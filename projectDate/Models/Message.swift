@@ -6,10 +6,19 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
+import SwiftUI
 
 struct Message: Identifiable, Codable{
     var id: String
+    var received: Bool
     var text: String
-    var receieved: Bool
     var timeStamp: Date
+}
+
+enum CodingKeys: String, CodingKey {
+    case id
+    case received
+    case text
+    case timeStamp
 }

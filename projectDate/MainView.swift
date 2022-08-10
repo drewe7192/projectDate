@@ -18,7 +18,7 @@ struct MainView: View {
                 .tabItem{
                     Label("Profile", systemImage: "person")
                 }
-            MessengerView()
+            MessageView()
                 .tabItem{
                     Label("Messenger", systemImage: "message")
                 }
