@@ -2,7 +2,7 @@
 //  PreviewProfileView.swift
 //  DatingApp
 //
-//  Created by Drew Sutherlan on 7/30/22.
+//  Created by DotZ3R0 on 7/30/22.
 //
 
 import SwiftUI
@@ -16,7 +16,7 @@ struct ImageOverlay: View{
                     .foregroundColor(.white)
                 Text("FSU")
                     .foregroundColor(.white)
-                Text("smokes weed")
+                Text("blah blah")
                     .foregroundColor(.white)
             }.offset(x: -120, y: 260)
        
@@ -68,7 +68,6 @@ struct PreviewProfileView: View {
                 }
                 HStack{
                     Text("Social")
-                    Text("smoking")
                     Text("Man")
                 }
              

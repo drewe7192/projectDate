@@ -2,7 +2,7 @@
 //  EditProfile.swift
 //  DatingApp
 //
-//  Created by Drew Sutherlan on 7/28/22.
+//  Created by DotZ3R0 on 7/28/22.
 //
 
 import SwiftUI
@@ -11,7 +11,9 @@ struct EditProfileView: View {
     @State private var userName: String = ""
     
     var body: some View {
+
         VStack{
+            ImageGridView()
             Form {
                 Section{
                     Text("My Photos(image grid section)")
@@ -71,7 +73,6 @@ struct EditProfileView: View {
             
             }
         }
-        
     }
 }
 

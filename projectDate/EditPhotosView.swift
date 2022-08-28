@@ -2,7 +2,7 @@
 //  EditPhotosView.swift
 //  DatingApp
 //
-//  Created by Drew Sutherlan on 7/30/22.
+//  Created by DotZ3R0 on 7/30/22.
 //
 
 import SwiftUI

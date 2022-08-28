@@ -2,14 +2,14 @@
 //  HomeView.swift
 //  projectDate
 //
-//  Created by Drew Sutherlan on 8/3/22.
+//  Created by DotZ3R0 on 8/3/22.
 //
 
 import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        Text("This is the Beacon/Home Screen")
+        Text("This is the Home Screen")
     }
 }
 
