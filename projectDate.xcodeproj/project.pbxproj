@@ -16,8 +16,11 @@
 		771EA01C28A24588007EBC40 /* MessagesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA01B28A24588007EBC40 /* MessagesManager.swift */; };
 		771EA01D28A24588007EBC40 /* MessagesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA01B28A24588007EBC40 /* MessagesManager.swift */; };
 		771EA01E28A24588007EBC40 /* MessagesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA01B28A24588007EBC40 /* MessagesManager.swift */; };
+		7756A48328C5192C0038903D /* MotherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7756A48228C5192C0038903D /* MotherView.swift */; };
+		775E062928C51B140082C27E /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E062828C51B140082C27E /* ViewRouter.swift */; };
+		775E062C28C51B6F0082C27E /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E062B28C51B6F0082C27E /* SignInView.swift */; };
+		775E062E28C51B850082C27E /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E062D28C51B850082C27E /* SignUpView.swift */; };
 		776DFB5428B27E0100F9AC63 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 776DFB5328B27E0100F9AC63 /* GoogleService-Info.plist */; };
-		776DFB5828B27EA000F9AC63 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776DFB5728B27EA000F9AC63 /* LoginView.swift */; };
 		776DFB5B28B286B300F9AC63 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 776DFB5A28B286B300F9AC63 /* FirebaseAuth */; };
 		77B8FD0A28BA228D00AE45A8 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8FD0928BA228D00AE45A8 /* Page.swift */; };
 		77B8FD0E28BA244000AE45A8 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8FD0D28BA244000AE45A8 /* ImageGridView.swift */; };
@@ -83,8 +86,12 @@
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		771EA01028A04810007EBC40 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		771EA01B28A24588007EBC40 /* MessagesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesManager.swift; sourceTree = "<group>"; };
+		7756A48228C5192C0038903D /* MotherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherView.swift; sourceTree = "<group>"; };
+		775E062828C51B140082C27E /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
+		775E062B28C51B6F0082C27E /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		775E062D28C51B850082C27E /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		775E062F28C72B450082C27E /* projectDate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDate.entitlements; sourceTree = "<group>"; };
 		776DFB5328B27E0100F9AC63 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
-		776DFB5728B27EA000F9AC63 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		77B8FD0928BA228D00AE45A8 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		77B8FD0D28BA244000AE45A8 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
 		77B8FD0F28BA28CE00AE45A8 /* PageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewModel.swift; sourceTree = "<group>"; };
@@ -139,10 +146,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		775E062A28C51B4F0082C27E /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				775E062B28C51B6F0082C27E /* SignInView.swift */,
+				775E062D28C51B850082C27E /* SignUpView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		776DFB4928B27A4E00F9AC63 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				776DFB5528B27E8900F9AC63 /* Login */,
+				775E062A28C51B4F0082C27E /* Auth */,
 				776DFB4E28B27B2D00F9AC63 /* UserProfile */,
 				776DFB4C28B27A9100F9AC63 /* Chat */,
 			);
@@ -205,22 +221,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		776DFB5528B27E8900F9AC63 /* Login */ = {
-			isa = PBXGroup;
-			children = (
-				776DFB5628B27E8F00F9AC63 /* Views */,
-			);
-			path = Login;
-			sourceTree = "<group>";
-		};
-		776DFB5628B27E8F00F9AC63 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				776DFB5728B27EA000F9AC63 /* LoginView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		776DFB5C28BA1EBD00F9AC63 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +261,7 @@
 		77C3D4FE289910CE0088554F /* projectDate */ = {
 			isa = PBXGroup;
 			children = (
+				775E062F28C72B450082C27E /* projectDate.entitlements */,
 				776DFB4B28B27A7900F9AC63 /* Resources */,
 				776DFB4A28B27A6500F9AC63 /* Networking */,
 				776DFB4928B27A4E00F9AC63 /* Features */,
@@ -269,6 +270,8 @@
 				77C3D539289912B60088554F /* SettingsView.swift */,
 				77C3D53F289A5E650088554F /* HomeView.swift */,
 				77C3D501289910CE0088554F /* MainView.swift */,
+				7756A48228C5192C0038903D /* MotherView.swift */,
+				775E062828C51B140082C27E /* ViewRouter.swift */,
 				776DFB5328B27E0100F9AC63 /* GoogleService-Info.plist */,
 				77C3D505289910CF0088554F /* Preview Content */,
 			);
@@ -458,6 +461,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				775E062928C51B140082C27E /* ViewRouter.swift in Sources */,
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77B8FD1028BA28CE00AE45A8 /* PageViewModel.swift in Sources */,
 				77C3D52A289912600088554F /* EditPhotosView.swift in Sources */,
@@ -465,18 +469,20 @@
 				771EA01C28A24588007EBC40 /* MessagesManager.swift in Sources */,
 				77C3D54D289D05020088554F /* TitleRow.swift in Sources */,
 				77B8FD0A28BA228D00AE45A8 /* Page.swift in Sources */,
+				775E062E28C51B850082C27E /* SignUpView.swift in Sources */,
 				77C3D502289910CE0088554F /* MainView.swift in Sources */,
+				775E062C28C51B6F0082C27E /* SignInView.swift in Sources */,
 				77B8FD1228BB4BDF00AE45A8 /* DropViewDelegate.swift in Sources */,
 				77DD938E289FC9B30039CF6D /* MessageView.swift in Sources */,
 				77C3D52E289912840088554F /* EditProfileView.swift in Sources */,
 				771EA01128A04810007EBC40 /* MessageField.swift in Sources */,
+				7756A48328C5192C0038903D /* MotherView.swift in Sources */,
 				77B8FD0E28BA244000AE45A8 /* ImageGridView.swift in Sources */,
 				77C3D55B289FB4E30088554F /* Message.swift in Sources */,
 				77C3D55F289FB5410088554F /* MessageBubble.swift in Sources */,
 				77C3D540289A5E650088554F /* HomeView.swift in Sources */,
 				77C3D536289912B10088554F /* ProfileView.swift in Sources */,
 				77C3D500289910CE0088554F /* projectDateApp.swift in Sources */,
-				776DFB5828B27EA000F9AC63 /* LoginView.swift in Sources */,
 				771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,6 +664,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = projectDate/projectDate.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -690,6 +697,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = projectDate/projectDate.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

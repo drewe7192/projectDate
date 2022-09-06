@@ -11,12 +11,15 @@ import Firebase
 @main
 struct projectDateApp: App {
     
+    @StateObject var viewRouter = ViewRouter()
+    
     init(){
         FirebaseApp.configure()
     }
+    
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MotherView().environmentObject(viewRouter)
         }
     }
 }
