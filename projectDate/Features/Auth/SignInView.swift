@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import GoogleSignIn
 
 struct SignInView: View {
     @EnvironmentObject var viewRouter: ViewRouter
@@ -16,47 +17,140 @@ struct SignInView: View {
     @State var signInErrorMessage = ""
     @State var email = ""
     @State var password =  ""
+    @State var isLoading: Bool = false
     
     
     var body: some View {
-        VStack(spacing: 15){
-            LogoView()
-            Spacer()
-            SignInCredentialFields(email: $email, password: $password)
-            Button(action: {
-                signInUser(userEmail: email, userPassword: password)
-            }) {
-                Text("Log In")
-                    .bold()
-                    .frame(width: 360, height: 50)
-                    .background(.thinMaterial)
-                    .cornerRadius(10)
-            }
-            .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
+        ZStack{
             
-            Spacer()
-            HStack{
-                Text("Don't have an account?")
+            Color.white
+                .ignoresSafeArea()
+            
+            VStack(spacing: 15){
+                LogoView()
+                Spacer()
+                SignInCredentialFields(email: $email, password: $password)
                 Button(action: {
-                    viewRouter.currentPage = .signUpPage
+                    signInUser(userEmail: email, userPassword: password)
                 }) {
-                    Text("Sign Up")
+                    Text("Log In")
+                        .bold()
+                        .frame(width: 360, height: 50)
+                        .background(.thinMaterial)
+                        .cornerRadius(10)
+                }
+                .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
+                // Sign in Buttons...
+                AppleAuth()
+                Button{
+                    handleGoogleLogin()
+                } label: {
+                    HStack(spacing: 15){
+                        Text("Create Google Account")
+                            .font(.title3)
+                            .fontWeight(.medium)
+                            .kerning(1.1)
+                    }
+                    .foregroundColor(Color.blue)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+
+                    .background(
+                    Capsule()
+                        .strokeBorder(Color.blue)
+                    )
+                }
+                .padding(.top,25)
+                
+                
+                
+                Spacer()
+                HStack{
+                    Text("Don't have an account?")
+                    Button(action: {
+                        viewRouter.currentPage = .signUpPage
+                    }) {
+                        Text("Sign Up")
+                    }
+                }
+                
+                if signInProcessing {
+                    ProgressView()
+                }
+                
+                if !signInErrorMessage.isEmpty {
+                    Text("Failed creating account: \(signInErrorMessage)")
+                        .foregroundColor(.red)
                 }
             }
-            
-            if signInProcessing {
-                ProgressView()
-            }
-            
-            if !signInErrorMessage.isEmpty {
-                Text("Failed creating account: \(signInErrorMessage)")
-                    .foregroundColor(.red)
-            }
+            .overlay(
+                // Is Loading Indicator...
+                ZStack{
+                    if isLoading{
+                        Color.black
+                            .opacity(0.25)
+                            .ignoresSafeArea()
+                        
+                        ProgressView()
+                            .font(.title2)
+                            .frame(width: 60, height: 60)
+                            .background(Color.white)
+                            .cornerRadius(10)
+                    }
+                }
+            )
         }
-     
-        
     }
     
+    func handleGoogleLogin(){
+        
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+        
+        let config = GIDConfiguration(clientID: clientID)
+        
+        isLoading = true
+        
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: getRootViewController()) {
+            [self] user, err in
+            
+            
+            if let error = err {
+                isLoading = false
+                print(error.localizedDescription)
+                return
+            }
+            
+            guard
+                let authentication = user?.authentication,
+                    let idToken = authentication.idToken
+            else {
+                isLoading = false
+                return
+            }
+            
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                           accessToken:
+                                                            authentication.accessToken)
+            
+            //Firebase Auth...
+            Auth.auth().signIn(with: credential) { result, err in
+                
+                isLoading = false
+                
+                if let error = err {
+                    print(error.localizedDescription)
+                    return
+                }
+                
+                    //Displaying User Name...
+                guard let user = result?.user else{
+                    return
+                }
+                print(user.displayName ?? "Sucess!")
+                viewRouter.currentPage = .homePage
+            }
+        }
+    }
     func signInUser(userEmail: String, userPassword: String){
         signInProcessing = true
         
@@ -107,4 +201,17 @@ struct SignInCredentialFields: View {
         }
     }
     
+}
+
+extension View {
+    func getRootViewController()->UIViewController{
+        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else{
+            return .init()
+        }
+        
+        guard let root = screen.windows.first?.rootViewController else {
+            return .init()
+        }
+        return root
+    }
 }

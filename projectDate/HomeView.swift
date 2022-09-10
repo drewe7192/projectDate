@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import GoogleSignIn
 
 struct HomeView: View {
     @EnvironmentObject var viewRouter: ViewRouter
@@ -15,17 +16,30 @@ struct HomeView: View {
     @State var signOutProcessing = false
     
     var body: some View {
-        Text("This is the Home Screen")
-        Button(action: {
-            signOutUser()
-        }) {
-            Text("Sign Out")
+        
+        ZStack{
+            Color.white
+                .ignoresSafeArea()
+            VStack{
+                Text("This is the Home Screen")
+                Button(action: {
+                    signOutUser()
+                }) {
+                    Text("Sign Out")
+                }
+                
+                
+            
+            }
         }
+      
+        
     }
     
     func signOutUser(){
         let firebaseAuth = Auth.auth()
         do{
+            GIDSignIn.sharedInstance.signOut()
             try firebaseAuth.signOut()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)

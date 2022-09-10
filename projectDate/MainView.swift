@@ -26,10 +26,6 @@ struct MainView: View {
                 .tabItem{
                     Label("Messenger", systemImage: "message")
                 }.tag(3)
-            LogOutView()
-                .tabItem{
-                    Label("LogOut", systemImage: "pencil")
-                }.tag(4)
         }
     }
 }

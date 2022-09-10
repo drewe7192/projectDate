@@ -18,33 +18,41 @@ struct SignUpView: View {
     @State var passwordConfirmation = ""
     
     var body: some View {
-        
-        VStack(spacing: 15){
-            LogoView()
-            Spacer()
-            SignUpCredentialFields(email: $email, password: $password, passwordConfirmation: $passwordConfirmation)
-            Button(action: {
-                signUpUser(userEmail: email, userPassword: password)
-            }) {
-                Text("Sign Up")
-                    .bold()
-                    .frame(width: 360, height: 50)
-                    .background(.thinMaterial)
-                    .cornerRadius(10)
-            }
-            Spacer()
-            HStack{
-                Text("Already have an account?")
+        ZStack{
+            Color.white
+                .ignoresSafeArea()
+            
+            VStack(spacing: 15){
+               
+                
+                LogoView()
+                Spacer()
+                SignUpCredentialFields(email: $email, password: $password, passwordConfirmation: $passwordConfirmation)
                 Button(action: {
-                    viewRouter.currentPage = .signInPage
+                    signUpUser(userEmail: email, userPassword: password)
                 }) {
-                    Text("Log In")
+                    Text("Sign Up")
+                        .bold()
+                        .frame(width: 360, height: 50)
+                        .background(.thinMaterial)
+                        .cornerRadius(10)
                 }
+                Spacer()
+                HStack{
+                    Text("Already have an account?")
+                    Button(action: {
+                        viewRouter.currentPage = .signInPage
+                    }) {
+                        Text("Log In")
+                    }
+                }
+                .opacity(0.9)
+                .disabled(!signupProcessing && !email.isEmpty && !password.isEmpty && !passwordConfirmation.isEmpty && password == passwordConfirmation ? false : true)
             }
-            .opacity(0.9)
-            .disabled(!signupProcessing && !email.isEmpty && !password.isEmpty && !passwordConfirmation.isEmpty && password == passwordConfirmation ? false : true)
+            .padding()
+            
         }
-        .padding()
+      
     }
     
     func signUpUser(userEmail: String, userPassword: String){
