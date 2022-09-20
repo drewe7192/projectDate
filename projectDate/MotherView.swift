@@ -13,10 +13,10 @@ struct MotherView: View {
     
     var body: some View {
         switch viewRouter.currentPage {
-        case .signUpPage :
-            SignUpView()
-        case .signInPage:
+        case .signInPage :
             SignInView()
+        case .signUpPage:
+            SignUpView()
         case .homePage:
             HomeView()
         }

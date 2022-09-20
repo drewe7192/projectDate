@@ -16,11 +16,11 @@ struct MainView: View {
         TabView {
             HomeView()
                 .tabItem{
-                    Label("Home", systemImage: "house")
+                    Label("Home", systemImage: "MainViewhouse")
                 }.tag(1)
             ProfileView()
                 .tabItem{
-                    Label("Profile", systemImage: "message")
+                    Label("Profile", systemImage: "MainViewmessage")
                 }.tag(2)
             MessageView()
                 .tabItem{

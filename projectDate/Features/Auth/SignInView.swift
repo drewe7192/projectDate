@@ -9,62 +9,60 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 import GoogleSignIn
+import FacebookLogin
 
 struct SignInView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
-    @State var signInProcessing = false
     @State var signInErrorMessage = ""
     @State var email = ""
     @State var password =  ""
     @State var isLoading: Bool = false
-    
+    @State var isLoggedIn: Bool = false
+    @State var signInProcessing = false
+    @State var isThirdPartyAuth = false
     
     var body: some View {
+        
+        // without these 3 lines background will be black
         ZStack{
-            
             Color.white
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 15){
                 LogoView()
-                Spacer()
-                SignInCredentialFields(email: $email, password: $password)
+                    .padding(.bottom)
+               
+                // other logIn Buttons...
+                if (isThirdPartyAuth){
+                    ThirdPartyLogInButtons()
+                }else{
+                    EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage)
+                }
+              
                 Button(action: {
-                    signInUser(userEmail: email, userPassword: password)
+                    self.isThirdPartyAuth.toggle()
                 }) {
-                    Text("Log In")
+                    Text("Sign in with 3rd party")
                         .bold()
+                        .foregroundColor(Color.green)
                         .frame(width: 360, height: 50)
-                        .background(.thinMaterial)
+                        .background(Color.white)
                         .cornerRadius(10)
                 }
-                .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
-                // Sign in Buttons...
-                AppleAuth()
-                Button{
-                    handleGoogleLogin()
-                } label: {
-                    HStack(spacing: 15){
-                        Text("Create Google Account")
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .kerning(1.1)
-                    }
-                    .foregroundColor(Color.blue)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-
-                    .background(
-                    Capsule()
-                        .strokeBorder(Color.blue)
-                    )
-                }
-                .padding(.top,25)
+                .frame(width: 300, height: 25)
+                .padding()
+                .background(Color.white)
+                .cornerRadius(20)
+                .textInputAutocapitalization(.never)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
+                )
+                .padding(.bottom,25)
+      
+                //Spacer()
                 
-                
-                
-                Spacer()
+                //footer...
                 HStack{
                     Text("Don't have an account?")
                     Button(action: {
@@ -76,11 +74,6 @@ struct SignInView: View {
                 
                 if signInProcessing {
                     ProgressView()
-                }
-                
-                if !signInErrorMessage.isEmpty {
-                    Text("Failed creating account: \(signInErrorMessage)")
-                        .foregroundColor(.red)
                 }
             }
             .overlay(
@@ -102,55 +95,72 @@ struct SignInView: View {
         }
     }
     
-    func handleGoogleLogin(){
-        
-        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-        
-        let config = GIDConfiguration(clientID: clientID)
-        
-        isLoading = true
-        
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: getRootViewController()) {
-            [self] user, err in
-            
-            
-            if let error = err {
-                isLoading = false
-                print(error.localizedDescription)
-                return
-            }
-            
-            guard
-                let authentication = user?.authentication,
-                    let idToken = authentication.idToken
-            else {
-                isLoading = false
-                return
-            }
-            
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                           accessToken:
-                                                            authentication.accessToken)
-            
-            //Firebase Auth...
-            Auth.auth().signIn(with: credential) { result, err in
-                
-                isLoading = false
-                
-                if let error = err {
-                    print(error.localizedDescription)
-                    return
-                }
-                
-                    //Displaying User Name...
-                guard let user = result?.user else{
-                    return
-                }
-                print(user.displayName ?? "Sucess!")
-                viewRouter.currentPage = .homePage
-            }
+    
+}
+
+
+struct SignInCredentialFields: View {
+    @Binding var email: String
+    @Binding var password: String
+    
+    var body: some View {
+        Group{
+            TextField("Email", text: $email)
+                .frame(width: 300, height: 25)
+                .padding()
+                .background(.thinMaterial)
+                .cornerRadius(20)
+                .textInputAutocapitalization(.never)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
+                )
+            SecureField("Password", text: $password)
+                .frame(width: 300, height: 25)
+                .padding()
+                .background(.thinMaterial)
+                .cornerRadius(20)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
+                )
+                .padding(.bottom,25)
         }
     }
+    
+}
+
+struct EmailPasswordLogIn: View{
+    @Binding var email: String
+    @Binding var password: String
+    @Binding var signInProcessing: Bool
+    @Binding var signInErrorMessage: String
+    
+    var body: some View{
+        SignInCredentialFields(email: $email, password: $password)
+           
+        //logIn Button
+        Button(action: {
+            signInUser(userEmail: email, userPassword: password)
+        }) {
+            Text("Log In")
+                .bold()
+                .foregroundColor(Color.blue)
+                .frame(width: 360, height: 50)
+                .background(Color.white)
+                .cornerRadius(10)
+        }
+        .frame(width: 300, height: 25)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(20)
+        .textInputAutocapitalization(.never)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20).stroke(Color.blue, lineWidth: 3)
+        )
+        .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
+        .padding(.bottom,25)
+        
+    }
+    
     func signInUser(userEmail: String, userPassword: String){
         signInProcessing = true
         
@@ -168,50 +178,31 @@ struct SignInView: View {
             case .some(_):
                 print("User signed in")
                 signInProcessing = false
-                withAnimation{
-                    viewRouter.currentPage = .homePage
-                }
+                SignInView().viewRouter.currentPage = .homePage
+                
             }
         }
+    }
+}
+struct ThirdPartyLogInButtons: View{
+    var body: some View{
+        FacebookAuth()
+        AppleAuth()
+        GoogleAuth()
+            .padding(.bottom,30)
     }
 }
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
-        SignInView()
+        Group {
+            SignInView()
+                .previewInterfaceOrientation(.portrait)
+        }
     }
 }
 
-struct SignInCredentialFields: View {
-    @Binding var email: String
-    @Binding var password: String
-    
-    var body: some View {
-        Group{
-            TextField("Email", text: $email)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(10)
-                .textInputAutocapitalization(.never)
-            SecureField("Password", text: $password)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(10)
-                .padding(.bottom, 30)
-        }
-    }
-    
-}
 
-extension View {
-    func getRootViewController()->UIViewController{
-        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else{
-            return .init()
-        }
-        
-        guard let root = screen.windows.first?.rootViewController else {
-            return .init()
-        }
-        return root
-    }
-}
+
+
+

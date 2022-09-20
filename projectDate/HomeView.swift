@@ -14,6 +14,7 @@ struct HomeView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
     @State var signOutProcessing = false
+    @State var isLoggedOut = false
     
     var body: some View {
         
@@ -27,13 +28,11 @@ struct HomeView: View {
                 }) {
                     Text("Sign Out")
                 }
-                
-                
-            
+                .fullScreenCover(isPresented: $isLoggedOut) {
+                    SignInView()
+                }
             }
         }
-      
-        
     }
     
     func signOutUser(){
@@ -44,9 +43,9 @@ struct HomeView: View {
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
         }
-        withAnimation{
-            viewRouter.currentPage = .signInPage
-        }
+        viewRouter.currentPage = .signInPage
+        isLoggedOut = true
+        
     }
 }
 

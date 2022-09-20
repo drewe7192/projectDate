@@ -9,10 +9,12 @@ import SwiftUI
 
 class ViewRouter: ObservableObject {
     
-    @Published var currentPage: Pawge = .signUpPage
+    static let shared = ViewRouter()
+    
+    @Published var currentPage: Route = .signInPage
 }
 
-enum Pawge {
+enum Route {
     case signUpPage
     case signInPage
     case homePage

@@ -113,13 +113,3 @@ struct SignUpCredentialFields: View {
     }
     
 }
-
-struct LogoView: View {
-    var body: some View {
-        Image("sasuke")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 300, height: 150)
-            .padding(.top, 70)
-    }
-}

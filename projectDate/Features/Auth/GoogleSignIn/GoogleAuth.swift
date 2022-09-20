@@ -7,34 +7,37 @@
 
 import SwiftUI
 import Firebase
+import FirebaseAuth
 import GoogleSignIn
 
 struct GoogleAuth: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
-    @State var isLoading: Bool = false
-    
     var body: some View {
         Button{
-            handleGoogleLogin()
+            GoogleLogIn().handleGoogleLogin()
         } label: {
             HStack(spacing: 15){
-                Text("Create Google Account")
+                Text("Sign in with Google")
                     .font(.title3)
                     .fontWeight(.medium)
                     .kerning(1.1)
             }
-            .foregroundColor(Color.blue)
+            .foregroundColor(Color.red)
             .padding()
             .frame(maxWidth: .infinity)
             
             .background(
             Capsule()
-                .strokeBorder(Color.blue)
+                .stroke(Color.red,lineWidth: 3)
             )
         }
-        .padding(.top,25)
+        .frame(width: 350)
     }
+}
+
+struct GoogleLogIn {
+    @State var isLoading: Bool = false
     
     func handleGoogleLogin(){
         
@@ -44,9 +47,8 @@ struct GoogleAuth: View {
         
         isLoading = true
         
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: getRootViewController()) {
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: GoogleAuth().getRootViewController()) {
             [self] user, err in
-            
             
             if let error = err {
                 isLoading = false
@@ -81,9 +83,23 @@ struct GoogleAuth: View {
                     return
                 }
                 print(user.displayName ?? "Sucess!")
-                viewRouter.currentPage = .homePage
+                GoogleAuth().viewRouter.currentPage = .homePage
             }
         }
+    }
+    
+}
+
+extension View {
+    func getRootViewController()->UIViewController{
+        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else{
+            return .init()
+        }
+        
+        guard let root = screen.windows.first?.rootViewController else {
+            return .init()
+        }
+        return root
     }
 }
 
@@ -92,3 +108,8 @@ struct GoogleAuth_Previews: PreviewProvider {
         GoogleAuth()
     }
 }
+
+
+
+
+
