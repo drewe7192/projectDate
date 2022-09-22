@@ -12,10 +12,11 @@ import GoogleSignIn
 
 struct GoogleAuth: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @State var isLoggedIn: Bool  = false
     
     var body: some View {
         Button{
-            GoogleLogIn().handleGoogleLogin()
+            GoogleLogIn(isLoggedIn: $isLoggedIn).handleGoogleLogin()
         } label: {
             HStack(spacing: 15){
                 Text("Sign in with Google")
@@ -33,12 +34,16 @@ struct GoogleAuth: View {
             )
         }
         .frame(width: 350)
+        .fullScreenCover( isPresented: $isLoggedIn){
+          HomeView()
+        }
     }
 }
 
 struct GoogleLogIn {
     @State var isLoading: Bool = false
-    
+    @Binding var isLoggedIn: Bool
+   
     func handleGoogleLogin(){
         
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
@@ -83,7 +88,8 @@ struct GoogleLogIn {
                     return
                 }
                 print(user.displayName ?? "Sucess!")
-                GoogleAuth().viewRouter.currentPage = .homePage
+                isLoggedIn = true
+               
             }
         }
     }

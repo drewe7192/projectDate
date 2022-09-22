@@ -38,6 +38,7 @@ struct HomeView: View {
     func signOutUser(){
         let firebaseAuth = Auth.auth()
         do{
+            //Google sign out..
             GIDSignIn.sharedInstance.signOut()
             try firebaseAuth.signOut()
         } catch let signOutError as NSError {

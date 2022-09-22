@@ -24,75 +24,88 @@ struct SignInView: View {
     
     var body: some View {
         
-        // without these 3 lines background will be black
-        ZStack{
-            Color.white
-                .ignoresSafeArea()
+        NavigationView {
+            
+            // without these 3 lines background will be black
+            ZStack{
+                Color.white
+                    .ignoresSafeArea()
 
-            VStack(spacing: 15){
-                LogoView()
-                    .padding(.bottom)
-               
-                // other logIn Buttons...
-                if (isThirdPartyAuth){
-                    ThirdPartyLogInButtons()
-                }else{
-                    EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage)
-                }
-              
-                Button(action: {
-                    self.isThirdPartyAuth.toggle()
-                }) {
-                    Text("Sign in with 3rd party")
-                        .bold()
-                        .foregroundColor(Color.green)
-                        .frame(width: 360, height: 50)
-                        .background(Color.white)
-                        .cornerRadius(10)
-                }
-                .frame(width: 300, height: 25)
-                .padding()
-                .background(Color.white)
-                .cornerRadius(20)
-                .textInputAutocapitalization(.never)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
-                )
-                .padding(.bottom,25)
-      
-                //Spacer()
-                
-                //footer...
-                HStack{
-                    Text("Don't have an account?")
-                    Button(action: {
-                        viewRouter.currentPage = .signUpPage
-                    }) {
-                        Text("Sign Up")
+                VStack(spacing: 15){
+                    LogoView()
+                        .padding(.bottom)
+                   
+                    // other logIn Buttons...
+                    if (isThirdPartyAuth){
+                        ThirdPartyLogInButtons()
+                    }else{
+                        EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
                     }
-                }
-                
-                if signInProcessing {
-                    ProgressView()
-                }
-            }
-            .overlay(
-                // Is Loading Indicator...
-                ZStack{
-                    if isLoading{
-                        Color.black
-                            .opacity(0.25)
-                            .ignoresSafeArea()
-                        
-                        ProgressView()
-                            .font(.title2)
-                            .frame(width: 60, height: 60)
+                  
+                    Button(action: {
+                        self.isThirdPartyAuth.toggle()
+                    }) {
+                        Text("Sign in with 3rd party")
+                            .bold()
+                            .foregroundColor(Color.green)
+                            .frame(width: 360, height: 50)
                             .background(Color.white)
                             .cornerRadius(10)
                     }
+                    .frame(width: 300, height: 25)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .textInputAutocapitalization(.never)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
+                    )
+                    .padding(.bottom,25)
+          
+                    //Spacer()
+                    
+                    //footer...
+                  
+                        HStack{
+                            Text("Don't have an account?")
+                                .foregroundColor(Color.black)
+                            NavigationLink(destination: SignUpView()) {
+                                Text("Sign up")
+                            }
+                        }
+                    
+                   
+                    
+                    if signInProcessing {
+                        ProgressView()
+                    }
                 }
-            )
+                .overlay(
+                    // Is Loading Indicator...
+                    ZStack{
+                        if isLoading{
+                            Color.black
+                                .opacity(0.25)
+                                .ignoresSafeArea()
+                            
+                            ProgressView()
+                                .font(.title2)
+                                .frame(width: 60, height: 60)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                        }
+                    }
+                )
+                .fullScreenCover(isPresented: $isLoggedIn) {
+                    HomeView()
+                }
+                
+            }
+            
+            
+            
         }
+       
     }
     
     
@@ -129,10 +142,12 @@ struct SignInCredentialFields: View {
 }
 
 struct EmailPasswordLogIn: View{
+    @EnvironmentObject var viewRouter: ViewRouter
     @Binding var email: String
     @Binding var password: String
     @Binding var signInProcessing: Bool
     @Binding var signInErrorMessage: String
+    @Binding var isLoggedIn: Bool
     
     var body: some View{
         SignInCredentialFields(email: $email, password: $password)
@@ -158,8 +173,8 @@ struct EmailPasswordLogIn: View{
         )
         .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
         .padding(.bottom,25)
-        
     }
+
     
     func signInUser(userEmail: String, userPassword: String){
         signInProcessing = true
@@ -178,7 +193,7 @@ struct EmailPasswordLogIn: View{
             case .some(_):
                 print("User signed in")
                 signInProcessing = false
-                SignInView().viewRouter.currentPage = .homePage
+                isLoggedIn = true
                 
             }
         }
