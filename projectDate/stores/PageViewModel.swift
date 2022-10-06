@@ -27,3 +27,9 @@ class PageViewModel: ObservableObject {
 }
 
 
+struct Page: Identifiable {
+    var id = UUID().uuidString
+    var url: URL
+}
+
+

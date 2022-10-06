@@ -17,12 +17,12 @@ struct HomeView: View {
     @State var isLoggedOut = false
     
     var body: some View {
-        
         ZStack{
             Color.white
                 .ignoresSafeArea()
             VStack{
                 Text("This is the Home Screen")
+                    .foregroundColor(Color.black)
                 Button(action: {
                     signOutUser()
                 }) {

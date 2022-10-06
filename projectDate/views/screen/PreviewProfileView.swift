@@ -8,21 +8,7 @@
 import SwiftUI
 
 
-struct ImageOverlay: View{
-    var body: some View{
-        ZStack{
-            VStack{
-                Text("dotZ3R0")
-                    .foregroundColor(.white)
-                Text("FSU")
-                    .foregroundColor(.white)
-                Text("blah blah")
-                    .foregroundColor(.white)
-            }.offset(x: -120, y: 260)
-       
-        }
-    }
-}
+
 struct PreviewProfileView: View {
     var body: some View {
         ScrollView{
@@ -92,6 +78,22 @@ struct PreviewProfileView: View {
             .clipShape(Rectangle())
 
             
+        }
+    }
+}
+
+struct ImageOverlay: View{
+    var body: some View{
+        ZStack{
+            VStack{
+                Text("dotZ3R0")
+                    .foregroundColor(.white)
+                Text("FSU")
+                    .foregroundColor(.white)
+                Text("blah blah")
+                    .foregroundColor(.white)
+            }.offset(x: -120, y: 260)
+       
         }
     }
 }
