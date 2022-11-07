@@ -31,10 +31,17 @@ struct SignInView: View {
                 Color.white
                     .ignoresSafeArea()
 
-                VStack(spacing: 15){
-                    LogoView()
-                        .padding(.bottom)
+                VStack(spacing: 10){
                    
+                    VStack{
+                        Text("Hello Again")
+                            .bold()
+                            .font(.system(size: 30))
+                        
+                        Text("blah nblah subtitle blah")
+                            .font(.system(size: 20))
+                    }
+                    
                     // other logIn Buttons...
                     if (isThirdPartyAuth){
                         ThirdPartyLogInButtons()
@@ -42,6 +49,11 @@ struct SignInView: View {
                         EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
                     }
                   
+                        Text("or continue with")
+                        .padding(.bottom,50)
+              
+                      
+                    
                     Button(action: {
                         self.isThirdPartyAuth.toggle()
                     }) {
@@ -61,8 +73,6 @@ struct SignInView: View {
                         RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
                     )
                     .padding(.bottom,25)
-          
-                    //Spacer()
                     
                     //footer...
                   
@@ -73,6 +83,7 @@ struct SignInView: View {
                                 Text("Sign up")
                             }
                         }
+                        .padding(.bottom,100)
                     
                    
                     
@@ -111,32 +122,37 @@ struct SignInView: View {
     
 }
 
-
 struct SignInCredentialFields: View {
     @Binding var email: String
     @Binding var password: String
     
     var body: some View {
         Group{
-            TextField("Email", text: $email)
-                .frame(width: 300, height: 25)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(20)
-                .textInputAutocapitalization(.never)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
-                )
-            SecureField("Password", text: $password)
-                .frame(width: 300, height: 25)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(20)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
-                )
-                .padding(.bottom,25)
+            VStack{
+                TextField("Email", text: $email)
+                    .frame(width: 300, height: 25)
+                    .padding()
+                    .background(.thinMaterial)
+                    .cornerRadius(20)
+                    .textInputAutocapitalization(.never)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
+                    )
+                    .padding(.bottom,10)
+                
+                SecureField("Password", text: $password)
+                    .frame(width: 300, height: 25)
+                    .padding()
+                    .background(.thinMaterial)
+                    .cornerRadius(20)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
+                    )
+            }
+            .padding(.bottom, 60)
+
         }
+   
     }
     
 }
@@ -172,7 +188,7 @@ struct EmailPasswordLogIn: View{
             RoundedRectangle(cornerRadius: 20).stroke(Color.blue, lineWidth: 3)
         )
         .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
-        .padding(.bottom,25)
+        .padding(.bottom,150)
     }
 
     
@@ -199,6 +215,7 @@ struct EmailPasswordLogIn: View{
         }
     }
 }
+
 struct ThirdPartyLogInButtons: View{
     var body: some View{
         FacebookAuth()
