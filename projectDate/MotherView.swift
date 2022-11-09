@@ -17,16 +17,26 @@ struct MotherView: View {
             TabView {
                 HomeView()
                     .tabItem{
-                        Label("Home", systemImage: "message")
+                        Label("Home", systemImage: "house")
                     }.tag(1)
-                ProfileView()
+                LikesView()
                     .tabItem{
-                        Label("Profile", systemImage: "message")
-                    }.tag(2)
+                        Label("Likes", systemImage: "heart")
+                    }
+                    .tag(2)
+                MatchBoxPortalView()
+                    .tabItem{
+                        Label("CodeName", systemImage: "star")
+                    }
+                    .tag(3)
                 MessageView()
                     .tabItem{
                         Label("Messenger", systemImage: "message")
-                    }.tag(3)
+                    }.tag(4)
+                ProfileView()
+                    .tabItem{
+                        Label("Profile", systemImage: "person")
+                    }.tag(5)
             }
         case .signUpPage :
             SignUpView()

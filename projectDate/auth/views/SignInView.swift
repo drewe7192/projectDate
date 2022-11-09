@@ -20,7 +20,7 @@ struct SignInView: View {
     @State var isLoading: Bool = false
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
-    @State var isThirdPartyAuth = false
+    @State var isThirdPartyAuth = true
     
     var body: some View {
         
@@ -42,37 +42,31 @@ struct SignInView: View {
                             .font(.system(size: 20))
                     }
                     
-                    // other logIn Buttons...
-                    if (isThirdPartyAuth){
-                        ThirdPartyLogInButtons()
-                    }else{
-                        EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
-                    }
-                  
-                        Text("or continue with")
-                        .padding(.bottom,50)
-              
-                      
+                    EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
                     
-                    Button(action: {
-                        self.isThirdPartyAuth.toggle()
-                    }) {
-                        Text("Sign in with 3rd party")
-                            .bold()
-                            .foregroundColor(Color.green)
-                            .frame(width: 360, height: 50)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                    }
-                    .frame(width: 300, height: 25)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(20)
-                    .textInputAutocapitalization(.never)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
-                    )
-                    .padding(.bottom,25)
+                        Text("or continue with")
+              
+                    ThirdPartyButtons()
+                    
+//                    Button(action: {
+//                        self.isThirdPartyAuth.toggle()
+//                    }) {
+//                        Text("Sign in with 3rd party")
+//                            .bold()
+//                            .foregroundColor(Color.green)
+//                            .frame(width: 360, height: 50)
+//                            .background(Color.white)
+//                            .cornerRadius(10)
+//                    }
+//                    .frame(width: 300, height: 25)
+//                    .padding()
+//                    .background(Color.white)
+//                    .cornerRadius(20)
+//                    .textInputAutocapitalization(.never)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
+//                    )
+//                    .padding(.bottom,25)
                     
                     //footer...
                   
@@ -83,7 +77,7 @@ struct SignInView: View {
                                 Text("Sign up")
                             }
                         }
-                        .padding(.bottom,100)
+                        .padding(.bottom,80)
                     
                    
                     
@@ -188,7 +182,7 @@ struct EmailPasswordLogIn: View{
             RoundedRectangle(cornerRadius: 20).stroke(Color.blue, lineWidth: 3)
         )
         .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
-        .padding(.bottom,150)
+        .padding(.bottom,130)
     }
 
     
@@ -213,15 +207,6 @@ struct EmailPasswordLogIn: View{
                 
             }
         }
-    }
-}
-
-struct ThirdPartyLogInButtons: View{
-    var body: some View{
-        FacebookAuth()
-        AppleAuth()
-        GoogleAuth()
-            .padding(.bottom,30)
     }
 }
 

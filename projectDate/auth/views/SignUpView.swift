@@ -25,28 +25,48 @@ struct SignUpView: View {
             VStack(spacing: 15){
                
                 
-                LogoView()
-                Spacer()
-                SignUpCredentialFields(email: $email, password: $password, passwordConfirmation: $passwordConfirmation)
-                Button(action: {
-                    signUpUser(userEmail: email, userPassword: password)
-                }) {
-                    Text("Sign Up")
+                VStack{
+                    Text("Create Account")
                         .bold()
-                        .frame(width: 360, height: 50)
-                        .background(.thinMaterial)
-                        .cornerRadius(10)
+                        .font(.system(size: 30))
+                    
+                    Text("blahb bblah balh")
+                        .font(.system(size: 20))
                 }
-                Spacer()
+                
+                VStack{
+                    SignUpCredentialFields(email: $email, password: $password, passwordConfirmation: $passwordConfirmation)
+                    Button(action: {
+                        signUpUser(userEmail: email, userPassword: password)
+                    }) {
+                        Text("Sign Up")
+                            .bold()
+                            .foregroundColor(Color.blue)
+                            .frame(width: 360, height: 50)
+                            .background(Color.white)
+                            .cornerRadius(10)
+                    }
+                    .frame(width: 300, height: 25)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .textInputAutocapitalization(.never)
+                    .overlay(RoundedRectangle(cornerRadius:20)
+                        .stroke(Color.blue, lineWidth: 3))
+                }
+                .padding(.bottom,100)
+                
+                Text("or sign up with")
+                ThirdPartyButtons()
+           
+                
                 HStack{
                     Text("Already have an account?")
-                    Button(action: {
-                        viewRouter.currentPage = .signInPage
-                    }) {
-                        Text("Log In")
-                    }
+              NavigationLink(destination:
+                                SignInView()) {
+                  Text("Log In")
+              }
                 }
-                .opacity(0.9)
                 .disabled(!signupProcessing && !email.isEmpty && !password.isEmpty && !passwordConfirmation.isEmpty && password == passwordConfirmation ? false : true)
             }
             .padding()
@@ -93,19 +113,33 @@ struct SignUpCredentialFields: View {
     var body: some View {
         Group{
             TextField("Email", text: $email)
+                .frame(width: 300, height: 25)
                 .padding()
                 .background(.thinMaterial)
                 .cornerRadius(10)
+                .overlay(RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.gray)
+                )
                 .textInputAutocapitalization(.never)
             SecureField("Password", text: $password)
+                .frame(width: 300, height: 25)
                 .padding()
                 .background(.thinMaterial)
                 .cornerRadius(10)
-                .disableAutocorrection(true)
+                .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.gray)
+                )
+            
             SecureField("Confirm Password", text: $passwordConfirmation)
+                .frame(width: 300, height: 25)
                 .padding()
                 .background(.thinMaterial)
                 .cornerRadius(10)
+                .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.gray)
+                )
                 .border(Color.red, width: passwordConfirmation != password ? 1: 0)
                 .padding(.bottom, 30)
                 .disableAutocorrection(true)
