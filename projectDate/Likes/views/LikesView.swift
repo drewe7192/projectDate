@@ -9,7 +9,67 @@ import SwiftUI
 
 struct LikesView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView{
+            ZStack{
+                    CustomHeaderView()
+                VStack{
+                    HStack{
+                        NavigationLink(destination: ProfileView()) {
+                            Text("dater profile")
+                        }.frame(width: 150, height: 180)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
+                        
+                        NavigationLink(destination: ProfileView()){
+                            Text("dater profile")
+                        }.frame(width: 150, height: 180)
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
+                        
+                    }
+                    
+                    HStack{
+                        NavigationLink(destination: ProfileView()) {
+                            Text("dater profile")
+                        }.frame(width: 150, height: 180)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
+                        
+                        NavigationLink(destination: ProfileView()){
+                            Text("dater profile")
+                        }.frame(width: 150, height: 180)
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
+                        
+                    }
+                    
+                    HStack{
+                        NavigationLink(destination: ProfileView()) {
+                            Text("dater profile")
+                        }.frame(width: 150, height: 180)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
+                        
+                        NavigationLink(destination: ProfileView()){
+                            Text("dater profile")
+                        }.frame(width: 150, height: 180)
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
+                        
+                    }    
+                }
+               
+            }
+            .navigationTitle("Likes You")
+            .navigationBarTitleDisplayMode(.inline)
+            
+        }
     }
 }
 

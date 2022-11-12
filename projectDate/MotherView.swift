@@ -24,9 +24,9 @@ struct MotherView: View {
                         Label("Likes", systemImage: "heart")
                     }
                     .tag(2)
-                MatchBoxPortalView()
+                GamesView()
                     .tabItem{
-                        Label("CodeName", systemImage: "star")
+                        Label("Games", systemImage: "flag.2.crossed")
                     }
                     .tag(3)
                 MessageView()

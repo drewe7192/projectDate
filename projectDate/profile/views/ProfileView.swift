@@ -11,8 +11,12 @@ struct ProfileView: View {
     var body: some View {
         NavigationView{
             ZStack{
-                CustomHeader()
-                CircleImageView()
+                CustomHeaderView()
+                VStack{
+                    CircleImageView()
+                    Buttons()
+                }
+          
             }
         }
     }
@@ -45,45 +49,13 @@ struct CircleImageView: View{
                     .foregroundColor(Color.gray)
                     .font(.system(size: 25))
             }
-            
-            Buttons()
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-struct CustomHeader: View {
-    var body: some View {
-        Text("")
-            .frame(width: 200, height: 1000)
-            .background(Color.white)
-            .cornerRadius(65, corners: [.topRight])
-            .padding([.top, .trailing],200)
-        
-        
-        Text("")
-            .frame(width: 200, height: 1000)
-            .background(Color.blue)
-            .cornerRadius(65, corners: [.topLeft])
-            .padding([.top, .leading],200)
-        
-        
-        Text("")
-            .frame(width: 400, height: 1040)
-            .background(Color.white)
-            .cornerRadius(65, corners: [.topRight])
-            .padding([.top],350)
-        
-        
-        Text("")
-            .frame(width: 400, height: 160)
-            .background(Color.blue)
-            .cornerRadius(65, corners: [.topLeft, .topRight, .bottomLeft])
-            .padding([.bottom],850)
-        
-    }
-}
+
 
 struct Buttons: View {
     var body: some View{

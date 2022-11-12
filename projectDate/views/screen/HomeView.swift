@@ -39,7 +39,7 @@ struct HomeView: View {
                 .frame(height: 350)
         
                 
-                NavigationLink(destination: MatchBoxPortalView()){
+                NavigationLink(destination: MatchBoxMainView()){
                     Text("00:00")
                 }
                 .frame(width: 300, height: 25)
