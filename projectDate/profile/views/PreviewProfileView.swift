@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct PreviewProfileView: View {
     var body: some View {
         GeometryReader{geo in

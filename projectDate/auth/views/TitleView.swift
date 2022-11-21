@@ -12,7 +12,7 @@ struct TitleView: View {
         VStack{
             Top()
             Spacer()
-                .frame(height: 150)
+                .frame(height: 100)
             
             Butttons()
         }
@@ -29,8 +29,19 @@ struct Top: View{
             
             LogoView()
         }
-        Text("Welcome to thiss app blah blah blah fadsfs fadssf dsf dfs fds fds fds fdfs fdsfs fds fds fds")
-            .font(.system(size: 30))
+        .padding(.bottom, 30)
+        
+        VStack(spacing: 20){
+            Text("Discover your" + "\n" + "New MATCH here")
+                .font(.title.bold())
+                .multilineTextAlignment(.center)
+            
+            Text("Bringing a new way to date combined with the classical way blah blah blah")
+                .font(.title2)
+                .multilineTextAlignment(.center)
+        }
+
+  
         
     }
 }
@@ -43,7 +54,7 @@ struct Butttons: View{
                 Text("Sign In")
                     .bold()
                     .foregroundColor(Color.black)
-                    .frame(width: 130, height: 50)
+                    .frame(width: 130, height: 60)
                     .background(Color.gray)
                     .cornerRadius(10)
             }
@@ -53,7 +64,7 @@ struct Butttons: View{
                 Text("Sign Up")
                     .bold()
                     .foregroundColor(Color.black)
-                    .frame(width: 130, height: 50)
+                    .frame(width: 130, height: 60)
                     .background(Color.gray)
                     .cornerRadius(5)
             }

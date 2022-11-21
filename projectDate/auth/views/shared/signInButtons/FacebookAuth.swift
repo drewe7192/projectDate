@@ -24,12 +24,12 @@ struct FacebookAuth: View {
                     .fontWeight(.medium)
                     .kerning(1.1)
             }
-            .foregroundColor(Color.blue)
+            .foregroundColor(Color.gray)
             .padding()
             .frame(maxWidth: .infinity)
             .background(
             Capsule()
-                .stroke(Color.blue, lineWidth: 3)
+                .stroke(Color.black, lineWidth: 3)
             )
         }
         .frame(width: 350)

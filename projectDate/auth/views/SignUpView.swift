@@ -26,11 +26,11 @@ struct SignUpView: View {
                
                 
                 VStack{
-                    Text("Create Account")
+                    Text("Welcome!")
                         .bold()
                         .font(.system(size: 30))
                     
-                    Text("blahb bblah balh")
+                    Text("please create account")
                         .font(.system(size: 20))
                 }
                 
@@ -41,7 +41,8 @@ struct SignUpView: View {
                     }) {
                         Text("Sign Up")
                             .bold()
-                            .foregroundColor(Color.blue)
+                            .foregroundColor(.gray)
+                            .contrast(1)
                             .frame(width: 360, height: 50)
                             .background(Color.white)
                             .cornerRadius(10)
@@ -52,7 +53,7 @@ struct SignUpView: View {
                     .cornerRadius(20)
                     .textInputAutocapitalization(.never)
                     .overlay(RoundedRectangle(cornerRadius:20)
-                        .stroke(Color.blue, lineWidth: 3))
+                        .stroke(Color.black, lineWidth: 3))
                 }
                 .padding(.bottom,100)
                 

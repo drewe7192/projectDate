@@ -43,8 +43,6 @@ struct MotherView: View {
         case . homePage:
        SignInView()
         }
-
-      
     }
 }
 

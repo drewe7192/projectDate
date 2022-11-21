@@ -30,56 +30,34 @@ struct SignInView: View {
             ZStack{
                 Color.white
                     .ignoresSafeArea()
-
+                
                 VStack(spacing: 10){
-                   
+                    
                     VStack{
                         Text("Hello Again")
                             .bold()
                             .font(.system(size: 30))
                         
-                        Text("blah nblah subtitle blah")
+                        Text("please sign into account")
                             .font(.system(size: 20))
                     }
                     
                     EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
                     
-                        Text("or continue with")
-              
+                    Text("or continue with")
+                    
                     ThirdPartyButtons()
                     
-//                    Button(action: {
-//                        self.isThirdPartyAuth.toggle()
-//                    }) {
-//                        Text("Sign in with 3rd party")
-//                            .bold()
-//                            .foregroundColor(Color.green)
-//                            .frame(width: 360, height: 50)
-//                            .background(Color.white)
-//                            .cornerRadius(10)
-//                    }
-//                    .frame(width: 300, height: 25)
-//                    .padding()
-//                    .background(Color.white)
-//                    .cornerRadius(20)
-//                    .textInputAutocapitalization(.never)
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 20).stroke(Color.green, lineWidth: 3)
-//                    )
-//                    .padding(.bottom,25)
-                    
-                    //footer...
-                  
-                        HStack{
-                            Text("Don't have an account?")
-                                .foregroundColor(Color.black)
-                            NavigationLink(destination: SignUpView()) {
-                                Text("Sign up")
-                            }
+                    HStack{
+                        Text("Don't have an account?")
+                            .foregroundColor(Color.black)
+                        NavigationLink(destination: SignUpView()) {
+                            Text("Sign up")
                         }
-                        .padding(.bottom,80)
+                    }
+                    .padding(.bottom,80)
                     
-                   
+                    
                     
                     if signInProcessing {
                         ProgressView()
@@ -106,14 +84,8 @@ struct SignInView: View {
                 }
                 
             }
-            
-            
-            
         }
-       
     }
-    
-    
 }
 
 struct SignInCredentialFields: View {
@@ -144,11 +116,9 @@ struct SignInCredentialFields: View {
                     )
             }
             .padding(.bottom, 60)
-
+            
         }
-   
     }
-    
 }
 
 struct EmailPasswordLogIn: View{
@@ -161,14 +131,14 @@ struct EmailPasswordLogIn: View{
     
     var body: some View{
         SignInCredentialFields(email: $email, password: $password)
-           
+        
         //logIn Button
         Button(action: {
             signInUser(userEmail: email, userPassword: password)
         }) {
             Text("Log In")
                 .bold()
-                .foregroundColor(Color.blue)
+                .foregroundColor(Color.gray)
                 .frame(width: 360, height: 50)
                 .background(Color.white)
                 .cornerRadius(10)
@@ -179,12 +149,12 @@ struct EmailPasswordLogIn: View{
         .cornerRadius(20)
         .textInputAutocapitalization(.never)
         .overlay(
-            RoundedRectangle(cornerRadius: 20).stroke(Color.blue, lineWidth: 3)
+            RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 3)
         )
         .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
-        .padding(.bottom,130)
+        .padding(.bottom,100)
     }
-
+    
     
     func signInUser(userEmail: String, userPassword: String){
         signInProcessing = true
