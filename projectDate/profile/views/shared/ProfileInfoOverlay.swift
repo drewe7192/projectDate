@@ -10,14 +10,29 @@ import SwiftUI
 struct ProfileInfoOverlay: View {
     var body: some View {
         ZStack{
-            Spacer()
-            VStack{
-
+        
+            VStack(alignment: .leading){
+                    Text("Jane Jane")
+                        .font(.title)
+                        .padding()
+                
+                ScrollView{
+                    VStack{
+                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exert")
+                            .padding(.bottom)
+                        
+                        Text("Interests")
+                            .font(.title2)
+                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exert")
+                    }
+                }
+              
             }
-            .frame(width: 300, height: 200)
+            .frame(width: 350, height: 200)
             .background(.gray)
-            .cornerRadius(20)
+            .cornerRadius(40)
             .opacity(0.5)
+            .padding()
             
         }
     }

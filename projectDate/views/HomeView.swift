@@ -23,13 +23,13 @@ struct HomeView: View {
                 HStack{
                     Image(systemName: "line.3.horizontal.circle")
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 25, height: 25)
                     
                     Spacer()
                     
                     Image(systemName: "magnifyingglass")
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 25, height: 25)
                 }
             
                 
@@ -51,7 +51,7 @@ struct HomeView: View {
                     .padding(.bottom,40)
                    
                 
-                Text("Dates")
+                Text("Daters")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.title.bold())
                     .foregroundColor(Color.black)
