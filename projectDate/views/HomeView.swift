@@ -9,37 +9,70 @@ import SwiftUI
 
 
 struct HomeView: View {
-    
+
     @State var signOutProcessing = false
     @State private var selectedTab: Int = 0
-    @State private var stuff: Array = ["Top", "New",  "Live"]
+    @State private var titles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
     
     var body: some View {
-        ZStack{
-            Color.white
-                .ignoresSafeArea()
-            
-            VStack{
-                HStack{
-                    Image(systemName: "line.3.horizontal.circle")
+        NavigationView{
+            ZStack{
+                Color.white
+                    .ignoresSafeArea()
+                
+                VStack{
+                    header
+                    nextDateView
+                        .padding(.top, 40)
+                    datesView
+                        .padding(.top, 40)
+                }
+                .padding()
+            }
+        }
+    }
+    
+    private var header: some View{
+        HStack{
+            Menu {
+                Button("Test1", action: function1)
+                Button("Test2", action: function2)
+                Button("Test3", action: function3)
+            } label: {
+                Label {
+                    Text("")
+                } icon: {
+                    Image(systemName: "ellipsis.circle")
                         .resizable()
                         .frame(width: 25, height: 25)
-                    
-                    Spacer()
-                    
+                        .foregroundColor(.black)
+                }
+            }
+            
+            Spacer()
+            NavigationLink(destination: SearchView(), label: {
+                Label{
+                    Text("")
+                } icon:{
                     Image(systemName: "magnifyingglass")
                         .resizable()
                         .frame(width: 25, height: 25)
+                        .foregroundColor(.black)
                 }
+            })
+        }
+    }
+    
+    private var nextDateView: some View {
+        VStack{
+            Text("Next Date")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.largeTitle.bold())
+                .foregroundColor(.black)
             
-                
-                
-                Text("Next")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.largeTitle.bold())
-                    .foregroundColor(.black)
-                    .padding(.top,50)
-                
+            
+            NavigationLink(destination: sdHomeView(),
+                           label: {
                 Text("Start Now! \n 0:00")
                     .multilineTextAlignment(.center)
                     .font(.title.bold())
@@ -48,30 +81,41 @@ struct HomeView: View {
                     .foregroundColor(.gray)
                     .cornerRadius(20)
                     .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 2))
-                    .padding(.bottom,40)
-                   
+            })
+            
+        }
+    }
+    
+    private var datesView: some View {
+        VStack{
+            Text("Dates")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.largeTitle.bold())
+                .foregroundColor(.black)
+            
+            VStack{
+                CustomSegmentedControl(selectedTab: $selectedTab, options: titles)
                 
-                Text("Daters")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.title.bold())
-                    .foregroundColor(Color.black)
-                    
-                  
-                VStack{
-                    CustomSegmentedControl(selectedTab: $selectedTab, options: stuff)
-                    
-                    switch(selectedTab) {
-                    case 0: TopTabView()
-                    case 1: NewTabView()
-                    case 2: LiveTabView()
-                    default: TopTabView()
-                    }
+                switch(selectedTab) {
+                case 0: TopTabView()
+                case 1: NewTabView()
+                case 2: LiveTabView()
+                default: TopTabView()
                 }
             }
-            .padding()
-       
         }
-       
+    }
+    
+    func function1(){
+        
+    }
+    
+    func function2(){
+        
+    }
+    
+    func function3(){
+        
     }
 }
 

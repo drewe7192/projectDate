@@ -2,16 +2,14 @@
 //  tabView.swift
 //  projectDate
 //
-//  Created by Drew Sutherland on 11/21/22.
+//  Created by DotZ3R0 on 11/21/22.
 //
 
 import SwiftUI
 
 struct tabView: View {
     var body: some View {
-        NavigationView{
             ScrollView {
-                
                 VStack(spacing: 20){
                     ForEach(0..<10){_ in
                         HStack{
@@ -77,7 +75,6 @@ struct tabView: View {
                         }
                     }
                 }
-            }
         }
     }
 }

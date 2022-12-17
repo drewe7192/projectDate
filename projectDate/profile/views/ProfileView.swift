@@ -2,7 +2,7 @@
 //  UserProfileView.swift
 //  projectDate
 //
-//  Created by Drew Sutherland on 11/21/22.
+//  Created by DotZ3R0 on 11/21/22.
 //
 
 import SwiftUI
@@ -26,18 +26,11 @@ struct ProfileView: View {
             }
             
             VStack{
-                Image(systemName: "message")
+                Image(systemName: "star.circle")
                     .resizable()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 40, height: 40)
                     .foregroundColor(.white)
-                Text("2")
-                
-                Image(systemName: "heart")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.white)
-                
-                Text("2")
+                    .padding(.bottom,10)
                 
                 ZStack{
                     Text("")
@@ -55,7 +48,6 @@ struct ProfileView: View {
                             .font(.system(size: 20))
                     }
                 }
-                .padding()
                 
                 ZStack{
                     Text("")
@@ -106,7 +98,8 @@ struct ProfileView: View {
                 }
             }
             .padding(.trailing, 300)
-            .padding(.bottom,200)
+            .padding(.bottom,300)
+            .opacity(0.8)
             
             Image(systemName: "ellipsis")
                 .resizable()

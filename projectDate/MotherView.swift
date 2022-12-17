@@ -15,7 +15,7 @@ struct MotherView: View {
         switch viewRouter.currentPage {
         case .signInPage :
             TabView {
-                ProfileView()
+                HomeView()
                     .tabItem{
                         Label("Home", systemImage: "house")
                     }.tag(1)

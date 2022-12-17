@@ -2,7 +2,7 @@
 //  CustomSegmentedControl.swift
 //  projectDate
 //
-//  Created by Drew Sutherland on 11/20/22.
+//  Created by DotZ3R0 on 11/20/22.
 //
 
 import SwiftUI
