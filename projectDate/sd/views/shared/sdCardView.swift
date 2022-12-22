@@ -20,12 +20,8 @@ struct sdCardView: View {
                     .stroke(.black, lineWidth: 2))
             
             HStack{
-                AsyncImage(url: URL(string: "https://i.pinimg.com/236x/af/1c/30/af1c30d6d881d9447dec06149f61d2f9--drawings-of-girls-anime-drawings-girl.jpg")) { image in
-                    
-                    image.resizable()
-                } placeholder: {
-                    
-                }
+                Image("animeGirl")
+                    .resizable()
                 .frame(width: 60, height: 60)
                 .background(.gray)
                 .clipShape(Circle())

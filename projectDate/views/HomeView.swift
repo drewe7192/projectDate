@@ -17,6 +17,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView{
             ZStack{
+                // needed to keep color consistent
                 Color.white
                     .ignoresSafeArea()
                 
@@ -34,22 +35,6 @@ struct HomeView: View {
     
     private var header: some View{
         HStack{
-            Menu {
-                Button("Test1", action: function1)
-                Button("Test2", action: function2)
-                Button("Test3", action: function3)
-            } label: {
-                Label {
-                    Text("")
-                } icon: {
-                    Image(systemName: "ellipsis.circle")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .foregroundColor(.black)
-                }
-            }
-            
-            Spacer()
             NavigationLink(destination: SearchView(), label: {
                 Label{
                     Text("")
@@ -60,6 +45,23 @@ struct HomeView: View {
                         .foregroundColor(.black)
                 }
             })
+            
+            Spacer()
+            
+            Menu {
+                Button("Test1", action: function1)
+                Button("Test2", action: function2)
+                Button("Test3", action: function3)
+            } label: {
+                Label {
+                    Text("")
+                } icon: {
+                    Image(systemName: "ellipsis")
+                        .resizable()
+                        .frame(width: 37, height: 7)
+                        .foregroundColor(.black)
+                }
+            }
         }
     }
     

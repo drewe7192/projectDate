@@ -71,6 +71,8 @@
 		77FB2457294604D8008F5469 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2456294604D8008F5469 /* UserModel.swift */; };
 		77FB245E294DA1A2008F5469 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB245D294DA1A2008F5469 /* SearchView.swift */; };
 		77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2460294DA8D2008F5469 /* SearchInput.swift */; };
+		77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB246429539DB5008F5469 /* ImageSlider.swift */; };
+		77FB24672954A1D5008F5469 /* RatingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB24662954A1D5008F5469 /* RatingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +148,8 @@
 		77FB2456294604D8008F5469 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		77FB245D294DA1A2008F5469 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		77FB2460294DA8D2008F5469 /* SearchInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInput.swift; sourceTree = "<group>"; };
+		77FB246429539DB5008F5469 /* ImageSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlider.swift; sourceTree = "<group>"; };
+		77FB24662954A1D5008F5469 /* RatingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -551,6 +555,7 @@
 			isa = PBXGroup;
 			children = (
 				77FB23C1292B6227008F5469 /* ProfileInfoOverlay.swift */,
+				77FB246429539DB5008F5469 /* ImageSlider.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -631,6 +636,7 @@
 			children = (
 				77FB245F294DA8BA008F5469 /* shared */,
 				77FB245D294DA1A2008F5469 /* SearchView.swift */,
+				77FB24662954A1D5008F5469 /* RatingsView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -802,10 +808,12 @@
 				77493D23291E3C6C00C9E283 /* LittleThingsMainView.swift in Sources */,
 				77FB244C294602CA008F5469 /* FacetimeView.swift in Sources */,
 				773B473328D6681C001217DF /* LogoView.swift in Sources */,
+				77FB24672954A1D5008F5469 /* RatingsView.swift in Sources */,
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77B8FD1028BA28CE00AE45A8 /* PageViewModel.swift in Sources */,
 				77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */,
 				771EA01C28A24588007EBC40 /* MessagesManager.swift in Sources */,
+				77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */,
 				77C3D54D289D05020088554F /* TitleRow.swift in Sources */,
 				775E062E28C51B850082C27E /* SignUpView.swift in Sources */,
 				7757FE22291BA991009C40CC /* LikesView.swift in Sources */,
