@@ -12,7 +12,7 @@ struct HomeView: View {
 
     @State var signOutProcessing = false
     @State private var selectedTab: Int = 0
-    @State private var titles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
+    @State private var titles: Array = ["Top-Rated", "Recommenfded",  "Upcoming"]
     
     var body: some View {
         NavigationView{
