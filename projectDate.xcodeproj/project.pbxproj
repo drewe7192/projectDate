@@ -73,6 +73,8 @@
 		77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2460294DA8D2008F5469 /* SearchInput.swift */; };
 		77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB246429539DB5008F5469 /* ImageSlider.swift */; };
 		77FB24672954A1D5008F5469 /* RatingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB24662954A1D5008F5469 /* RatingsView.swift */; };
+		77FB24692958A0C0008F5469 /* MessageHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB24682958A0C0008F5469 /* MessageHomeView.swift */; };
+		77FB246B2958A0F5008F5469 /* MessageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB246A2958A0F5008F5469 /* MessageCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +152,8 @@
 		77FB2460294DA8D2008F5469 /* SearchInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInput.swift; sourceTree = "<group>"; };
 		77FB246429539DB5008F5469 /* ImageSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlider.swift; sourceTree = "<group>"; };
 		77FB24662954A1D5008F5469 /* RatingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsView.swift; sourceTree = "<group>"; };
+		77FB24682958A0C0008F5469 /* MessageHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHomeView.swift; sourceTree = "<group>"; };
+		77FB246A2958A0F5008F5469 /* MessageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -347,6 +351,7 @@
 			children = (
 				77ABBDFF2918297000A7669E /* shared */,
 				77DD938D289FC9B30039CF6D /* MessageView.swift */,
+				77FB24682958A0C0008F5469 /* MessageHomeView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 				77C3D55E289FB5410088554F /* MessageBubble.swift */,
 				77C3D54C289D05020088554F /* TitleRow.swift */,
 				771EA01028A04810007EBC40 /* MessageField.swift */,
+				77FB246A2958A0F5008F5469 /* MessageCardView.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -809,8 +815,10 @@
 				77FB244C294602CA008F5469 /* FacetimeView.swift in Sources */,
 				773B473328D6681C001217DF /* LogoView.swift in Sources */,
 				77FB24672954A1D5008F5469 /* RatingsView.swift in Sources */,
+				77FB24692958A0C0008F5469 /* MessageHomeView.swift in Sources */,
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77B8FD1028BA28CE00AE45A8 /* PageViewModel.swift in Sources */,
+				77FB246B2958A0F5008F5469 /* MessageCardView.swift in Sources */,
 				77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */,
 				771EA01C28A24588007EBC40 /* MessagesManager.swift in Sources */,
 				77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */,

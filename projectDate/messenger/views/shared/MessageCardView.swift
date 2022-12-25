@@ -1,18 +1,18 @@
 //
-//  sdCardView.swift
+//  MessageCardView.swift
 //  projectDate
 //
-//  Created by DotZ3R0 on 12/2/22.
+//  Created by DotZ3R0 on 12/25/22.
 //
 
 import SwiftUI
 
-struct sdCardView: View {
+struct MessageCardView: View {
     var body: some View {
         ZStack{
             Text("")
                 .font(.title.bold())
-                .frame(width: 350, height: 80)
+                .frame(width: 450, height: 80)
                 .background(.white)
                 .foregroundColor(.gray)
                 .cornerRadius(20)
@@ -25,18 +25,22 @@ struct sdCardView: View {
                 .frame(width: 60, height: 60)
                 .background(.gray)
                 .clipShape(Circle())
+                .padding(.trailing,30)
                 
-                VStack{
-                    Text("Emily Barron")
-                    Text("Tampa,FL")
+              
+                
+                VStack(alignment: .leading){
+                    Text("Bob Barron")
+                    Text("Yo that b was tripping bro")
+                        .foregroundColor(.gray)
                 }
             }
         }
     }
 }
 
-struct sdCardView_Previews: PreviewProvider {
+struct MessageCardView_Previews: PreviewProvider {
     static var previews: some View {
-        sdCardView()
+        MessageCardView()
     }
 }

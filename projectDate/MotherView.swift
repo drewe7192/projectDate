@@ -29,11 +29,11 @@ struct MotherView: View {
                         Label("Games", systemImage: "flag.2.crossed")
                     }
                     .tag(3)
-                MessageView()
+                MessageHomeView()
                     .tabItem{
                         Label("Messenger", systemImage: "message")
                     }.tag(4)
-                ProfileView()
+                UserProfileView()
                     .tabItem{
                         Label("Profile", systemImage: "person")
                     }.tag(5)

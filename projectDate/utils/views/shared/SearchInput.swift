@@ -19,7 +19,7 @@ struct SearchInput: View {
             
             TextField("", text: $name)
         }
-        .frame(width: 300)
+        .frame(width: 400, height: 40)
         .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
         .cornerRadius(20)
         .overlay(RoundedRectangle(cornerRadius: 20).stroke(.black, lineWidth: 2))

@@ -11,8 +11,9 @@ struct EditProfileView: View {
     @State private var userName: String = ""
     
     var body: some View {
-        ImageGridView()
             VStack{
+                ImageGridView()
+                
                 Form {
                     Section{
                         Text("My Photos(image grid section)")

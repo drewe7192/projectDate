@@ -61,7 +61,6 @@ struct FacetimeView: View {
                     let config = HMSConfig(authToken: token)
                     hmsSDK.join(config: config, delegate: self.viewModel)
                 }
-                
             }
         }
         
@@ -71,7 +70,6 @@ struct FacetimeView: View {
         HStack(spacing: 20) {
             Spacer()
             Button{
-                
             } label: {
                 Image(systemName: videoIsShowing ? "video.fill" : "video.slash.fill")
                     .frame(width: 60, height: 60, alignment: .center)
@@ -82,7 +80,6 @@ struct FacetimeView: View {
             }
             
             Button{
-                
             } label: {
                 Image(systemName: "phone.down.fill")
                     .frame(width: 60, height: 60, alignment: .center)
@@ -93,7 +90,6 @@ struct FacetimeView: View {
             }
             
             Button{
-                
             } label: {
                 Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
                     .frame(width: 60, height: 60, alignment: .center)
@@ -109,7 +105,6 @@ struct FacetimeView: View {
         
     }
 }
-
 
 extension FacetimeView {
     class ViewModel: ObservableObject, HMSUpdateListener{
