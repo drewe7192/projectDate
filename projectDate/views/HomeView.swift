@@ -9,10 +9,11 @@ import SwiftUI
 
 
 struct HomeView: View {
-
+    @StateObject private var viewModel = HomeViewModel()
+    
     @State var signOutProcessing = false
     @State private var selectedTab: Int = 0
-    @State private var titles: Array = ["Top-Rated", "Recommenfded",  "Upcoming"]
+    @State private var titles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
     
     var body: some View {
         NavigationView{
@@ -25,7 +26,7 @@ struct HomeView: View {
                     header
                     nextDateView
                         .padding(.top, 40)
-                    datesView
+                    exploreView
                         .padding(.top, 40)
                 }
                 .padding()
@@ -35,17 +36,6 @@ struct HomeView: View {
     
     private var header: some View{
         HStack{
-            NavigationLink(destination: SearchView(), label: {
-                Label{
-                    Text("")
-                } icon:{
-                    Image(systemName: "magnifyingglass")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .foregroundColor(.black)
-                }
-            })
-            
             Spacer()
             
             Menu {
@@ -88,9 +78,9 @@ struct HomeView: View {
         }
     }
     
-    private var datesView: some View {
+    private var exploreView: some View {
         VStack{
-            Text("Dates")
+            Text("Explore")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.largeTitle.bold())
                 .foregroundColor(.black)
@@ -99,10 +89,10 @@ struct HomeView: View {
                 CustomSegmentedControl(selectedTab: $selectedTab, options: titles)
                 
                 switch(selectedTab) {
-                case 0: TopTabView()
-                case 1: NewTabView()
-                case 2: LiveTabView()
-                default: TopTabView()
+                case 0: TopRatedTabView()
+                case 1: RecommendedTabView()
+                case 2: UpcomingTabView()
+                default: TopRatedTabView()
                 }
             }
         }

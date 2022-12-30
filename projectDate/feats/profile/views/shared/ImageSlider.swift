@@ -16,9 +16,10 @@ struct ImageSlider: View {
             ForEach(images, id: \.self) {item in
                 Image(item)
                     .resizable()
-                    .scaledToFill()
             }
+            .ignoresSafeArea()
         }
+        .ignoresSafeArea()
         .tabViewStyle(PageTabViewStyle())
     }
 }

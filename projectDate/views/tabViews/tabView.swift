@@ -8,23 +8,26 @@
 import SwiftUI
 
 struct tabView: View {
+    @StateObject  var viewModel = HomeViewModel()
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 20){
-                ForEach(0..<10){_ in
+                ForEach(viewModel.people){ person in
                     HStack{
                         VStack(alignment: .leading, spacing: 5){
-
+                            
                             NavigationLink(destination: ProfileView()) {
                                 Image("animeGirl")
                                     .resizable()
+                                
                             }
                             .frame(width: 150, height: 200)
                             .background(Color.black)
                             .foregroundColor(.white)
                             .cornerRadius(30)
                             
-                            Text("Hane hane")
+                            Text(person.fullName)
                                 .bold()
                             
                             Text("West Palm Beach, FL")
@@ -69,6 +72,6 @@ struct tabView: View {
 
 struct tabView_Previews: PreviewProvider {
     static var previews: some View {
-        tabView()
+        tabView(viewModel: HomeViewModel(forPreview: true))
     }
 }
