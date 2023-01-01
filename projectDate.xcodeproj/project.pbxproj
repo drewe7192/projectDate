@@ -40,6 +40,9 @@
 		776D4706295DD64B00754DE5 /* TabCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D4705295DD64B00754DE5 /* TabCard.swift */; };
 		776D4709295F359100754DE5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D4708295F359100754DE5 /* User.swift */; };
 		776D470B295F3B1300754DE5 /* sdTimeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D470A295F3B1300754DE5 /* sdTimeModel.swift */; };
+		776D470D2961A10000754DE5 /* CountdownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D470C2961A10000754DE5 /* CountdownTimerView.swift */; };
+		776D470F2961FD9000754DE5 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D470E2961FD9000754DE5 /* ProfileViewModel.swift */; };
+		776D47112962010000754DE5 /* ProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47102962010000754DE5 /* ProfileInfoModel.swift */; };
 		776DFB5428B27E0100F9AC63 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 776DFB5328B27E0100F9AC63 /* GoogleService-Info.plist */; };
 		776DFB5B28B286B300F9AC63 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 776DFB5A28B286B300F9AC63 /* FirebaseAuth */; };
 		77ABBE1029182DC900A7669E /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ABBE0F29182DC900A7669E /* TitleView.swift */; };
@@ -83,7 +86,7 @@
 		77FB246F2958F3E0008F5469 /* sdInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB246E2958F3E0008F5469 /* sdInfoView.swift */; };
 		77FB2474295DC11C008F5469 /* PageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2473295DC11C008F5469 /* PageModel.swift */; };
 		77FB2478295DC322008F5469 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2477295DC322008F5469 /* HomeViewModel.swift */; };
-		77FB247B295DC3AB008F5469 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB247A295DC3AB008F5469 /* Profile.swift */; };
+		77FB247B295DC3AB008F5469 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB247A295DC3AB008F5469 /* ProfileModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +130,9 @@
 		776D4705295DD64B00754DE5 /* TabCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCard.swift; sourceTree = "<group>"; };
 		776D4708295F359100754DE5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		776D470A295F3B1300754DE5 /* sdTimeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdTimeModel.swift; sourceTree = "<group>"; };
+		776D470C2961A10000754DE5 /* CountdownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownTimerView.swift; sourceTree = "<group>"; };
+		776D470E2961FD9000754DE5 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = projectDate/feats/utils/views/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
+		776D47102962010000754DE5 /* ProfileInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoModel.swift; sourceTree = "<group>"; };
 		776DFB5328B27E0100F9AC63 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		77ABBE0F29182DC900A7669E /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		77B8FD0D28BA244000AE45A8 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
@@ -171,7 +177,7 @@
 		77FB246E2958F3E0008F5469 /* sdInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdInfoView.swift; sourceTree = "<group>"; };
 		77FB2473295DC11C008F5469 /* PageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModel.swift; sourceTree = "<group>"; };
 		77FB2477295DC322008F5469 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		77FB247A295DC3AB008F5469 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		77FB247A295DC3AB008F5469 /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,6 +531,7 @@
 		77ABBE0C29182CDC00A7669E /* stores */ = {
 			isa = PBXGroup;
 			children = (
+				776D470E2961FD9000754DE5 /* ProfileViewModel.swift */,
 			);
 			path = stores;
 			sourceTree = "<group>";
@@ -696,6 +703,7 @@
 				77FB245F294DA8BA008F5469 /* shared */,
 				77FB245D294DA1A2008F5469 /* SearchView.swift */,
 				77FB24662954A1D5008F5469 /* RatingsView.swift */,
+				776D470C2961A10000754DE5 /* CountdownTimerView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -727,7 +735,8 @@
 		77FB2479295DC372008F5469 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				77FB247A295DC3AB008F5469 /* Profile.swift */,
+				77FB247A295DC3AB008F5469 /* ProfileModel.swift */,
+				776D47102962010000754DE5 /* ProfileInfoModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -909,7 +918,7 @@
 				7731738228CDBE4200B8885B /* FacebookAuth.swift in Sources */,
 				7731737F28CCE50100B8885B /* GoogleAuth.swift in Sources */,
 				77493D17291D0C0D00C9E283 /* GamesView.swift in Sources */,
-				77FB247B295DC3AB008F5469 /* Profile.swift in Sources */,
+				77FB247B295DC3AB008F5469 /* ProfileModel.swift in Sources */,
 				77619ED0295DC8AE00B1BF1F /* MockService.swift in Sources */,
 				77493D21291E3C4C00C9E283 /* TopRatedTabView.swift in Sources */,
 				776D470B295F3B1300754DE5 /* sdTimeModel.swift in Sources */,
@@ -931,11 +940,14 @@
 				77C3D55B289FB4E30088554F /* Message.swift in Sources */,
 				77FB246F2958F3E0008F5469 /* sdInfoView.swift in Sources */,
 				77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */,
+				776D47112962010000754DE5 /* ProfileInfoModel.swift in Sources */,
 				77FB23B9292B5C0C008F5469 /* RecommendedTabView.swift in Sources */,
 				77493D15291D007E00C9E283 /* CustomHeaderView.swift in Sources */,
+				776D470D2961A10000754DE5 /* CountdownTimerView.swift in Sources */,
 				77FB2457294604D8008F5469 /* UserModel.swift in Sources */,
 				77FB24542946046B008F5469 /* VideoView.swift in Sources */,
 				77C3D55F289FB5410088554F /* MessageBubble.swift in Sources */,
+				776D470F2961FD9000754DE5 /* ProfileViewModel.swift in Sources */,
 				77C3D540289A5E650088554F /* HomeView.swift in Sources */,
 				77C3D536289912B10088554F /* UserProfileView.swift in Sources */,
 				77C3D500289910CE0088554F /* projectDateApp.swift in Sources */,

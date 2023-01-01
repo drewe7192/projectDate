@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TabCard: View {
-    let item: Profile
+    let item: ProfileModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5){
@@ -32,6 +32,6 @@ struct TabCard: View {
 
 struct TabCard_Previews: PreviewProvider {
     static var previews: some View {
-        TabCard(item: MockService.sampleData.first!)
+        TabCard(item: MockService.profilesSampleData.first!)
     }
 }

@@ -11,11 +11,11 @@ struct sdTimeModel: Identifiable {
     var id = UUID().uuidString
     var firstName: String
     var lastName: String
-    var time: Date
+    var time: String
     var userRoleType: String
     
     var fullName: String {
-        lastName + ", " + firstName
+        lastName + " " + firstName
     }
     
 }

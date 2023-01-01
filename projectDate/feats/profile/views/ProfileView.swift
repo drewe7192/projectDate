@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @StateObject var viewModel = ProfileViewModel()
     
     @State private var showingSheet: Bool = false
     
     var body: some View {
         ZStack{
-            ImageSlider()
+            ImageSlider(person: viewModel.person)
             
-                
-                ProfileInfoOverlay()
-                    .padding(.top,600)
+            ProfileInfoOverlay(person: viewModel.person)
+                .padding(.top,600)
             
             VStack{
                 HStack{
@@ -53,12 +53,11 @@ struct ProfileView: View {
             NavigationLink(destination: RatingsView()) {
                 Image(systemName: "star.circle")
                     .resizable()
-              
+                
             }
             .frame(width: 40, height: 40)
             .foregroundColor(.white)
             .padding(.bottom,10)
-           
             
             ZStack{
                 Text("")
@@ -66,7 +65,6 @@ struct ProfileView: View {
                     .background(.white)
                     .cornerRadius(10)
                     .opacity(0.6)
-                
                 
                 VStack{
                     Text("Height")

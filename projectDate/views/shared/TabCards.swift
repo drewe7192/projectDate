@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TabCards: View {
     @StateObject var viewModel = HomeViewModel()
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 20){
@@ -22,8 +23,6 @@ struct TabCards: View {
             }
         }
     }
-    
-
     
     private var tabCardBig: some View {
         VStack{

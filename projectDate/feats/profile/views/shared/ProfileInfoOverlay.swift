@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ProfileInfoOverlay: View {
+    let person: ProfileModel
+    
     var body: some View {
         ZStack{
         
             VStack(alignment: .leading){
-                    Text("Jane Jane")
+                Text(person.fullName)
                         .font(.title)
                         .padding()
                 
@@ -44,6 +46,6 @@ struct ProfileInfoOverlay: View {
 
 struct ProfileInfoOverlay_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileInfoOverlay()
+        ProfileInfoOverlay(person: MockService.profileSampleData)
     }
 }

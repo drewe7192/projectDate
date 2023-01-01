@@ -13,6 +13,7 @@ struct User: Identifiable {
     var lastName: String
     var location: String
     var sdTimes: [sdTimeModel]
+    var Profiles: [ProfileModel]
     
     
     var fullName: String {

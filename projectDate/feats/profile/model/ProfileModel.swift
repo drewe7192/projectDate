@@ -7,11 +7,14 @@
 
 import Foundation
 
-struct Profile: Identifiable {
+struct ProfileModel: Identifiable {
     var id = UUID().uuidString
     var firstName: String
     var lastName: String
     var location: String
+    var profileType: String
+    var images: [String]
+    var info: ProfileInfoModel
     
     var fullName: String {
         lastName + ", " + firstName

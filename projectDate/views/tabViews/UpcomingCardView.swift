@@ -11,7 +11,7 @@ struct UpcomingCardView: View {
     var sdTime: sdTimeModel
     
     var body: some View {
-        if sdTime.userRoleType == "host" {
+        if sdTime.userRoleType == "guest" {
             hostDisplay
         }
         else{
@@ -33,10 +33,9 @@ struct UpcomingCardView: View {
                 
                 HStack{
                     VStack(alignment: .leading){
-                        Text("Invited by: John Blonde")
+                        Text("Invited by" + ": " + sdTime.fullName)
                             .font(.system(size: 15))
-                        Text("August 4th, 2023")
-                        Text("3:30pm")
+                        Text(sdTime.time)
                     }
                 }
             
@@ -68,9 +67,8 @@ struct UpcomingCardView: View {
                    
                     
                     VStack(alignment: .leading){
-                            Text("Emily Barron")
-                        Text("August 4th, 2023")
-                        Text("3:30pm")
+                        Text(sdTime.fullName)
+                        Text(sdTime.time)
                     }
                 }
             }

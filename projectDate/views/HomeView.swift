@@ -62,19 +62,7 @@ struct HomeView: View {
                 .font(.largeTitle.bold())
                 .foregroundColor(.black)
             
-            
-            NavigationLink(destination: sdHomeView(),
-                           label: {
-                Text("Start Now! \n 0:00")
-                    .multilineTextAlignment(.center)
-                    .font(.title.bold())
-                    .frame(width: 350, height: 80)
-                    .background(.white)
-                    .foregroundColor(.gray)
-                    .cornerRadius(20)
-                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 2))
-            })
-            
+            CountdownTimerView()
         }
     }
     
