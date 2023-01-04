@@ -11,7 +11,5 @@ struct ProfileInfoModel: Identifiable {
     var id = UUID().uuidString
     var aboutMe: String
     var interests: String
-//    var height: String
-//    var isSmoke: Bool
-//    var isKids: Bool
+    var sideBarInfo: sideBarInfoModel
 }

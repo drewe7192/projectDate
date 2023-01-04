@@ -7,14 +7,13 @@
 
 import Foundation
 
-struct User: Identifiable {
+struct UserModel: Identifiable {
     var id = UUID().uuidString
     var firstName: String
     var lastName: String
     var location: String
-    var sdTimes: [sdTimeModel]
+    var sds: [sdModel]
     var Profiles: [ProfileModel]
-    
     
     var fullName: String {
         lastName + ", " + firstName

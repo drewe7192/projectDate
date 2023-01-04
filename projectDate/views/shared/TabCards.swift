@@ -26,7 +26,7 @@ struct TabCards: View {
     
     private var tabCardBig: some View {
         VStack{
-            NavigationLink(destination: ProfileView()) {
+            NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)) {
                 Image("animeGirl")
                     .resizable()
             }

@@ -17,6 +17,7 @@ struct FacetimeView: View {
     @State var friendTrack = HMSVideoTrack()
     
     @StateObject var viewModel: ViewModel
+    @StateObject var sdvm: sdViewModel
     
     let tokenProvider = TokenProvider()
     
@@ -53,7 +54,7 @@ struct FacetimeView: View {
     }
     
     func joinRoom() {
-        tokenProvider.getToken(for: "638d9e07aee54625da64dfe2", role: "host") { token, error in
+        tokenProvider.getToken(for: sdvm.sd.roomNumber, role: sdvm.sd.userRoleType) { token, error in
             if let error = error {
                 
             }else {

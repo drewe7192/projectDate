@@ -14,14 +14,14 @@ struct LikesView: View {
                     CustomHeaderView()
                 VStack{
                     HStack{
-                        NavigationLink(destination: ProfileView()) {
+                        NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)) {
                             Text("dater profile")
                         }.frame(width: 150, height: 180)
                             .background(Color.black)
                             .foregroundColor(.white)
                             .cornerRadius(30)
                         
-                        NavigationLink(destination: ProfileView()){
+                        NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)){
                             Text("dater profile")
                         }.frame(width: 150, height: 180)
                             .background(Color.gray)
@@ -31,14 +31,14 @@ struct LikesView: View {
                     }
                     
                     HStack{
-                        NavigationLink(destination: ProfileView()) {
+                        NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)) {
                             Text("dater profile")
                         }.frame(width: 150, height: 180)
                             .background(Color.black)
                             .foregroundColor(.white)
                             .cornerRadius(30)
                         
-                        NavigationLink(destination: ProfileView()){
+                        NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)){
                             Text("dater profile")
                         }.frame(width: 150, height: 180)
                             .background(Color.gray)
@@ -48,14 +48,14 @@ struct LikesView: View {
                     }
                     
                     HStack{
-                        NavigationLink(destination: ProfileView()) {
+                        NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)) {
                             Text("dater profile")
                         }.frame(width: 150, height: 180)
                             .background(Color.black)
                             .foregroundColor(.white)
                             .cornerRadius(30)
                         
-                        NavigationLink(destination: ProfileView()){
+                        NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)){
                             Text("dater profile")
                         }.frame(width: 150, height: 180)
                             .background(Color.gray)

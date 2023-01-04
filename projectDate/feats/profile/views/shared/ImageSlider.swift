@@ -17,6 +17,7 @@ struct ImageSlider: View {
                         .resizable()
                 }
                 .ignoresSafeArea()
+       
         }
         .ignoresSafeArea()
         .tabViewStyle(PageTabViewStyle())

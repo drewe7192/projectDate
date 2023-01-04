@@ -62,7 +62,11 @@ struct HomeView: View {
                 .font(.largeTitle.bold())
                 .foregroundColor(.black)
             
-            CountdownTimerView()
+            NavigationLink(destination: sdHomeView(displayType: MockService.sdSampleData.userRoleType), label: {
+                
+                CountdownTimerView(timeRemaining: 2700)
+            })
+          
         }
     }
     

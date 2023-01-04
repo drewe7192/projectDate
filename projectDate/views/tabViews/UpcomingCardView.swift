@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct UpcomingCardView: View {
-    var sdTime: sdTimeModel
+    var sd: sdModel
     
     var body: some View {
-        if sdTime.userRoleType == "guest" {
+        if sd.userRoleType == "guest" {
             hostDisplay
         }
         else{
@@ -33,9 +33,9 @@ struct UpcomingCardView: View {
                 
                 HStack{
                     VStack(alignment: .leading){
-                        Text("Invited by" + ": " + sdTime.fullName)
+                        Text("Invited by" + ": " + sd.fullName)
                             .font(.system(size: 15))
-                        Text(sdTime.time)
+                        Text(sd.time)
                     }
                 }
             
@@ -67,8 +67,8 @@ struct UpcomingCardView: View {
                    
                     
                     VStack(alignment: .leading){
-                        Text(sdTime.fullName)
-                        Text(sdTime.time)
+                        Text(sd.fullName)
+                        Text(sd.time)
                     }
                 }
             }
@@ -78,6 +78,6 @@ struct UpcomingCardView: View {
 
 struct UpcomingCardView_Previews: PreviewProvider {
     static var previews: some View {
-        UpcomingCardView(sdTime: MockService.userSampleData.sdTimes.first!)
+        UpcomingCardView(sd: MockService.userSampleData.sds.first!)
     }
 }

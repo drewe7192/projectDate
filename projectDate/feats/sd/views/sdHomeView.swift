@@ -8,27 +8,17 @@
 import SwiftUI
 
 struct sdHomeView: View {
+    @StateObject var viewModel = sdViewModel()
+    
+    let displayType: String
+    
     var body: some View {
-            VStack{
-                
-                ForEach(0..<5){ index in
-                    sdCardView()
-                }
-                
-                info
-                
-                //button
-                NavigationLink(destination: FacetimeView(viewModel: .init()), label: {
-                    Text("Lets Date!")
-                        .font(.title.bold())
-                        .frame(width: 350, height: 50)
-                        .background(.white)
-                        .foregroundColor(.gray)
-                        .cornerRadius(20)
-                        .overlay(RoundedRectangle(cornerRadius: 20)
-                            .stroke(.black, lineWidth: 2))
-                })
-            }
+        if(displayType == "host"){
+            hostDisplay
+        }
+        else if(displayType == "guest") {
+            guestDisplay
+        }
     }
     
     private var info: some View {
@@ -47,10 +37,45 @@ struct sdHomeView: View {
                 .font(.system(size: 40))
         }
     }
+    
+    private var hostDisplay: some View {
+        
+        VStack{
+            ScrollView{
+                ForEach(viewModel.sd.profiles){ participant in
+                    NavigationLink(destination: ProfileView(participant: participant), label: {
+                        sdCardView(participant: participant)
+                    })
+                  
+                }
+            }
+            
+            info
+            
+            //button
+            NavigationLink(destination: FacetimeView(viewModel: .init(), sdvm: viewModel), label: {
+                CountdownTimerView(timeRemaining: 1000)
+            })
+         
+        }
+    }
+    
+    private var guestDisplay: some View {
+        VStack{
+            ForEach(viewModel.sd.profiles){ profile in
+                Text("fdsfsd")
+            }
+            
+            info
+            
+            //button
+            CountdownTimerView(timeRemaining: 800)
+        }
+    }
 }
 
 struct sdHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        sdHomeView()
+        sdHomeView(displayType: "host")
     }
 }

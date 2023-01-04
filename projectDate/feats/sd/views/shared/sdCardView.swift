@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct sdCardView: View {
+    let participant: ProfileModel
+    
     var body: some View {
         ZStack{
             Text("")
@@ -20,15 +22,15 @@ struct sdCardView: View {
                     .stroke(.black, lineWidth: 2))
             
             HStack{
-                Image("animeGirl")
+                Image(participant.images.first!)
                     .resizable()
                 .frame(width: 60, height: 60)
                 .background(.gray)
                 .clipShape(Circle())
                 
                 VStack{
-                    Text("Emily Barron")
-                    Text("Tampa,FL")
+                    Text(participant.fullName)
+                    Text(participant.location)
                 }
             }
         }
@@ -37,6 +39,6 @@ struct sdCardView: View {
 
 struct sdCardView_Previews: PreviewProvider {
     static var previews: some View {
-        sdCardView()
+        sdCardView(participant: MockService.profileSampleData)
     }
 }

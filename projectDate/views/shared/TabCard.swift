@@ -13,7 +13,7 @@ struct TabCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5){
             
-            NavigationLink(destination: ProfileView()) {
+            NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)) {
                 Image("animeGirl")
                     .resizable()
             }

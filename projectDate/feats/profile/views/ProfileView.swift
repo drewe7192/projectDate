@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ProfileView: View {
+    let participant: ProfileModel
     @StateObject var viewModel = ProfileViewModel()
     
-    @State private var showingSheet: Bool = false
     
     var body: some View {
         ZStack{
@@ -18,7 +18,7 @@ struct ProfileView: View {
             
             ProfileInfoOverlay(person: viewModel.person)
                 .padding(.top,600)
-            
+
             VStack{
                 HStack{
                     sideBar
@@ -69,7 +69,7 @@ struct ProfileView: View {
                 VStack{
                     Text("Height")
                         .font(.system(size: 15))
-                    Text("5.5")
+                    Text(viewModel.person.info.sideBarInfo.height)
                         .bold()
                         .font(.system(size: 20))
                 }
@@ -86,7 +86,7 @@ struct ProfileView: View {
                     Text("From")
                         .font(.system(size: 15))
                     
-                    Text("Tampa")
+                    Text(viewModel.person.location)
                         .bold()
                         .font(.system(size: 15))
                 }
@@ -103,9 +103,16 @@ struct ProfileView: View {
                     Text("Smoke")
                         .font(.system(size: 15))
                     
-                    Text("no")
-                        .bold()
-                        .font(.system(size: 20))
+                    if(viewModel.person.info.sideBarInfo.isSmoke) {
+                        Text("yes")
+                            .bold()
+                            .font(.system(size: 20))
+                    } else {
+                        Text("no")
+                            .bold()
+                            .font(.system(size: 20))
+                    }
+                 
                 }
             }
             
@@ -118,8 +125,14 @@ struct ProfileView: View {
                 
                 VStack{
                     Text("Kids")
-                    Text("+1")
-                        .bold()
+                    if(viewModel.person.info.sideBarInfo.isKids){
+                        Text("+1")
+                            .bold()
+                    }else{
+                        Text("none")
+                            .bold()
+                    }
+               
                 }
             }
         }
@@ -140,6 +153,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView()
+        ProfileView(participant: MockService.profileSampleData)
     }
 }

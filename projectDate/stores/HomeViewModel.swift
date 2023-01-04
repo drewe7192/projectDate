@@ -9,7 +9,7 @@ import Foundation
 
 class HomeViewModel: ObservableObject {
     @Published var people: [ProfileModel] = MockService.profilesSampleData
-    @Published var user: User = MockService.userSampleData
+    @Published var user: UserModel = MockService.userSampleData
     
     init(forPreview: Bool = false) {
         if forPreview {

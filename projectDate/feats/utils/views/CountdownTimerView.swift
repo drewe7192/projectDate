@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct CountdownTimerView: View {
-    @State var timeRemaining = 27000
+    @StateObject var viewModel = sdViewModel()
+    
+    @State var timeRemaining = 0
     @State var isStartNow = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
  
-    
     var body: some View {
-        NavigationLink(destination: sdHomeView(),
-                       label: {
+       sdHomeViewButton
+    }
+    
+    var sdHomeViewButton: some View {
             Text(
                 //just the display
                 (isStartNow ? "Start Now!": "") +
@@ -37,8 +40,9 @@ struct CountdownTimerView: View {
             .cornerRadius(20)
             .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 2)
             )
-        })
+    
     }
+    
     
     func secondsToHoursMinutesSeconds(_ seconds: Int) -> (Int, Int, Int) {
         return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
@@ -60,6 +64,6 @@ struct bar: View {
 
 struct CountdownTimerView_Previews: PreviewProvider {
     static var previews: some View {
-        CountdownTimerView()
+        CountdownTimerView(timeRemaining: 27000)
     }
 }

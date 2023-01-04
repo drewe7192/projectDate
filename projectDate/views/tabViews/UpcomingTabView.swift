@@ -13,8 +13,8 @@ struct UpcomingTabView: View {
     var body: some View {
         ScrollView{
             VStack{
-                ForEach(viewModel.user.sdTimes) { time in
-                    UpcomingCardView(sdTime: time)
+                ForEach(viewModel.user.sds) { time in
+                    UpcomingCardView(sd: time)
                 }
             }
         }
