@@ -9,6 +9,7 @@ import Foundation
 
 enum MockService {
     
+    static var homeTabTitles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
     static var profileSampleData: ProfileModel {
         ProfileModel(firstName: "vooon",
                      lastName: "Daooy", location: "Tampa, Fl",profileType: "recommended", images: ["animeGirl","animeGirl2","sasuke"],
@@ -22,7 +23,7 @@ enum MockService {
     static var sdSampleData: sdModel {
         sdModel(firstName: "Drew",
                 lastName: "Drew",
-                time: "August 12, 2023 5:30pm",
+                time: 4743843,
                 userRoleType: "host",
                 roomNumber: "638d9e07aee54625da64dfe2",
                 profiles: profilesSampleData)
@@ -123,7 +124,7 @@ enum MockService {
                 sdModel(
                     firstName: "Drew",
                     lastName: "Drew",
-                    time: "August 12, 2023 5:30pm",
+                    time: 270000,
                     userRoleType: "host",
                     roomNumber: "638d9e07aee54625da64dfe2",
                     profiles: profilesSampleData
@@ -131,7 +132,7 @@ enum MockService {
                 sdModel(
                     firstName: "D",
                     lastName: "ew",
-                    time: "August 12, 2023 3:30pm",
+                    time: 384585,
                     userRoleType: "guest",
                     roomNumber: "638d9e07aee54625da64dfe2",
                     profiles: profilesSampleData
@@ -139,7 +140,7 @@ enum MockService {
                 sdModel(
                     firstName: "w",
                     lastName: "w",
-                    time: "August 12, 2023 4:30pm",
+                    time: 5059448,
                     userRoleType: "host",
                     roomNumber: "638d9e07aee54625da64dfe2",
                     profiles: profilesSampleData

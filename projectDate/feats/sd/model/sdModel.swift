@@ -11,7 +11,7 @@ struct sdModel: Identifiable {
     var id = UUID().uuidString
     var firstName: String
     var lastName: String
-    var time: String
+    var time: Int
     var userRoleType: String
     var roomNumber: String
     var profiles: [ProfileModel]

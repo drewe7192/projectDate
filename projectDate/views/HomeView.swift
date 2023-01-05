@@ -13,7 +13,7 @@ struct HomeView: View {
     
     @State var signOutProcessing = false
     @State private var selectedTab: Int = 0
-    @State private var titles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
+    @State var menuSelection: Int? = 0
     
     var body: some View {
         NavigationView{
@@ -36,13 +36,25 @@ struct HomeView: View {
     
     private var header: some View{
         HStack{
-            Spacer()
+            //Gotta keep the naviagationLinks here in order to route in a menu
+            NavigationLink(destination: SettingsView(), tag: 1, selection: $menuSelection) {}
+            NavigationLink(destination: LikesView(), tag: 2, selection: $menuSelection) {}
+            NavigationLink(destination: LikesView(), tag: 3, selection: $menuSelection) {}
             
+            Spacer()
+         
             Menu {
-                Button("Test1", action: function1)
-                Button("Test2", action: function2)
-                Button("Test3", action: function3)
+                Button("Settings") {
+                    self.menuSelection = 1
+                }
+                Button("Test1") {
+                    self.menuSelection = 2
+                }
+                Button("Test2") {
+                    self.menuSelection = 3
+                }
             } label: {
+                //this is the 3 dots
                 Label {
                     Text("")
                 } icon: {
@@ -62,11 +74,9 @@ struct HomeView: View {
                 .font(.largeTitle.bold())
                 .foregroundColor(.black)
             
-            NavigationLink(destination: sdHomeView(displayType: MockService.sdSampleData.userRoleType), label: {
-                
-                CountdownTimerView(timeRemaining: 2700)
+            NavigationLink(destination: sdHomeView(displayType: viewModel.user.sds.first!.userRoleType), label: {
+                CountdownTimerView(timeRemaining: viewModel.user.sds.first!.time)
             })
-          
         }
     }
     
@@ -78,7 +88,7 @@ struct HomeView: View {
                 .foregroundColor(.black)
             
             VStack{
-                CustomSegmentedControl(selectedTab: $selectedTab, options: titles)
+                CustomSegmentedControl(selectedTab: $selectedTab, options: viewModel.tabTitles)
                 
                 switch(selectedTab) {
                 case 0: TopRatedTabView()
@@ -88,18 +98,6 @@ struct HomeView: View {
                 }
             }
         }
-    }
-    
-    func function1(){
-        
-    }
-    
-    func function2(){
-        
-    }
-    
-    func function3(){
-        
     }
 }
 

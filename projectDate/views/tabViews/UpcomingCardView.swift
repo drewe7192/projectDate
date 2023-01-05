@@ -35,7 +35,7 @@ struct UpcomingCardView: View {
                     VStack(alignment: .leading){
                         Text("Invited by" + ": " + sd.fullName)
                             .font(.system(size: 15))
-                        Text(sd.time)
+                        Text("\(sd.time)")
                     }
                 }
             
@@ -68,7 +68,7 @@ struct UpcomingCardView: View {
                     
                     VStack(alignment: .leading){
                         Text(sd.fullName)
-                        Text(sd.time)
+                        Text("\(sd.time)")
                     }
                 }
             }

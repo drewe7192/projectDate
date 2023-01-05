@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct sdHomeView: View {
-    @StateObject var viewModel = sdViewModel()
-    
     let displayType: String
+
+    @StateObject var viewModel = sdViewModel()
     
     var body: some View {
         if(displayType == "host"){
