@@ -25,9 +25,9 @@ struct HomeView: View {
                 VStack{
                     header
                     nextDateView
-                        .padding(.top, 40)
+                        .padding(.top, 20)
                     exploreView
-                        .padding(.top, 40)
+                        .padding(.top, 20)
                 }
                 .padding()
             }
@@ -40,6 +40,12 @@ struct HomeView: View {
             NavigationLink(destination: SettingsView(), tag: 1, selection: $menuSelection) {}
             NavigationLink(destination: LikesView(), tag: 2, selection: $menuSelection) {}
             NavigationLink(destination: LikesView(), tag: 3, selection: $menuSelection) {}
+             Spacer()
+            
+            Text("Logo")
+                .bold()
+                .font(.system(size: 30))
+                .padding(.leading, 40)
             
             Spacer()
          
@@ -60,7 +66,7 @@ struct HomeView: View {
                 } icon: {
                     Image(systemName: "ellipsis")
                         .resizable()
-                        .frame(width: 37, height: 7)
+                        .frame(width: 27, height: 7)
                         .foregroundColor(.black)
                 }
             }
@@ -71,7 +77,7 @@ struct HomeView: View {
         VStack{
             Text("Next Date")
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.largeTitle.bold())
+                .font(.title.bold())
                 .foregroundColor(.black)
             
             NavigationLink(destination: sdHomeView(displayType: viewModel.user.sds.first!.userRoleType), label: {
@@ -84,7 +90,7 @@ struct HomeView: View {
         VStack{
             Text("Explore")
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.largeTitle.bold())
+                .font(.title.bold())
                 .foregroundColor(.black)
             
             VStack{

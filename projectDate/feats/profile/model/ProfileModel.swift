@@ -15,6 +15,7 @@ struct ProfileModel: Identifiable {
     var profileType: String
     var images: [String]
     var info: ProfileInfoModel
+    var test: Int
     
     var fullName: String {
         lastName + ", " + firstName

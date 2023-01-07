@@ -13,32 +13,31 @@ struct TabCards: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20){
-                ForEach(viewModel.people, id: \.firstName) { item in
-                    HStack{
+                ForEach(viewModel.people, id: \.id) { item in
+                    //switch statement
+                    switch item.test {
+                    case 1:
+                        HStack{
+                            //find specific Id in entire list
+                            if let ndx = viewModel.people.firstIndex(where: {$0.id == item.id}) {
+                                //if theres a item in list after this current one
+                                if ndx + 1 < viewModel.people.count {
+                                    let nextItem = viewModel.people[ndx + 1]
+                                    if nextItem.test == 1 {
+                                        TabCard(item: item)
+                                        TabCard(item: nextItem)
+                                    }
+                                }
+                            }
+                        }
+                    case 2:
+                        TabCardBig(item: item)
+                    default:
                         TabCard(item: item)
-                        TabCard(item: item)
+                        
                     }
-                    tabCardBig
                 }
             }
-        }
-    }
-    
-    private var tabCardBig: some View {
-        VStack{
-            NavigationLink(destination: ProfileView(participant: MockService.profileSampleData)) {
-                Image("animeGirl")
-                    .resizable()
-            }
-            .frame(width: 300, height: 300)
-            .background(Color.black)
-            .foregroundColor(.white)
-            .cornerRadius(30)
-            
-            Text("Hane hane")
-                .bold()
-            
-            Text("West Palm Beach, FL")
         }
     }
 }

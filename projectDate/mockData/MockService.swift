@@ -17,7 +17,7 @@ enum MockService {
                         aboutMe: "fdsfsdfs",
                         interests: "fdsfadsfdsfdsfaddsf",
                         sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                     ))
+                     ), test: 1)
     }
     
     static var sdSampleData: sdModel {
@@ -39,7 +39,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 1),
             ProfileModel(
                 firstName: "von",
                 lastName: "Day",
@@ -48,7 +48,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 1),
             ProfileModel(
                 firstName: "22Gz",
                 lastName: "Blixy",
@@ -57,7 +57,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfsbbgfgf", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 2),
             ProfileModel(
                 firstName: "Felippe",
                 lastName: "Ferriera",
@@ -66,7 +66,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 1),
             ProfileModel(
                 firstName: "Sierra",
                 lastName: "AppleWhite",
@@ -75,7 +75,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs",interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 1),
             ProfileModel(
                 firstName: "Ashley",
                 lastName: "Bashely",
@@ -84,7 +84,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 2),
             ProfileModel(
                 firstName: "My",
                 lastName: "Dude",
@@ -93,7 +93,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 1),
             ProfileModel(
                 firstName: "Travon",
                 lastName: "Dayvon",
@@ -102,7 +102,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 1),
             ProfileModel(
                 firstName: "Travon",
                 lastName: "Dayvon",
@@ -111,7 +111,7 @@ enum MockService {
                 images: ["animeGirl","animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      )),
+                                      ),test: 2),
             
         ]
     }
@@ -124,7 +124,7 @@ enum MockService {
                 sdModel(
                     firstName: "Drew",
                     lastName: "Drew",
-                    time: 270000,
+                    time: 172805,
                     userRoleType: "host",
                     roomNumber: "638d9e07aee54625da64dfe2",
                     profiles: profilesSampleData

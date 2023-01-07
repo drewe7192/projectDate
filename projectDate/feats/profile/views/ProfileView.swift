@@ -14,16 +14,19 @@ struct ProfileView: View {
     
     var body: some View {
         ZStack{
-            ImageSlider(person: viewModel.person)
             
-            ProfileInfoOverlay(person: viewModel.person)
+            ImageSlider(person: participant)
+
+            ProfileInfoOverlay(participant: participant)
                 .padding(.top,600)
 
             VStack{
+                
                 HStack{
                     sideBar
                         .opacity(0.8)
                         .padding(.top,100)
+                    
                     
                     Spacer()
                     
@@ -37,7 +40,7 @@ struct ProfileView: View {
                         } icon: {
                             Image(systemName: "ellipsis")
                                 .resizable()
-                                .frame(width: 37, height: 7)
+                                .frame(width: 27, height: 7)
                                 .foregroundColor(.black)
                         }
                     }

@@ -27,6 +27,6 @@ struct ImageSlider: View {
 struct ImageSlider_Previews: PreviewProvider {
     static var previews: some View {
         ImageSlider(person: MockService.profileSampleData)
-            .previewLayout(.fixed(width: 400, height: 300))
+         
     }
 }

@@ -34,7 +34,7 @@ struct CountdownTimerView: View {
         //normal styling for button
         .multilineTextAlignment(.center)
         .font(.title.bold())
-        .frame(width: 350, height: 80)
+        .frame(width: 350, height: 60)
         .background(.white)
         .foregroundColor(.gray)
         .cornerRadius(20)
