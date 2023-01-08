@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
 		771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA00E28A045EC007EBC40 /* Extensions.swift */; };
 		771EA01128A04810007EBC40 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA01028A04810007EBC40 /* MessageField.swift */; };
 		771EA01828A2435C007EBC40 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 771EA01728A2435C007EBC40 /* FirebaseFirestore */; };
@@ -109,6 +110,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		771EA01028A04810007EBC40 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		771EA01B28A24588007EBC40 /* MessagesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesManager.swift; sourceTree = "<group>"; };
@@ -624,6 +626,7 @@
 			children = (
 				77FB23C1292B6227008F5469 /* ProfileInfoOverlay.swift */,
 				77FB246429539DB5008F5469 /* ImageSlider.swift */,
+				771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -899,6 +902,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77FB23BB292B5C29008F5469 /* UpcomingTabView.swift in Sources */,
+				771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */,
 				77FB23C2292B6227008F5469 /* ProfileInfoOverlay.swift in Sources */,
 				77FB23C8293235F8008F5469 /* sdHomeView.swift in Sources */,
 				774F2399291A501100C33E80 /* ThirdPartyButtons.swift in Sources */,

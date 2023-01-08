@@ -13,11 +13,13 @@ struct ImageSlider: View {
     var body: some View {
         TabView{
                 ForEach(person.images, id: \.self) {item in
-                    Image(item)
-                        .resizable()
+                    NavigationLink(destination: ImageDetailView(image: item), label: {
+                        Image(item)
+                            .resizable()
+                            .scaledToFill()
+                    })
                 }
                 .ignoresSafeArea()
-       
         }
         .ignoresSafeArea()
         .tabViewStyle(PageTabViewStyle())

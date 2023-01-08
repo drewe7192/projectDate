@@ -20,15 +20,65 @@ struct ProfileInfoOverlay: View {
                 
                 ScrollView{
                     VStack{
-                        Text("About me")
+                        Text("Bio")
                             .font(.title2)
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exert")
                             .padding(.bottom)
                         
-                        Text("Interests")
+                    Divider()
+                        
+                        Text("Values")
                             .font(.title2)
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exert")
+                            .padding(.bottom)
+                        
+                        Divider()
+                        
+                        Text("About Me")
+                            .font(.title2)
+                            .padding(.bottom, 5)
+                        HStack{
+                            VStack(alignment: .leading){
+                                HStack{
+                                    Image(systemName: "heart")
+                                    Text("Never married")
+                                }
+                                
+                                Spacer()
+                                
+                                HStack{
+                                    Image(systemName: "figure.and.child.holdinghands")
+                                    Text("No Kids")
+                                }
+                                Spacer()
+                                
+                                HStack{
+                                    Image(systemName: "figure.2.and.child.holdinghands")
+                                    Text("Maybe")
+                                }
+                            }
+                            VStack(alignment: .leading){
+                                HStack{
+                                    Image(systemName: "graduationcap")
+                                    Text("Bachelors Degree")
+                                }
+                                Spacer()
+                                
+                                HStack{
+                                    Image(systemName: "tshirt")
+                                    Text("Athletic/Fit")
+                                }
+                                Spacer()
+                                
+                                HStack{
+                                    Image(systemName: "wineglass")
+                                    Text("On occasion")
+                                }
+                            }
+                        }
+                      
                     }
+                   
                 }
               
             }

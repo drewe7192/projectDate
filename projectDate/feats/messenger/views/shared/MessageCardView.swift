@@ -31,6 +31,7 @@ struct MessageCardView: View {
                 
                 VStack(alignment: .leading){
                     Text("Bob Barron")
+                        .foregroundColor(.black)
                     Text("Yo that b was tripping bro")
                         .foregroundColor(.gray)
                 }

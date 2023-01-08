@@ -9,7 +9,6 @@ import SwiftUI
 
 struct LikesView: View {
     var body: some View {
-        NavigationView{
             ZStack{
                     CustomHeaderView()
                 VStack{
@@ -70,7 +69,6 @@ struct LikesView: View {
             .navigationBarTitleDisplayMode(.inline)
             
         }
-    }
 }
 
 struct LikesView_Previews: PreviewProvider {

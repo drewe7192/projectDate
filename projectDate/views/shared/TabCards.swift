@@ -25,6 +25,7 @@ struct TabCards: View {
                                     let nextItem = viewModel.people[ndx + 1]
                                     if nextItem.test == 1 {
                                         TabCard(item: item)
+                                            .padding(.trailing)
                                         TabCard(item: nextItem)
                                     }
                                 }
@@ -32,6 +33,7 @@ struct TabCards: View {
                         }
                     case 2:
                         TabCardBig(item: item)
+                            .frame(maxWidth: .infinity)
                     default:
                         TabCard(item: item)
                         

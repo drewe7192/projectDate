@@ -12,16 +12,21 @@ struct UpcomingCardView: View {
     
     var body: some View {
         if sd.userRoleType == "guest" {
-            hostDisplay
+            NavigationLink(destination: sdInfoView(), label: {
+                hostDisplay
+            })
+            
         }
         else{
-            guestDisplay
+            NavigationLink(destination: sdInfoView(), label: {
+                guestDisplay
+            })
+            
         }
     }
     
     private var hostDisplay: some View {
         ZStack{
-           
                 Text("")
                     .font(.title.bold())
                     .frame(width: 350, height: 80)
@@ -34,6 +39,7 @@ struct UpcomingCardView: View {
                 HStack{
                     VStack(alignment: .leading){
                         Text("Invited by" + ": " + sd.fullName)
+                            .foregroundColor(.black)
                             .font(.system(size: 15))
                         Text("\(sd.time)")
                     }

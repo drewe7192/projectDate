@@ -9,19 +9,22 @@ import SwiftUI
 
 struct MessageHomeView: View {
     var body: some View {
-        VStack{
-            SearchInput()
-                .padding(.bottom, 100)
+        ZStack{
+            Color.white
+                .ignoresSafeArea()
             
-            ForEach(0..<3){ item in
-                NavigationLink(destination: MessageView()) {
-                    MessageCardView()
+            VStack{
+                SearchInput()
+                    .padding(.bottom, 100)
+                
+                ForEach(0..<3){ item in
+                    NavigationLink(destination: MessageView()) {
+                        MessageCardView()
+                    }
                 }
-              
+                Spacer()
             }
-            Spacer()
         }
-      
     }
 }
 

@@ -11,22 +11,18 @@ struct ProfileView: View {
     let participant: ProfileModel
     @StateObject var viewModel = ProfileViewModel()
     
-    
     var body: some View {
         ZStack{
-            
             ImageSlider(person: participant)
 
             ProfileInfoOverlay(participant: participant)
-                .padding(.top,600)
+                .padding(.top,400)
 
             VStack{
-                
                 HStack{
                     sideBar
                         .opacity(0.8)
                         .padding(.top,100)
-                    
                     
                     Spacer()
                     
@@ -44,7 +40,7 @@ struct ProfileView: View {
                                 .foregroundColor(.black)
                         }
                     }
-                    .padding(.bottom,300)
+                    .padding(.bottom,450)
                 }
             }
             .padding(.bottom,450)
@@ -54,17 +50,16 @@ struct ProfileView: View {
     private var sideBar: some View {
         VStack{
             NavigationLink(destination: RatingsView()) {
-                Image(systemName: "star.circle")
+                Image(systemName: "star.bubble")
                     .resizable()
-                
             }
-            .frame(width: 40, height: 40)
+            .frame(width: 35, height: 35)
             .foregroundColor(.white)
             .padding(.bottom,10)
             
             ZStack{
                 Text("")
-                    .frame(width: 55, height: 55)
+                    .frame(width: 45, height: 45)
                     .background(.white)
                     .cornerRadius(10)
                     .opacity(0.6)
@@ -74,13 +69,13 @@ struct ProfileView: View {
                         .font(.system(size: 15))
                     Text(viewModel.person.info.sideBarInfo.height)
                         .bold()
-                        .font(.system(size: 20))
+                        .font(.system(size: 15))
                 }
             }
             
             ZStack{
                 Text("")
-                    .frame(width: 55, height: 55)
+                    .frame(width: 45, height: 45)
                     .background(.white)
                     .cornerRadius(10)
                     .opacity(0.6)
@@ -97,7 +92,7 @@ struct ProfileView: View {
             
             ZStack{
                 Text("")
-                    .frame(width: 55, height: 55)
+                    .frame(width: 45, height: 45)
                     .background(.white)
                     .cornerRadius(10)
                     .opacity(0.6)
@@ -109,11 +104,11 @@ struct ProfileView: View {
                     if(viewModel.person.info.sideBarInfo.isSmoke) {
                         Text("yes")
                             .bold()
-                            .font(.system(size: 20))
+                            .font(.system(size: 15))
                     } else {
                         Text("no")
                             .bold()
-                            .font(.system(size: 20))
+                            .font(.system(size: 15))
                     }
                  
                 }
@@ -121,7 +116,7 @@ struct ProfileView: View {
             
             ZStack{
                 Text("")
-                    .frame(width: 55, height: 55)
+                    .frame(width: 45, height: 45)
                     .background(.white)
                     .cornerRadius(10)
                     .opacity(0.6)
@@ -131,9 +126,11 @@ struct ProfileView: View {
                     if(viewModel.person.info.sideBarInfo.isKids){
                         Text("+1")
                             .bold()
+                            .font(.system(size: 15))
                     }else{
                         Text("none")
                             .bold()
+                            .font(.system(size: 15))
                     }
                
                 }

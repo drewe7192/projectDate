@@ -9,7 +9,6 @@ import SwiftUI
 
 struct UserProfileView: View {
     var body: some View {
-        NavigationView{
             ZStack{
                 CustomHeaderView()
                 VStack{
@@ -18,7 +17,6 @@ struct UserProfileView: View {
                 }
           
             }
-        }
     }
     
 }
@@ -42,6 +40,7 @@ struct CircleImageView: View{
                     .bold()
                     .offset(y: -100)
                     .font(.system(size: 25))
+                    .foregroundColor(.black)
                 
                 Text("25")
                     .bold()

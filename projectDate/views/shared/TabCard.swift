@@ -21,11 +21,14 @@ struct TabCard: View {
             .background(Color.black)
             .foregroundColor(.white)
             .cornerRadius(30)
+            .shadow(radius: 15, x: 1, y: 20)
             
             Text(item.fullName)
                 .bold()
+                .foregroundColor(.black)
             
             Text(item.location)
+                .foregroundColor(.black)
         }
     }
 }

@@ -26,7 +26,7 @@ struct MotherView: View {
                     .tag(2)
                 GamesView()
                     .tabItem{
-                        Label("Games", systemImage: "flag.2.crossed")
+                        Label("Games", systemImage: "gamecontroller")
                     }
                     .tag(3)
                 MessageHomeView()
@@ -38,6 +38,8 @@ struct MotherView: View {
                         Label("Profile", systemImage: "person")
                     }.tag(5)
             }
+            .frame(height: 870)
+            
         case .signUpPage :
             SignUpView()
         case . homePage:

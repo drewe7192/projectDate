@@ -13,7 +13,6 @@ struct CustomSegmentedControl: View {
     let color = Color.red
     
     var body: some View {
-        
         HStack(spacing: 0){
             ForEach(options.indices, id: \.self) { index in
                 ZStack {
@@ -37,7 +36,7 @@ struct CustomSegmentedControl: View {
                 )
             }
         }
-        .frame(height: 40)
+        .frame(height: 30)
         .cornerRadius(20)
     }
 }

@@ -25,7 +25,7 @@ struct HomeView: View {
                 VStack{
                     header
                     nextDateView
-                        .padding(.top, 20)
+                        .padding(.top, 10)
                     exploreView
                         .padding(.top, 20)
                 }
@@ -46,6 +46,7 @@ struct HomeView: View {
                 .bold()
                 .font(.system(size: 30))
                 .padding(.leading, 40)
+                .foregroundColor(.black)
             
             Spacer()
          
@@ -93,16 +94,13 @@ struct HomeView: View {
                 .font(.title.bold())
                 .foregroundColor(.black)
             
-            VStack{
                 CustomSegmentedControl(selectedTab: $selectedTab, options: viewModel.tabTitles)
-                
                 switch(selectedTab) {
                 case 0: TopRatedTabView()
                 case 1: RecommendedTabView()
                 case 2: UpcomingTabView()
                 default: TopRatedTabView()
                 }
-            }
         }
     }
 }
