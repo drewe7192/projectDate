@@ -16,7 +16,8 @@ struct ProfileView: View {
             ImageSlider(person: participant)
 
             ProfileInfoOverlay(participant: participant)
-                .padding(.top,400)
+                .padding(.top,500)
+                
 
             VStack{
                 HStack{
@@ -48,94 +49,86 @@ struct ProfileView: View {
     }
     
     private var sideBar: some View {
-        VStack{
-            NavigationLink(destination: RatingsView()) {
-                Image(systemName: "star.bubble")
-                    .resizable()
-            }
-            .frame(width: 35, height: 35)
-            .foregroundColor(.white)
-            .padding(.bottom,10)
-            
-            ZStack{
-                Text("")
-                    .frame(width: 45, height: 45)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .opacity(0.6)
-                
-                VStack{
-                    Text("Height")
-                        .font(.system(size: 15))
-                    Text(viewModel.person.info.sideBarInfo.height)
-                        .bold()
-                        .font(.system(size: 15))
-                }
-            }
-            
-            ZStack{
-                Text("")
-                    .frame(width: 45, height: 45)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .opacity(0.6)
-                
-                VStack{
-                    Text("From")
-                        .font(.system(size: 15))
-                    
-                    Text(viewModel.person.location)
-                        .bold()
-                        .font(.system(size: 15))
-                }
-            }
-            
-            ZStack{
-                Text("")
-                    .frame(width: 45, height: 45)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .opacity(0.6)
-                
-                VStack{
-                    Text("Smoke")
-                        .font(.system(size: 15))
-                    
-                    if(viewModel.person.info.sideBarInfo.isSmoke) {
-                        Text("yes")
-                            .bold()
-                            .font(.system(size: 15))
-                    } else {
-                        Text("no")
-                            .bold()
-                            .font(.system(size: 15))
-                    }
-                 
-                }
-            }
-            
-            ZStack{
-                Text("")
-                    .frame(width: 45, height: 45)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .opacity(0.6)
-                
-                VStack{
-                    Text("Kids")
-                    if(viewModel.person.info.sideBarInfo.isKids){
-                        Text("+1")
-                            .bold()
-                            .font(.system(size: 15))
-                    }else{
-                        Text("none")
-                            .bold()
-                            .font(.system(size: 15))
-                    }
+        
+        ZStack{
+            Text("")
+                .frame(width: 45, height: 200)
+                .background(.gray)
+                .cornerRadius(20)
+                .padding(.leading,5)
+                .opacity(0.6)
                
+            
+            VStack{
+                NavigationLink(destination: RatingsView()) {
+                    Image(systemName: "star.bubble")
+                        .resizable()
+                        .foregroundColor(.white)
+                }
+                .frame(width: 25, height: 25)
+                .foregroundColor(.white)
+                .padding(.leading,5)
+                
+                Text("Ratings")
+                    .bold()
+                    .foregroundColor(.white)
+                    .font(.system(size: 12))
+                    .padding(.bottom,10)
+                    .padding(.leading,5)
+             
+                
+                ZStack{
+    //                Text("")
+    //                    .frame(width: 45, height: 45)
+    //                    .background(.white)
+    //                    .cornerRadius(10)
+    //                    .opacity(0.6)
+                    
+                    VStack{
+                        Image(systemName: "pencil.and.ruler")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                            .padding(.leading,5)
+    //                    Text("Height")
+    //                        .font(.system(size: 15))
+                        Text(viewModel.person.info.sideBarInfo.height)
+                            .bold()
+                            .foregroundColor(.white)
+                            .font(.system(size: 15))
+                            .padding(.bottom,10)
+                            .padding(.leading,5)
+                    }
+                }
+                
+                ZStack{
+    //                Text("")
+    //                    .frame(width: 45, height: 45)
+    //                    .background(.white)
+    //                    .cornerRadius(10)
+    //                    .opacity(0.6)
+                    
+                    VStack{
+                        Image(systemName: "mappin")
+                            .resizable()
+                            .frame(width: 10, height: 25)
+                            .foregroundColor(.white)
+                            .padding(.leading,5)
+                        
+    //                    Text("From")
+    //                        .font(.system(size: 15))
+                        
+                        Text("Tampa")
+                            .bold()
+                            .foregroundColor(.white)
+                            .font(.system(size: 15))
+                            .padding(.bottom,10)
+                            .padding(.leading,5)
+                    }
                 }
             }
         }
+      
     }
     
     func function1(){

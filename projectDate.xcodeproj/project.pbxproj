@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
+		771AE411296D4D4E00F3A6A1 /* sdInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */; };
 		771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA00E28A045EC007EBC40 /* Extensions.swift */; };
 		771EA01128A04810007EBC40 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA01028A04810007EBC40 /* MessageField.swift */; };
 		771EA01828A2435C007EBC40 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 771EA01728A2435C007EBC40 /* FirebaseFirestore */; };
@@ -111,6 +112,7 @@
 
 /* Begin PBXFileReference section */
 		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
+		771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdInfoCardView.swift; sourceTree = "<group>"; };
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		771EA01028A04810007EBC40 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		771EA01B28A24588007EBC40 /* MessagesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesManager.swift; sourceTree = "<group>"; };
@@ -666,6 +668,7 @@
 			children = (
 				77FB23C92939D0A8008F5469 /* sdCardView.swift */,
 				77FB24532946046B008F5469 /* VideoView.swift */,
+				771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -932,6 +935,7 @@
 				77FB247B295DC3AB008F5469 /* ProfileModel.swift in Sources */,
 				77619ED0295DC8AE00B1BF1F /* MockService.swift in Sources */,
 				77493D21291E3C4C00C9E283 /* TopRatedTabView.swift in Sources */,
+				771AE411296D4D4E00F3A6A1 /* sdInfoCardView.swift in Sources */,
 				776D470B295F3B1300754DE5 /* sdModel.swift in Sources */,
 				77FB23B7292A4CF3008F5469 /* CustomSegmentedControl.swift in Sources */,
 				77FB245229460426008F5469 /* TokenProvider.swift in Sources */,

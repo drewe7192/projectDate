@@ -12,27 +12,14 @@ struct sdCardView: View {
     
     var body: some View {
         ZStack{
-            Text("")
-                .font(.title.bold())
-                .frame(width: 350, height: 80)
-                .background(.white)
-                .foregroundColor(.gray)
-                .cornerRadius(20)
-                .overlay(RoundedRectangle(cornerRadius: 20)
-                    .stroke(.black, lineWidth: 2))
-            
-            HStack{
                 Image(participant.images.first!)
                     .resizable()
-                .frame(width: 60, height: 60)
+                    .scaledToFill()
+                .frame(width: 90, height: 80)
                 .background(.gray)
-                .clipShape(Circle())
-                
-                VStack{
-                    Text(participant.fullName)
-                    Text(participant.location)
-                }
-            }
+                .clipShape(Rectangle())
+                .cornerRadius(40)
+    
         }
     }
 }

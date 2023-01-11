@@ -13,17 +13,18 @@ struct sdHomeView: View {
     @StateObject var viewModel = sdViewModel()
     
     var body: some View {
-        if(displayType == "host"){
-            hostDisplay
+        ZStack{
+            Color("Grey")
+                .ignoresSafeArea()
+                hostDisplay
+         
         }
-        else if(displayType == "guest") {
-            guestDisplay
-        }
+     
     }
     
     private var info: some View {
         VStack{
-            Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when Please be polite, please be kindd")
+            Text("Lorem Ipsum is simply dummy text")
                 .multilineTextAlignment(.center)
                 .padding(.top,20)
             
@@ -39,37 +40,82 @@ struct sdHomeView: View {
     }
     
     private var hostDisplay: some View {
-        
         VStack{
-            ScrollView{
-                ForEach(viewModel.sd.profiles){ participant in
-                    NavigationLink(destination: ProfileView(participant: participant), label: {
-                        sdCardView(participant: participant)
-                    })
-                  
+            VStack{
+                HStack{
+                    Image(systemName: "calendar.badge.clock")
+                        .resizable()
+                        .frame(width: 40 ,height: 40)
+                      VStack{
+                        Text("Tuesday, May 18th")
+                            .bold()
+                        Text("10:00 - 12:00")
+                    }
+                }
+                
+              
+            
+            }
+            .padding(.top,150)
+            .padding(.bottom,10)
+            
+            Divider()
+            
+            VStack{
+                HStack{
+                    Text("Participants")
+                        .bold()
+                        .font(.system(size: 20))
+                        .padding(.trailing)
+                    ZStack{
+                        Text("")
+                            .frame(width: 40, height: 40)
+                            .background(.white)
+                            .foregroundColor(.gray)
+                            .cornerRadius(8)
+                            .overlay(RoundedRectangle(cornerRadius: 20)
+                                .stroke(.white, lineWidth: 2))
+                        
+                        Text("4")
+                    }
+                }
+                .padding(.trailing,200)
+       
+                ScrollView(.horizontal){
+                    HStack{
+                        ForEach(viewModel.sd.profiles){ participant in
+                            NavigationLink(destination: ProfileView(participant: participant), label: {
+                                sdCardView(participant: participant)
+                                    .padding(.trailing, 5)
+                            })
+                          
+                        }
+                    }
                 }
             }
+            .padding()
             
-            info
-            
-            //button
-            NavigationLink(destination: FacetimeView(viewModel: .init(), sdvm: viewModel), label: {
-                CountdownTimerView(timeRemaining: 1000)
-            })
-         
-        }
-    }
-    
-    private var guestDisplay: some View {
-        VStack{
-            ForEach(viewModel.sd.profiles){ profile in
-                Text("fdsfsd")
+           
+            ZStack{
+                Text("")
+                    .frame(width: 400, height: 400, alignment: .bottom)
+                    .background(.white)
+                    .foregroundColor(.gray)
+                    .cornerRadius(60)
+                    .padding(.top,20)
+                    .padding(.bottom,280)
+                    .shadow(radius: 10)
+                
+                sdInfoCardView()
+                    .padding(.bottom,300)
+              
+                    //button
+                    NavigationLink(destination: FacetimeView(viewModel: .init(), sdvm: viewModel), label: {
+                        CountdownTimerView(timeRemaining: 1000)
+                          
+                    })
+                    .padding(.top,250)
             }
-            
-            info
-            
-            //button
-            CountdownTimerView(timeRemaining: 800)
         }
     }
 }

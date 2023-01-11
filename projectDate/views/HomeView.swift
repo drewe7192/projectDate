@@ -19,7 +19,7 @@ struct HomeView: View {
         NavigationView{
             ZStack{
                 // needed to keep color consistent
-                Color.white
+                Color("Grey")
                     .ignoresSafeArea()
                 
                 VStack{
