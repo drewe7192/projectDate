@@ -9,48 +9,53 @@ import SwiftUI
 
 struct sdInfoView: View {
     var body: some View {
-        VStack{
-            Text("sdInfo")
-                .font(.system(size: 70, weight: .bold))
-            
-            Text("Dating Order")
-                .font(.system(size: 40, weight: .medium))
-            
-            ImageGridView()
-            
+        ZStack{
+            Color("Grey")
+                .ignoresSafeArea()
             VStack{
+                Text("sdInfo")
+                    .font(.system(size: 70, weight: .bold))
                 
-                Text("Fun Facts")
+                Text("Dating Order")
                     .font(.system(size: 40, weight: .medium))
                 
-                ForEach(0..<3){item in
+                ImageGridView()
+                
+                VStack{
                     
-                    ZStack{
-                        Text("")
-                            .font(.title.bold())
-                            .frame(width: 400, height: 80)
-                            .background(.white)
-                            .foregroundColor(.gray)
-                            .cornerRadius(20)
-                            .overlay(RoundedRectangle(cornerRadius: 20)
-                                .stroke(.black, lineWidth: 2))
+                    Text("Fun Facts")
+                        .font(.system(size: 40, weight: .medium))
+                    
+                    ForEach(0..<3){item in
                         
-                        HStack{
-                            Image("animeGirl")
-                                .resizable()
-                                .clipShape(Circle())
-                                .frame(width: 60, height: 60)
+                        ZStack{
+                            Text("")
+                                .font(.title.bold())
+                                .frame(width: 400, height: 80)
+                                .background(.white)
+                                .foregroundColor(.gray)
+                                .cornerRadius(20)
+                                .overlay(RoundedRectangle(cornerRadius: 20)
+                                    .stroke(.black, lineWidth: 2))
                             
-                            Text("I like kittens")
-                            
+                            HStack{
+                                Image("animeGirl")
+                                    .resizable()
+                                    .clipShape(Circle())
+                                    .frame(width: 60, height: 60)
+                                
+                                Text("I like kittens")
+                                
+                            }
                         }
                     }
+              
+             
+            
                 }
-          
-         
-        
             }
         }
+        
     }
 }
 

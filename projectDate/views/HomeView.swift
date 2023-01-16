@@ -16,40 +16,43 @@ struct HomeView: View {
     @State var menuSelection: Int? = 0
     
     var body: some View {
-        NavigationView{
+               NavigationView{
+        GeometryReader{geo in
             ZStack{
                 // needed to keep color consistent
                 Color("Grey")
                     .ignoresSafeArea()
                 
                 VStack{
-                    header
-                    nextDateView
-                        .padding(.top, 10)
-                    exploreView
-                        .padding(.top, 20)
+                    header(for: geo)
+                    nextDateView(for: geo)
+                        .padding(.top, geo.size.height * 0.03)
+                    exploreView(for: geo)
+                        .padding(.top, geo.size.height * 0.03)
                 }
                 .padding()
             }
+            .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }
+        
+               }
     }
     
-    private var header: some View{
+    private func header(for geo: GeometryProxy) -> some View {
         HStack{
             //Gotta keep the naviagationLinks here in order to route in a menu
             NavigationLink(destination: SettingsView(), tag: 1, selection: $menuSelection) {}
             NavigationLink(destination: LikesView(), tag: 2, selection: $menuSelection) {}
             NavigationLink(destination: LikesView(), tag: 3, selection: $menuSelection) {}
-             Spacer()
+            Spacer()
             
             Text("Logo")
                 .bold()
-                .font(.system(size: 30))
-                .padding(.leading, 40)
-                .foregroundColor(.black)
+                .font(.system(size: geo.size.height * 0.04))
+                .padding(.leading, geo.size.height * 0.05)
             
             Spacer()
-         
+            
             Menu {
                 Button("Settings") {
                     self.menuSelection = 1
@@ -67,17 +70,17 @@ struct HomeView: View {
                 } icon: {
                     Image(systemName: "ellipsis")
                         .resizable()
-                        .frame(width: 27, height: 7)
+                        .frame(width: geo.size.width * 0.08, height: geo.size.height * 0.01)
                         .foregroundColor(.black)
                 }
             }
         }
     }
     
-    private var nextDateView: some View {
+    private func nextDateView(for geo: GeometryProxy) -> some View {
         VStack{
             Text("Next Date")
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: geo.size.width, alignment: .leading)
                 .font(.title.bold())
                 .foregroundColor(.black)
             
@@ -85,22 +88,26 @@ struct HomeView: View {
                 CountdownTimerView(timeRemaining: viewModel.user.sds.first!.time)
             })
         }
+        
     }
     
-    private var exploreView: some View {
+    private func exploreView(for geo: GeometryProxy) -> some View {
         VStack{
             Text("Explore")
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: geo.size.width, alignment: .leading)
                 .font(.title.bold())
                 .foregroundColor(.black)
             
+            VStack{
                 CustomSegmentedControl(selectedTab: $selectedTab, options: viewModel.tabTitles)
+                
                 switch(selectedTab) {
                 case 0: TopRatedTabView()
                 case 1: RecommendedTabView()
                 case 2: UpcomingTabView()
                 default: TopRatedTabView()
                 }
+            }
         }
     }
 }

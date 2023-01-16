@@ -14,7 +14,7 @@ struct TabCard: View {
         VStack(alignment: .leading, spacing: 5){
             
             NavigationLink(destination: ProfileView(participant: item)) {
-                Image("animeGirl")
+                Image(item.images.first!)
                     .resizable()
             }
             .frame(width: 150, height: 200)

@@ -9,14 +9,16 @@ import SwiftUI
 
 struct UserProfileView: View {
     var body: some View {
-            ZStack{
-                CustomHeaderView()
-                VStack{
-                    CircleImageView()
-                    Buttons()
-                }
-          
+        ZStack{
+            Color("Grey")
+                .ignoresSafeArea()
+            
+            VStack{
+                CircleImageView()
+                Buttons()
             }
+            
+        }
     }
     
 }

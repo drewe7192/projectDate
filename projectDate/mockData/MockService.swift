@@ -36,7 +36,7 @@ enum MockService {
                 lastName: "Dayvon",
                 location: "ClearWater, Fl",
                 profileType: "top-rated",
-                images: ["animeGirl","animeGirl2","sasuke"],
+                images: ["animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
@@ -45,7 +45,7 @@ enum MockService {
                 lastName: "Day",
                 location: "Tampa, Fl",
                 profileType: "recommended",
-                images: ["animeGirl","animeGirl2","sasuke"],
+                images: ["sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
@@ -63,7 +63,7 @@ enum MockService {
                 lastName: "Ferriera",
                 location: "Tally, Fl",
                 profileType: "like",
-                images: ["animeGirl","animeGirl2","sasuke"],
+                images: ["animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
@@ -72,7 +72,7 @@ enum MockService {
                 lastName: "AppleWhite",
                 location: "ClearWater, Fl",
                 profileType: "recommended",
-                images: ["animeGirl","animeGirl2","sasuke"],
+                images: ["sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs",interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
@@ -90,7 +90,7 @@ enum MockService {
                 lastName: "Dude",
                 location: "ClearWater, Fl",
                 profileType: "top-rated",
-                images: ["animeGirl","animeGirl2","sasuke"],
+                images: ["animeGirl2","sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
@@ -108,7 +108,7 @@ enum MockService {
                 lastName: "Dayvon",
                 location: "ClearWater, Fl",
                 profileType: "top-rated",
-                images: ["animeGirl","animeGirl2","sasuke"],
+                images: ["sasuke"],
                 info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 2),

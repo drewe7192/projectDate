@@ -14,8 +14,10 @@ struct ProfileView: View {
     var body: some View {
         ZStack{
             ImageSlider(person: participant)
+                
 
             ProfileInfoOverlay(participant: participant)
+                .padding()
                 .padding(.top,500)
                 
 
