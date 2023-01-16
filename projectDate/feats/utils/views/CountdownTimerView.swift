@@ -9,13 +9,17 @@ import SwiftUI
 
 struct CountdownTimerView: View {
     @StateObject var viewModel = sdViewModel()
-    
     @State var timeRemaining = 0
+    var sizing: GeometryProxy
+
     @State var isStartNow = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        sdHomeViewButton
+        VStack{
+            sdHomeViewButton
+        }
+        
     }
     
     var sdHomeViewButton: some View {
@@ -34,7 +38,7 @@ struct CountdownTimerView: View {
         //normal styling for button
         .multilineTextAlignment(.center)
         .font(.title.bold())
-        .frame(width: 400, height: 70)
+        .frame(width: 350, height: 60)
         .background(.white)
         .foregroundColor(.gray)
         .cornerRadius(20)
@@ -70,6 +74,13 @@ struct bar: View {
 
 struct CountdownTimerView_Previews: PreviewProvider {
     static var previews: some View {
-        CountdownTimerView(timeRemaining: 80400)
+        GeometryReader{geo in
+            VStack{
+                CountdownTimerView(timeRemaining: 80400, sizing: geo)
+            }
+            .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
+           
+        }
+        
     }
 }

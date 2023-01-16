@@ -16,26 +16,27 @@ struct HomeView: View {
     @State var menuSelection: Int? = 0
     
     var body: some View {
-               NavigationView{
-        GeometryReader{geo in
-            ZStack{
-                // needed to keep color consistent
-                Color("Grey")
-                    .ignoresSafeArea()
-                
-                VStack{
-                    header(for: geo)
-                    nextDateView(for: geo)
-                        .padding(.top, geo.size.height * 0.03)
-                    exploreView(for: geo)
-                        .padding(.top, geo.size.height * 0.03)
+        NavigationView{
+            GeometryReader{geo in
+                ZStack{
+                    // needed to keep color consistent
+                    Color("Grey")
+                        .ignoresSafeArea()
+                    
+                    VStack{
+                        header(for: geo)
+                        nextDateView(for: geo)
+                           .padding(.top, geo.size.height * 0.03)
+                   
+                        exploreView(for: geo)
+                            .padding(.top, geo.size.height * 0.03)
+                      
+                    }
+//                    .padding()
                 }
-                .padding()
+                .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
             }
-            .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }
-        
-               }
     }
     
     private func header(for geo: GeometryProxy) -> some View {
@@ -84,11 +85,10 @@ struct HomeView: View {
                 .font(.title.bold())
                 .foregroundColor(.black)
             
-            NavigationLink(destination: sdHomeView(displayType: viewModel.user.sds.first!.userRoleType), label: {
-                CountdownTimerView(timeRemaining: viewModel.user.sds.first!.time)
+            NavigationLink(destination: sdHomeView(displayType: viewModel.user.sds.first!.userRoleType, sizing: geo), label: {
+                CountdownTimerView(timeRemaining: viewModel.user.sds.first!.time, sizing: geo)
             })
         }
-        
     }
     
     private func exploreView(for geo: GeometryProxy) -> some View {
