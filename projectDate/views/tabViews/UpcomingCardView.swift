@@ -9,22 +9,26 @@ import SwiftUI
 
 struct UpcomingCardView: View {
     var sd: sdModel
-   
+    var geoReader: GeometryProxy
+    
     
     var body: some View {
-        ZStack{
-            Color("Grey")
-                .ignoresSafeArea()
+      
+            ZStack{
+                Color("Grey")
+                    .ignoresSafeArea()
+                hostDisplay(for: geoReader)
+            }
             
-            hostDisplay
-        }
+        
+      
     }
     
-     var hostDisplay: some View {
+    func hostDisplay(for geoReader: GeometryProxy) -> some View {
         ZStack{
             Text("")
                 .font(.title.bold())
-                .frame(width: 400, height: 100)
+                .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.2)
                 .background(.white)
                 .foregroundColor(.gray)
                 .cornerRadius(20)
@@ -32,7 +36,7 @@ struct UpcomingCardView: View {
             HStack{
                 Image("animeGirl")
                     .resizable()
-                    .frame(width: 90, height: 90)
+                    .frame(width: geoReader.size.width * 0.25, height: geoReader.size.height * 0.15)
                     .background(.gray)
                     .clipShape(Circle())
                     .padding(.leading)
@@ -40,7 +44,7 @@ struct UpcomingCardView: View {
                 VStack(alignment: .leading){
                     Text(sd.fullName)
                         .foregroundColor(.black)
-                        .font(.system(size: 22))
+                        .font(.system(size: geoReader.size.width * 0.05))
                         .bold()
                     Text(convertTime(sd.time))
                     
@@ -49,15 +53,14 @@ struct UpcomingCardView: View {
                 Spacer()
                 
                 Text("\(sd.userRoleType)")
-                    .font(.system(size: 20))
+                    .font(.system(size: geoReader.size.width * 0.05))
                     .padding(.trailing)
             }
             .padding(.trailing)
             
         }
      }
-    
-    
+
     func convertTime(_ foo: Int) -> (String){
         let now = Date.now
         let result = Calendar.current.date(byAdding: .second, value: -foo, to: now)
@@ -73,6 +76,9 @@ struct UpcomingCardView: View {
 
 struct UpcomingCardView_Previews: PreviewProvider {
     static var previews: some View {
-        UpcomingCardView(sd: MockService.userSampleData.sds.first!)
+        GeometryReader{geo in
+            UpcomingCardView(sd: MockService.userSampleData.sds.first!, geoReader: geo)
+        }
+      
     }
 }

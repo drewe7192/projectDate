@@ -17,29 +17,28 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView{
-            GeometryReader{geo in
+            GeometryReader{geoReader in
                 ZStack{
                     // needed to keep color consistent
                     Color("Grey")
                         .ignoresSafeArea()
                     
                     VStack{
-                        header(for: geo)
-                        nextDateView(for: geo)
-                           .padding(.top, geo.size.height * 0.03)
+                        header(for: geoReader)
+                        nextDateView(for: geoReader)
+                           .padding(.top, geoReader.size.height * 0.03)
                    
-                        exploreView(for: geo)
-                            .padding(.top, geo.size.height * 0.03)
+                        exploreView(for: geoReader)
+                            .padding(.top, geoReader.size.height * 0.03)
                       
                     }
-//                    .padding()
                 }
-                .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
+                .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
             }
         }
     }
     
-    private func header(for geo: GeometryProxy) -> some View {
+    private func header(for geoReader: GeometryProxy) -> some View {
         HStack{
             //Gotta keep the naviagationLinks here in order to route in a menu
             NavigationLink(destination: SettingsView(), tag: 1, selection: $menuSelection) {}
@@ -49,8 +48,8 @@ struct HomeView: View {
             
             Text("Logo")
                 .bold()
-                .font(.system(size: geo.size.height * 0.04))
-                .padding(.leading, geo.size.height * 0.05)
+                .font(.system(size: geoReader.size.height * 0.04))
+                .padding(.leading, geoReader.size.height * 0.05)
             
             Spacer()
             
@@ -71,30 +70,30 @@ struct HomeView: View {
                 } icon: {
                     Image(systemName: "ellipsis")
                         .resizable()
-                        .frame(width: geo.size.width * 0.08, height: geo.size.height * 0.01)
+                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.01)
                         .foregroundColor(.black)
                 }
             }
         }
     }
     
-    private func nextDateView(for geo: GeometryProxy) -> some View {
+    private func nextDateView(for geoReader: GeometryProxy) -> some View {
         VStack{
             Text("Next Date")
-                .frame(maxWidth: geo.size.width, alignment: .leading)
+                .frame(maxWidth: geoReader.size.width, alignment: .leading)
                 .font(.title.bold())
                 .foregroundColor(.black)
             
-            NavigationLink(destination: sdHomeView(displayType: viewModel.user.sds.first!.userRoleType, sizing: geo), label: {
-                CountdownTimerView(timeRemaining: viewModel.user.sds.first!.time, sizing: geo)
+            NavigationLink(destination: sdHomeView(displayType: viewModel.user.sds.first!.userRoleType), label: {
+                CountdownTimerView(timeRemaining: viewModel.user.sds.first!.time, geoReader: geoReader)
             })
         }
     }
     
-    private func exploreView(for geo: GeometryProxy) -> some View {
+    private func exploreView(for geoReader: GeometryProxy) -> some View {
         VStack{
             Text("Explore")
-                .frame(maxWidth: geo.size.width, alignment: .leading)
+                .frame(maxWidth: geoReader.size.width, alignment: .leading)
                 .font(.title.bold())
                 .foregroundColor(.black)
             

@@ -11,13 +11,16 @@ struct UpcomingTabView: View {
     @StateObject var viewModel = HomeViewModel()
     
     var body: some View {
-        ScrollView{
-            VStack{
-                ForEach(viewModel.user.sds) { time in
-                    UpcomingCardView(sd: time)
+        GeometryReader{geoReader in
+            ScrollView{
+                VStack{
+                    ForEach(viewModel.user.sds) { time in
+                        UpcomingCardView(sd: time, geoReader: geoReader)
+                    }
                 }
             }
         }
+     
     }
 }
 

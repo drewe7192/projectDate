@@ -144,6 +144,30 @@ enum MockService {
                     userRoleType: "host",
                     roomNumber: "638d9e07aee54625da64dfe2",
                     profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
                 )
             ],
             Profiles: profilesSampleData

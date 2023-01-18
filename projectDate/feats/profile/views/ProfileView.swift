@@ -12,49 +12,49 @@ struct ProfileView: View {
     @StateObject var viewModel = ProfileViewModel()
     
     var body: some View {
-        ZStack{
-            ImageSlider(person: participant)
-                
-
-            ProfileInfoOverlay(participant: participant)
-                .padding()
-                .padding(.top,500)
-                
-
-            VStack{
-                HStack{
-                    sideBar
-                        .opacity(0.8)
-                        .padding(.top,100)
+        GeometryReader{ geoReader in
+            ZStack{
+                ImageSlider(person: participant)
                     
-                    Spacer()
+                ProfileInfoOverlay(participant: participant)
+                    .padding(.top, geoReader.size.height * 0.15)
                     
-                    Menu {
-                        Button("Test1", action: function1)
-                        Button("Test2", action: function2)
-                        Button("Test3", action: function3)
-                    } label: {
-                        Label {
-                            Text("")
-                        } icon: {
-                            Image(systemName: "ellipsis")
-                                .resizable()
-                                .frame(width: 27, height: 7)
-                                .foregroundColor(.black)
+                VStack{
+                    HStack{
+                        sideBar(for: geoReader)
+                            .opacity(0.8)
+                        
+                        Spacer()
+                        
+                        Menu {
+                            Button("Test1", action: function1)
+                            Button("Test2", action: function2)
+                            Button("Test3", action: function3)
+                        } label: {
+                            Label {
+                                Text("")
+                            } icon: {
+                                Image(systemName: "ellipsis")
+                                    .resizable()
+                                    .frame(width: 27, height: 7)
+                                    .foregroundColor(.black)
+                            }
                         }
+                        .padding(.bottom,geoReader.size.height * 0.6)
                     }
-                    .padding(.bottom,450)
                 }
-            }
-            .padding(.bottom,450)
+                .padding(.bottom,geoReader.size.height * 0.3)
+             
+            }.position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
         }
+      
     }
     
-    private var sideBar: some View {
+    private func sideBar(for geoReader: GeometryProxy) -> some View {
         
         ZStack{
             Text("")
-                .frame(width: 45, height: 200)
+                .frame(width: geoReader.size.width * 0.13, height: geoReader.size.height * 0.3)
                 .background(.gray)
                 .cornerRadius(20)
                 .padding(.leading,5)

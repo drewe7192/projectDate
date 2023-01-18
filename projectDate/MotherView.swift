@@ -15,28 +15,36 @@ struct MotherView: View {
         switch viewRouter.currentPage {
         case .signInPage :
             TabView {
-                HomeView()
+                LocalHomeView()
                     .tabItem{
                         Label("Home", systemImage: "house")
                     }.tag(1)
-                LikesView()
+                LocalHomeView()
                     .tabItem{
-                        Label("Likes", systemImage: "heart")
-                    }
-                    .tag(2)
-                GamesView()
-                    .tabItem{
-                        Label("Games", systemImage: "gamecontroller")
-                    }
-                    .tag(3)
-                MessageHomeView()
-                    .tabItem{
-                        Label("Messenger", systemImage: "message")
-                    }.tag(4)
-                UserProfileView()
-                    .tabItem{
-                        Label("Profile", systemImage: "person")
-                    }.tag(5)
+                        Label("Events", systemImage: "calendar")
+                    }.tag(2)
+//                HomeView()
+//                    .tabItem{
+//                        Label("Home", systemImage: "house")
+//                    }.tag(1)
+//                LikesView()
+//                    .tabItem{
+//                        Label("Likes", systemImage: "heart")
+//                    }
+//                    .tag(2)
+//                GamesView()
+//                    .tabItem{
+//                        Label("Games", systemImage: "gamecontroller")
+//                    }
+//                    .tag(3)
+//                MessageHomeView()
+//                    .tabItem{
+//                        Label("Messenger", systemImage: "message")
+//                    }.tag(4)
+//                UserProfileView()
+//                    .tabItem{
+//                        Label("Profile", systemImage: "person")
+//                    }.tag(5)
             }
             .frame(height: 870)
             
