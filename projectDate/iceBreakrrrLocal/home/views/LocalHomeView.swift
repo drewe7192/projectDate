@@ -11,23 +11,26 @@ struct LocalHomeView: View {
     @State private var showFriendDisplay = true
     
     var body: some View {
-        GeometryReader{geoReader in
-            ZStack{
-                Color("Gray")
-                    .ignoresSafeArea()
-                VStack{
-                    headerSection(for: geoReader)
-                    Divider()
-                    Spacer()
-                        .frame(height: 20)
-                    eventSection(for: geoReader)
-                    Spacer()
-                        .frame(height: 20)
-                    cardsSection(for: geoReader)
-                    Spacer()
-                }
-            }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
+        NavigationView{
+            GeometryReader{geoReader in
+                ZStack{
+                    Color("Gray")
+                        .ignoresSafeArea()
+                    VStack{
+                        headerSection(for: geoReader)
+                        Divider()
+                        Spacer()
+                            .frame(height: 20)
+                        eventSection(for: geoReader)
+                        Spacer()
+                            .frame(height: 20)
+                        cardsSection(for: geoReader)
+                        Spacer()
+                    }
+                }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
+            }
         }
+       
     }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
@@ -36,7 +39,6 @@ struct LocalHomeView: View {
                 Text("Logo")
                     .bold()
                     .font(.system(size: 30))
-                //                    .padding(.leading,120)
                 
                 VStack(alignment: .trailing){
                     Toggle("", isOn: $showFriendDisplay)
@@ -53,22 +55,10 @@ struct LocalHomeView: View {
                 .bold()
                 .font(.system(size: 30))
                 .padding(.trailing,200)
-            
-            ZStack{
-                Text("")
-                    .frame(width: 370, height: 80)
-                    .background(Color.white)
-                    .foregroundColor(.white)
-                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.blue, lineWidth: 2))
-                
-                VStack{
-                    HStack{
-                        Image(systemName: "figure.australian.football")
-                        Text("SpeedDating on Landis")
-                    }
-                    Text("August 10, 2010")
-                }
+            NavigationLink(destination: EventInfoView()){
+                EventCardView()
             }
+         
         }
     }
     
@@ -78,17 +68,7 @@ struct LocalHomeView: View {
                 .bold()
                 .font(.system(size: 30))
                 .padding(.trailing,200)
-            ZStack{
-                Text("")
-                    .frame(width: 370, height: 350)
-                    .background(.white)
-                    .foregroundColor(.gray)
-                    .cornerRadius(20)
-                    .shadow(radius: geoReader.size.width * 0.03)
-                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(.blue, lineWidth: 2))
-                
-                Text("fsdfsdf")
-            }
+            SwipeCardsView()
         }
     }
 }

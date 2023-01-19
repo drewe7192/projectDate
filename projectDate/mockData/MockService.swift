@@ -11,13 +11,15 @@ enum MockService {
     
     static var homeTabTitles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
     static var profileSampleData: ProfileModel {
-        ProfileModel(firstName: "vooon",
-                     lastName: "Daooy", location: "Tampa, Fl",profileType: "recommended", images: ["animeGirl","animeGirl2","sasuke"],
-                     info: ProfileInfoModel(
-                        aboutMe: "fdsfsdfs",
-                        interests: "fdsfadsfdsfdsfaddsf",
-                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                     ), test: 1)
+        ProfileModel(
+            id: 1,
+            firstName: "vooon",
+            lastName: "Daooy", location: "Tampa, Fl",profileType: "recommended", images: ["animeGirl","animeGirl2","sasuke"],
+            info: ProfileInfoModel(
+                aboutMe: "fdsfsdfs",
+                interests: "fdsfadsfdsfdsfaddsf",
+                sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
+            ), test: 1)
     }
     
     static var sdSampleData: sdModel {
@@ -32,6 +34,7 @@ enum MockService {
     static var profilesSampleData: [ProfileModel] {
         [
             ProfileModel(
+                id: 1,
                 firstName: "Travon",
                 lastName: "Dayvon",
                 location: "ClearWater, Fl",
@@ -41,6 +44,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
             ProfileModel(
+                id: 2,
                 firstName: "von",
                 lastName: "Day",
                 location: "Tampa, Fl",
@@ -50,6 +54,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
             ProfileModel(
+                id: 3,
                 firstName: "22Gz",
                 lastName: "Blixy",
                 location: "St.Pete, Fl",
@@ -59,6 +64,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 2),
             ProfileModel(
+                id: 4,
                 firstName: "Felippe",
                 lastName: "Ferriera",
                 location: "Tally, Fl",
@@ -68,6 +74,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
             ProfileModel(
+                id: 5,
                 firstName: "Sierra",
                 lastName: "AppleWhite",
                 location: "ClearWater, Fl",
@@ -77,6 +84,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
             ProfileModel(
+                id: 6,
                 firstName: "Ashley",
                 lastName: "Bashely",
                 location: "ClearWater, Fl",
@@ -86,6 +94,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 2),
             ProfileModel(
+                id: 7,
                 firstName: "My",
                 lastName: "Dude",
                 location: "ClearWater, Fl",
@@ -95,6 +104,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
             ProfileModel(
+                id: 8,
                 firstName: "Travon",
                 lastName: "Dayvon",
                 location: "ClearWater, Fl",
@@ -104,6 +114,7 @@ enum MockService {
                                        sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
                                       ),test: 1),
             ProfileModel(
+                id: 9,
                 firstName: "Travon",
                 lastName: "Dayvon",
                 location: "ClearWater, Fl",
@@ -172,5 +183,10 @@ enum MockService {
             ],
             Profiles: profilesSampleData
         )
+    }
+    
+    static var swipeCardsProfilesSampleData: SwipeCardsModel {
+        SwipeCardsModel(id: 0, firstName: "Bob", lastName: "john",
+                        start: .red, end: .green, profiles: profilesSampleData)
     }
 }

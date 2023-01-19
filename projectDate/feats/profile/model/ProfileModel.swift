@@ -8,7 +8,7 @@
 import Foundation
 
 struct ProfileModel: Identifiable {
-    var id = UUID().uuidString
+    var id: Int
     var firstName: String
     var lastName: String
     var location: String
