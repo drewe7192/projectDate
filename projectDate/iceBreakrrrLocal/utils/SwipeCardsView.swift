@@ -23,7 +23,7 @@ struct SwipeCardsView: View {
                         .animation(.spring())
                         .frame(width:
                                 viewModel.swipeCards.cardWidth(in: geometry,
-                                                userId: user.id), height: 400)
+                                                userId: user.id), height: 700)
                         .offset(x: 0,
                                 y: viewModel.swipeCards.cardOffset(
                                     userId: user.id))

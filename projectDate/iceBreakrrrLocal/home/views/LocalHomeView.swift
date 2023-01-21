@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LocalHomeView: View {
     @State private var showFriendDisplay = true
+    @State private var downloadAmount = 0.0
+    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationView{
@@ -19,13 +21,69 @@ struct LocalHomeView: View {
                     VStack{
                         headerSection(for: geoReader)
                         Divider()
-                        Spacer()
-                            .frame(height: 20)
-                        eventSection(for: geoReader)
-                        Spacer()
-                            .frame(height: 20)
+                  
+                        
+                            Text(showFriendDisplay ? "Friend Profile": "Dating Profile")
+                                .bold()
+                                .font(.system(size: 25))
+                                .padding(.trailing,200)
+                            
+                        
+                       
+                        .padding(.leading,30)
+                     
+                         
+                        
+                        HStack {
+                            ZStack{
+                                Circle()
+                                    .stroke(
+                                        Color.pink.opacity(0.5),
+                                        lineWidth: 5
+                                    ).frame(width: 130, height: 130)
+                                
+                                Text("98%")
+                                    .font(.system(size: 40))
+                            }
+                            
+                            Spacer()
+                                .frame(width: 40)
+                                
+                            VStack{
+                                VStack(alignment: .leading){
+                                    Text("Test: 100%")
+                                    Rectangle()
+                                        .stroke(.green, lineWidth: 3)
+                                        .frame(width: 140, height: 1)
+                                }
+                                
+                                VStack(alignment: .leading){
+                                    Text("Test: 100%")
+                                    Rectangle()
+                                        .stroke(.green, lineWidth: 3)
+                                        .frame(width: 140, height: 1)
+                                }
+                                
+                                VStack(alignment: .leading){
+                                    Text("Test: 100%")
+                                    Rectangle()
+                                        .stroke(.green, lineWidth: 3)
+                                        .frame(width: 140, height: 1)
+                                }
+                            }
+                       
+                          
+                            
+                        }
+                    
+                
+                        
                         cardsSection(for: geoReader)
-                        Spacer()
+                        
+//                        eventSection(for: geoReader)
+                        
+                      
+                      
                     }
                 }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
             }
@@ -34,18 +92,17 @@ struct LocalHomeView: View {
     }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
-        VStack{
-            HStack{
+        ZStack{
+          
                 Text("Logo")
                     .bold()
                     .font(.system(size: 30))
-                
-                VStack(alignment: .trailing){
-                    Toggle("", isOn: $showFriendDisplay)
-                    Text(showFriendDisplay ? "Friendship" : "Dating" )
-                        .bold()
-                }
-            }
+            
+         
+                Toggle("", isOn: $showFriendDisplay)
+                .padding(.trailing,10)
+            
+            
         }
     }
     
@@ -64,10 +121,19 @@ struct LocalHomeView: View {
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
         VStack{
-            Text("Little Things")
-                .bold()
-                .font(.system(size: 30))
-                .padding(.trailing,200)
+
+            
+//            ProgressView("Downloading...", value: downloadAmount, total: 100)
+//                .frame(width: 350, height: 10)
+//                .padding(8)
+//                .background(Color.gray.opacity(0.25))
+//                .tint(.red)
+//                .cornerRadius(8)
+//                .onReceive(timer) {_ in
+//                    if downloadAmount < 100 {
+//                        downloadAmount += 2
+//                    }
+//                }
             SwipeCardsView()
         }
     }
