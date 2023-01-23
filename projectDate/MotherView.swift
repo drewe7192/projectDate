@@ -19,39 +19,39 @@ struct MotherView: View {
                     .tabItem{
                         Label("Home", systemImage: "house")
                     }.tag(1)
-                LocalHomeView()
+                EventHomeView(searchText: .constant(""))
                     .tabItem{
                         Label("Events", systemImage: "calendar")
                     }.tag(2)
-//                HomeView()
-//                    .tabItem{
-//                        Label("Home", systemImage: "house")
-//                    }.tag(1)
-//                LikesView()
-//                    .tabItem{
-//                        Label("Likes", systemImage: "heart")
-//                    }
-//                    .tag(2)
-//                GamesView()
-//                    .tabItem{
-//                        Label("Games", systemImage: "gamecontroller")
-//                    }
-//                    .tag(3)
-//                MessageHomeView()
-//                    .tabItem{
-//                        Label("Messenger", systemImage: "message")
-//                    }.tag(4)
-//                UserProfileView()
-//                    .tabItem{
-//                        Label("Profile", systemImage: "person")
-//                    }.tag(5)
+                //                HomeView()
+                //                    .tabItem{
+                //                        Label("Home", systemImage: "house")
+                //                    }.tag(1)
+                //                LikesView()
+                //                    .tabItem{
+                //                        Label("Likes", systemImage: "heart")
+                //                    }
+                //                    .tag(2)
+                //                GamesView()
+                //                    .tabItem{
+                //                        Label("Games", systemImage: "gamecontroller")
+                //                    }
+                //                    .tag(3)
+                //                MessageHomeView()
+                //                    .tabItem{
+                //                        Label("Messenger", systemImage: "message")
+                //                    }.tag(4)
+                //                UserProfileView()
+                //                    .tabItem{
+                //                        Label("Profile", systemImage: "person")
+                //                    }.tag(5)
             }
             .frame(height: 870)
             
         case .signUpPage :
             SignUpView()
         case . homePage:
-       SignInView()
+            SignInView()
         }
     }
 }

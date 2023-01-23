@@ -10,9 +10,6 @@ import SwiftUI
 
 struct SwipeCardsModel: Identifiable {
     var id: Int
-    let firstName: String
-    let lastName: String
-    let start: Color
-    let end: Color
+    let questions: [QuestionModel]
     let profiles: [ProfileModel]
 }

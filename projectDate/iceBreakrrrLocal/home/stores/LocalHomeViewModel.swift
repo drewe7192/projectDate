@@ -8,11 +8,11 @@
 import Foundation
 
 class LocalHomeViewModel: ObservableObject {
-    @Published var swipeCards: [ProfileModel] = MockService.swipeCardsProfilesSampleData.profiles
+    @Published var swipeCards: [QuestionModel] = MockService.swipeCardsQuestionsSampleData.questions
     
     init(forPreview: Bool = false) {
         if forPreview {
-            swipeCards = MockService.swipeCardsProfilesSampleData.profiles
+            swipeCards = MockService.swipeCardsQuestionsSampleData.questions
         }
     }
 }

@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct LocalHomeView: View {
+    @ObservedObject private var viewModel = LocalHomeViewModel()
     @State private var showFriendDisplay = true
+    @State private var progress: Double = 0.4
     @State private var downloadAmount = 0.0
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -16,124 +18,103 @@ struct LocalHomeView: View {
         NavigationView{
             GeometryReader{geoReader in
                 ZStack{
-                    Color("Gray")
+                    Color("IceBreakrrrBlue")
                         .ignoresSafeArea()
+                    
                     VStack{
                         headerSection(for: geoReader)
                         Divider()
-                  
                         
-                            Text(showFriendDisplay ? "Friend Profile": "Dating Profile")
-                                .bold()
-                                .font(.system(size: 25))
-                                .padding(.trailing,200)
-                            
+                        Text(showFriendDisplay ? "Friend Profile": "Dating Profile")
+                            .bold()
+                            .foregroundColor(.white)
+                            .font(.custom("Superclarendon", size: 25))
+                            .padding(.trailing,170)
+                            .padding(.leading,5)
                         
-                       
-                        .padding(.leading,30)
-                     
-                         
-                        
-                        HStack {
-                            ZStack{
-                                Circle()
-                                    .stroke(
-                                        Color.pink.opacity(0.5),
-                                        lineWidth: 5
-                                    ).frame(width: 130, height: 130)
-                                
-                                Text("98%")
-                                    .font(.system(size: 40))
-                            }
-                            
-                            Spacer()
-                                .frame(width: 40)
-                                
-                            VStack{
-                                VStack(alignment: .leading){
-                                    Text("Test: 100%")
-                                    Rectangle()
-                                        .stroke(.green, lineWidth: 3)
-                                        .frame(width: 140, height: 1)
-                                }
-                                
-                                VStack(alignment: .leading){
-                                    Text("Test: 100%")
-                                    Rectangle()
-                                        .stroke(.green, lineWidth: 3)
-                                        .frame(width: 140, height: 1)
-                                }
-                                
-                                VStack(alignment: .leading){
-                                    Text("Test: 100%")
-                                    Rectangle()
-                                        .stroke(.green, lineWidth: 3)
-                                        .frame(width: 140, height: 1)
-                                }
-                            }
-                       
-                          
-                            
-                        }
-                    
-                
-                        
+                        profilerSection(for: geoReader)
                         cardsSection(for: geoReader)
                         
-//                        eventSection(for: geoReader)
-                        
-                      
-                      
                     }
                 }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
             }
         }
-       
     }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-          
-                Text("Logo")
-                    .bold()
-                    .font(.system(size: 30))
+            Text("Logo")
+                .bold()
+                .font(.system(size: 30))
             
-         
-                Toggle("", isOn: $showFriendDisplay)
-                .padding(.trailing,10)
-            
+            Toggle(isOn: $showFriendDisplay, label: {
+                
+            })
+            .padding()
+            .toggleStyle(SwitchToggleStyle(tint: .white))
             
         }
     }
     
-    private func eventSection(for geoReader: GeometryProxy) ->  some View {
-        VStack{
-            Text("Next Event")
-                .bold()
-                .font(.system(size: 30))
-                .padding(.trailing,200)
-            NavigationLink(destination: EventInfoView()){
-                EventCardView()
+    private func profilerSection(for geoReader: GeometryProxy) -> some View {
+        HStack {
+            ZStack{
+                CircularProgressView(progress: progress)
+                    .frame(width: 130, height: 130)
+                
+                
+                Text("\(progress * 100, specifier: "%.0f")%")
+                    .font(.custom("Superclarendon", size: 45))
+                    .foregroundColor(.white)
             }
-         
+            
+            Spacer()
+                .frame(width: 40)
+            
+            VStack{
+                VStack(alignment: .leading){
+                    VStack{
+                        ProgressView("Values:" + "\(downloadAmount)%", value: downloadAmount, total: 100)
+                            .foregroundColor(.white)
+                            .tint(.white)
+                            .frame(width: 150)
+                            .onReceive(timer) {_ in
+                                if downloadAmount < 100 {
+                                    downloadAmount += 2
+                                }
+                            }
+                    }
+                    
+                    VStack{
+                        ProgressView("Qualities:" + "\(downloadAmount)%", value: downloadAmount, total: 100)
+                            .foregroundColor(.white)
+                            .tint(.white)
+                            .frame(width: 150)
+                            .onReceive(timer) {_ in
+                                if downloadAmount < 100 {
+                                    downloadAmount += 2
+                                }
+                            }
+                    }
+                    
+                    VStack{
+                        ProgressView("Commit:" + "\(downloadAmount)%", value: downloadAmount, total: 100)
+                            .foregroundColor(.white)
+                            .tint(.white)
+                            .frame(width: 150)
+                            .onReceive(timer) {_ in
+                                if downloadAmount < 100 {
+                                    downloadAmount += 2
+                                }
+                            }
+                    }
+                }
+            }
         }
     }
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
         VStack{
-
-            
-//            ProgressView("Downloading...", value: downloadAmount, total: 100)
-//                .frame(width: 350, height: 10)
-//                .padding(8)
-//                .background(Color.gray.opacity(0.25))
-//                .tint(.red)
-//                .cornerRadius(8)
-//                .onReceive(timer) {_ in
-//                    if downloadAmount < 100 {
-//                        downloadAmount += 2
-//                    }
-//                }
             SwipeCardsView()
         }
     }

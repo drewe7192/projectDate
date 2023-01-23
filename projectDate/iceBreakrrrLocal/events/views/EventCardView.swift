@@ -10,44 +10,46 @@ import SwiftUI
 struct EventCardView: View {
     var body: some View {
         ZStack{
-                    Text("")
-                        .frame(width: 370, height: 130)
-                        .background(Color.white)
+            
+            Color("IceBreakrrrBlue")
+                .ignoresSafeArea()
+            
+            Text("")
+                .frame(width: 370, height: 100)
+                .cornerRadius(60)
+                .shadow(radius: 10)
+                .overlay(RoundedRectangle(cornerRadius: 60).stroke(.white, lineWidth: 6))
+            
+            VStack{
+                VStack(alignment: .leading){
+                    Text("SpeedDate Kickball")
                         .foregroundColor(.white)
-                        .cornerRadius(60)
-                        .shadow(radius: 10)
-
+                        .font(.system(size: 25))
+                    
                     VStack{
-                        VStack(alignment: .leading){
-                            Text("SpeedDate Kickball")
-                                .foregroundColor(.black)
-                                .font(.system(size: 25))
-                                .padding(.top,2)
-
-                            Text("Wharf Tampa")
-                                .foregroundColor(.black)
-                                .font(.system(size: 15))
-                                .padding(.bottom,2)
-                            
-                            Text("9/23")
-                                .foregroundColor(.black)
-                                .font(.system(size: 15))
-                        }
-                        .padding(.trailing,70)
-                        }
-                    .padding(.bottom,30)
+                        Text("Wharf Tampa")
+                            .foregroundColor(.white)
+                            .font(.system(size: 15))
+                        
+                        Text("9/23")
+                            .foregroundColor(.white)
+                            .font(.system(size: 15))
+                    }
+                }
+                .padding(.trailing,70)
+            }
             
             HStack{
                 ForEach(0..<4){ item in
-                    Text("AV")
-                        .foregroundColor(.black)
+                    Image("animeGirl")
+                        .resizable()
+                        .clipShape(Circle())
                         .frame(width: 40, height: 40)
-                        .overlay(Circle().stroke(Color.blue, lineWidth: 2))
                 }
-            }.padding(.leading,80)
-            .padding(.top,70)
-                        
-                }
+            }
+            .padding(.leading,120)
+            .padding(.top,40)
+        }
     }
 }
 

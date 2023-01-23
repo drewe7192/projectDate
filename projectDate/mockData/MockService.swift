@@ -10,6 +10,74 @@ import Foundation
 enum MockService {
     
     static var homeTabTitles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
+    
+    static var userSampleData: UserModel {
+        UserModel(
+            firstName: "Travon",
+            lastName: "Dayvon", location: "ClearWater, Fl",
+            sds:  [
+                sdModel(
+                    firstName: "Drew",
+                    lastName: "Drew",
+                    time: 172805,
+                    userRoleType: "host",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "w",
+                    lastName: "w",
+                    time: 5059448,
+                    userRoleType: "host",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                ),
+                sdModel(
+                    firstName: "D",
+                    lastName: "ew",
+                    time: 384585,
+                    userRoleType: "guest",
+                    roomNumber: "638d9e07aee54625da64dfe2",
+                    profiles: profilesSampleData
+                )
+            ],
+            Profiles: profilesSampleData
+        )
+    }
+    
+    static var sdSampleData: sdModel {
+        sdModel(firstName: "Drew",
+                lastName: "Drew",
+                time: 4743843,
+                userRoleType: "host",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData)
+    }
+    
     static var profileSampleData: ProfileModel {
         ProfileModel(
             id: 1,
@@ -20,15 +88,6 @@ enum MockService {
                 interests: "fdsfadsfdsfdsfaddsf",
                 sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
             ), test: 1)
-    }
-    
-    static var sdSampleData: sdModel {
-        sdModel(firstName: "Drew",
-                lastName: "Drew",
-                time: 4743843,
-                userRoleType: "host",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData)
     }
     
     static var profilesSampleData: [ProfileModel] {
@@ -127,66 +186,34 @@ enum MockService {
         ]
     }
     
-    static var userSampleData: UserModel {
-        UserModel(
-            firstName: "Travon",
-            lastName: "Dayvon", location: "ClearWater, Fl",
-            sds:  [
-                sdModel(
-                    firstName: "Drew",
-                    lastName: "Drew",
-                    time: 172805,
-                    userRoleType: "host",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "w",
-                    lastName: "w",
-                    time: 5059448,
-                    userRoleType: "host",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                )
-            ],
-            Profiles: profilesSampleData
-        )
+    static var swipeCardsQuestionsSampleData: SwipeCardsModel {
+        SwipeCardsModel(id: 0, questions: questionsSampleData, profiles: profilesSampleData)
     }
     
-    static var swipeCardsProfilesSampleData: SwipeCardsModel {
-        SwipeCardsModel(id: 0, firstName: "Bob", lastName: "john",
-                        start: .red, end: .green, profiles: profilesSampleData)
+    static var questionsSampleData: [QuestionModel] {
+        [
+            QuestionModel(id: 0, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 1, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 2, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 3, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 4, question: "Going to the weekends upcoming Event?", choices: ["Yes", "Maybe", "No"], isEvent: true),
+            QuestionModel(id: 5, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 6, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 7, question: "When are you Free This Week?", choices: ["Sunday", "Monday"], isEvent: true),
+            QuestionModel(id: 8, question: "Time?", choices: ["MOrning", "AfterNoon"], isEvent: true),
+            QuestionModel(id: 9, question: "What do you want to do?", choices: ["BikeRiding", "RiverWalk"], isEvent: true),
+            QuestionModel(id: 10, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            QuestionModel(id: 11, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            
+        ]
+    }
+    
+    static var eventsSampleData: [EventModel] {
+        [
+            
+            EventModel(id: 0, title: "SppeDDating KickBall", Date: "August 25th 2023", participants: ["Bob", "Ellen"]),
+            EventModel(id: 0, title: "SppeDDating KickBall", Date: "August 25th 2023", participants: ["Bob", "Ellen"]),
+            EventModel(id: 0, title: "SppeDDating KickBall", Date: "August 25th 2023", participants: ["Bob", "Ellen"])
+        ]
     }
 }
