@@ -11,9 +11,10 @@ struct UserModel: Identifiable {
     var id = UUID().uuidString
     var firstName: String
     var lastName: String
+    var email: String
     var location: String
     var sds: [sdModel]
-    var Profiles: [ProfileModel]
+    var profiles: [ProfileModel]
     
     var fullName: String {
         lastName + ", " + firstName

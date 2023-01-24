@@ -7,11 +7,11 @@
 
 import Foundation
 import FirebaseFirestore
-import FirebaseFirestoreSwift
 
-class MessagesManager: ObservableObject {
+class MessageViewModel: ObservableObject {
     @Published private(set) var messages: [Message] = []
     @Published private(set) var lastMessageId = ""
+    
     let db = Firestore.firestore()
     
     init(){

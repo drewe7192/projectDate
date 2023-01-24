@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MessageView: View {
-    @StateObject var messagesManager = MessagesManager()
+    @StateObject var viewModel = MessageViewModel()
     
     var body: some View {
         VStack {
@@ -17,7 +17,7 @@ struct MessageView: View {
                 
                 ScrollViewReader { proxy in
                     ScrollView{
-                        ForEach(messagesManager.messages, id:
+                        ForEach(viewModel.messages, id:
                                     \.id) {message in
                             MessageBubble(message: message)
                         }
@@ -26,7 +26,7 @@ struct MessageView: View {
                     .background(.white)
                     .cornerRadius(30, corners:[.topLeft, .topRight])
                     .onChange(of:
-                                messagesManager.lastMessageId) { id in
+                                viewModel.lastMessageId) { id in
                         withAnimation{
                             proxy.scrollTo(id, anchor: .bottom)
                         }                        
@@ -36,7 +36,7 @@ struct MessageView: View {
             .background(Color("Peach"))
             
             MessageField()
-                .environmentObject(messagesManager)
+                .environmentObject(viewModel)
         }
     }
     

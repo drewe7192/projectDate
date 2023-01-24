@@ -8,8 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct SwipeCardsModel: Identifiable {
+struct CardsModel: Identifiable {
     var id: Int
-    let questions: [QuestionModel]
-    let profiles: [ProfileModel]
+    let cards: [CardModel]
 }

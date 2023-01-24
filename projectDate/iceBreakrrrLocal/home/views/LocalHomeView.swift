@@ -18,7 +18,7 @@ struct LocalHomeView: View {
         NavigationView{
             GeometryReader{geoReader in
                 ZStack{
-                    Color("IceBreakrrrBlue")
+                    Color(.systemTeal)
                         .ignoresSafeArea()
                     
                     VStack{
@@ -124,4 +124,8 @@ struct LocalHomeView_Previews: PreviewProvider {
     static var previews: some View {
         LocalHomeView()
     }
+}
+
+extension Color {
+    static let realColor = Color("iceBreakrrrBlue")
 }

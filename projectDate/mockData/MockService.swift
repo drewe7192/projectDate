@@ -14,68 +14,76 @@ enum MockService {
     static var userSampleData: UserModel {
         UserModel(
             firstName: "Travon",
-            lastName: "Dayvon", location: "ClearWater, Fl",
-            sds:  [
-                sdModel(
-                    firstName: "Drew",
-                    lastName: "Drew",
-                    time: 172805,
-                    userRoleType: "host",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "w",
-                    lastName: "w",
-                    time: 5059448,
-                    userRoleType: "host",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                ),
-                sdModel(
-                    firstName: "D",
-                    lastName: "ew",
-                    time: 384585,
-                    userRoleType: "guest",
-                    roomNumber: "638d9e07aee54625da64dfe2",
-                    profiles: profilesSampleData
-                )
-            ],
-            Profiles: profilesSampleData
+            lastName: "Dayvon",
+            email: "bob@google.com",
+            location: "ClearWater, Fl",
+            sds:  sdsSampleData,
+            profiles: profilesSampleData
         )
     }
     
     static var sdSampleData: sdModel {
-        sdModel(firstName: "Drew",
+        sdModel(
+            firstName: "Drew",
+            lastName: "Drew",
+            time: 4743843,
+            userRoleType: "host",
+            roomNumber: "638d9e07aee54625da64dfe2",
+            profiles: profilesSampleData
+        )
+    }
+    
+    static var sdsSampleData: [sdModel] {
+        [
+            sdModel(
+                firstName: "Drew",
                 lastName: "Drew",
-                time: 4743843,
+                time: 172805,
                 userRoleType: "host",
                 roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData)
+                profiles: profilesSampleData
+            ),
+            sdModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            sdModel(
+                firstName: "w",
+                lastName: "w",
+                time: 5059448,
+                userRoleType: "host",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            sdModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            sdModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            sdModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            )
+        ]
     }
     
     static var profileSampleData: ProfileModel {
@@ -84,10 +92,11 @@ enum MockService {
             firstName: "vooon",
             lastName: "Daooy", location: "Tampa, Fl",profileType: "recommended", images: ["animeGirl","animeGirl2","sasuke"],
             info: ProfileInfoModel(
-                aboutMe: "fdsfsdfs",
-                interests: "fdsfadsfdsfdsfaddsf",
-                sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-            ), test: 1)
+            aboutMe: "fdsfsdfs",
+            interests: "fdsfadsfdsfdsfaddsf",
+            sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)),
+            test: 1
+        )
     }
     
     static var profilesSampleData: [ProfileModel] {
@@ -186,24 +195,24 @@ enum MockService {
         ]
     }
     
-    static var swipeCardsQuestionsSampleData: SwipeCardsModel {
-        SwipeCardsModel(id: 0, questions: questionsSampleData, profiles: profilesSampleData)
+    static var cardObjectSampleData: CardsModel {
+        CardsModel(id: 0, cards: cardsSampleData)
     }
     
-    static var questionsSampleData: [QuestionModel] {
+    static var cardsSampleData: [CardModel] {
         [
-            QuestionModel(id: 0, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 1, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 2, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 3, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 4, question: "Going to the weekends upcoming Event?", choices: ["Yes", "Maybe", "No"], isEvent: true),
-            QuestionModel(id: 5, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 6, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 7, question: "When are you Free This Week?", choices: ["Sunday", "Monday"], isEvent: true),
-            QuestionModel(id: 8, question: "Time?", choices: ["MOrning", "AfterNoon"], isEvent: true),
-            QuestionModel(id: 9, question: "What do you want to do?", choices: ["BikeRiding", "RiverWalk"], isEvent: true),
-            QuestionModel(id: 10, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
-            QuestionModel(id: 11, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], isEvent: false),
+            CardModel(id: 0, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
+            CardModel(id: 1, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
+            CardModel(id: 2, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
+            CardModel(id: 3, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
+            CardModel(id: 4, question: "Going to the weekends upcoming Event?", choices: ["Yes", "Maybe", "No"], category: "qualities"),
+            CardModel(id: 5, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
+            CardModel(id: 6, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "event"),
+            CardModel(id: 7, question: "When are you Free This Week?", choices: ["Sunday", "Monday"], category: "event"),
+            CardModel(id: 8, question: "Time?", choices: ["MOrning", "AfterNoon"], category: "qualities"),
+            CardModel(id: 9, question: "What do you want to do?", choices: ["BikeRiding", "RiverWalk"], category: "qualities"),
+            CardModel(id: 10, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
+            CardModel(id: 11, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
             
         ]
     }

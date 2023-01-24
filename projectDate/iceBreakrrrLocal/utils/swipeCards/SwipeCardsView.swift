@@ -9,14 +9,14 @@ import SwiftUI
 
 
 struct SwipeCardsView: View {
-    @ObservedObject private var viewModel = LocalHomeViewModel()
+    @StateObject private var viewModel = LocalHomeViewModel()
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 ForEach(viewModel.swipeCards) { question in
                     if question.id > viewModel.swipeCards.maxId - 4 {
-                        SwipeCardView(question: question, onRemove: {
+                        SwipeCardView(card: question, onRemove: {
                             removedUser in
                             viewModel.swipeCards.removeAll { $0.id == removedUser.id }
                         })
@@ -34,7 +34,7 @@ struct SwipeCardsView: View {
     }
 }
 
-extension Array where Element == QuestionModel {
+extension Array where Element == CardModel {
     var maxId: Int { map { $0.id }.max() ?? 0 }
     
     func cardOffset(userId: Int) -> CGFloat {

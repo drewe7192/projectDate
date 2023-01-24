@@ -12,7 +12,7 @@ struct CircularProgressView: View {
     var body: some View {
         
         ZStack{
-            Color("IceBreakrrrBlue")
+            Color(.systemTeal)
                 .ignoresSafeArea()
             
             Circle()

@@ -18,13 +18,13 @@ struct SwipeCardView: View {
     
     @State
     private var translation: CGSize = .zero
-    private var question: QuestionModel
-    private var onRemove: (_ question: QuestionModel) -> Void
+    private var card: CardModel
+    private var onRemove: (_ card: CardModel) -> Void
     private var threshold: CGFloat = 0.5
     
-    init(question: QuestionModel, onRemove: @escaping (_ question: QuestionModel)
+    init(card: CardModel, onRemove: @escaping (_ card: CardModel)
          -> Void) {
-        self.question = question
+        self.card = card
         self.onRemove = onRemove
     }
     
@@ -33,20 +33,21 @@ struct SwipeCardView: View {
             VStack(alignment: .leading, spacing: 20) {
                 ZStack{
                     Rectangle()
-                        .foregroundColor(Color("IceBreakrrrPink"))
+                        .foregroundColor(.pink)
                         .cornerRadius(40)
                         .frame(width: geometry.size.width - 40,
                                height: geometry.size.height * 0.45)
                     
                     VStack{
-                        Text("\(question.question)")
+                        Text("\(card.question)")
                             .font(.custom("Superclarendon", size: 30))
                             .foregroundColor(.white)
+                            .padding(10)
                         Spacer()
                             .frame(height: 40)
                         VStack {
                             Picker("", selection: $selectedColor) {
-                                ForEach(question.choices, id: \.self) { choice in
+                                ForEach(card.choices, id: \.self) { choice in
                                     Text("\(choice)")
                                 }
                               
@@ -83,7 +84,7 @@ struct SwipeCardView: View {
                         translation = $0.translation
                     }.onEnded {
                         if $0.percentage(in: geometry) > threshold {
-                            onRemove(self.question)
+                            onRemove(self.card)
                         } else {
                             translation = .zero
                         }
@@ -101,6 +102,6 @@ extension DragGesture.Value {
 
 struct SwipeCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeCardView(question: MockService.questionsSampleData.first!, onRemove: {_ in})
+        SwipeCardView(card: MockService.cardsSampleData.first!, onRemove: {_ in})
     }
 }

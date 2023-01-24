@@ -7,10 +7,11 @@
 
 import Foundation
 
-
-struct QuestionModel: Identifiable {
+struct CardModel: Codable, Identifiable  {
     let id: Int
     let question: String
     let choices: [String]
-    let isEvent: Bool
+    let category: String
 }
+
+

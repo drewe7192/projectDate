@@ -17,12 +17,25 @@ struct projectDateApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var viewRouter = ViewRouter()
     
+    //init firebase
+//    init(){
+//        initFirebase()
+//    }
+    
     var body: some Scene {
         WindowGroup {
             MotherView().environmentObject(viewRouter)
         }
     }
 }
+
+//extension projectDateApp {
+//    private func initFirebase(){
+//        FirebaseApp.configure()
+//    }
+//}
+
+
 
 class AppDelegate: NSObject, UIApplicationDelegate{
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchingOptions:
