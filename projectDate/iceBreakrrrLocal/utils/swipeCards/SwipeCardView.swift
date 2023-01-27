@@ -40,11 +40,10 @@ struct SwipeCardView: View {
                     
                     VStack{
                         Text("\(card.question)")
-                            .font(.custom("Superclarendon", size: 30))
+                            .font(.custom("Superclarendon", size: 20))
                             .foregroundColor(.white)
                             .padding(10)
-                        Spacer()
-                            .frame(height: 40)
+                       
                         VStack {
                             Picker("", selection: $selectedColor) {
                                 ForEach(card.choices, id: \.self) { choice in
@@ -54,6 +53,7 @@ struct SwipeCardView: View {
                             }
                         }
                     }
+                    .frame(height: 375)
                 }
                 
                 Divider()

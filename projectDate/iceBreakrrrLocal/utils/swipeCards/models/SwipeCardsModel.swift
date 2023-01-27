@@ -9,6 +9,6 @@ import Foundation
 import SwiftUI
 
 struct CardsModel: Identifiable {
-    var id: Int
-    let cards: [CardModel]
+    var id = UUID().uuidString
+    var cards: [CardModel]
 }

@@ -17,9 +17,77 @@ enum MockService {
             lastName: "Dayvon",
             email: "bob@google.com",
             location: "ClearWater, Fl",
-            sds:  sdsSampleData,
-            profiles: profilesSampleData
+            userProfile: profileSampleData
         )
+    }
+    
+    static var profileSampleData: ProfileModel {
+        ProfileModel(
+            firstName: "John",
+            lastName: "Bon",
+            location: "Tampa, Fl",
+            images: ["animeGirl","animeGirl2","sasuke"],
+            info: profileInfoSampleData,
+            cards: cardsSampleData,
+            topRatedProfiles: [],
+            recommendedProfiles: [],
+            sds: [],
+            tabCardNumber: 0
+        )
+    }
+    
+    static var profileInfoSampleData: ProfileInfoModel {
+        ProfileInfoModel(
+        aboutMe: "fdsafdsf",
+        interests: "fdsfsdfsd",
+        height: "6"
+        )
+    }
+    
+    static var profilesSampleData: [ProfileModel] {
+        [
+            ProfileModel(
+                firstName: "Travon",
+                lastName: "Dayvon",
+                location: "ClearWater, Fl",
+                images: ["animeGirl2","sasuke"],
+                info: profileInfoSampleData,
+                cards: cardsSampleData,
+                topRatedProfiles: [],
+                recommendedProfiles: [],
+                sds: [],
+            tabCardNumber: 0
+            )
+        ]
+    }
+    
+    static var cardObjectSampleData: CardsModel {
+        CardsModel(cards: cardsSampleData)
+    }
+    
+    static var cardsSampleData: [CardModel] {
+        [
+            CardModel(
+                id: "484j48",
+                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+                choices: ["fadsfdsf", "fdasfsdfsd"],
+                category: "value",
+                profileType: "Friend"
+            )
+        ]
+    }
+    
+    static var eventsSampleData: [EventModel] {
+        [
+           EventModel(
+            title: "Event title 1",
+            location: "Tampa, Fl",
+            creationDate: Date(),
+            description: "fdsfdsfdsafsdfsd",
+            participants: [],
+            eventDate: Date()
+           )
+        ]
     }
     
     static var sdSampleData: sdModel {
@@ -83,146 +151,6 @@ enum MockService {
                 roomNumber: "638d9e07aee54625da64dfe2",
                 profiles: profilesSampleData
             )
-        ]
-    }
-    
-    static var profileSampleData: ProfileModel {
-        ProfileModel(
-            id: 1,
-            firstName: "vooon",
-            lastName: "Daooy", location: "Tampa, Fl",profileType: "recommended", images: ["animeGirl","animeGirl2","sasuke"],
-            info: ProfileInfoModel(
-            aboutMe: "fdsfsdfs",
-            interests: "fdsfadsfdsfdsfaddsf",
-            sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)),
-            test: 1
-        )
-    }
-    
-    static var profilesSampleData: [ProfileModel] {
-        [
-            ProfileModel(
-                id: 1,
-                firstName: "Travon",
-                lastName: "Dayvon",
-                location: "ClearWater, Fl",
-                profileType: "top-rated",
-                images: ["animeGirl2","sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 1),
-            ProfileModel(
-                id: 2,
-                firstName: "von",
-                lastName: "Day",
-                location: "Tampa, Fl",
-                profileType: "recommended",
-                images: ["sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 1),
-            ProfileModel(
-                id: 3,
-                firstName: "22Gz",
-                lastName: "Blixy",
-                location: "St.Pete, Fl",
-                profileType: "top-rated",
-                images: ["animeGirl","animeGirl2","sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfsbbgfgf", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 2),
-            ProfileModel(
-                id: 4,
-                firstName: "Felippe",
-                lastName: "Ferriera",
-                location: "Tally, Fl",
-                profileType: "like",
-                images: ["animeGirl2","sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 1),
-            ProfileModel(
-                id: 5,
-                firstName: "Sierra",
-                lastName: "AppleWhite",
-                location: "ClearWater, Fl",
-                profileType: "recommended",
-                images: ["sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs",interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 1),
-            ProfileModel(
-                id: 6,
-                firstName: "Ashley",
-                lastName: "Bashely",
-                location: "ClearWater, Fl",
-                profileType: "match",
-                images: ["animeGirl","animeGirl2","sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 2),
-            ProfileModel(
-                id: 7,
-                firstName: "My",
-                lastName: "Dude",
-                location: "ClearWater, Fl",
-                profileType: "top-rated",
-                images: ["animeGirl2","sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 1),
-            ProfileModel(
-                id: 8,
-                firstName: "Travon",
-                lastName: "Dayvon",
-                location: "ClearWater, Fl",
-                profileType: "recommended",
-                images: ["animeGirl","animeGirl2","sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 1),
-            ProfileModel(
-                id: 9,
-                firstName: "Travon",
-                lastName: "Dayvon",
-                location: "ClearWater, Fl",
-                profileType: "top-rated",
-                images: ["sasuke"],
-                info: ProfileInfoModel(aboutMe: "fdsfsdfs", interests: "fdsfadsfdsfdsfaddsf",
-                                       sideBarInfo: sideBarInfoModel(height: "6ft", isSmoke: true, isKids: false)
-                                      ),test: 2),
-            
-        ]
-    }
-    
-    static var cardObjectSampleData: CardsModel {
-        CardsModel(id: 0, cards: cardsSampleData)
-    }
-    
-    static var cardsSampleData: [CardModel] {
-        [
-            CardModel(id: 0, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            CardModel(id: 1, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            CardModel(id: 2, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            CardModel(id: 3, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            CardModel(id: 4, question: "Going to the weekends upcoming Event?", choices: ["Yes", "Maybe", "No"], category: "qualities"),
-            CardModel(id: 5, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            CardModel(id: 6, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "event"),
-            CardModel(id: 7, question: "When are you Free This Week?", choices: ["Sunday", "Monday"], category: "event"),
-            CardModel(id: 8, question: "Time?", choices: ["MOrning", "AfterNoon"], category: "qualities"),
-            CardModel(id: 9, question: "What do you want to do?", choices: ["BikeRiding", "RiverWalk"], category: "qualities"),
-            CardModel(id: 10, question: "What is the first thing you do in the morning?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            CardModel(id: 11, question: "What excites you the most in life?", choices: ["What is that one piece of advice you would give to people to stop hatred?","fwarefaefesd","fdsfdsafdsf"], category: "qualities"),
-            
-        ]
-    }
-    
-    static var eventsSampleData: [EventModel] {
-        [
-            
-            EventModel(id: 0, title: "SppeDDating KickBall", Date: "August 25th 2023", participants: ["Bob", "Ellen"]),
-            EventModel(id: 0, title: "SppeDDating KickBall", Date: "August 25th 2023", participants: ["Bob", "Ellen"]),
-            EventModel(id: 0, title: "SppeDDating KickBall", Date: "August 25th 2023", participants: ["Bob", "Ellen"])
         ]
     }
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 struct ProfileInfoModel: Identifiable {
-    var id = UUID().uuidString
+    let id = UUID().uuidString
     var aboutMe: String
     var interests: String
-    var sideBarInfo: sideBarInfoModel
+    var height: String
 }

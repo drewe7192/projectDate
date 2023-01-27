@@ -8,13 +8,12 @@
 import Foundation
 
 struct UserModel: Identifiable {
-    var id = UUID().uuidString
+    let id = UUID().uuidString
     var firstName: String
     var lastName: String
     var email: String
     var location: String
-    var sds: [sdModel]
-    var profiles: [ProfileModel]
+    var userProfile: ProfileModel
     
     var fullName: String {
         lastName + ", " + firstName

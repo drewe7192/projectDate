@@ -14,8 +14,8 @@ struct UpcomingTabView: View {
         GeometryReader{geoReader in
             ScrollView{
                 VStack{
-                    ForEach(viewModel.user.sds) { time in
-                        UpcomingCardView(sd: time, geoReader: geoReader)
+                    ForEach(viewModel.user.userProfile.sds, id:\.?.id) { time in
+                        UpcomingCardView(sd: time ?? MockService.sdSampleData, geoReader: geoReader)
                     }
                 }
             }

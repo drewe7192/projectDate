@@ -8,15 +8,18 @@
 import Foundation
 
 struct ProfileModel: Identifiable {
-    var id: Int
+    let id = UUID().uuidString
     var firstName: String
     var lastName: String
     var location: String
-    var profileType: String
     var images: [String]
     var info: ProfileInfoModel
-    var test: Int
-    
+    var cards: [CardModel]
+    var topRatedProfiles: [ProfileModel?]
+    var recommendedProfiles: [ProfileModel?]
+    var sds: [sdModel?]
+    var tabCardNumber: Int
+   
     var fullName: String {
         lastName + ", " + firstName
     }

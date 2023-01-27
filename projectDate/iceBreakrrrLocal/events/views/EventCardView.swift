@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct EventCardView: View {
+    let event: EventModel
+    
     var body: some View {
         ZStack{
             
-            Color("IceBreakrrrBlue")
+            Color(.systemTeal)
                 .ignoresSafeArea()
             
             Text("")
@@ -22,16 +24,16 @@ struct EventCardView: View {
             
             VStack{
                 VStack(alignment: .leading){
-                    Text("SpeedDate Kickball")
+                    Text("\(event.title)")
                         .foregroundColor(.white)
                         .font(.system(size: 25))
                     
                     VStack{
-                        Text("Wharf Tampa")
+                        Text("\(event.location)")
                             .foregroundColor(.white)
                             .font(.system(size: 15))
                         
-                        Text("9/23")
+                        Text("\(event.eventDate)")
                             .foregroundColor(.white)
                             .font(.system(size: 15))
                     }
@@ -40,14 +42,14 @@ struct EventCardView: View {
             }
             
             HStack{
-                ForEach(0..<4){ item in
+                ForEach(event.participants, id: \.?.id){ item in
                     Image("animeGirl")
                         .resizable()
                         .clipShape(Circle())
                         .frame(width: 40, height: 40)
                 }
             }
-            .padding(.leading,120)
+            .padding(.leading,240)
             .padding(.top,40)
         }
     }
@@ -55,6 +57,6 @@ struct EventCardView: View {
 
 struct EventCardView_Previews: PreviewProvider {
     static var previews: some View {
-        EventCardView()
+        EventCardView(event: MockService.eventsSampleData.first!)
     }
 }

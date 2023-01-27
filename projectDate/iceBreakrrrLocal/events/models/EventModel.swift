@@ -9,8 +9,19 @@ import Foundation
 
 
 struct EventModel: Identifiable {
-    var id: Int
-    let title: String
-    let Date: String
-    let participants: [String]
+    let id = UUID().uuidString
+    var title: String
+    var location: String
+    var creationDate: Date
+    var description: String
+    var participants: [ProfileModel?]
+    var eventDate: Date
+    
+    var dateString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE, dd 'of' MMMM"
+        return formatter.string(from: eventDate)
+    }
 }
+
+//extension EventModel: Equatable, Hashable {}

@@ -14,19 +14,19 @@ struct SwipeCardsView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                ForEach(viewModel.swipeCards) { question in
-                    if question.id > viewModel.swipeCards.maxId - 4 {
-                        SwipeCardView(card: question, onRemove: {
+                ForEach(Array(viewModel.swipeCards.enumerated()), id: \.element) { index, card in
+                    if index > viewModel.swipeCards.maxId(index: index) - 4 {
+                        SwipeCardView(card: card, onRemove: {
                             removedUser in
                             viewModel.swipeCards.removeAll { $0.id == removedUser.id }
                         })
                         .animation(.spring())
                         .frame(width:
                                 viewModel.swipeCards.cardWidth(in: geometry,
-                                                userId: question.id), height: 700)
+                                                userId: index), height: 700)
                         .offset(x: 0,
                                 y: viewModel.swipeCards.cardOffset(
-                                    userId: question.id))
+                                    userId: index))
                     }
                 }
             }
@@ -35,7 +35,11 @@ struct SwipeCardsView: View {
 }
 
 extension Array where Element == CardModel {
-    var maxId: Int { map { $0.id }.max() ?? 0 }
+    func maxId(index: Int) -> Int{
+        var maxId: Int { map { _ in index }.max() ?? 0 }
+        return maxId
+    }
+    
     
     func cardOffset(userId: Int) -> CGFloat {
         CGFloat(count - 1 - userId) * 8

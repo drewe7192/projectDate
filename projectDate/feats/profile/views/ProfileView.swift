@@ -94,7 +94,7 @@ struct ProfileView: View {
                             .padding(.leading,5)
     //                    Text("Height")
     //                        .font(.system(size: 15))
-                        Text(viewModel.person.info.sideBarInfo.height)
+                        Text(viewModel.person.info.height)
                             .bold()
                             .foregroundColor(.white)
                             .font(.system(size: 15))

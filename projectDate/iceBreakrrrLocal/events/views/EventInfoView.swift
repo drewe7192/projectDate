@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct EventInfoView: View {
+    let event: EventModel
+    
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
-                Color("IceBreakrrrBlue")
+                Color(.systemTeal)
                     .ignoresSafeArea()
                 
                 VStack(){
@@ -19,7 +21,7 @@ struct EventInfoView: View {
                 
                         
                         VStack{
-                            Text("Wharf Tampa")
+                            Text("\(event.location)")
                                 .font(.system(size: 20))
                                 .padding(7)
                                 .overlay(
@@ -28,8 +30,8 @@ struct EventInfoView: View {
                                 )
                         }
                         
-                        Text("SpeedDate Kickball")
-                            .font(.system(size: 60))
+                        Text("\(event.title)")
+                            .font(.system(size: 55))
                         
                     }
                     .foregroundColor(.white)
@@ -41,11 +43,12 @@ struct EventInfoView: View {
                         
                             
                             
-                            Text("3:00pm")
-                                .font(.system(size: 40))
+                            Text("\(event.eventDate)")
+                                .font(.system(size: 30))
                                 .bold()
                             
-                            Text("Decemeber 25th, 2023")
+                            Text("3pm")
+                                .font(.system(size: 20))
                         }
                         
                         Spacer()
@@ -55,7 +58,7 @@ struct EventInfoView: View {
                             Text("Host")
                             
                             HStack{
-                                ForEach(0..<2){ item in
+                                ForEach(event.participants, id: \.!.id){ item in
                                     Text("AV")
                                         .foregroundColor(.black)
                                         .frame(width: 40, height: 40)
@@ -110,6 +113,7 @@ struct EventInfoView: View {
                    
                      
                 }
+            
               
             }
             .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -121,6 +125,6 @@ struct EventInfoView: View {
 
 struct EventInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        EventInfoView()
+        EventInfoView(event: MockService.eventsSampleData.first!)
     }
 }

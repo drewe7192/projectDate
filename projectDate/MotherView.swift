@@ -11,6 +11,10 @@ struct MotherView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     
+    init() {
+    UITabBar.appearance().backgroundColor = UIColor.white
+    }
+    
     var body: some View {
         switch viewRouter.currentPage {
         case .signInPage :
@@ -46,7 +50,7 @@ struct MotherView: View {
                 //                        Label("Profile", systemImage: "person")
                 //                    }.tag(5)
             }
-            .frame(height: 870)
+            .frame(height: 850)
             
         case .signUpPage :
             SignUpView()

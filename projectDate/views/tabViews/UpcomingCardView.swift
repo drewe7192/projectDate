@@ -77,7 +77,7 @@ struct UpcomingCardView: View {
 struct UpcomingCardView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
-            UpcomingCardView(sd: MockService.userSampleData.sds.first!, geoReader: geo)
+            UpcomingCardView(sd: MockService.userSampleData.userProfile.sds.first! ?? MockService.sdSampleData, geoReader: geo)
         }
       
     }

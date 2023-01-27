@@ -15,7 +15,7 @@ struct TabCards: View {
             VStack(spacing: 20){
                 ForEach(viewModel.people, id: \.id) { item in
                     //switch statement
-                    switch item.test {
+                    switch item.tabCardNumber {
                     case 1:
                         HStack{
                             //find specific Id in entire list
@@ -23,7 +23,7 @@ struct TabCards: View {
                                 //if theres a item in list after this current one
                                 if ndx + 1 < viewModel.people.count {
                                     let nextItem = viewModel.people[ndx + 1]
-                                    if nextItem.test == 1 {
+                                    if nextItem.tabCardNumber == 1 {
                                         TabCard(item: item)
                                             .padding(.trailing)
                                         TabCard(item: nextItem)

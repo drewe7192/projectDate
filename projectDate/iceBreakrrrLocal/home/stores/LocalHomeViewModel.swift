@@ -29,6 +29,14 @@ class LocalHomeViewModel: ObservableObject {
             
             self.swipeCards = documents.compactMap {document -> CardModel? in
                 do {
+//                                        let data =  document.data()
+//                                        let question = data["question"] as? String ?? ""
+//                                        let category = data["category"] as? String ?? ""
+//                                        let choices = data["choices"] as? [String] ?? []
+//                                        let profileType = data["profileType"] as? String ?? ""
+//                                        let cardOrderId = data["cardOrderId"] as? Int ?? 0
+//
+//                                        return  CardModel(cardOrderId: cardOrderId, question: question, choices: choices, category: category, profileType: profileType)
                     return try document.data(as: CardModel.self)
                 } catch {
                     print("Error decoding document into Message: \(error)")
@@ -37,6 +45,7 @@ class LocalHomeViewModel: ObservableObject {
             }
         }
     }
+    
     
     init(forPreview: Bool = false) {
         if forPreview {
