@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct SwipeCardsView: View {
     @StateObject private var viewModel = LocalHomeViewModel()
 
@@ -15,7 +14,7 @@ struct SwipeCardsView: View {
         GeometryReader { geometry in
             ZStack {
                 ForEach(Array(viewModel.swipeCards.enumerated()), id: \.element) { index, card in
-                    if index > viewModel.swipeCards.maxId(index: index) - 4 {
+                    if index > viewModel.swipeCards.count - 4 {
                         SwipeCardView(card: card, onRemove: {
                             removedUser in
                             viewModel.swipeCards.removeAll { $0.id == removedUser.id }
@@ -35,11 +34,6 @@ struct SwipeCardsView: View {
 }
 
 extension Array where Element == CardModel {
-    func maxId(index: Int) -> Int{
-        var maxId: Int { map { _ in index }.max() ?? 0 }
-        return maxId
-    }
-    
     
     func cardOffset(userId: Int) -> CGFloat {
         CGFloat(count - 1 - userId) * 8

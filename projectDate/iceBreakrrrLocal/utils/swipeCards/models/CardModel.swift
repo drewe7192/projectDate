@@ -7,11 +7,13 @@
 
 import Foundation
 
-struct CardModel: Codable, Identifiable  {
-    let id: Int
-    let question: String
-    let choices: [String]
-    let category: String
+struct CardModel: Codable, Identifiable, Hashable {
+    var id : String
+    var question: String
+    var choices: [String]
+    var category: String
+    var profileType: String
+
 }
 
 

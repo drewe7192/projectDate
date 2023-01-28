@@ -59,7 +59,7 @@ struct LocalHomeView: View {
     private func profilerSection(for geoReader: GeometryProxy) -> some View {
         HStack {
             ZStack{
-                CircularProgressView(progress: progress)
+                CircularProgressView(progress: Double(viewModel.swipeCards.count) * 0.01)
                     .frame(width: 130, height: 130)
                 
                 
