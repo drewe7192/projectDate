@@ -13,7 +13,6 @@ struct LogoView: View {
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 300, height: 150)
-            .padding(.top, 70)
     }
 }
 

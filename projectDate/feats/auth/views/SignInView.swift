@@ -17,165 +17,70 @@ struct SignInView: View {
     @State var signInErrorMessage = ""
     @State var email = ""
     @State var password =  ""
-    @State var isLoading: Bool = false
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
-    @State var isThirdPartyAuth = true
+    @State var toggleButons = false
+    
+    enum signInType {
+        case google, facebook, apple
+    }
     
     var body: some View {
-        
         NavigationView {
-            
-            // without these 3 lines background will be black
             ZStack{
-                Color.white
+                // need a ZStack and color to change the background color
+                LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                 
-                VStack(spacing: 10){
-                    
-                    VStack{
-                        Text("Hello Again")
-                            .bold()
-                            .font(.system(size: 30))
-                        
-                        Text("please sign into account")
-                            .font(.system(size: 20))
-                    }
-                    
-                    EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
-                    
-                    Text("or continue with")
-                    
-                    ThirdPartyButtons()
-                    
-                    HStack{
-                        Text("Don't have an account?")
-                            .foregroundColor(Color.black)
-                        NavigationLink(destination: SignUpView()) {
-                            Text("Sign up")
-                        }
-                    }
-                    .padding(.bottom,80)
-                    
-                    
+                VStack{
+                    headerSection
+                    bodySection
                     
                     if signInProcessing {
                         ProgressView()
                     }
                 }
                 .overlay(
-                    // Is Loading Indicator...
-                    ZStack{
-                        if isLoading{
-                            Color.black
-                                .opacity(0.25)
-                                .ignoresSafeArea()
-                            
-                            ProgressView()
-                                .font(.title2)
-                                .frame(width: 60, height: 60)
-                                .background(Color.white)
-                                .cornerRadius(10)
-                        }
-                    }
+                    LogInItems().loadingIndicator
                 )
-                .fullScreenCover(isPresented: $isLoggedIn) {
-                    HomeView()
-                }
-                
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
-}
-
-struct SignInCredentialFields: View {
-    @Binding var email: String
-    @Binding var password: String
     
-    var body: some View {
-        Group{
+    private var headerSection: some View {
+        VStack{
             VStack{
-                TextField("Email", text: $email)
-                    .frame(width: 300, height: 25)
-                    .padding()
-                    .background(.thinMaterial)
-                    .cornerRadius(20)
-                    .textInputAutocapitalization(.never)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
-                    )
-                    .padding(.bottom,10)
+                Text("Welcome,")
+                    .foregroundColor(.white)
+                    .bold()
+                    .font(.system(size: 30))
                 
-                SecureField("Password", text: $password)
-                    .frame(width: 300, height: 25)
-                    .padding()
-                    .background(.thinMaterial)
-                    .cornerRadius(20)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20).stroke(Color.gray)
-                    )
+                Text("Glad to see you!")
+                    .foregroundColor(.white)
+                    .font(.system(size: 30))
             }
-            .padding(.bottom, 60)
+            EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
+            
+            Text("Forgot Password?")
+                .padding(.leading, 230)
+                .padding(.top,10)
+                .foregroundColor(.white)
             
         }
-    }
-}
-
-struct EmailPasswordLogIn: View{
-    @EnvironmentObject var viewRouter: ViewRouter
-    @Binding var email: String
-    @Binding var password: String
-    @Binding var signInProcessing: Bool
-    @Binding var signInErrorMessage: String
-    @Binding var isLoggedIn: Bool
-    
-    var body: some View{
-        SignInCredentialFields(email: $email, password: $password)
-        
-        //logIn Button
-        Button(action: {
-            signInUser(userEmail: email, userPassword: password)
-        }) {
-            Text("Log In")
-                .bold()
-                .foregroundColor(Color.gray)
-                .frame(width: 360, height: 50)
-                .background(Color.white)
-                .cornerRadius(10)
-        }
-        .frame(width: 300, height: 25)
-        .padding()
-        .background(Color.white)
-        .cornerRadius(20)
-        .textInputAutocapitalization(.never)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 3)
-        )
-        .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
-        .padding(.bottom,100)
+        .padding(.bottom,80)
     }
     
-    
-    func signInUser(userEmail: String, userPassword: String){
-        signInProcessing = true
-        
-        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+    private var bodySection: some View {
+        VStack{
+            Text("or Login with")
+                .foregroundColor(.white)
+                .padding(.bottom,20)
             
-            guard error ==  nil else{
-                signInProcessing = false
-                signInErrorMessage = error!.localizedDescription
-                return
-            }
-            switch authResult {
-            case .none:
-                print("Cound not sign in user.")
-                signInProcessing = false
-            case .some(_):
-                print("User signed in")
-                signInProcessing = false
-                isLoggedIn = true
-                
-            }
+          LogInItems()
+            
+            LogInItems().signUpLinkSection
+                .padding(.bottom,80)
         }
     }
 }
@@ -188,7 +93,6 @@ struct SignInView_Previews: PreviewProvider {
         }
     }
 }
-
 
 
 

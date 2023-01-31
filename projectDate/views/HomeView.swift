@@ -86,7 +86,7 @@ struct HomeView: View {
             
             NavigationLink(destination: sdHomeView(displayType: viewModel.user.userProfile.sds.first??.userRoleType ?? "host"),
                            label: {
-                CountdownTimerView(timeRemaining: viewModel.user.userProfile.sds.first!?.time ?? 3838374, geoReader: geoReader)
+//                CountdownTimerView(timeRemaining: viewModel.user.userProfile.sds.first!?.time ?? 3838374, geoReader: geoReader)
             })
         }
     }

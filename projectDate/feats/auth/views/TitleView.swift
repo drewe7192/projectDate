@@ -8,67 +8,78 @@
 import SwiftUI
 
 struct TitleView: View {
+    @StateObject var viewRouter = ViewRouter.shared
+    @State var showSignInView = false
+    @State var showSignUpView = false
+    
     var body: some View {
+        NavigationView{
+            GeometryReader{geoReader in
+                ZStack{
+                    //Background Color
+                    LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
+                        .ignoresSafeArea()
+                    
+                    VStack{
+                        logo
+                        Spacer()
+                            .frame(height: 70)
+                        buttons
+                    }
+                }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
+            }
+        }
+    }
+    
+    private var logo: some View {
         VStack{
-            Top()
-            Spacer()
-                .frame(height: 100)
-            
-            Butttons()
-        }
-    }
-}
-
-struct Top: View{
-    var body: some View{
-        
-        ZStack{
-            Circle()
-                .fill(.gray)
-                .frame(width: 300, height: 300)
-            
             LogoView()
-        }
-        .padding(.bottom, 30)
-        
-        VStack(spacing: 20){
-            Text("Discover your" + "\n" + "New MATCH here")
-                .font(.title.bold())
-                .multilineTextAlignment(.center)
             
-            Text("Bringing a new way to date combined with the classical way blah blah blah")
-                .font(.title2)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 20){
+                Text("Logo Title")
+                    .font(.title.bold())
+                
+                Text("Short app description  gdfsgdf gfd gfsd gfd gf g  gfd gfd gdf gdf g")
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+            }
         }
-
-  
-        
+        .padding()
     }
-}
-
-struct Butttons: View{
-    var body: some View{
-        HStack{
+    
+    private var buttons: some View {
+        VStack{
+            // These navLinks provides padding.. cant be avoided it seems
+            NavigationLink(destination: SignInView(), isActive: $showSignInView) {}
+            NavigationLink(destination: SignUpView(), isActive: $showSignUpView) {}
+            
             Button(action: {
+                showSignInView = true
             }) {
                 Text("Sign In")
                     .bold()
-                    .foregroundColor(Color.black)
-                    .frame(width: 130, height: 60)
-                    .background(Color.gray)
-                    .cornerRadius(10)
+                    .foregroundColor(.black)
+                    .frame(width: 350, height: 60)
+                    .background(.white)
+                    .cornerRadius(15)
+                    .shadow(radius: 5)
             }
             
+            Spacer()
+                .frame(height: 20)
+           
+            
             Button(action: {
+                showSignUpView = true
             }) {
                 Text("Sign Up")
                     .bold()
-                    .foregroundColor(Color.black)
-                    .frame(width: 130, height: 60)
-                    .background(Color.gray)
-                    .cornerRadius(5)
+                    .foregroundColor(.white)
+                    .frame(width: 350, height: 60)
+                    .shadow(radius: 5)
+                    .overlay(RoundedRectangle(cornerRadius: 15).stroke(.white, lineWidth: 2))
             }
-            
+           
         }
     }
 }

@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct MotherView: View {
-    
     @EnvironmentObject var viewRouter: ViewRouter
     
+    //Change the menuBar color to white
     init() {
-    UITabBar.appearance().backgroundColor = UIColor.white
+        UITabBar.appearance().backgroundColor = UIColor.white
     }
     
     var body: some View {
         switch viewRouter.currentPage {
-        case .signInPage :
+        case .homePage :
             TabView {
                 LocalHomeView()
                     .tabItem{
@@ -54,7 +54,7 @@ struct MotherView: View {
             
         case .signUpPage :
             SignUpView()
-        case . homePage:
+        case .signInPage:
             SignInView()
         }
     }

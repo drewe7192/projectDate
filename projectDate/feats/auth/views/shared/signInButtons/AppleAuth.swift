@@ -104,13 +104,9 @@ struct AppleAuth: View {
             }
         }
      )
-     .frame(width: 350, height: 55)
-     .signInWithAppleButtonStyle(.whiteOutline)
-     .cornerRadius(25)
-     .overlay(
-     RoundedRectangle(cornerRadius: 25)
-        .stroke(Color.black, lineWidth: 2)
-     )
+     .frame(width: 400, height: 60)
+     .cornerRadius(20)
+     .shadow(radius: 5)
      
         
     }

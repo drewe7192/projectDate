@@ -12,92 +12,164 @@ import FirebaseAuth
 struct SignUpView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
-    @State var signupProcessing = false
+    @State var signInErrorMessage = ""
     @State var email = ""
-    @State var password = ""
-    @State var passwordConfirmation = ""
+    @State var password =  ""
+    @State var isLoggedIn: Bool = false
+    @State var signInProcessing = false
+    @State var isThirdPartyAuth = true
     
-    var body: some View {
-        ZStack{
-            Color.white
-                .ignoresSafeArea()
-            
-            VStack(spacing: 15){
-               
-                
-                VStack{
-                    Text("Welcome!")
-                        .bold()
-                        .font(.system(size: 30))
-                    
-                    Text("please create account")
-                        .font(.system(size: 20))
-                }
-                
-                VStack{
-                    SignUpCredentialFields(email: $email, password: $password, passwordConfirmation: $passwordConfirmation)
-                    Button(action: {
-                        signUpUser(userEmail: email, userPassword: password)
-                    }) {
-                        Text("Sign Up")
-                            .bold()
-                            .foregroundColor(.gray)
-                            .contrast(1)
-                            .frame(width: 360, height: 50)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                    }
-                    .frame(width: 300, height: 25)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(20)
-                    .textInputAutocapitalization(.never)
-                    .overlay(RoundedRectangle(cornerRadius:20)
-                        .stroke(Color.black, lineWidth: 3))
-                }
-                .padding(.bottom,100)
-                
-                Text("or sign up with")
-                ThirdPartyButtons()
-           
-                
-                HStack{
-                    Text("Already have an account?")
-              NavigationLink(destination:
-                                SignInView()) {
-                  Text("Log In")
-              }
-                }
-                .disabled(!signupProcessing && !email.isEmpty && !password.isEmpty && !passwordConfirmation.isEmpty && password == passwordConfirmation ? false : true)
-            }
-            .padding()
-            
-        }
-      
+    enum signInType {
+        case google, facebook, apple
     }
     
-    func signUpUser(userEmail: String, userPassword: String){
-        signupProcessing = true
-        Auth.auth().createUser(withEmail: userEmail, password: userPassword) { authResult, error in
-            guard error == nil else {
-                signupProcessing = false
-                return
+    var body: some View {
+        NavigationView {
+            ZStack{
+                // need a ZStack and color to change the background color
+                LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+                
+                VStack{
+                    headerSection
+                    bodySection
+                    
+                    if signInProcessing {
+                        ProgressView()
+                    }
+                }
+                .overlay(
+                    LogInItems().loadingIndicator
+                )
+                .fullScreenCover(isPresented: $isLoggedIn) {
+                    LocalHomeView()
+                }
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    private var headerSection: some View {
+        VStack{
+            VStack{
+                Text("Create Account,")
+                    .foregroundColor(.white)
+                    .bold()
+                    .font(.system(size: 30))
+                
+                Text("To get started now!")
+                    .foregroundColor(.white)
+                    .font(.system(size: 30))
             }
             
-            switch authResult {
-            case.none:
-                print("Could not create account")
-                signupProcessing = false
-            case .some(_):
-                print("User created")
-                signupProcessing = false
-                viewRouter.currentPage = .homePage
+            EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
+        }
+        
+    }
+    
+    private var bodySection: some View {
+        VStack{
+            Text("or Sign Up with")
+                .foregroundColor(.white)
+                .padding(.bottom,20)
+            
+            LogInItems()
+            
+            signUpLinkSection
+                .padding(.bottom,80)
+        }
+    }
+    
+    private var signUpLinkSection: some View {
+        HStack{
+            Text("Already have an account?")
+                .foregroundColor(Color.black)
+            NavigationLink(destination: SignInView()) {
+                Text("Login Now")
+            }
+        }
+    }
+    
+    struct CredentialFields: View {
+        @Binding var email: String
+        @Binding var password: String
+        
+        var body: some View {
+            Group{
+                VStack{
+                    SignInCredentialFields(email: $email, password: $password)
+                        .padding(.bottom,3)
+                    
+                    SecureField("Confirm Password", text: $password)
+                        .frame(width: 340, height: 25)
+                        .padding()
+                        .background(.white)
+                        .opacity(0.5)
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                        )
+                }
+                .padding(.bottom, 30)
+            }
+        }
+    }
+    
+    struct EmailPasswordLogIn: View{
+        @EnvironmentObject var viewRouter: ViewRouter
+        @Binding var email: String
+        @Binding var password: String
+        @Binding var signInProcessing: Bool
+        @Binding var signInErrorMessage: String
+        @Binding var isLoggedIn: Bool
+        
+        var body: some View{
+            CredentialFields(email: $email, password: $password)
+            
+            //logIn Button
+            Button(action: {
+                signInUser(userEmail: email, userPassword: password)
+            }) {
+                Text("Sign Up")
+                    .bold()
+                    .foregroundColor(.black)
+                    .background(Color.white)
+            }
+            .frame(width: 340, height: 25)
+            .padding()
+            .background(Color.white)
+            .cornerRadius(10)
+            .textInputAutocapitalization(.never)
+            .shadow(radius: 5)
+            .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
+            .padding(.bottom,70)
+        }
+        
+        
+        func signInUser(userEmail: String, userPassword: String){
+            signInProcessing = true
+            
+            Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+                
+                guard error ==  nil else{
+                    signInProcessing = false
+                    signInErrorMessage = error!.localizedDescription
+                    return
+                }
+                switch authResult {
+                case .none:
+                    print("Cound not sign in user.")
+                    signInProcessing = false
+                case .some(_):
+                    print("User signed in")
+                    signInProcessing = false
+                    isLoggedIn = true
+                    
+                }
             }
         }
     }
 }
-
-
 
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
@@ -105,46 +177,4 @@ struct SignUpView_Previews: PreviewProvider {
     }
 }
 
-struct SignUpCredentialFields: View {
-    
-    @Binding var email: String
-    @Binding var password: String
-    @Binding var passwordConfirmation: String
-    
-    var body: some View {
-        Group{
-            TextField("Email", text: $email)
-                .frame(width: 300, height: 25)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(10)
-                .overlay(RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.gray)
-                )
-                .textInputAutocapitalization(.never)
-            SecureField("Password", text: $password)
-                .frame(width: 300, height: 25)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(10)
-                .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.gray)
-                )
-            
-            SecureField("Confirm Password", text: $passwordConfirmation)
-                .frame(width: 300, height: 25)
-                .padding()
-                .background(.thinMaterial)
-                .cornerRadius(10)
-                .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.gray)
-                )
-                .border(Color.red, width: passwordConfirmation != password ? 1: 0)
-                .padding(.bottom, 30)
-                .disableAutocorrection(true)
-        }
-    }
-    
-}
+

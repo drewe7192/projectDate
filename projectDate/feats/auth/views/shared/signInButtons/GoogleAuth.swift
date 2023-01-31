@@ -18,20 +18,15 @@ struct GoogleAuth: View {
         Button{
             GoogleLogIn(isLoggedIn: $isLoggedIn).handleGoogleLogin()
         } label: {
-            HStack(spacing: 15){
-                Text("Sign in with Google")
-                    .font(.title3)
-                    .fontWeight(.medium)
-                    .kerning(1.1)
-            }
-            .foregroundColor(Color.gray)
-            .padding()
-            .frame(maxWidth: .infinity)
-            
-            .background(
-            Capsule()
-                .stroke(Color.black,lineWidth: 3)
-            )
+            Text("Sign in with Google")
+                .font(.title3)
+                .fontWeight(.medium)
+                .kerning(1.1)
+                .foregroundColor(.white)
+                .frame(width: 400, height: 60)
+                .background(.red)
+                .cornerRadius(20)
+                .shadow(radius: 5)
         }
         .frame(width: 350)
         .fullScreenCover( isPresented: $isLoggedIn){

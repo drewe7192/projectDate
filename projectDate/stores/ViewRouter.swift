@@ -8,9 +8,7 @@
 import SwiftUI
 
 class ViewRouter: ObservableObject {
-    
     static let shared = ViewRouter()
-    
     @Published var currentPage: Route = .signInPage
 }
 
