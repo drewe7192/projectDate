@@ -21,10 +21,6 @@ struct SignInView: View {
     @State var signInProcessing = false
     @State var toggleButons = false
     
-    enum signInType {
-        case google, facebook, apple
-    }
-    
     var body: some View {
         NavigationView {
             ZStack{
@@ -43,6 +39,9 @@ struct SignInView: View {
                 .overlay(
                     LogInItems().loadingIndicator
                 )
+                .fullScreenCover(isPresented: $isLoggedIn) {
+                    LocalHomeView()
+                }
             }
         }
         .navigationBarBackButtonHidden(true)

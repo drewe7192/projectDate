@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 class LocalHomeViewModel: ObservableObject {
-    //    @Published var swipeCards: [CardModel] = MockService.cardObjectSampleData.cards
+        @Published var mockCards: [CardModel] = MockService.cardObjectSampleData.cards
     @Published var swipeCards: [CardModel] = []
     
     private var db = Firestore.firestore()

@@ -114,8 +114,26 @@ struct LocalHomeView: View {
     }
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
-        VStack{
+        ZStack{
+          
             SwipeCardsView()
+            
+            NavigationLink(destination: CreateCardView()) {
+                ZStack{
+                    Circle()
+                        .frame(width: 80,height: 80)
+                        .shadow(radius: 10)
+                       
+                    
+                    Image(systemName:"plus")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(width: 50, height: 50)
+                }
+                .position(x: geoReader.size.height * 0.07, y: geoReader.size.width * 0.95)
+             
+            }
+           
         }
     }
 }

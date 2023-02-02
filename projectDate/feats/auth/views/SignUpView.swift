@@ -15,6 +15,7 @@ struct SignUpView: View {
     @State var signInErrorMessage = ""
     @State var email = ""
     @State var password =  ""
+    @State var confirmPassword = ""
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
     @State var isThirdPartyAuth = true
@@ -62,7 +63,7 @@ struct SignUpView: View {
                     .font(.system(size: 30))
             }
             
-            EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
+            EmailPasswordLogIn(email: $email, password: $password, confirmPasword: $confirmPassword, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
         }
         
     }
@@ -93,6 +94,7 @@ struct SignUpView: View {
     struct CredentialFields: View {
         @Binding var email: String
         @Binding var password: String
+        @Binding var confirmPassword: String
         
         var body: some View {
             Group{
@@ -100,15 +102,25 @@ struct SignUpView: View {
                     SignInCredentialFields(email: $email, password: $password)
                         .padding(.bottom,3)
                     
-                    SecureField("Confirm Password", text: $password)
-                        .frame(width: 340, height: 25)
-                        .padding()
-                        .background(.white)
-                        .opacity(0.5)
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                        )
+                    ZStack{
+                        SecureField("Confirm Password", text: $confirmPassword)
+                            .frame(width: 340, height: 25)
+                            .padding()
+                            .background(.white)
+                            .opacity(0.3)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                            )
+                        
+                        SecureField("Confirm Password", text: $confirmPassword)
+                            .frame(width: 340, height: 25)
+                            .padding()
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                            )
+                    }
                 }
                 .padding(.bottom, 30)
             }
@@ -119,12 +131,13 @@ struct SignUpView: View {
         @EnvironmentObject var viewRouter: ViewRouter
         @Binding var email: String
         @Binding var password: String
+        @Binding var confirmPasword: String
         @Binding var signInProcessing: Bool
         @Binding var signInErrorMessage: String
         @Binding var isLoggedIn: Bool
         
         var body: some View{
-            CredentialFields(email: $email, password: $password)
+            CredentialFields(email: $email, password: $password, confirmPassword: $confirmPasword)
             
             //logIn Button
             Button(action: {

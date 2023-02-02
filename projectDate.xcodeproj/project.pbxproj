@@ -56,6 +56,7 @@
 		7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7770E2BF297E755300C70469 /* BarProgressView.swift */; };
 		777821AA29643ADE006CD035 /* sdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777821A929643ADE006CD035 /* sdViewModel.swift */; };
 		777821AC2969558F006CD035 /* TabCardBig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777821AB2969558F006CD035 /* TabCardBig.swift */; };
+		777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C2CD0298A373A00CD3CCE /* CreateCardView.swift */; };
 		77A0F9BB2986CEA1009CD1E0 /* LogInItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */; };
 		77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */; };
 		77A1C7C4297C4094004C8FA6 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C3297C4094004C8FA6 /* EventModel.swift */; };
@@ -164,6 +165,7 @@
 		7770E2BF297E755300C70469 /* BarProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarProgressView.swift; sourceTree = "<group>"; };
 		777821A929643ADE006CD035 /* sdViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdViewModel.swift; sourceTree = "<group>"; };
 		777821AB2969558F006CD035 /* TabCardBig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCardBig.swift; sourceTree = "<group>"; };
+		777C2CD0298A373A00CD3CCE /* CreateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardView.swift; sourceTree = "<group>"; };
 		77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInItems.swift; sourceTree = "<group>"; };
 		77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModel.swift; sourceTree = "<group>"; };
 		77A1C7C3297C4094004C8FA6 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
@@ -254,7 +256,7 @@
 		771AE4122977C3D200F3A6A1 /* iceBreakrrrLocal */ = {
 			isa = PBXGroup;
 			children = (
-				771AE4292979D9ED00F3A6A1 /* utils */,
+				771AE4292979D9ED00F3A6A1 /* feats */,
 				771AE4232979D96600F3A6A1 /* events */,
 				771AE4132977C40300F3A6A1 /* home */,
 			);
@@ -330,13 +332,14 @@
 			path = stores;
 			sourceTree = "<group>";
 		};
-		771AE4292979D9ED00F3A6A1 /* utils */ = {
+		771AE4292979D9ED00F3A6A1 /* feats */ = {
 			isa = PBXGroup;
 			children = (
+				777C2CD2298A3ED900CD3CCE /* utils */,
 				77A1C7C7297C44F9004C8FA6 /* progressCircle */,
 				77A1C7BF297C3A65004C8FA6 /* swipeCards */,
 			);
-			path = utils;
+			path = feats;
 			sourceTree = "<group>";
 		};
 		77493D18291D12F400C9E283 /* match */ = {
@@ -504,12 +507,28 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		777C2CD2298A3ED900CD3CCE /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				777C2CD3298A3EE100CD3CCE /* views */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		777C2CD3298A3EE100CD3CCE /* views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
 		77A1C7BF297C3A65004C8FA6 /* swipeCards */ = {
 			isa = PBXGroup;
 			children = (
 				77A1C7C0297C3B05004C8FA6 /* models */,
 				771AE41D2979263B00F3A6A1 /* SwipeCardView.swift */,
 				771AE41F2979B40B00F3A6A1 /* SwipeCardsView.swift */,
+				777C2CD0298A373A00CD3CCE /* CreateCardView.swift */,
 			);
 			path = swipeCards;
 			sourceTree = "<group>";
@@ -1035,6 +1054,7 @@
 				77493D23291E3C6C00C9E283 /* LittleThingsMainView.swift in Sources */,
 				77FB244C294602CA008F5469 /* FacetimeView.swift in Sources */,
 				776D4704295DCED700754DE5 /* TabCards.swift in Sources */,
+				777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */,
 				773B473328D6681C001217DF /* LogoView.swift in Sources */,
 				77A1C7CA297C4528004C8FA6 /* CircularProgressView.swift in Sources */,
 				776D4706295DD64B00754DE5 /* TabCard.swift in Sources */,

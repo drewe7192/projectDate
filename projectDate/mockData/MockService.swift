@@ -68,7 +68,42 @@ enum MockService {
     static var cardsSampleData: [CardModel] {
         [
             CardModel(
-                id: "484j48",
+                id: "0",
+                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+                choices: ["fadsfdsf", "fdasfsdfsd"],
+                category: "value",
+                profileType: "Friend"
+            ),
+            CardModel(
+                id: "1",
+                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+                choices: ["fadsfdsf", "fdasfsdfsd"],
+                category: "value",
+                profileType: "Friend"
+            ),
+            CardModel(
+                id: "2",
+                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+                choices: ["fadsfdsf", "fdasfsdfsd"],
+                category: "value",
+                profileType: "Friend"
+            ),
+            CardModel(
+                id: "3",
+                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+                choices: ["fadsfdsf", "fdasfsdfsd"],
+                category: "value",
+                profileType: "Friend"
+            ),
+            CardModel(
+                id: "4",
+                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+                choices: ["fadsfdsf", "fdasfsdfsd"],
+                category: "value",
+                profileType: "Friend"
+            ),
+            CardModel(
+                id: "5",
                 question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
                 choices: ["fadsfdsf", "fdasfsdfsd"],
                 category: "value",
