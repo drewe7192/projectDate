@@ -17,7 +17,7 @@ struct LogInItems: View {
     @State var signInErrorMessage = ""
     @State var email = ""
     @State var password =  ""
-    @State var isLoading: Bool = false
+    @State var isLoading: Bool = true
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
     @State var isThirdPartyAuth = true

@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 class LocalHomeViewModel: ObservableObject {
-        @Published var mockCards: [CardModel] = MockService.cardObjectSampleData.cards
+        @Published var createCards: [CardModel] = MockService.cardObjectSampleData.cards
     @Published var swipeCards: [CardModel] = []
     
     private var db = Firestore.firestore()
@@ -29,7 +29,7 @@ class LocalHomeViewModel: ObservableObject {
             
             self.swipeCards = documents.compactMap {document -> CardModel? in
                 do {
-//                                        let data =  document.data()
+                                       let data =  document.data()
 //                                        let question = data["question"] as? String ?? ""
 //                                        let category = data["category"] as? String ?? ""
 //                                        let choices = data["choices"] as? [String] ?? []

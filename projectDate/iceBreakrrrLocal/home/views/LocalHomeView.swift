@@ -40,7 +40,7 @@ struct LocalHomeView: View {
             }
         }
     }
-    
+
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
             Text("Logo")
@@ -115,28 +115,26 @@ struct LocalHomeView: View {
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-          
-            SwipeCardsView()
             
-            NavigationLink(destination: CreateCardView()) {
-                ZStack{
-                    Circle()
-                        .frame(width: 80,height: 80)
-                        .shadow(radius: 10)
-                       
-                    
-                    Image(systemName:"plus")
-                        .resizable()
-                        .foregroundColor(.white)
-                        .frame(width: 50, height: 50)
+            SwipeCardsView()
+            VStack{
+                NavigationLink(destination: CreateCardView()) {
+                    ZStack{
+                        Circle()
+                            .frame(width: 80,height: 80)
+                            .shadow(radius: 10)
+                        
+                        Image(systemName:"plus")
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 50)
+                    }
                 }
-                .position(x: geoReader.size.height * 0.07, y: geoReader.size.width * 0.95)
-             
             }
-           
+            .position(x: geoReader.size.height * 0.07, y: geoReader.size.width * 0.95)
         }
     }
-}
+} 
 
 struct LocalHomeView_Previews: PreviewProvider {
     static var previews: some View {

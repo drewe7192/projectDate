@@ -57,16 +57,7 @@ struct SwipeCardView: View {
                 }
                 
                 Divider()
-                
-//                Text("Upcoming Event")
-//                NavigationLink(destination: EventInfoView()){
-//                    Text("\(viewModel.events.first!.title)")
-//                        .foregroundColor(.black)
-//                        .font(.title2)
-//                        .bold()
-//                        .padding(7)
-//                        .overlay(RoundedRectangle(cornerRadius: 20).stroke(.blue, lineWidth: 4))
-//                }
+        
             }
             .padding(20)
             .background(Color.white)

@@ -256,8 +256,8 @@
 		771AE4122977C3D200F3A6A1 /* iceBreakrrrLocal */ = {
 			isa = PBXGroup;
 			children = (
-				771AE4292979D9ED00F3A6A1 /* feats */,
 				771AE4232979D96600F3A6A1 /* events */,
+				771AE4292979D9ED00F3A6A1 /* feats */,
 				771AE4132977C40300F3A6A1 /* home */,
 			);
 			path = iceBreakrrrLocal;
@@ -335,9 +335,9 @@
 		771AE4292979D9ED00F3A6A1 /* feats */ = {
 			isa = PBXGroup;
 			children = (
-				777C2CD2298A3ED900CD3CCE /* utils */,
 				77A1C7C7297C44F9004C8FA6 /* progressCircle */,
 				77A1C7BF297C3A65004C8FA6 /* swipeCards */,
+				777C2CD2298A3ED900CD3CCE /* utils */,
 			);
 			path = feats;
 			sourceTree = "<group>";

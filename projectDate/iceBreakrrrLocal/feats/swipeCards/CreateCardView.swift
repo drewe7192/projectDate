@@ -13,6 +13,7 @@ struct CreateCardView: View {
     @State private var answerB: String = ""
     @State private var answerC: String = ""
     @State private var showFriendDisplay: Bool = false
+    @State var isLoading: Bool = false
     
     @StateObject private var viewModel = LocalHomeViewModel()
     
@@ -25,25 +26,31 @@ struct CreateCardView: View {
                     Color(.systemTeal)
                         .ignoresSafeArea()
                   
+                    loadingIndicator
+                   
                     Text("Logo")
-                        .font(.system(size: 50))
+                        .font(.system(size: 40))
                         .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03)
                     
-                    ForEach(viewModel.mockCards) { card in
-                        if Int(card.id) ?? 0 > viewModel.mockCards.count - 4 {
+                    ForEach(viewModel.createCards) { card in
+                        
+                        if Int(card.id) ?? 0 > viewModel.createCards.count - 4 {
                             CCardView(card: card, onRemove: {
                                 removedUser in
-                                viewModel.mockCards.removeAll { $0.id == removedUser.id }
+                                viewModel.createCards.removeAll { $0.id == removedUser.id }
+                                if (removedUser.id == "0"){
+                                    isLoading = true
+                                }
+                            
                             })
                             .animation(.spring())
                             .frame(width:
-                                    viewModel.mockCards.cardWidth(in: geoReader,
+                                    viewModel.createCards.cardWidth(in: geoReader,
                                                                   userId:  Int(card.id) ?? 0), height: 700)
                             .offset(x: 0,
-                                    y: viewModel.mockCards.cardOffset(
+                                    y: viewModel.createCards.cardOffset(
                                         userId: Int(card.id) ?? 0))
                         }
-
                     }
                     
                     HStack{
@@ -75,17 +82,32 @@ struct CreateCardView: View {
                         }
                     }
                     .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.85)
-                    
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
-                
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
+    func createCard(){
+       isLoading = true
+   }
     
-    private func createCard(){
-        print("fdsfds");
-    }
+    
+    var loadingIndicator: some View {
+       ZStack{
+           if isLoading{
+               Color.black
+                   .opacity(0.25)
+                   .ignoresSafeArea()
+
+               ProgressView()
+                   .font(.title2)
+                   .frame(width: 60, height: 60)
+                   .background(Color.white)
+                   .cornerRadius(10)
+           }
+       }
+   }
     
     
 }
@@ -98,12 +120,20 @@ struct CCardView: View {
     @State private var answerB: String = ""
     @State private var answerC: String = ""
     @State private var showFriendDisplay: Bool = false
+    @State var isLoading: Bool = false
     
+    enum LikeDislike: Int {
+       case like, dislike, none
+   }
     
     @State
     private var translation: CGSize = .zero
     private var card: CardModel
     private var onRemove: (_ card: CardModel) -> Void
+     @State var swipeStatus: LikeDislike = .none
+    
+ 
+    
     private var threshold: CGFloat = 0.5
     
     init(card: CardModel, onRemove: @escaping (_ card: CardModel)
@@ -116,15 +146,43 @@ struct CCardView: View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 20) {
                 ZStack{
+                    loadingIndicator
+                    
+                      if self.swipeStatus == .like {
+                                              Text("LIKE")
+                                                  .font(.headline)
+                                                  .padding()
+                                                  .cornerRadius(10)
+                                                  .foregroundColor(Color.green)
+                                                  .overlay(
+                                                      RoundedRectangle(cornerRadius: 10)
+                                                          .stroke(Color.green, lineWidth: 3.0)
+                                              ).padding(24)
+                                                  .rotationEffect(Angle.degrees(-45))
+                                          } else if self.swipeStatus == .dislike {
+                                              Text("DISLIKE")
+                                                  .font(.headline)
+                                                  .padding()
+                                                  .cornerRadius(10)
+                                                  .foregroundColor(Color.red)
+                                                  .overlay(
+                                                      RoundedRectangle(cornerRadius: 10)
+                                                          .stroke(Color.red, lineWidth: 3.0)
+                                              ).padding(.top, 45)
+                                                  .rotationEffect(Angle.degrees(45))
+                                          }
+                    
                     Rectangle()
                         .foregroundColor(.pink)
                         .cornerRadius(40)
                         .frame(width: geometry.size.width - 40,
                                height: geometry.size.height * 0.75)
-                  
+    
+                            
+                
                     VStack{
                         
-                        if(Int(card.id) == 5){
+                        if(Int(card.id) == 3){
                             Text("Question:")
                                 .bold()
                                 .font(.system(size: 40))
@@ -159,7 +217,7 @@ struct CCardView: View {
                         }
                         
                         
-                        if(Int(card.id) == 4){
+                        if(Int(card.id) == 2){
                             Text("Answers")
                                 .bold()
                                 .font(.system(size: 40))
@@ -249,7 +307,7 @@ struct CCardView: View {
                             }
                         }
                         
-                        if(Int(card.id) == 3){
+                        if(Int(card.id) == 1){
                             Text("Create New Card?")
                                 .bold()
                                 .font(.system(size: 40))
@@ -274,9 +332,24 @@ struct CCardView: View {
                 DragGesture()
                     .onChanged {
                         translation = $0.translation
+                        
+                        if $0.percentage(in: geometry) >= threshold && translation.width < -195 {
+                            self.swipeStatus = .like
+                                               } else if $0.percentage(in: geometry) >= threshold && translation.width > 197 {
+                                                   self.swipeStatus = .dislike
+                                               } else {
+                                                   self.swipeStatus = .none
+                                               }
+                        
+                        print("\(swipeStatus)","swipeStatus")
+                        print("\($0.percentage(in: geometry))", "percentage")
+                        print("\(translation)", "translation")
+
+                        
                     }.onEnded {
                         if $0.percentage(in: geometry) > threshold {
                             onRemove(self.card)
+                           
                         } else {
                             translation = .zero
                         }
@@ -284,6 +357,26 @@ struct CCardView: View {
             )
         }
     }
+    
+    func createCard(){
+       isLoading = true
+   }
+    
+    var loadingIndicator: some View {
+       ZStack{
+           if isLoading{
+               Color.black
+                   .opacity(0.25)
+                   .ignoresSafeArea()
+
+               ProgressView()
+                   .font(.title2)
+                   .frame(width: 60, height: 60)
+                   .background(Color.white)
+                   .cornerRadius(10)
+           }
+       }
+   }
     
 
     

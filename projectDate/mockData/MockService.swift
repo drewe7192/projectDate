@@ -94,20 +94,6 @@ enum MockService {
                 choices: ["fadsfdsf", "fdasfsdfsd"],
                 category: "value",
                 profileType: "Friend"
-            ),
-            CardModel(
-                id: "4",
-                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-                choices: ["fadsfdsf", "fdasfsdfsd"],
-                category: "value",
-                profileType: "Friend"
-            ),
-            CardModel(
-                id: "5",
-                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-                choices: ["fadsfdsf", "fdasfsdfsd"],
-                category: "value",
-                profileType: "Friend"
             )
         ]
     }

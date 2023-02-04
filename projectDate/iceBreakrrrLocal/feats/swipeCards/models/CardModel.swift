@@ -15,5 +15,3 @@ struct CardModel: Codable, Identifiable, Hashable {
     var profileType: String
 
 }
-
-
