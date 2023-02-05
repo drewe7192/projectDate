@@ -7,15 +7,25 @@
 
 import Foundation
 import SwiftUI
+import HMSSDK
 
-// Extension for adding rounded corners to specific corners
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
     }
+    
+    func getRootViewController()->UIViewController{
+        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else{
+            return .init()
+        }
+        
+        guard let root = screen.windows.first?.rootViewController else {
+            return .init()
+        }
+        return root
+    }
 }
 
-// Custom RoundedCorner shape used for cornerRadius extension above
 struct RoundedCorner: Shape {
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners
@@ -23,5 +33,87 @@ struct RoundedCorner: Shape {
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
+    }
+}
+
+extension DragGesture.Value {
+    func percentage(in geometry: GeometryProxy) -> CGFloat {
+        abs(translation.width / geometry.size.width)
+    }
+}
+
+extension Array where Element == CardModel {
+    
+    func cardOffset(cardId: Int) -> CGFloat {
+        // done really get this logic
+        CGFloat(count - 1 - cardId) * 8
+    }
+    
+    func cardWidth(in geometry: GeometryProxy,
+                   cardId: Int) -> CGFloat {
+        // what does this have to do with width? 
+        geometry.size.width - cardOffset(cardId: cardId)
+    }
+}
+
+extension Color {
+    static let realColor = Color("iceBreakrrrBlue")
+}
+
+extension FacetimeView {
+    class ViewModel: ObservableObject, HMSUpdateListener{
+        
+        @Published var addVideoView: ((_ videoView: HMSVideoTrack) -> ())?
+        @Published var removeVideoView: ((_ videoView: HMSVideoTrack) -> ())?
+        
+        
+        func on(join room: HMSRoom) {
+            
+        }
+        
+        func on(room: HMSRoom, update: HMSRoomUpdate) {
+            
+        }
+        
+        func on(peer: HMSPeer, update: HMSPeerUpdate) {
+            
+        }
+        
+        func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
+            switch update {
+            case .trackAdded:
+                if let videoTrack = track as? HMSVideoTrack {
+                    addVideoView?(videoTrack)
+                }
+            case .trackRemoved:
+                if let videoTrack = track as? HMSVideoTrack {
+                    removeVideoView?(videoTrack)
+                }
+            default:
+                break
+            }
+        }
+        
+        func on(error: Error) {
+            
+        }
+        
+        func on(message: HMSMessage) {
+            
+        }
+        
+        func on(updated speakers: [HMSSpeaker]) {
+            
+        }
+        
+        func onReconnecting() {
+            
+        }
+        
+        func onReconnected() {
+            
+        }
+        
+        
     }
 }

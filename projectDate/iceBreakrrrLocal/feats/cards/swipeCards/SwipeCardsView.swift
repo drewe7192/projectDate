@@ -22,26 +22,14 @@ struct SwipeCardsView: View {
                         .animation(.spring())
                         .frame(width:
                                 viewModel.swipeCards.cardWidth(in: geometry,
-                                                userId: index), height: 700)
+                                                cardId: index), height: 700)
                         .offset(x: 0,
                                 y: viewModel.swipeCards.cardOffset(
-                                    userId: index))
+                                    cardId: index))
                     }
                 }
             }
         }.padding()
-    }
-}
-
-extension Array where Element == CardModel {
-    
-    func cardOffset(userId: Int) -> CGFloat {
-        CGFloat(count - 1 - userId) * 8
-    }
-    
-    func cardWidth(in geometry: GeometryProxy,
-                   userId: Int) -> CGFloat {
-        geometry.size.width - cardOffset(userId: userId)
     }
 }
 

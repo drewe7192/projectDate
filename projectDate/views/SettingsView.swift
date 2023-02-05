@@ -18,19 +18,17 @@ struct SettingsView: View {
         VStack{
             Text("Hello Settings view")
             
-                            Button(action: {
-                                signOutUser()
-                            }) {
-                                Text("Sign Out")
-                            }
-                            .fullScreenCover(isPresented: $isLoggedOut) {
-                                SignInView()
-                            }
+            Button(action: {
+                signOutUser()
+            }) {
+                Text("Sign Out")
+            }
+            .fullScreenCover(isPresented: $isLoggedOut) {
+                SignInView()
+            }
         }
-   
     }
-    
-    
+
     func signOutUser(){
         let firebaseAuth = Auth.auth()
         do{
@@ -42,7 +40,6 @@ struct SettingsView: View {
         }
         viewRouter.currentPage = .signInPage
         isLoggedOut = true
-        
     }
 }
 

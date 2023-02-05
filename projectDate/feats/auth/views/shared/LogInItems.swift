@@ -22,7 +22,6 @@ struct LogInItems: View {
     @State var signInProcessing = false
     @State var isThirdPartyAuth = true
 
-
     var body: some View {
             if(toggleButtons){
                 thirdPartyButtons
@@ -105,7 +104,6 @@ struct LogInItems: View {
             }
         }
     }
-
 }
 
 struct SignInCredentialFields: View {

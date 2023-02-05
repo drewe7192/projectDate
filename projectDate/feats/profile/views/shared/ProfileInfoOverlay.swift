@@ -22,10 +22,10 @@ struct ProfileInfoOverlay: View {
                 
                 VStack(alignment: .leading){
                     Text(participant.fullName)
-                            .font(.title)
-                            .bold()
-                            .foregroundColor(.white)
-                            .padding()
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.white)
+                        .padding()
                     
                     ScrollView{
                         VStack{
@@ -36,7 +36,7 @@ struct ProfileInfoOverlay: View {
                                 .padding(.bottom)
                                 .foregroundColor(.white)
                             
-                        Divider()
+                            Divider()
                             
                             Text("Values")
                                 .font(.title2)
@@ -96,7 +96,7 @@ struct ProfileInfoOverlay: View {
                                     }
                                 }
                             }
-                          
+                            
                         }
                     }
                 }
@@ -104,11 +104,8 @@ struct ProfileInfoOverlay: View {
                 
             }.position(x: geoReader.frame(in: .global).midX, y: geoReader.frame(in: .global).midY)
         }
-     
     }
 }
-
-
 
 struct ProfileInfoOverlay_Previews: PreviewProvider {
     static var previews: some View {

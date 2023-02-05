@@ -17,7 +17,6 @@ struct UserProfileView: View {
                 CircleImageView()
                 Buttons()
             }
-            
         }
     }
     

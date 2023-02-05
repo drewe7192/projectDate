@@ -115,10 +115,9 @@ struct LocalHomeView: View {
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            
             SwipeCardsView()
             VStack{
-                NavigationLink(destination: CreateCardView()) {
+                NavigationLink(destination: CreateCardsView()) {
                     ZStack{
                         Circle()
                             .frame(width: 80,height: 80)
@@ -140,8 +139,4 @@ struct LocalHomeView_Previews: PreviewProvider {
     static var previews: some View {
         LocalHomeView()
     }
-}
-
-extension Color {
-    static let realColor = Color("iceBreakrrrBlue")
 }

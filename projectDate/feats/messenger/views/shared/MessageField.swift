@@ -11,7 +11,6 @@ struct MessageField: View {
     @EnvironmentObject var viewModel: MessageViewModel
     @State private var message = ""
     
-    
     var body: some View {
         HStack {
             CustomTextField(placeholder: Text("Enter your text message here"), text: $message)
@@ -48,7 +47,6 @@ struct CustomTextField: View {
     var editingChanged: (Bool) -> () = {_ in}
     var commit: () -> () = {}
     
-   
     var body: some View{
         ZStack(alignment: .leading) {
             if text.isEmpty {

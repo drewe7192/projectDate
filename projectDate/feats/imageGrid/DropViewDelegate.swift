@@ -9,11 +9,9 @@ import SwiftUI
 
 //Drop Delegate functions... 
 struct DropViewDelegate: DropDelegate {
-   
     let item: String
     @Binding var items: [String]
     @Binding var draggedItem: String?
-    
     
     func performDrop(info: DropInfo) -> Bool {
         return true
@@ -32,7 +30,6 @@ struct DropViewDelegate: DropDelegate {
                 self.items.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
             }
         }
-
     }
 }
 

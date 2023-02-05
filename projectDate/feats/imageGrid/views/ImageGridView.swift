@@ -30,31 +30,31 @@ struct ImageGridView: View {
     
     var body: some View {
         ScrollView {
-        LazyVGrid(columns: columns, spacing: 1) {
-            ForEach(items2, id: \.self){item in
-                
-                AsyncImage(url: URL(string: item)) { phase in
-                    switch phase{
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .frame(width: 100, height: 100)
-                    default:
-                        Image(systemName: "photo")
+            LazyVGrid(columns: columns, spacing: 1) {
+                ForEach(items2, id: \.self){item in
+                    
+                    AsyncImage(url: URL(string: item)) { phase in
+                        switch phase{
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .frame(width: 100, height: 100)
+                        default:
+                            Image(systemName: "photo")
+                        }
                     }
-                }
-//Drag and Drop...
+                    //Drag and Drop...
                     .onDrag({
                         self.draggedItem = item
                         //Sending ID for sample....
                         return NSItemProvider(contentsOf: URL(string: "\(item)")!)!
                     })
                     .onDrop(of: [.url], delegate: DropViewDelegate(item: item, items: $items2, draggedItem: $draggedItem))
+                }
             }
-        }
-        .frame(height: 300)
-        .aspectRatio(1, contentMode: .fit)
-        .clipped()
+            .frame(height: 300)
+            .aspectRatio(1, contentMode: .fit)
+            .clipped()
         }
     }
 }

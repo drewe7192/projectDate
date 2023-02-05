@@ -1,0 +1,144 @@
+//
+//  CreateCardsView.swift
+//  projectDate
+//
+//  Created by DotZ3R0 on 2/4/23.
+//
+
+import SwiftUI
+
+struct CreateCardsView: View {
+    enum LikeDislike: Int {
+        case like, dislike, none
+    }
+    
+    @State private var question: String = ""
+    @State private var answerA: String = ""
+    @State private var answerB: String = ""
+    @State private var answerC: String = ""
+    @State private var showFriendDisplay: Bool = false
+    @State private var displayCreateButton: Bool = false
+    @State private var isLoading: Bool = false
+    @State var swipeStatus: LikeDislike = .none
+    
+    @StateObject private var viewModel = LocalHomeViewModel()
+    
+    var body: some View {
+        NavigationView{
+            GeometryReader{ geoReader in
+                ZStack{
+                    Color(.systemTeal)
+                        .ignoresSafeArea()
+                    
+                    loadingIndicator
+                    
+                    Text("Logo")
+                        .font(.system(size: 40))
+                        .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03)
+                    
+                    cards(for: geoReader)
+                    
+                    createCardButton(for: geoReader)
+                }
+                .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    func createCard(){
+        viewModel.createCards.removeAll()
+        displayCreateButton = false
+        isLoading = true
+        
+        
+    }
+    
+    private func cards(for geoReader: GeometryProxy) -> some View {
+        ZStack{
+            //the order of these cards will be 0,1,2 as expected
+            //but since its a Zstack the last cards in the index are on top of the stack
+            ForEach(viewModel.createCards) { card in
+                //this is showing only the last 4 cards
+                // as explained above the card indices are reversed cause of ZStack
+                // display each card counting backwards till you reach the 4th to last card in the index
+                // after that dont display anymore cards. Notice the array will update after you swipe each card
+                //Change the 4 to show more cards in deck
+                if Int(card.id) ?? 0 > viewModel.createCards.count - 4 {
+                    CreateCardView(
+                        card: card,
+                        onRemove: {
+                            removedUser in
+                            //remove card that equals current id
+                            viewModel.createCards.removeAll {
+                                $0.id == removedUser.id
+                            }
+                            
+                            //after removing 2nd to last card
+                            if(removedUser.id == "1"){
+                                displayCreateButton = true
+                            }
+                            
+                            //after removing last card
+                            if (removedUser.id == "0"){
+                                displayCreateButton = false
+                                isLoading = true
+                                createCard()
+                            }
+                            
+                        },
+                        swipeStatus: $swipeStatus)
+                    .animation(.spring())
+                    .frame(width:
+                            viewModel.createCards.cardWidth(in: geoReader,
+                                                            cardId: Int(card.id) ?? 0), height: 700)
+                    // gives the ability to see the cards under the top one
+                    .offset(x: 0,
+                            y: viewModel.createCards.cardOffset(
+                                cardId: Int(card.id) ?? 0))
+                }
+            }
+        }
+    }
+    
+    private func createCardButton(for geoReader: GeometryProxy) -> some View {
+        VStack{
+            if(displayCreateButton){
+                Button(action: {
+                    createCard()
+                }) {
+                    Text("Create Card")
+                        .font(.system(size: 30))
+                        .frame(width: 400, height: 100)
+                        .foregroundColor(.white)
+                        .background(.pink)
+                        .cornerRadius(20)
+                        .shadow(radius: 5, x: 6, y: 4)
+                }
+            }
+        }
+        .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.85)
+    }
+    
+    var loadingIndicator: some View {
+        ZStack{
+            if isLoading{
+                Color.black
+                    .opacity(0.25)
+                    .ignoresSafeArea()
+                
+                ProgressView()
+                    .font(.title2)
+                    .frame(width: 60, height: 60)
+                    .background(Color.white)
+                    .cornerRadius(10)
+            }
+        }
+    }
+}
+
+struct CreateCardsView_Previews: PreviewProvider {
+    static var previews: some View {
+        CreateCardsView()
+    }
+}

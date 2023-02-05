@@ -13,10 +13,9 @@ struct GamesView: View {
             Color.white
                 .ignoresSafeArea()
             
-        Text("fdsfsdfsd")
+            Text("fdsfsdfsd")
             
         }
-
     }
 }
 

@@ -30,7 +30,7 @@ struct GoogleAuth: View {
         }
         .frame(width: 350)
         .fullScreenCover( isPresented: $isLoggedIn){
-          HomeView()
+            HomeView()
         }
     }
 }
@@ -38,9 +38,8 @@ struct GoogleAuth: View {
 struct GoogleLogIn {
     @State var isLoading: Bool = false
     @Binding var isLoggedIn: Bool
-   
+    
     func handleGoogleLogin(){
-        
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
         let config = GIDConfiguration(clientID: clientID)
@@ -58,7 +57,7 @@ struct GoogleLogIn {
             
             guard
                 let authentication = user?.authentication,
-                    let idToken = authentication.idToken
+                let idToken = authentication.idToken
             else {
                 isLoading = false
                 return
@@ -78,29 +77,14 @@ struct GoogleLogIn {
                     return
                 }
                 
-                    //Displaying User Name...
+                //Displaying User Name...
                 guard let user = result?.user else{
                     return
                 }
                 print(user.displayName ?? "Sucess!")
                 isLoggedIn = true
-               
             }
         }
-    }
-    
-}
-
-extension View {
-    func getRootViewController()->UIViewController{
-        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else{
-            return .init()
-        }
-        
-        guard let root = screen.windows.first?.rootViewController else {
-            return .init()
-        }
-        return root
     }
 }
 

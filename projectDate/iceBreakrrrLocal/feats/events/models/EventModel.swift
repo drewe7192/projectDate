@@ -23,5 +23,3 @@ struct EventModel: Identifiable {
         return formatter.string(from: eventDate)
     }
 }
-
-//extension EventModel: Equatable, Hashable {}

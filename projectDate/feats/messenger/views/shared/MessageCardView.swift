@@ -27,8 +27,6 @@ struct MessageCardView: View {
                 .clipShape(Circle())
                 .padding(.trailing,30)
                 
-              
-                
                 VStack(alignment: .leading){
                     Text("Bob Barron")
                         .foregroundColor(.black)

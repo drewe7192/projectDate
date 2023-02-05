@@ -11,17 +11,12 @@ struct UpcomingCardView: View {
     var sd: sdModel
     var geoReader: GeometryProxy
     
-    
     var body: some View {
-      
             ZStack{
                 Color("Grey")
                     .ignoresSafeArea()
                 hostDisplay(for: geoReader)
             }
-            
-        
-      
     }
     
     func hostDisplay(for geoReader: GeometryProxy) -> some View {
@@ -47,7 +42,6 @@ struct UpcomingCardView: View {
                         .font(.system(size: geoReader.size.width * 0.05))
                         .bold()
                     Text(convertTime(sd.time))
-                    
                 }
                 
                 Spacer()
@@ -57,7 +51,6 @@ struct UpcomingCardView: View {
                     .padding(.trailing)
             }
             .padding(.trailing)
-            
         }
      }
 
@@ -65,9 +58,7 @@ struct UpcomingCardView: View {
         let now = Date.now
         let result = Calendar.current.date(byAdding: .second, value: -foo, to: now)
         let text = "\(String(describing: result))"
-        
         let text2 = text.replacingOccurrences(of: "Optional(", with: "")
-        
         let text3 = text2.replacingOccurrences(of: "+0000)", with: "")
         
         return text3;

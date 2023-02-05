@@ -9,17 +9,17 @@ import SwiftUI
 
 struct ImageSlider: View {
     let person: ProfileModel
-
+    
     var body: some View {
         TabView{
-                ForEach(person.images, id: \.self) {item in
-                    NavigationLink(destination: ImageDetailView(image: item), label: {
-                        Image(item)
-                            .resizable()
-                            .scaledToFill()
-                    })
-                }
-                .ignoresSafeArea()
+            ForEach(person.images, id: \.self) {item in
+                NavigationLink(destination: ImageDetailView(image: item), label: {
+                    Image(item)
+                        .resizable()
+                        .scaledToFill()
+                })
+            }
+            .ignoresSafeArea()
         }
         .ignoresSafeArea()
         .tabViewStyle(PageTabViewStyle())
@@ -29,6 +29,6 @@ struct ImageSlider: View {
 struct ImageSlider_Previews: PreviewProvider {
     static var previews: some View {
         ImageSlider(person: MockService.profileSampleData)
-         
+        
     }
 }

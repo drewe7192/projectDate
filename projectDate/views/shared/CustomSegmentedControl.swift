@@ -13,7 +13,6 @@ struct CustomSegmentedControl: View {
     let color = Color.red
     
     var body: some View {
-        
         HStack(spacing: 0){
             ForEach(options.indices, id: \.self) { index in
                 ZStack {
@@ -32,8 +31,8 @@ struct CustomSegmentedControl: View {
                         }
                 }
                 .overlay(
-                Text(options[index])
-                    .foregroundColor(selectedTab == index ? color : Color.black)
+                    Text(options[index])
+                        .foregroundColor(selectedTab == index ? color : Color.black)
                 )
             }
         }

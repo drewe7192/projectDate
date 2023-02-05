@@ -14,7 +14,6 @@ struct MessageView: View {
         VStack {
             VStack {
                 TitleRow()
-                
                 ScrollViewReader { proxy in
                     ScrollView{
                         ForEach(viewModel.messages, id:
@@ -29,7 +28,7 @@ struct MessageView: View {
                                 viewModel.lastMessageId) { id in
                         withAnimation{
                             proxy.scrollTo(id, anchor: .bottom)
-                        }                        
+                        }
                     }
                 }
             }
@@ -39,7 +38,6 @@ struct MessageView: View {
                 .environmentObject(viewModel)
         }
     }
-    
 }
 
 struct MessageView_Previews: PreviewProvider {

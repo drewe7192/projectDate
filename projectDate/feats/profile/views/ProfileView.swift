@@ -15,10 +15,10 @@ struct ProfileView: View {
         GeometryReader{ geoReader in
             ZStack{
                 ImageSlider(person: participant)
-                    
+                
                 ProfileInfoOverlay(participant: participant)
                     .padding(.top, geoReader.size.height * 0.15)
-                    
+                
                 VStack{
                     HStack{
                         sideBar(for: geoReader)
@@ -44,10 +44,9 @@ struct ProfileView: View {
                     }
                 }
                 .padding(.bottom,geoReader.size.height * 0.3)
-             
+                
             }.position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
         }
-      
     }
     
     private func sideBar(for geoReader: GeometryProxy) -> some View {
@@ -59,7 +58,6 @@ struct ProfileView: View {
                 .cornerRadius(20)
                 .padding(.leading,5)
                 .opacity(0.6)
-               
             
             VStack{
                 NavigationLink(destination: RatingsView()) {
@@ -77,23 +75,15 @@ struct ProfileView: View {
                     .font(.system(size: 12))
                     .padding(.bottom,10)
                     .padding(.leading,5)
-             
                 
                 ZStack{
-    //                Text("")
-    //                    .frame(width: 45, height: 45)
-    //                    .background(.white)
-    //                    .cornerRadius(10)
-    //                    .opacity(0.6)
-                    
                     VStack{
                         Image(systemName: "pencil.and.ruler")
                             .resizable()
                             .frame(width: 20, height: 20)
                             .foregroundColor(.white)
                             .padding(.leading,5)
-    //                    Text("Height")
-    //                        .font(.system(size: 15))
+                        
                         Text(viewModel.person.info.height)
                             .bold()
                             .foregroundColor(.white)
@@ -104,21 +94,12 @@ struct ProfileView: View {
                 }
                 
                 ZStack{
-    //                Text("")
-    //                    .frame(width: 45, height: 45)
-    //                    .background(.white)
-    //                    .cornerRadius(10)
-    //                    .opacity(0.6)
-                    
                     VStack{
                         Image(systemName: "mappin")
                             .resizable()
                             .frame(width: 10, height: 25)
                             .foregroundColor(.white)
                             .padding(.leading,5)
-                        
-    //                    Text("From")
-    //                        .font(.system(size: 15))
                         
                         Text("Tampa")
                             .bold()
@@ -130,7 +111,7 @@ struct ProfileView: View {
                 }
             }
         }
-      
+        
     }
     
     func function1(){

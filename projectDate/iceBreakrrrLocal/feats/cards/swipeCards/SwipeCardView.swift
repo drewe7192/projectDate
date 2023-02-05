@@ -22,6 +22,11 @@ struct SwipeCardView: View {
     private var onRemove: (_ card: CardModel) -> Void
     private var threshold: CGFloat = 0.5
     
+    enum LikeDislike: Int {
+       case like, dislike, none
+   }
+    @State var swipeStatus: LikeDislike = .none
+    
     init(card: CardModel, onRemove: @escaping (_ card: CardModel)
          -> Void) {
         self.card = card
@@ -73,6 +78,14 @@ struct SwipeCardView: View {
                 DragGesture()
                     .onChanged {
                         translation = $0.translation
+                        
+                        if $0.percentage(in: geometry) >= threshold && translation.width < -195 {
+                            self.swipeStatus = .like
+                                               } else if $0.percentage(in: geometry) >= threshold && translation.width > 197 {
+                                                   self.swipeStatus = .dislike
+                                               } else {
+                                                   self.swipeStatus = .none
+                                               }
                     }.onEnded {
                         if $0.percentage(in: geometry) > threshold {
                             onRemove(self.card)
@@ -82,12 +95,6 @@ struct SwipeCardView: View {
                     }
             )
         }
-    }
-}
-
-extension DragGesture.Value {
-    func percentage(in geometry: GeometryProxy) ->      CGFloat {
-        abs(translation.width / geometry.size.width)
     }
 }
 

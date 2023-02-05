@@ -8,7 +8,6 @@
 import Foundation
 
 enum MockService {
-    
     static var homeTabTitles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
     
     static var userSampleData: UserModel {
@@ -88,13 +87,63 @@ enum MockService {
                 category: "value",
                 profileType: "Friend"
             ),
-            CardModel(
-                id: "3",
-                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-                choices: ["fadsfdsf", "fdasfsdfsd"],
-                category: "value",
-                profileType: "Friend"
-            )
+//            CardModel(
+//                id: "3",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "4",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "5",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "6",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "7",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "8",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "9",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            ),
+//            CardModel(
+//                id: "10",
+//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+//                choices: ["fadsfdsf", "fdasfsdfsd"],
+//                category: "value",
+//                profileType: "Friend"
+//            )
+            
         ]
     }
     
