@@ -10,12 +10,13 @@ import FBSDKLoginKit
 import SwiftUI
 
 class FacebookSignInManager: ObservableObject {
-  
     @Published var isLoggedIn: Bool = false
   
     let loginManager = LoginManager()
     
-    func facebookLogin() {
+    // using a completion handler with a completion block to fire viewRouter AFTER this code completes
+    // also called a escaping closure
+    func facebookLogin(completion: @escaping (_ success: Bool) -> Void) {
         loginManager.logIn(permissions: [.publicProfile, .email], viewController: nil) { loginResult in
             switch loginResult {
                 
@@ -32,6 +33,7 @@ class FacebookSignInManager: ObservableObject {
                         let fbDetails = result as! NSDictionary
                         print(fbDetails)
                         self.isLoggedIn = true
+                        completion(true)
                     }
                 })
             }

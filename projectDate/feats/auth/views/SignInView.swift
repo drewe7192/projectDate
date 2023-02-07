@@ -20,13 +20,14 @@ struct SignInView: View {
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
     @State var toggleButons = false
-    
+       
     var body: some View {
         NavigationView {
             ZStack{
                 // need a ZStack and color to change the background color
                 LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
+                
                 
                 VStack{
                     headerSection
@@ -46,7 +47,7 @@ struct SignInView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-    
+
     private var headerSection: some View {
         VStack{
             VStack{

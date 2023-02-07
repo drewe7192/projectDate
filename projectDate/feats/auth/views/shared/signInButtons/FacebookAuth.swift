@@ -13,7 +13,13 @@ struct FacebookAuth: View {
     
     var body: some View {
         Button(action: {
-            self.fbmanager.facebookLogin()
+            self.fbmanager.facebookLogin() { (success) -> Void in
+                if success {
+                    if(fbmanager.isLoggedIn){
+                        viewRouter.currentPage = .homePage
+                    }
+                }
+            }
         }) {
             
             Text("Sign in with Facebook")
@@ -25,15 +31,10 @@ struct FacebookAuth: View {
                 .background(.blue)
                 .cornerRadius(20)
                 .shadow(radius: 5)
-            
         }
         .frame(width: 350)
-        .fullScreenCover(isPresented: self.$fbmanager.isLoggedIn) {
-            LocalHomeView()
-        }
     }
 }
-
 
 struct FacebookAuth_Previews: PreviewProvider {
     static var previews: some View {

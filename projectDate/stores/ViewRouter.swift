@@ -9,7 +9,7 @@ import SwiftUI
 
 class ViewRouter: ObservableObject {
     static let shared = ViewRouter()
-    @Published var currentPage: Route = .homePage
+    @Published var currentPage: Route = .signInPage
 }
 
 enum Route {
