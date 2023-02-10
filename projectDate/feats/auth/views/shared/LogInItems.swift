@@ -21,6 +21,8 @@ struct LogInItems: View {
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
     @State var isThirdPartyAuth = true
+    
+    @State var showAlert: Bool = false
 
     var body: some View {
             if(toggleButtons){
@@ -73,9 +75,21 @@ struct LogInItems: View {
 
     var thirdPartyButtons: some View {
        VStack{
-           FacebookAuth()
+           GoogleAuth(showAlert: $showAlert)
+           
+           FacebookLoginView(showAlert: $showAlert)
+               .frame(width: 400, height: 60)
+               .cornerRadius(20)
+               .shadow(radius: 5)
+               .padding()
+           
            AppleAuth()
-           GoogleAuth()
+       }.alert(isPresented: $showAlert) {
+           Alert(
+               title: Text("Account already exists"),
+               message: Text("Sign in using a provider associated" +
+                               " with this email address.")
+           )
        }
    }
 

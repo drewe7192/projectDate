@@ -13,6 +13,7 @@ import FacebookLogin
 
 struct SignInView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @ObservedObject var fbmanager = FacebookSignInManager()
     
     @State var signInErrorMessage = ""
     @State var email = ""
@@ -20,7 +21,7 @@ struct SignInView: View {
     @State var isLoggedIn: Bool = false
     @State var signInProcessing = false
     @State var toggleButons = false
-       
+
     var body: some View {
         NavigationView {
             ZStack{
@@ -40,9 +41,6 @@ struct SignInView: View {
                 .overlay(
                     LogInItems().loadingIndicator
                 )
-                .fullScreenCover(isPresented: $isLoggedIn) {
-                    LocalHomeView()
-                }
             }
         }
         .navigationBarBackButtonHidden(true)

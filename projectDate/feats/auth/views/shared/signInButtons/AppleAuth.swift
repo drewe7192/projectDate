@@ -84,6 +84,7 @@ struct AppleAuth: View {
                         }
                         
                         let credential = OAuthProvider.credential(withProviderID: "apple.com" ,idToken: idTokenString, rawNonce: nonce)
+                        
                         Auth.auth().signIn(with: credential) { (authResult, error) in
                             if(error != nil) {
                                 print(error?.localizedDescription as Any)
@@ -91,9 +92,7 @@ struct AppleAuth: View {
                             }
                             print("signed in")
                             viewRouter.currentPage = .homePage
-                            
                         }
-                        print("\(String(describing: Auth.auth().currentUser?.uid))")
                     default:
                         break
                     }

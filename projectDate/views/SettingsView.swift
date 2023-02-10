@@ -33,7 +33,7 @@ struct SettingsView: View {
         let firebaseAuth = Auth.auth()
         do{
             //Google sign out..
-            GIDSignIn.sharedInstance.signOut()
+//            GIDSignIn.sharedInstance.signOut()
             try firebaseAuth.signOut()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)

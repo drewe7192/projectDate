@@ -27,6 +27,10 @@ struct MotherView: View {
                     .tabItem{
                         Label("Events", systemImage: "calendar")
                     }.tag(2)
+                SettingsView()
+                    .tabItem{
+                        Label("Settings", systemImage: "calendar")
+                    }.tag(3)
                 //                HomeView()
                 //                    .tabItem{
                 //                        Label("Home", systemImage: "house")
