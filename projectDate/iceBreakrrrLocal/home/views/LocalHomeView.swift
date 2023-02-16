@@ -14,6 +14,7 @@ struct LocalHomeView: View {
     @State private var valueCount = 0.0
     @State private var qualityCount = 0.0
     @State private var commitCount = 0.0
+    @State var showCardCreatedAlert: Bool = false
     
     @State private var profileText = ""
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -41,6 +42,13 @@ struct LocalHomeView: View {
                         
                     }
                 }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
+                    .alert(isPresented: $showCardCreatedAlert){
+                        Alert(
+                            title: Text("New Card Created!"),
+                            message: Text("You'll get a notification if someone matches your perfered answer!")
+                        )
+                    }
+                    
             }
         }
     }
@@ -121,7 +129,7 @@ struct LocalHomeView: View {
         ZStack{
             CardsView()
             VStack{
-                NavigationLink(destination: CreateCardsView()) {
+                NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert)) {
                     ZStack{
                         Circle()
                             .frame(width: geoReader.size.width * 0.2, height: geoReader.size.width * 0.2)
@@ -144,6 +152,7 @@ struct LocalHomeView: View {
     }
     
     private func setProgress() -> Double{
+        // might what to change this to update on only unique cards
         progress = Double(viewModel.cardsSwipedToday.count) * 0.1
         return Double(viewModel.cardsSwipedToday.count) * 5 * 0.01
     }

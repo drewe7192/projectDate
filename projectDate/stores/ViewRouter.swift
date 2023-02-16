@@ -33,4 +33,5 @@ enum Route {
     case signUpPage
     case signInPage
     case homePage
+    case confirmationPage
 }

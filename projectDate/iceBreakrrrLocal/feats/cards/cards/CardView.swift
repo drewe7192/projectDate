@@ -90,12 +90,11 @@ struct CardView: View {
                             self.swipeStatus = .none
                         }
                     }.onEnded {_ in
-                        Task{
                             if (self.swipeStatus == .like) && (selectedChoice != "Choose answer") {
                                 onRemove(self.card)
                                 
                                 // after each swipe save the card data and update the profiler section
-                                viewModel.createSwipedCard(card: self.card, answer: selectedChoice)
+                                viewModel.saveSwipedCard(card: self.card, answer: selectedChoice)
                                  viewModel.getCardsSwipedToday(){ (success) -> Void in
                                      if !success.isEmpty {
                                       print("success!")
@@ -103,14 +102,11 @@ struct CardView: View {
                                 }
                             } else if (self.swipeStatus == .dislike) {
                                 onRemove(self.card)
-                                viewModel.createSwipedCard(card: self.card, answer: "")
+                                viewModel.saveSwipedCard(card: self.card, answer: "")
                             } else {
                                 translation = .zero
                             }
                         }
-                        
-                      
-                    }
             )
         }
     }

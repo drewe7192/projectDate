@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77115F95299EF2EC00705811 /* ConfirmationView.swift */; };
 		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
 		771AE411296D4D4E00F3A6A1 /* sdInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */; };
 		771AE4162977C46A00F3A6A1 /* LocalHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */; };
@@ -125,6 +126,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		77115F95299EF2EC00705811 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdInfoCardView.swift; sourceTree = "<group>"; };
 		771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalHomeView.swift; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 		777C2CD3298A3EE100CD3CCE /* views */ = {
 			isa = PBXGroup;
 			children = (
+				77115F95299EF2EC00705811 /* ConfirmationView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -1081,6 +1084,7 @@
 				77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */,
 				77C3D54D289D05020088554F /* TitleRow.swift in Sources */,
 				775E062E28C51B850082C27E /* SignUpView.swift in Sources */,
+				77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */,
 				7757FE22291BA991009C40CC /* LikesView.swift in Sources */,
 				7731738228CDBE4200B8885B /* FacebookAuth.swift in Sources */,
 				7731737F28CCE50100B8885B /* GoogleAuth.swift in Sources */,

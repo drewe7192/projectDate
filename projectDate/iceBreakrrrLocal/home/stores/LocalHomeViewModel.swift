@@ -94,7 +94,7 @@ class LocalHomeViewModel: ObservableObject {
             }
     }
     
-    public func createSwipedCard(card: CardModel, answer: String){
+    public func saveSwipedCard(card: CardModel, answer: String){
         let docData: [String: Any] = [
             "cardId": card.id,
             "answer": cardChoices(choices: card.choices, answer: answer),
@@ -112,6 +112,31 @@ class LocalHomeViewModel: ObservableObject {
                 print("Document successfully written!")
             }
         }
+    }
+    
+    public func createNewCard(id: String, question: String, choices: [String], categoryType: String, profileType: String ,completed: @escaping (_ success: Bool) -> Void){
+        
+        let docData: [String: Any] = [
+            "id" : id,
+            "question": question,
+            "choices": choices,
+            "categoryType": categoryType,
+            "profileType": profileType
+        ]
+        
+        let docRef = db.collection("cards").document()
+        
+        docRef.setData(docData) {error in
+            if let error = error{
+                print("Error creating new card: \(error)")
+                completed(false)
+            } else {
+                print("Document successfully written!")
+                completed(true)
+            }
+        }
+        
+      
     }
     
     public func removeTimeStamp(fromDate: Date) -> Date {

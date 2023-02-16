@@ -12,16 +12,21 @@ struct CreateCardsView: View {
         case like, dislike, none
     }
     
-    @State private var question: String = ""
-    @State private var answerA: String = ""
-    @State private var answerB: String = ""
-    @State private var answerC: String = ""
+    @State var question: String = ""
+    @State var answerA: String = ""
+    @State var answerB: String = ""
+    @State var answerC: String = ""
+    @State var categoryType: String = ""
+    @State var profileType: String = ""
+    
     @State private var showFriendDisplay: Bool = false
     @State private var displayCreateButton: Bool = false
     @State private var isLoading: Bool = false
     @State var swipeStatus: LikeDislike = .none
     
     @StateObject private var viewModel = LocalHomeViewModel()
+    @EnvironmentObject var viewRouter: ViewRouter
+    @Binding var showCardCreatedAlert: Bool
     
     var body: some View {
         NavigationView{
@@ -31,14 +36,16 @@ struct CreateCardsView: View {
                         .ignoresSafeArea()
                     
                     loadingIndicator
-                    
-                    Text("Logo")
-                        .font(.system(size: 40))
-                        .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03)
-                    
-                    cards(for: geoReader)
-                    
-                    createCardButton(for: geoReader)
+                    VStack{
+                        Text("Logo")
+                            .font(.system(size: 40))
+                            .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03)
+                        
+                        cards(for: geoReader)
+                        
+                        createCardButton(for: geoReader)
+                    }
+                
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
             }
@@ -50,6 +57,21 @@ struct CreateCardsView: View {
         viewModel.createCards.removeAll()
         displayCreateButton = false
         isLoading = true
+        viewModel.createNewCard(
+            id: UUID().uuidString,
+            question: question,
+            choices: [answerA,answerB,answerC],
+            categoryType: categoryType,
+            profileType: profileType) { (success) -> Void in
+                if success{
+                    viewRouter.currentPage = .confirmationPage
+                    isLoading = false
+//                    showCardCreatedAlert = true
+                    
+                }
+                
+            }
+        
         
         
     }
@@ -87,7 +109,13 @@ struct CreateCardsView: View {
                             }
                             
                         },
-                        swipeStatus: $swipeStatus)
+                        swipeStatus: $swipeStatus,
+                        question: $question,
+                        answerA: $answerA,
+                        answerB: $answerB,
+                        answerC: $answerC,
+                        categoryType: $categoryType,
+                        profileType: $profileType)
                     .animation(.spring())
                     .frame(width:
                             viewModel.createCards.cardWidth(in: geoReader,
@@ -96,6 +124,7 @@ struct CreateCardsView: View {
                     .offset(x: 0,
                             y: viewModel.createCards.cardOffset(
                                 cardId: Int(card.id) ?? 0))
+                   
                 }
             }
         }
@@ -139,6 +168,6 @@ struct CreateCardsView: View {
 
 struct CreateCardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCardsView()
+        CreateCardsView(showCardCreatedAlert: .constant(true))
     }
 }
