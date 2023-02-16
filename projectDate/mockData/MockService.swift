@@ -56,6 +56,30 @@ enum MockService {
                 recommendedProfiles: [],
                 sds: [],
             tabCardNumber: 0
+            ),
+            ProfileModel(
+                firstName: "Travon",
+                lastName: "Dayvon",
+                location: "ClearWater, Fl",
+                images: ["animeGirl2","sasuke"],
+                info: profileInfoSampleData,
+                cards: cardsSampleData,
+                topRatedProfiles: [],
+                recommendedProfiles: [],
+                sds: [],
+            tabCardNumber: 0
+            ),
+            ProfileModel(
+                firstName: "Travon",
+                lastName: "Dayvon",
+                location: "ClearWater, Fl",
+                images: ["animeGirl2","sasuke"],
+                info: profileInfoSampleData,
+                cards: cardsSampleData,
+                topRatedProfiles: [],
+                recommendedProfiles: [],
+                sds: [],
+            tabCardNumber: 0
             )
         ]
     }
@@ -70,21 +94,21 @@ enum MockService {
                 id: "0",
                 question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
                 choices: ["fadsfdsf", "fdasfsdfsd"],
-                category: "value",
+                categoryType: "value",
                 profileType: "Friend"
             ),
             CardModel(
                 id: "1",
                 question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
                 choices: ["fadsfdsf", "fdasfsdfsd"],
-                category: "value",
+                categoryType: "value",
                 profileType: "Friend"
             ),
             CardModel(
                 id: "2",
                 question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
                 choices: ["fadsfdsf", "fdasfsdfsd"],
-                category: "value",
+                categoryType: "value",
                 profileType: "Friend"
             ),
 //            CardModel(
@@ -154,7 +178,31 @@ enum MockService {
             location: "Tampa, Fl",
             creationDate: Date(),
             description: "fdsfdsfdsafsdfsd",
-            participants: [],
+            participants: profilesSampleData,
+            eventDate: Date()
+           ),
+           EventModel(
+            title: "Event title 1 Event title 1 Event title 1 Event title 1",
+            location: "Tampa, Fl",
+            creationDate: Date(),
+            description: "fdsfdsfdsafsdfsd",
+            participants: profilesSampleData,
+            eventDate: Date()
+           ),
+           EventModel(
+            title: "Event title 1",
+            location: "Tampa, Fl",
+            creationDate: Date(),
+            description: "fdsfdsfdsafsdfsd",
+            participants: profilesSampleData,
+            eventDate: Date()
+           ),
+           EventModel(
+            title: "Event title 1",
+            location: "Tampa, Fl",
+            creationDate: Date(),
+            description: "fdsfdsfdsafsdfsd",
+            participants: profilesSampleData,
             eventDate: Date()
            )
         ]

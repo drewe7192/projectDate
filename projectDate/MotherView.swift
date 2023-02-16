@@ -16,50 +16,52 @@ struct MotherView: View {
     }
     
     var body: some View {
-        switch viewRouter.currentPage {
-        case .homePage :
-            TabView {
-                LocalHomeView()
-                    .tabItem{
-                        Label("Home", systemImage: "house")
-                    }.tag(1)
-                EventHomeView(searchText: .constant(""))
-                    .tabItem{
-                        Label("Events", systemImage: "calendar")
-                    }.tag(2)
-                SettingsView()
-                    .tabItem{
-                        Label("Settings", systemImage: "calendar")
-                    }.tag(3)
-                //                HomeView()
-                //                    .tabItem{
-                //                        Label("Home", systemImage: "house")
-                //                    }.tag(1)
-                //                LikesView()
-                //                    .tabItem{
-                //                        Label("Likes", systemImage: "heart")
-                //                    }
-                //                    .tag(2)
-                //                GamesView()
-                //                    .tabItem{
-                //                        Label("Games", systemImage: "gamecontroller")
-                //                    }
-                //                    .tag(3)
-                //                MessageHomeView()
-                //                    .tabItem{
-                //                        Label("Messenger", systemImage: "message")
-                //                    }.tag(4)
-                //                UserProfileView()
-                //                    .tabItem{
-                //                        Label("Profile", systemImage: "person")
-                //                    }.tag(5)
+        GeometryReader{geoReader in
+            switch viewRouter.currentPage {
+            case .homePage :
+                TabView {
+                    LocalHomeView()
+                        .tabItem{
+                            Label("Home", systemImage: "house")
+                        }.tag(1)
+                    EventHomeView(searchText: .constant(""))
+                        .tabItem{
+                            Label("Events", systemImage: "calendar")
+                        }.tag(2)
+                    SettingsView()
+                        .tabItem{
+                            Label("Settings", systemImage: "gearshape")
+                        }.tag(3)
+                    //                HomeView()
+                    //                    .tabItem{
+                    //                        Label("Home", systemImage: "house")
+                    //                    }.tag(1)
+                    //                LikesView()
+                    //                    .tabItem{
+                    //                        Label("Likes", systemImage: "heart")
+                    //                    }
+                    //                    .tag(2)
+                    //                GamesView()
+                    //                    .tabItem{
+                    //                        Label("Games", systemImage: "gamecontroller")
+                    //                    }
+                    //                    .tag(3)
+                    //                MessageHomeView()
+                    //                    .tabItem{
+                    //                        Label("Messenger", systemImage: "message")
+                    //                    }.tag(4)
+                    //                UserProfileView()
+                    //                    .tabItem{
+                    //                        Label("Profile", systemImage: "person")
+                    //                    }.tag(5)
+                }
+                .frame(height: geoReader.size.height * 1.05)
+                
+            case .signUpPage :
+                SignUpView()
+            case .signInPage:
+                SignInView()
             }
-            .frame(height: 850)
-            
-        case .signUpPage :
-            SignUpView()
-        case .signInPage:
-            SignInView()
         }
     }
 }

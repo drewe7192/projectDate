@@ -11,7 +11,7 @@ struct CardModel: Codable, Identifiable, Hashable {
     var id : String
     var question: String
     var choices: [String]
-    var category: String
+    var categoryType: String
     var profileType: String
 
 }

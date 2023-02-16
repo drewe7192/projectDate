@@ -7,24 +7,24 @@
 
 import SwiftUI
 
-struct SwipeCardsView: View {
+struct CardsView: View {
     @StateObject private var viewModel = LocalHomeViewModel()
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                ForEach(Array(viewModel.swipeCards.enumerated()), id: \.element) { index, card in
-                    if index > viewModel.swipeCards.count - 4 {
-                        SwipeCardView(card: card, onRemove: {
+                ForEach(Array(viewModel.cards.enumerated()), id: \.element) { index, card in
+                    if index > viewModel.cards.count - 4 {
+                        CardView(card: card, onRemove: {
                             removedUser in
-                            viewModel.swipeCards.removeAll { $0.id == removedUser.id }
+                            viewModel.cards.removeAll { $0.id == removedUser.id }
                         })
                         .animation(.spring())
                         .frame(width:
-                                viewModel.swipeCards.cardWidth(in: geometry,
+                                viewModel.cards.cardWidth(in: geometry,
                                                 cardId: index), height: 700)
                         .offset(x: 0,
-                                y: viewModel.swipeCards.cardOffset(
+                                y: viewModel.cards.cardOffset(
                                     cardId: index))
                     }
                 }
@@ -33,8 +33,8 @@ struct SwipeCardsView: View {
     }
 }
 
-struct SwipeCardsView_Previews: PreviewProvider {
+struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeCardsView()
+        CardsView()
     }
 }

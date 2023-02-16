@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 struct CardsModel: Identifiable {
     var id = UUID().uuidString

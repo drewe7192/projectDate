@@ -11,11 +11,10 @@
 		771AE411296D4D4E00F3A6A1 /* sdInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */; };
 		771AE4162977C46A00F3A6A1 /* LocalHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */; };
 		771AE4182979173A00F3A6A1 /* EventInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4172979173A00F3A6A1 /* EventInfoView.swift */; };
-		771AE41A297917D300F3A6A1 /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE419297917D300F3A6A1 /* EventCardView.swift */; };
 		771AE41C297918DB00F3A6A1 /* EventHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41B297918DB00F3A6A1 /* EventHomeView.swift */; };
-		771AE41E2979263B00F3A6A1 /* SwipeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41D2979263B00F3A6A1 /* SwipeCardView.swift */; };
-		771AE4202979B40B00F3A6A1 /* SwipeCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41F2979B40B00F3A6A1 /* SwipeCardsView.swift */; };
-		771AE4222979B44F00F3A6A1 /* SwipeCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4212979B44F00F3A6A1 /* SwipeCardsModel.swift */; };
+		771AE41E2979263B00F3A6A1 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41D2979263B00F3A6A1 /* CardView.swift */; };
+		771AE4202979B40B00F3A6A1 /* CardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41F2979B40B00F3A6A1 /* CardsView.swift */; };
+		771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4212979B44F00F3A6A1 /* CardsModel.swift */; };
 		771AE42B2979DE3500F3A6A1 /* LocalHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE42A2979DE3500F3A6A1 /* LocalHomeViewModel.swift */; };
 		771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA00E28A045EC007EBC40 /* Extensions.swift */; };
 		771EA01128A04810007EBC40 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA01028A04810007EBC40 /* MessageField.swift */; };
@@ -56,6 +55,7 @@
 		777821AA29643ADE006CD035 /* sdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777821A929643ADE006CD035 /* sdViewModel.swift */; };
 		777821AC2969558F006CD035 /* TabCardBig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777821AB2969558F006CD035 /* TabCardBig.swift */; };
 		777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C2CD0298A373A00CD3CCE /* CreateCardView.swift */; };
+		778A5F8B2998CA65004EA498 /* SwipedCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A5F8A2998CA65004EA498 /* SwipedCardsModel.swift */; };
 		779985DA298EC07D00D3FD74 /* CreateCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779985D9298EC07D00D3FD74 /* CreateCardsView.swift */; };
 		77A0F9BB2986CEA1009CD1E0 /* LogInItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */; };
 		77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */; };
@@ -129,11 +129,10 @@
 		771AE410296D4D4E00F3A6A1 /* sdInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdInfoCardView.swift; sourceTree = "<group>"; };
 		771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalHomeView.swift; sourceTree = "<group>"; };
 		771AE4172979173A00F3A6A1 /* EventInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoView.swift; sourceTree = "<group>"; };
-		771AE419297917D300F3A6A1 /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
 		771AE41B297918DB00F3A6A1 /* EventHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHomeView.swift; sourceTree = "<group>"; };
-		771AE41D2979263B00F3A6A1 /* SwipeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCardView.swift; sourceTree = "<group>"; };
-		771AE41F2979B40B00F3A6A1 /* SwipeCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCardsView.swift; sourceTree = "<group>"; };
-		771AE4212979B44F00F3A6A1 /* SwipeCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCardsModel.swift; sourceTree = "<group>"; };
+		771AE41D2979263B00F3A6A1 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		771AE41F2979B40B00F3A6A1 /* CardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsView.swift; sourceTree = "<group>"; };
+		771AE4212979B44F00F3A6A1 /* CardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsModel.swift; sourceTree = "<group>"; };
 		771AE42A2979DE3500F3A6A1 /* LocalHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalHomeViewModel.swift; sourceTree = "<group>"; };
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		771EA01028A04810007EBC40 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
@@ -165,6 +164,7 @@
 		777821A929643ADE006CD035 /* sdViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sdViewModel.swift; sourceTree = "<group>"; };
 		777821AB2969558F006CD035 /* TabCardBig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCardBig.swift; sourceTree = "<group>"; };
 		777C2CD0298A373A00CD3CCE /* CreateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardView.swift; sourceTree = "<group>"; };
+		778A5F8A2998CA65004EA498 /* SwipedCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipedCardsModel.swift; sourceTree = "<group>"; };
 		779985D9298EC07D00D3FD74 /* CreateCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardsView.swift; sourceTree = "<group>"; };
 		77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInItems.swift; sourceTree = "<group>"; };
 		77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModel.swift; sourceTree = "<group>"; };
@@ -294,7 +294,6 @@
 			isa = PBXGroup;
 			children = (
 				771AE41B297918DB00F3A6A1 /* EventHomeView.swift */,
-				771AE419297917D300F3A6A1 /* EventCardView.swift */,
 				771AE4172979173A00F3A6A1 /* EventInfoView.swift */,
 			);
 			path = views;
@@ -522,13 +521,13 @@
 			path = views;
 			sourceTree = "<group>";
 		};
-		779985D7298EC04000D3FD74 /* swipeCards */ = {
+		779985D7298EC04000D3FD74 /* cards */ = {
 			isa = PBXGroup;
 			children = (
-				771AE41F2979B40B00F3A6A1 /* SwipeCardsView.swift */,
-				771AE41D2979263B00F3A6A1 /* SwipeCardView.swift */,
+				771AE41F2979B40B00F3A6A1 /* CardsView.swift */,
+				771AE41D2979263B00F3A6A1 /* CardView.swift */,
 			);
-			path = swipeCards;
+			path = cards;
 			sourceTree = "<group>";
 		};
 		779985D8298EC05700D3FD74 /* createCards */ = {
@@ -544,7 +543,7 @@
 			isa = PBXGroup;
 			children = (
 				779985D8298EC05700D3FD74 /* createCards */,
-				779985D7298EC04000D3FD74 /* swipeCards */,
+				779985D7298EC04000D3FD74 /* cards */,
 				77A1C7C0297C3B05004C8FA6 /* models */,
 			);
 			path = cards;
@@ -553,8 +552,9 @@
 		77A1C7C0297C3B05004C8FA6 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				771AE4212979B44F00F3A6A1 /* SwipeCardsModel.swift */,
+				771AE4212979B44F00F3A6A1 /* CardsModel.swift */,
 				77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */,
+				778A5F8A2998CA65004EA498 /* SwipedCardsModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -1069,7 +1069,7 @@
 				77FB2474295DC11C008F5469 /* PageModel.swift in Sources */,
 				77FB24672954A1D5008F5469 /* RatingsView.swift in Sources */,
 				77FB24692958A0C0008F5469 /* MessageHomeView.swift in Sources */,
-				771AE41E2979263B00F3A6A1 /* SwipeCardView.swift in Sources */,
+				771AE41E2979263B00F3A6A1 /* CardView.swift in Sources */,
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77B8FD1028BA28CE00AE45A8 /* PageViewModel.swift in Sources */,
 				77FB246B2958A0F5008F5469 /* MessageCardView.swift in Sources */,
@@ -1094,7 +1094,6 @@
 				77FB23B7292A4CF3008F5469 /* CustomSegmentedControl.swift in Sources */,
 				77FB245229460426008F5469 /* TokenProvider.swift in Sources */,
 				775E062C28C51B6F0082C27E /* SignInView.swift in Sources */,
-				771AE41A297917D300F3A6A1 /* EventCardView.swift in Sources */,
 				77FB23CA2939D0A8008F5469 /* sdCardView.swift in Sources */,
 				77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */,
 				779985DA298EC07D00D3FD74 /* CreateCardsView.swift in Sources */,
@@ -1103,15 +1102,16 @@
 				77DD938E289FC9B30039CF6D /* MessageView.swift in Sources */,
 				77C3D52E289912840088554F /* EditProfileView.swift in Sources */,
 				77ABBE1029182DC900A7669E /* TitleView.swift in Sources */,
-				771AE4202979B40B00F3A6A1 /* SwipeCardsView.swift in Sources */,
+				771AE4202979B40B00F3A6A1 /* CardsView.swift in Sources */,
 				77626AEE28C87AF600D1DD9E /* AppleAuth.swift in Sources */,
 				771EA01128A04810007EBC40 /* MessageField.swift in Sources */,
 				77E88D752987ED9C00F20B29 /* FacebookSignInManager.swift in Sources */,
 				777821AC2969558F006CD035 /* TabCardBig.swift in Sources */,
 				7756A48328C5192C0038903D /* MotherView.swift in Sources */,
+				778A5F8B2998CA65004EA498 /* SwipedCardsModel.swift in Sources */,
 				771AE42B2979DE3500F3A6A1 /* LocalHomeViewModel.swift in Sources */,
 				7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */,
-				771AE4222979B44F00F3A6A1 /* SwipeCardsModel.swift in Sources */,
+				771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */,
 				77FB245E294DA1A2008F5469 /* SearchView.swift in Sources */,
 				77B8FD0E28BA244000AE45A8 /* ImageGridView.swift in Sources */,
 				77C3D55B289FB4E30088554F /* Message.swift in Sources */,
@@ -1308,7 +1308,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1345,7 +1345,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

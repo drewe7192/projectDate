@@ -13,7 +13,6 @@ import FacebookLogin
 
 struct SignInView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @ObservedObject var fbmanager = FacebookSignInManager()
     
     @State var signInErrorMessage = ""
     @State var email = ""
