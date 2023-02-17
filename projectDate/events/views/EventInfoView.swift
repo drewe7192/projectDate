@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EventInfoView: View {
     let event: EventModel
+    @Binding var selected: [Int]
     
     var body: some View {
         GeometryReader{ geoReader in
@@ -27,7 +28,7 @@ struct EventInfoView: View {
                   
                 }
             
-            }
+            }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
             .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY )
         }
     }
@@ -115,18 +116,30 @@ struct EventInfoView: View {
     
     func footerSection(for geoReader: GeometryProxy) -> some View {
         HStack{
-            ZStack{
-                Text("")
-                    .frame(width: 350,height: 80)
-                    .padding(7)
-                    .overlay(
-                        RoundedRectangle(cornerRadius:35)
-                            .stroke(.black, lineWidth: 2)
-                    )
-                
+//            ZStack{
+//                Text("")
+//                    .frame(width: 350,height: 80)
+//                    .padding(7)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius:35)
+//                            .stroke(.black, lineWidth: 2)
+//                    )
+//
+//                Text("Join")
+//                    .font(.system(size: 30))
+//            }
+            
+            Button(action: {
+         
+            }) {
                 Text("Join")
-                    .font(.system(size: 30))
             }
+                                .frame(width: 350,height: 80)
+                                .padding(7)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius:35)
+                                        .stroke(selected.contains(event.id) ? .white : .black, lineWidth: 2)
+                                )
         }
         .foregroundColor(.white)
         
@@ -135,6 +148,6 @@ struct EventInfoView: View {
 
 struct EventInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        EventInfoView(event: MockService.eventsSampleData.first!)
+        EventInfoView(event: MockService.eventsSampleData.first!, selected: .constant([0,1]))
     }
 }

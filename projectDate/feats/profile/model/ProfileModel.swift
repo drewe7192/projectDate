@@ -17,8 +17,9 @@ struct ProfileModel: Identifiable {
     var cards: [CardModel]
     var topRatedProfiles: [ProfileModel?]
     var recommendedProfiles: [ProfileModel?]
-    var sds: [sdModel?]
+//    var sds: [sdModel?]
     var tabCardNumber: Int
+    //var EventsAttending: [String]
    
     var fullName: String {
         lastName + ", " + firstName

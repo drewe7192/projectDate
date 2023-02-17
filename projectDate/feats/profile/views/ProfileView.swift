@@ -59,57 +59,57 @@ struct ProfileView: View {
                 .padding(.leading,5)
                 .opacity(0.6)
             
-            VStack{
-                NavigationLink(destination: RatingsView()) {
-                    Image(systemName: "star.bubble")
-                        .resizable()
-                        .foregroundColor(.white)
-                }
-                .frame(width: 25, height: 25)
-                .foregroundColor(.white)
-                .padding(.leading,5)
-                
-                Text("Ratings")
-                    .bold()
-                    .foregroundColor(.white)
-                    .font(.system(size: 12))
-                    .padding(.bottom,10)
-                    .padding(.leading,5)
-                
-                ZStack{
-                    VStack{
-                        Image(systemName: "pencil.and.ruler")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
-                            .padding(.leading,5)
-                        
-                        Text(viewModel.person.info.height)
-                            .bold()
-                            .foregroundColor(.white)
-                            .font(.system(size: 15))
-                            .padding(.bottom,10)
-                            .padding(.leading,5)
-                    }
-                }
-                
-                ZStack{
-                    VStack{
-                        Image(systemName: "mappin")
-                            .resizable()
-                            .frame(width: 10, height: 25)
-                            .foregroundColor(.white)
-                            .padding(.leading,5)
-                        
-                        Text("Tampa")
-                            .bold()
-                            .foregroundColor(.white)
-                            .font(.system(size: 15))
-                            .padding(.bottom,10)
-                            .padding(.leading,5)
-                    }
-                }
-            }
+//            VStack{
+//                NavigationLink(destination: RatingsView()) {
+//                    Image(systemName: "star.bubble")
+//                        .resizable()
+//                        .foregroundColor(.white)
+//                }
+//                .frame(width: 25, height: 25)
+//                .foregroundColor(.white)
+//                .padding(.leading,5)
+//                
+//                Text("Ratings")
+//                    .bold()
+//                    .foregroundColor(.white)
+//                    .font(.system(size: 12))
+//                    .padding(.bottom,10)
+//                    .padding(.leading,5)
+//                
+//                ZStack{
+//                    VStack{
+//                        Image(systemName: "pencil.and.ruler")
+//                            .resizable()
+//                            .frame(width: 20, height: 20)
+//                            .foregroundColor(.white)
+//                            .padding(.leading,5)
+//                        
+//                        Text(viewModel.person.info.height)
+//                            .bold()
+//                            .foregroundColor(.white)
+//                            .font(.system(size: 15))
+//                            .padding(.bottom,10)
+//                            .padding(.leading,5)
+//                    }
+//                }
+//                
+//                ZStack{
+//                    VStack{
+//                        Image(systemName: "mappin")
+//                            .resizable()
+//                            .frame(width: 10, height: 25)
+//                            .foregroundColor(.white)
+//                            .padding(.leading,5)
+//                        
+//                        Text("Tampa")
+//                            .bold()
+//                            .foregroundColor(.white)
+//                            .font(.system(size: 15))
+//                            .padding(.bottom,10)
+//                            .padding(.leading,5)
+//                    }
+//                }
+//            }
         }
         
     }

@@ -24,7 +24,7 @@ struct MotherView: View {
                         .tabItem{
                             Label("Home", systemImage: "house")
                         }.tag(1)
-                    EventHomeView(searchText: .constant(""))
+                    EventHomeView()
                         .tabItem{
                             Label("Events", systemImage: "calendar")
                         }.tag(2)

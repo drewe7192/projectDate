@@ -12,8 +12,8 @@ struct EditProfileView: View {
     
     var body: some View {
         VStack{
-            ImageGridView()
-            
+//            ImageGridView()
+//            
             Form {
                 Section{
                     Text("My Photos(image grid section)")

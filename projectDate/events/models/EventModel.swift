@@ -9,7 +9,7 @@ import Foundation
 
 
 struct EventModel: Identifiable {
-    let id = UUID().uuidString
+    var id: Int
     var title: String
     var location: String
     var creationDate: Date

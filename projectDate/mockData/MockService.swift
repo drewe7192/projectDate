@@ -30,7 +30,7 @@ enum MockService {
             cards: cardsSampleData,
             topRatedProfiles: [],
             recommendedProfiles: [],
-            sds: [],
+           // sds: [],
             tabCardNumber: 0
         )
     }
@@ -54,7 +54,7 @@ enum MockService {
                 cards: cardsSampleData,
                 topRatedProfiles: [],
                 recommendedProfiles: [],
-                sds: [],
+               // sds: [],
             tabCardNumber: 0
             ),
             ProfileModel(
@@ -66,7 +66,7 @@ enum MockService {
                 cards: cardsSampleData,
                 topRatedProfiles: [],
                 recommendedProfiles: [],
-                sds: [],
+               // sds: [],
             tabCardNumber: 0
             ),
             ProfileModel(
@@ -78,7 +78,7 @@ enum MockService {
                 cards: cardsSampleData,
                 topRatedProfiles: [],
                 recommendedProfiles: [],
-                sds: [],
+                //sds: [],
             tabCardNumber: 0
             )
         ]
@@ -174,6 +174,7 @@ enum MockService {
     static var eventsSampleData: [EventModel] {
         [
            EventModel(
+            id: 0,
             title: "Event title 1",
             location: "Tampa, Fl",
             creationDate: Date(),
@@ -182,7 +183,17 @@ enum MockService {
             eventDate: Date()
            ),
            EventModel(
-            title: "Event title 1 Event title 1 Event title 1 Event title 1",
+            id: 1,
+            title: "Event title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
+            location: "Tampa, Fl",
+            creationDate: Date(),
+            description: "fdsfdsfdsafsdfsd nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1 nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
+            participants: profilesSampleData,
+            eventDate: Date()
+           ),
+           EventModel(
+            id: 2,
+            title: "Drew title 1",
             location: "Tampa, Fl",
             creationDate: Date(),
             description: "fdsfdsfdsafsdfsd",
@@ -190,15 +201,8 @@ enum MockService {
             eventDate: Date()
            ),
            EventModel(
-            title: "Event title 1",
-            location: "Tampa, Fl",
-            creationDate: Date(),
-            description: "fdsfdsfdsafsdfsd",
-            participants: profilesSampleData,
-            eventDate: Date()
-           ),
-           EventModel(
-            title: "Event title 1",
+            id: 3,
+            title: "Drew drew 1",
             location: "Tampa, Fl",
             creationDate: Date(),
             description: "fdsfdsfdsafsdfsd",
@@ -208,67 +212,67 @@ enum MockService {
         ]
     }
     
-    static var sdSampleData: sdModel {
-        sdModel(
-            firstName: "Drew",
-            lastName: "Drew",
-            time: 4743843,
-            userRoleType: "host",
-            roomNumber: "638d9e07aee54625da64dfe2",
-            profiles: profilesSampleData
-        )
-    }
-    
-    static var sdsSampleData: [sdModel] {
-        [
-            sdModel(
-                firstName: "Drew",
-                lastName: "Drew",
-                time: 172805,
-                userRoleType: "host",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
-            ),
-            sdModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
-            ),
-            sdModel(
-                firstName: "w",
-                lastName: "w",
-                time: 5059448,
-                userRoleType: "host",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
-            ),
-            sdModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
-            ),
-            sdModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
-            ),
-            sdModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
-            )
-        ]
-    }
+//    static var sdSampleData: sdModel {
+//        sdModel(
+//            firstName: "Drew",
+//            lastName: "Drew",
+//            time: 4743843,
+//            userRoleType: "host",
+//            roomNumber: "638d9e07aee54625da64dfe2",
+//            profiles: profilesSampleData
+//        )
+//    }
+//    
+//    static var sdsSampleData: [sdModel] {
+//        [
+//            sdModel(
+//                firstName: "Drew",
+//                lastName: "Drew",
+//                time: 172805,
+//                userRoleType: "host",
+//                roomNumber: "638d9e07aee54625da64dfe2",
+//                profiles: profilesSampleData
+//            ),
+//            sdModel(
+//                firstName: "D",
+//                lastName: "ew",
+//                time: 384585,
+//                userRoleType: "guest",
+//                roomNumber: "638d9e07aee54625da64dfe2",
+//                profiles: profilesSampleData
+//            ),
+//            sdModel(
+//                firstName: "w",
+//                lastName: "w",
+//                time: 5059448,
+//                userRoleType: "host",
+//                roomNumber: "638d9e07aee54625da64dfe2",
+//                profiles: profilesSampleData
+//            ),
+//            sdModel(
+//                firstName: "D",
+//                lastName: "ew",
+//                time: 384585,
+//                userRoleType: "guest",
+//                roomNumber: "638d9e07aee54625da64dfe2",
+//                profiles: profilesSampleData
+//            ),
+//            sdModel(
+//                firstName: "D",
+//                lastName: "ew",
+//                time: 384585,
+//                userRoleType: "guest",
+//                roomNumber: "638d9e07aee54625da64dfe2",
+//                profiles: profilesSampleData
+//            ),
+//            sdModel(
+//                firstName: "D",
+//                lastName: "ew",
+//                time: 384585,
+//                userRoleType: "guest",
+//                roomNumber: "638d9e07aee54625da64dfe2",
+//                profiles: profilesSampleData
+//            )
+//        ]
+//    }
 }

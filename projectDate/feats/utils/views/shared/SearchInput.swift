@@ -8,26 +8,61 @@
 import SwiftUI
 
 struct SearchInput: View {
-    @State private var name: String = "Search"
+    @Binding var searchText: String
+    @State private var isEditing = false
     
     var body: some View {
-        HStack{
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .frame(width: 15, height: 15)
-                .foregroundColor(.black)
-            
-            TextField("", text: $name)
+        GeometryReader{geoReader in
+            HStack {
+                TextField("Search ...", text: $searchText)
+                    .padding(geoReader.size.height * 0.01)
+                    .padding(.horizontal, geoReader.size.height * 0.1)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(geoReader.size.height * 0.03)
+                    .overlay(
+                        HStack{
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, geoReader.size.width * 0.03)
+                            
+                            if isEditing{
+                                Button(action: {
+                                    self.searchText = ""
+                                }) {
+                                    Image(systemName: "multiply.circle.fill")
+                                        .foregroundColor(.gray)
+                                        .padding(.trailing, geoReader.size.height * 0.01)
+                                }
+                            }
+                        }
+                    )
+                    .padding(.horizontal, 10)
+                    .onTapGesture {
+                        self.isEditing = true
+                    }
+                
+//                if isEditing {
+//                    Button(action: {
+//                        self.isEditing = false
+//                        self.searchText = ""
+//                        
+//                    }) {
+//                        Text("Cancel")
+//                    }
+//                    .padding(.trailing, 10)
+//                    .transition(.move(edge: .trailing))
+//                    .animation(.default)
+//                }
+            }
+//            .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
         }
-        .frame(width: 400, height: 40)
-        .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
-        .cornerRadius(20)
-        .overlay(RoundedRectangle(cornerRadius: 20).stroke(.black, lineWidth: 2))
+    
     }
 }
 
 struct SearchInput_Previews: PreviewProvider {
     static var previews: some View {
-        SearchInput()
+        SearchInput(searchText: .constant(""))
     }
 }
