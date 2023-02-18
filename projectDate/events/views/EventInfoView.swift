@@ -14,7 +14,7 @@ struct EventInfoView: View {
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
-                Color(.systemTeal)
+                Color.mainBlack
                     .ignoresSafeArea()
                 
                 VStack{
@@ -39,13 +39,12 @@ struct EventInfoView: View {
                 Text("\(event.location)")
                     .font(.system(size: 15))
                     .padding(7)
-                    .overlay(
-                        RoundedRectangle(cornerRadius:20)
-                            .stroke(.black, lineWidth: 2)
-                    )
+                    .background(Color.mainGrey)
+                    .cornerRadius(39)
             }
             
             Text("\(event.title)")
+                .foregroundColor(Color.iceBreakrrrBlue)
                 .font(.system(size: 55))
             
         }
@@ -59,6 +58,7 @@ struct EventInfoView: View {
         HStack{
             VStack(alignment: .leading){
                 Text("Time of Event")
+                    .foregroundColor(Color.iceBreakrrrBlue)
                 
                 Text("\(event.eventDate.formatted(.dateTime.day().month().year()))")
                     .font(.system(size: 20))
@@ -73,6 +73,7 @@ struct EventInfoView: View {
             
             VStack(){
                 Text("Guests")
+                    .foregroundColor(.iceBreakrrrBlue)
                 
                 ZStack{
                     ForEach(event.participants, id: \.!.id){ item in
@@ -83,9 +84,8 @@ struct EventInfoView: View {
                     }
                     
                     Text("")
-                        .background(.white)
                         .frame(width: 40, height: 40)
-                        .overlay(Circle())
+                        .overlay(Circle().foregroundColor(Color.white))
                         .offset(x:-20, y: 0)
                     
                     Text("+2")
@@ -105,6 +105,7 @@ struct EventInfoView: View {
         
         VStack{
             Text("Description")
+                .foregroundColor(Color.iceBreakrrrBlue)
                 .padding(.bottom,10)
             
             Text("fds  fsdfsd lfjsd fdskljfsld fsdklfds flkdsjfsd flksdnf dsklfsd fjdskalfjsdfds fksdjfklsd fskdlfds flkjsdf dsklfnds fdslkfjsdlk dsfkljs dfdsklf")
@@ -130,17 +131,17 @@ struct EventInfoView: View {
 //            }
             
             Button(action: {
-         
+         print("fdsafdsf")
             }) {
                 Text("Join")
+                    .frame(width: 350,height: 80)
+                    .padding(7)
+                    .background(Color.mainGrey)
+                    .cornerRadius(30)
+                    .shadow(radius: 5, x: 4, y: 10)
             }
-                                .frame(width: 350,height: 80)
-                                .padding(7)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius:35)
-                                        .stroke(selected.contains(event.id) ? .white : .black, lineWidth: 2)
-                                )
         }
+        
         .foregroundColor(.white)
         
     }

@@ -38,10 +38,10 @@ struct CardView: View {
             VStack(alignment: .leading, spacing: 20) {
                 ZStack{
                     Rectangle()
-                        .foregroundColor(.pink)
+                        .foregroundColor(Color.iceBreakrrrBlue)
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
-                               height: geoReader.size.height * 0.45)
+                               height: geoReader.size.height * 0.50)
                     
                     VStack{
                         Text("\(card.question)")
@@ -68,7 +68,7 @@ struct CardView: View {
                 }
             }
             .padding(20)
-            .background(Color.white)
+            .background(Color.mainGrey)
             .cornerRadius(40)
             .shadow(radius: 5)
             .animation(.spring())
@@ -107,9 +107,8 @@ struct CardView: View {
                                 
                                 //save swiped card after each swipe
                                 viewModel.saveSwipedCard(card: self.card, answer: "")
-                            } else {
-                                translation = .zero
                             }
+                                translation = .zero
                         }
             )
         }

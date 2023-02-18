@@ -17,7 +17,7 @@ struct EventHomeView: View {
         NavigationView{
             GeometryReader{geoReader in
                 ZStack{
-                    Color(.systemTeal)
+                    Color.mainBlack
                         .ignoresSafeArea()
                     
                     eventCardView(for: geoReader)
@@ -43,7 +43,7 @@ struct EventHomeView: View {
                                 VStack{
                                     Text("")
                                         .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.25)
-                                        .background(.white)
+                                        .background(Color.mainGrey)
                                         .cornerRadius(30)
                                     //.overlay(RoundedRectangle(cornerRadius: geoReader.size.width * 0.1).stroke(.black, lineWidth: 6))
                                 }
@@ -51,18 +51,18 @@ struct EventHomeView: View {
                                 VStack{
                                     VStack(spacing: 5){
                                         Text("\(event.eventDate.formatted(.dateTime.day().month().year()))")
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
                                             .font(.system(size: 15))
                                         
                                         
                                         Text("\(event.title)")
                                             .bold()
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
                                             .font(.system(size: 20))
                                         
                                         VStack{
                                             Text("\(event.location)")
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.white)
                                                 .font(.system(size: 15))
                                         }
                                     }
@@ -70,7 +70,7 @@ struct EventHomeView: View {
                                     HStack{
                                         HStack{
                                             Image(systemName: "person.2.fill")
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.iceBreakrrrPink)
                                             
                                             Text("\(event.participants.count) guests")
                                                 .foregroundColor(.black)
@@ -91,7 +91,7 @@ struct EventHomeView: View {
                                             Text(selected.contains(event.id) ? "UnJoin" : "Join")
                                         }
                                             .frame(width: 80,height: 25)
-                                            .background(selected.contains(event.id) ? .pink : .black)
+                                            .background(selected.contains(event.id) ? Color.iceBreakrrrPink : Color.mainGrey)
                                             .foregroundColor(.white)
                                             .cornerRadius(22)
                                             .padding(.leading,100)

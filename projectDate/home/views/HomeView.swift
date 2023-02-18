@@ -24,7 +24,7 @@ struct HomeView: View {
         NavigationView{
             GeometryReader{geoReader in
                 ZStack{
-                    Color(.systemTeal)
+                    Color.mainBlack
                         .ignoresSafeArea()
                     
                     VStack{
@@ -92,7 +92,7 @@ struct HomeView: View {
                 VStack{
                     ProgressView("Values: " + "\(valuesCount)%", value: valuesCount, total: 100)
                         .foregroundColor(.white)
-                        .tint(.white)
+                        .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
                         .onReceive(timer) {_ in
                             if valuesCount < (Double(viewModel.valuesCount.count) * 10)  {
@@ -135,6 +135,7 @@ struct HomeView: View {
                 NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert)) {
                     ZStack{
                         Circle()
+                            .foregroundColor(Color.iceBreakrrrBlue)
                             .frame(width: geoReader.size.width * 0.2, height: geoReader.size.width * 0.2)
                             .shadow(radius: 10)
                         
@@ -150,7 +151,7 @@ struct HomeView: View {
     }
     
     private func displayText() -> String{
-        showFriendDisplay ? (profileText = "Friend Profile"): (profileText = "Dating Profile")
+        showFriendDisplay ? (profileText = "Friend Profile") : (profileText = "Dating Profile")
         return profileText;
     }
     

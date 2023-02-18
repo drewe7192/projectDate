@@ -32,9 +32,9 @@ struct CreateCardView: View {
             VStack(alignment: .leading, spacing: 20) {
                 ZStack{
                     Rectangle()
-                        .foregroundColor(.pink)
+                        .foregroundColor(.mainGrey)
                         .cornerRadius(geoReader.size.width * 0.1)
-                        .frame(width: geoReader.size.width - 40,
+                        .frame(width: geoReader.size.width * 0.9,
                                height: geoReader.size.height * 0.75)
                     
                     cardViews(for: geoReader)
@@ -42,7 +42,7 @@ struct CreateCardView: View {
             }
             
             .padding(geoReader.size.width * 0.05)
-            .background(Color.white)
+            .background(Color.iceBreakrrrBlue)
             .cornerRadius(geoReader.size.width * 0.1)
             .shadow(radius: geoReader.size.width * 0.05)
             .animation(.spring())
@@ -86,9 +86,8 @@ struct CreateCardView: View {
                             } else if (Int(card.id) == 0){
                                 onRemove(self.card)
                             }
-                            translation = .zero
                         }
-                        
+                        translation = .zero
                     }
             )
             .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -99,6 +98,7 @@ struct CreateCardView: View {
         VStack{
             if(Int(card.id) == 2){
                 Text("Question:")
+                    .foregroundColor(.white)
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
                 
@@ -131,6 +131,7 @@ struct CreateCardView: View {
             
             if(Int(card.id) == 1){
                 Text("Answers")
+                    .foregroundColor(Color.white)
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
                 ZStack{
@@ -220,6 +221,7 @@ struct CreateCardView: View {
             
             if(Int(card.id) == 0){
                 Text("Create New Card?")
+                    .foregroundColor(Color.white)
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
             }

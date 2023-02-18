@@ -32,7 +32,7 @@ struct CreateCardsView: View {
         NavigationView{
             GeometryReader{ geoReader in
                 ZStack{
-                    Color(.systemTeal)
+                    Color.mainBlack
                         .ignoresSafeArea()
                     
                     loadingIndicator

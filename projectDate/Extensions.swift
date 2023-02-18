@@ -57,5 +57,8 @@ extension Array where Element == CardModel {
 }
 
 extension Color {
-    static let realColor = Color("iceBreakrrrBlue")
+    static let mainBlack = Color("mainBlack")
+    static let mainGrey = Color("mainGrey")
+    static let iceBreakrrrBlue = Color("IceBreakrrrBlue")
+    static let iceBreakrrrPink = Color("IceBreakrrrPink")
 }
