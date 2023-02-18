@@ -43,7 +43,7 @@ struct SignUpView: View {
                     LogInItems().loadingIndicator
                 )
                 .fullScreenCover(isPresented: $isLoggedIn) {
-                    LocalHomeView()
+                    HomeView()
                 }
             }
         }

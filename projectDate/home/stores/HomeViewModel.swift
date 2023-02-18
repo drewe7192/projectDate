@@ -11,14 +11,14 @@ import Firebase
 import FirebaseFirestoreSwift
 import SwiftUI
 
-class LocalHomeViewModel: ObservableObject {
+class HomeViewModel: ObservableObject {
     @Published var createCards: [CardModel] = MockService.cardObjectSampleData.cards
     @Published var cards: [CardModel] = []
     @Published var cardsSwipedToday: [String] = []
     @Published var cardsFromSwipedIds: [CardModel] = []
-    @Published var valuesCount: [String] = []
-    @Published var qualitiesCount: [CardModel] = []
-    @Published var commitmentCount: [String] = []
+    @Published var valuesCount: [CardModel] = []
+    @Published var littleThingsCount: [CardModel] = []
+    @Published var commitmentCount: [CardModel] = []
     
     private var db = Firestore.firestore()
     
@@ -92,8 +92,21 @@ class LocalHomeViewModel: ObservableObject {
                         return nil
                     }
                 }
-                self.qualitiesCount = self.cardsFromSwipedIds
             }
+        
+        // setting ProgressBars for Profiler on HomeScreen
+        if(!self.cardsFromSwipedIds.isEmpty){
+            for card in self.cardsFromSwipedIds {
+                if card.categoryType == "values" {
+                    self.valuesCount.append(card)
+                }else if card.categoryType == "littleThings" {
+                    self.littleThingsCount.append(card)
+                }else if card.categoryType == "commitment" {
+                    self.commitmentCount.append(card)
+                }
+            }
+        }
+       
     }
     
     public func saveSwipedCard(card: CardModel, answer: String){

@@ -25,7 +25,7 @@ struct CreateCardView: View {
     @Binding var categoryType: String
     @Binding var profileType: String
     
-    var threshold: CGFloat = 0.5
+    var threshold: CGFloat = 0.1
     
     var body: some View {
         GeometryReader { geoReader in
@@ -58,10 +58,10 @@ struct CreateCardView: View {
                         
                         //duplicate code
                         // if card gets dragged to certain point on screen, deem it as like or dislike
-                        if $0.percentage(in: geoReader) >= threshold && translation.width < -195 {
-                            swipeStatus = .like
-                        } else if $0.percentage(in: geoReader) >= threshold && translation.width > 197 {
+                        if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                             swipeStatus = .dislike
+                        } else if $0.percentage(in: geoReader) >= threshold && translation.width > 110 {
+                            swipeStatus = .like
                         } else {
                             swipeStatus = .none
                         }
@@ -86,6 +86,7 @@ struct CreateCardView: View {
                             } else if (Int(card.id) == 0){
                                 onRemove(self.card)
                             }
+                            translation = .zero
                         }
                         
                     }

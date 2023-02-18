@@ -13,14 +13,14 @@ struct Contact: Identifiable {
 
 
 struct CardView: View {
-    @ObservedObject private var viewModel = LocalHomeViewModel()
+    @ObservedObject private var viewModel = HomeViewModel()
     @State private var selectedChoice = "Choose answer"
     
     @State
     private var translation: CGSize = .zero
     private var card: CardModel
     private var onRemove: (_ card: CardModel) -> Void
-    private var threshold: CGFloat = 0.5
+    private var threshold: CGFloat = 0.1
     
     enum LikeDislike: Int {
         case like, dislike, none
@@ -81,11 +81,13 @@ struct CardView: View {
                 DragGesture()
                     .onChanged {
                         translation = $0.translation
-                        
-                        if $0.percentage(in: geoReader) >= threshold && translation.width < -195 {
-                            self.swipeStatus = .like
-                        } else if $0.percentage(in: geoReader) >= threshold && translation.width > 197 {
+                        print("translation", translation)
+                        print("percentage",geoReader.size.width)
+                        print("threshold", threshold)
+                        if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                             self.swipeStatus = .dislike
+                        } else if $0.percentage(in: geoReader) >= threshold && translation.width > 110 {
+                            self.swipeStatus = .like
                         } else {
                             self.swipeStatus = .none
                         }
@@ -102,6 +104,8 @@ struct CardView: View {
                                 }
                             } else if (self.swipeStatus == .dislike) {
                                 onRemove(self.card)
+                                
+                                //save swiped card after each swipe
                                 viewModel.saveSwipedCard(card: self.card, answer: "")
                             } else {
                                 translation = .zero

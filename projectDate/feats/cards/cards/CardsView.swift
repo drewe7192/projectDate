@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CardsView: View {
-    @StateObject private var viewModel = LocalHomeViewModel()
+    @StateObject private var viewModel = HomeViewModel()
 
     var body: some View {
         GeometryReader { geometry in

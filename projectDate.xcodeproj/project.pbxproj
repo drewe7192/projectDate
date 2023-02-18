@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77115F95299EF2EC00705811 /* ConfirmationView.swift */; };
 		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
-		771AE4162977C46A00F3A6A1 /* LocalHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */; };
+		771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* HomeView.swift */; };
 		771AE4182979173A00F3A6A1 /* EventInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4172979173A00F3A6A1 /* EventInfoView.swift */; };
 		771AE41C297918DB00F3A6A1 /* EventHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41B297918DB00F3A6A1 /* EventHomeView.swift */; };
 		771AE41E2979263B00F3A6A1 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41D2979263B00F3A6A1 /* CardView.swift */; };
 		771AE4202979B40B00F3A6A1 /* CardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE41F2979B40B00F3A6A1 /* CardsView.swift */; };
 		771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4212979B44F00F3A6A1 /* CardsModel.swift */; };
-		771AE42B2979DE3500F3A6A1 /* LocalHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE42A2979DE3500F3A6A1 /* LocalHomeViewModel.swift */; };
+		771AE42B2979DE3500F3A6A1 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE42A2979DE3500F3A6A1 /* HomeViewModel.swift */; };
 		771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771EA00E28A045EC007EBC40 /* Extensions.swift */; };
 		771EA01828A2435C007EBC40 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 771EA01728A2435C007EBC40 /* FirebaseFirestore */; };
 		771EA01A28A2435C007EBC40 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 771EA01928A2435C007EBC40 /* FirebaseFirestoreSwift */; };
@@ -87,13 +87,13 @@
 /* Begin PBXFileReference section */
 		77115F95299EF2EC00705811 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
-		771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalHomeView.swift; sourceTree = "<group>"; };
+		771AE4152977C46A00F3A6A1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		771AE4172979173A00F3A6A1 /* EventInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoView.swift; sourceTree = "<group>"; };
 		771AE41B297918DB00F3A6A1 /* EventHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHomeView.swift; sourceTree = "<group>"; };
 		771AE41D2979263B00F3A6A1 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		771AE41F2979B40B00F3A6A1 /* CardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsView.swift; sourceTree = "<group>"; };
 		771AE4212979B44F00F3A6A1 /* CardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsModel.swift; sourceTree = "<group>"; };
-		771AE42A2979DE3500F3A6A1 /* LocalHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalHomeViewModel.swift; sourceTree = "<group>"; };
+		771AE42A2979DE3500F3A6A1 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		7731737E28CCE50100B8885B /* GoogleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuth.swift; sourceTree = "<group>"; };
 		7731738128CDBE4200B8885B /* FacebookAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAuth.swift; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				77C3D539289912B60088554F /* SettingsView.swift */,
-				771AE4152977C46A00F3A6A1 /* LocalHomeView.swift */,
+				771AE4152977C46A00F3A6A1 /* HomeView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -240,7 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				775E062828C51B140082C27E /* ViewRouter.swift */,
-				771AE42A2979DE3500F3A6A1 /* LocalHomeViewModel.swift */,
+				771AE42A2979DE3500F3A6A1 /* HomeViewModel.swift */,
 			);
 			path = stores;
 			sourceTree = "<group>";
@@ -687,7 +687,7 @@
 				77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */,
 				7731738228CDBE4200B8885B /* FacebookAuth.swift in Sources */,
 				7731737F28CCE50100B8885B /* GoogleAuth.swift in Sources */,
-				771AE4162977C46A00F3A6A1 /* LocalHomeView.swift in Sources */,
+				771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */,
 				77FB247B295DC3AB008F5469 /* ProfileModel.swift in Sources */,
 				77619ED0295DC8AE00B1BF1F /* MockService.swift in Sources */,
 				775E062C28C51B6F0082C27E /* SignInView.swift in Sources */,
@@ -700,7 +700,7 @@
 				77E88D752987ED9C00F20B29 /* FacebookSignInManager.swift in Sources */,
 				7756A48328C5192C0038903D /* MotherView.swift in Sources */,
 				778A5F8B2998CA65004EA498 /* SwipedCardsModel.swift in Sources */,
-				771AE42B2979DE3500F3A6A1 /* LocalHomeViewModel.swift in Sources */,
+				771AE42B2979DE3500F3A6A1 /* HomeViewModel.swift in Sources */,
 				7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */,
 				771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */,
 				77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */,

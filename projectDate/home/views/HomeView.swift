@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct LocalHomeView: View {
-    @ObservedObject private var viewModel = LocalHomeViewModel()
-    @State private var showFriendDisplay = true
+struct HomeView: View {
+    @ObservedObject private var viewModel = HomeViewModel()
+    @State private var showFriendDisplay = false
     @State private var progress: Double = 0.0
-    @State private var valueCount = 0.0
-    @State private var qualityCount = 0.0
-    @State private var commitCount = 0.0
+    @State private var valuesCount = 0.0
+    @State private var littleThingsCount = 0.0
+    @State private var commitmentCount = 0.0
     @State var showCardCreatedAlert: Bool = false
     
     @State private var profileText = ""
@@ -59,11 +59,14 @@ struct LocalHomeView: View {
                 .resizable()
                 .frame(width: 105,height: 35)
             
-            Toggle(isOn: $showFriendDisplay, label: {
-                
-            })
-            .padding(geoReader.size.width * 0.02)
-            .toggleStyle(SwitchToggleStyle(tint: .white))
+            // Dating/Friend Toggle button
+            // adding this back in future versions
+
+//            Toggle(isOn: $showFriendDisplay, label: {
+//
+//            })
+//            .padding(geoReader.size.width * 0.02)
+//            .toggleStyle(SwitchToggleStyle(tint: .white))
         }
     }
     
@@ -87,37 +90,37 @@ struct LocalHomeView: View {
             
             VStack(alignment: .leading){
                 VStack{
-                    ProgressView("Values:" + "\(valueCount)%", value: valueCount, total: 100)
+                    ProgressView("Values: " + "\(valuesCount)%", value: valuesCount, total: 100)
                         .foregroundColor(.white)
                         .tint(.white)
                         .frame(width: geoReader.size.width * 0.4)
                         .onReceive(timer) {_ in
-                            if valueCount < 100 {
-                                valueCount += 2
+                            if valuesCount < (Double(viewModel.valuesCount.count) * 10)  {
+                                valuesCount += 2
                             }
                         }
                 }
                 
                 VStack{
-                    ProgressView("Qualities:" + "\(qualityCount)%", value: qualityCount, total: 100)
+                    ProgressView("little things: " + "\(littleThingsCount)%", value: littleThingsCount, total: 100)
                         .foregroundColor(.white)
                         .tint(.white)
                         .frame(width: geoReader.size.width * 0.4)
                         .onReceive(timer) {_ in
-                            if qualityCount < (Double(viewModel.qualitiesCount.count) * 10) {
-                                qualityCount += 2
+                            if littleThingsCount < (Double(viewModel.littleThingsCount.count) * 10) {
+                                littleThingsCount += 2
                             }
                         }
                 }
                 
                 VStack{
-                    ProgressView("Commit:" + "\(commitCount)%", value: commitCount, total: 100)
+                    ProgressView("Commitment: " + "\(commitmentCount)%", value: commitmentCount, total: 100)
                         .foregroundColor(.white)
                         .tint(.white)
                         .frame(width: geoReader.size.width * 0.4)
                         .onReceive(timer) {_ in
-                            if commitCount < 100 {
-                                commitCount += 2
+                            if commitmentCount < (Double(viewModel.commitmentCount.count) * 10) {
+                                commitmentCount += 2
                             }
                         }
                 }
@@ -158,8 +161,8 @@ struct LocalHomeView: View {
     }
 } 
 
-struct LocalHomeView_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        LocalHomeView()
+        HomeView()
     }
 }

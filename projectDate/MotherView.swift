@@ -20,7 +20,7 @@ struct MotherView: View {
             switch viewRouter.currentPage {
             case .homePage :
                 TabView {
-                    LocalHomeView()
+                    HomeView()
                         .tabItem{
                             Label("Home", systemImage: "house")
                         }.tag(1)
@@ -32,28 +32,6 @@ struct MotherView: View {
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")
                         }.tag(3)
-                    //                HomeView()
-                    //                    .tabItem{
-                    //                        Label("Home", systemImage: "house")
-                    //                    }.tag(1)
-                    //                LikesView()
-                    //                    .tabItem{
-                    //                        Label("Likes", systemImage: "heart")
-                    //                    }
-                    //                    .tag(2)
-                    //                GamesView()
-                    //                    .tabItem{
-                    //                        Label("Games", systemImage: "gamecontroller")
-                    //                    }
-                    //                    .tag(3)
-                    //                MessageHomeView()
-                    //                    .tabItem{
-                    //                        Label("Messenger", systemImage: "message")
-                    //                    }.tag(4)
-                    //                UserProfileView()
-                    //                    .tabItem{
-                    //                        Label("Profile", systemImage: "person")
-                    //                    }.tag(5)
                 }
                 .frame(height: geoReader.size.height * 1.05)
                 
