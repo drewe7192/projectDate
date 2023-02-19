@@ -46,7 +46,6 @@
 		77A1C7C4297C4094004C8FA6 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C3297C4094004C8FA6 /* EventModel.swift */; };
 		77A1C7C6297C423B004C8FA6 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C5297C423B004C8FA6 /* EventViewModel.swift */; };
 		77A1C7CA297C4528004C8FA6 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C9297C4528004C8FA6 /* CircularProgressView.swift */; };
-		77ABBE1029182DC900A7669E /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ABBE0F29182DC900A7669E /* TitleView.swift */; };
 		77C3D500289910CE0088554F /* projectDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D4FF289910CE0088554F /* projectDateApp.swift */; };
 		77C3D504289910CF0088554F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77C3D503289910CF0088554F /* Assets.xcassets */; };
 		77C3D507289910CF0088554F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77C3D506289910CF0088554F /* Preview Assets.xcassets */; };
@@ -117,7 +116,6 @@
 		77A1C7C3297C4094004C8FA6 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		77A1C7C5297C423B004C8FA6 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		77A1C7C9297C4528004C8FA6 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
-		77ABBE0F29182DC900A7669E /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		77C3D4FC289910CE0088554F /* projectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77C3D4FF289910CE0088554F /* projectDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectDateApp.swift; sourceTree = "<group>"; };
 		77C3D503289910CF0088554F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -382,7 +380,6 @@
 				774F2397291A4FEB00C33E80 /* shared */,
 				775E062B28C51B6F0082C27E /* SignInView.swift */,
 				775E062D28C51B850082C27E /* SignUpView.swift */,
-				77ABBE0F29182DC900A7669E /* TitleView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -694,7 +691,6 @@
 				77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */,
 				779985DA298EC07D00D3FD74 /* CreateCardsView.swift in Sources */,
 				77C3D52E289912840088554F /* EditProfileView.swift in Sources */,
-				77ABBE1029182DC900A7669E /* TitleView.swift in Sources */,
 				771AE4202979B40B00F3A6A1 /* CardsView.swift in Sources */,
 				77626AEE28C87AF600D1DD9E /* AppleAuth.swift in Sources */,
 				77E88D752987ED9C00F20B29 /* FacebookSignInManager.swift in Sources */,

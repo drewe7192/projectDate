@@ -20,7 +20,7 @@ struct CreateCardsView: View {
     @State var profileType: String = ""
     
     @State private var showFriendDisplay: Bool = false
-    @State private var displayCreateButton: Bool = false
+    @State private var displayCreateButton: Bool = true
     @State private var isLoading: Bool = false
     @State var swipeStatus: LikeDislike = .none
     
@@ -37,13 +37,11 @@ struct CreateCardsView: View {
                     
                     loadingIndicator
                     VStack{
-                        Text("Logo")
+                        Text("Create New Card")
                             .font(.system(size: 40))
                             .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03)
                         
                         cards(for: geoReader)
-                        
-                        createCardButton(for: geoReader)
                     }
                 
                 }
@@ -128,25 +126,6 @@ struct CreateCardsView: View {
                 }
             }
         }
-    }
-    
-    private func createCardButton(for geoReader: GeometryProxy) -> some View {
-        VStack{
-            if(displayCreateButton){
-                Button(action: {
-                    createCard()
-                }) {
-                    Text("Create Card")
-                        .font(.system(size: 30))
-                        .frame(width: 400, height: 100)
-                        .foregroundColor(.white)
-                        .background(.pink)
-                        .cornerRadius(20)
-                        .shadow(radius: 5, x: 6, y: 4)
-                }
-            }
-        }
-        .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.85)
     }
     
     var loadingIndicator: some View {

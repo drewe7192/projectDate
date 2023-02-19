@@ -38,6 +38,15 @@ struct HomeView: View {
                             .padding(.trailing,geoReader.size.width * 0.44)
                         
                         profilerSection(for: geoReader)
+                        
+                        
+                        Text("How would your perfect match answer?")
+                            .bold()
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.03))
+                            .padding(geoReader.size.width * 0.001)
+                        
                         cardsSection(for: geoReader)
                         
                     }
@@ -48,7 +57,7 @@ struct HomeView: View {
                             message: Text("You'll get a notification if someone matches your perfered answer!")
                         )
                     }
-                    
+                
             }
         }
     }

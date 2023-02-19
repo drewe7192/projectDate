@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreateCardView: View {
     @State private var selectedColor = ""
-   
+    
     @State private var showFriendDisplay: Bool = false
     @State var isLoading: Bool = false
     @State var translation: CGSize = .zero
@@ -29,67 +29,66 @@ struct CreateCardView: View {
     
     var body: some View {
         GeometryReader { geoReader in
-            VStack(alignment: .leading, spacing: 20) {
-                ZStack{
-                    Rectangle()
-                        .foregroundColor(.mainGrey)
-                        .cornerRadius(geoReader.size.width * 0.1)
-                        .frame(width: geoReader.size.width * 0.9,
-                               height: geoReader.size.height * 0.75)
-                    
-                    cardViews(for: geoReader)
+                VStack(alignment: .leading, spacing: 20) {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(.mainGrey)
+                            .cornerRadius(geoReader.size.width * 0.1)
+                            .frame(width: geoReader.size.width * 0.9,
+                                   height: geoReader.size.height * 0.75)
+                        
+                        cardViews(for: geoReader)
+                    }
                 }
-            }
-            
-            .padding(geoReader.size.width * 0.05)
-            .background(Color.iceBreakrrrBlue)
-            .cornerRadius(geoReader.size.width * 0.1)
-            .shadow(radius: geoReader.size.width * 0.05)
-            .animation(.spring())
-            .offset(x: translation.width, y: 0)
-            .rotationEffect(.degrees(
-                Double(self.translation.width /
-                       geoReader.size.width)
-                * 20), anchor: .bottom)
-            .gesture(
-                DragGesture()
-                    .onChanged {
-                        translation = $0.translation
-                        
-                        //duplicate code
-                        // if card gets dragged to certain point on screen, deem it as like or dislike
-                        if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
-                            swipeStatus = .dislike
-                        } else if $0.percentage(in: geoReader) >= threshold && translation.width > 110 {
-                            swipeStatus = .like
-                        } else {
-                            swipeStatus = .none
-                        }
-                    }.onEnded {
-                        
-                        translation = $0.translation
-                        
-                        if swipeStatus == .dislike {
-                            if (Int(card.id) == 2 && !question.isEmpty){
-                                question = ""
-                            } else if (Int(card.id) == 1 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
-                                answerA = ""
-                                answerB = ""
-                                answerC = ""
+                .padding(geoReader.size.width * 0.05)
+                .background(Color.iceBreakrrrBlue)
+                .cornerRadius(geoReader.size.width * 0.1)
+                .shadow(radius: geoReader.size.width * 0.05)
+                .animation(.spring())
+                .offset(x: translation.width, y: 0)
+                .rotationEffect(.degrees(
+                    Double(self.translation.width /
+                           geoReader.size.width)
+                    * 20), anchor: .bottom)
+                .gesture(
+                    DragGesture()
+                        .onChanged {
+                            translation = $0.translation
+                            
+                            //duplicate code
+                            // if card gets dragged to certain point on screen, deem it as like or dislike
+                            if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
+                                swipeStatus = .dislike
+                            } else if $0.percentage(in: geoReader) >= threshold && translation.width > 110 {
+                                swipeStatus = .like
+                            } else {
+                                swipeStatus = .none
+                            }
+                        }.onEnded {
+                            
+                            translation = $0.translation
+                            
+                            if swipeStatus == .dislike {
+                                if (Int(card.id) == 2 && !question.isEmpty){
+                                    question = ""
+                                } else if (Int(card.id) == 1 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
+                                    answerA = ""
+                                    answerB = ""
+                                    answerC = ""
+                                }
+                                translation = .zero
+                            } else if swipeStatus == .like {
+                                if (Int(card.id) == 2 && !question.isEmpty){
+                                    onRemove(self.card)
+                                } else if (Int(card.id) == 1 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
+                                    onRemove(self.card)
+                                } else if (Int(card.id) == 0){
+                                    onRemove(self.card)
+                                }
                             }
                             translation = .zero
-                        } else if swipeStatus == .like {
-                            if (Int(card.id) == 2 && !question.isEmpty){
-                                onRemove(self.card)
-                            } else if (Int(card.id) == 1 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
-                                onRemove(self.card)
-                            } else if (Int(card.id) == 0){
-                                onRemove(self.card)
-                            }
                         }
-                        translation = .zero
-                    }
-            )
+                )
             .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
         }
     }
@@ -102,35 +101,59 @@ struct CreateCardView: View {
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
                 
-                    //FriendCard toggle feature for future versions 
-//                HStack{
-//                    Text("\(showFriendDisplay ? "Friend" : "Dater")")
-//                        .font(.system(size: 40))
-//                        .foregroundColor(.white)
-//                        .position(x: geoReader.frame(in: .local).midX * 0.5 , y: geoReader.size.height * 0.05)
-//                    
-//                    
-//                    Toggle(isOn: $showFriendDisplay, label: {
-//                        
-//                    })
-//                    .toggleStyle(SwitchToggleStyle(tint: .white))
-//                    .position(x: geoReader.frame(in: .local).midX * 0.1 , y: geoReader.size.height * 0.05)
-//                }
+                //FriendCard toggle feature for future versions
+                //                HStack{
+                //                    Text("\(showFriendDisplay ? "Friend" : "Dater")")
+                //                        .font(.system(size: 40))
+                //                        .foregroundColor(.white)
+                //                        .position(x: geoReader.frame(in: .local).midX * 0.5 , y: geoReader.size.height * 0.05)
+                //
+                //
+                //                    Toggle(isOn: $showFriendDisplay, label: {
+                //
+                //                    })
+                //                    .toggleStyle(SwitchToggleStyle(tint: .white))
+                //                    .position(x: geoReader.frame(in: .local).midX * 0.1 , y: geoReader.size.height * 0.05)
+                //                }
                 
-                TextEditor(text: $question)
-                    .frame(width: geoReader.size.width * 0.8, height: geoReader.size.height * 0.3)
-                    .foregroundColor(.black)
-                    .cornerRadius(geoReader.size.width * 0.03)
-                    .opacity(0.5)
-                    .textInputAutocapitalization(.never)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 2)
-                    )
-                    .padding(.bottom,geoReader.size.width * 0.2)
+                //                TextEditor(text: $question)
+                //                    .frame(width: geoReader.size.width * 0.8, height: geoReader.size.height * 0.2)
+                //                    .foregroundColor(.white)
+                //                    .cornerRadius(geoReader.size.width * 0.03)
+                //                    .opacity(0.5)
+                //                    .textInputAutocapitalization(.never)
+                //                    .overlay(
+                //                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 2)
+                //                    )
+                //                    .padding(.bottom,geoReader.size.width * 0.2)
+                
+                VStack {
+                    TextEditor(text: $question)
+                        .frame(width: geoReader.size.width * 0.8, height: geoReader.size.height * 0.2)
+                        .foregroundColor(.white)
+                        .cornerRadius(geoReader.size.width * 0.03)
+                        .opacity(0.5)
+                        .textInputAutocapitalization(.never)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 2)
+                        )
+                        .padding(.bottom,geoReader.size.width * 0.02)
+                    Button {
+                        dismissKeyboard() // 1
+                    } label : {
+                        Text("Dismiss Keyboard")
+                            .frame(width: 200, height: 30)
+                            .background(.white)
+                            .foregroundColor(.black)
+                            .cornerRadius(20)
+                            .shadow(radius: 15, x: 12, y: 10)
+                    }
+                    
+                }
             }
             
             if(Int(card.id) == 1){
-                Text("Answers")
+                Text("Top answers you're looking for?")
                     .foregroundColor(Color.white)
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
@@ -206,7 +229,6 @@ struct CreateCardView: View {
                             RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 1)
                         )
                     
-                    
                     TextField("Answer C", text: $answerC)
                         .foregroundColor(.black.opacity(0.2))
                         .frame(width: geoReader.size.width * 0.75, height: geoReader.size.height * 0.02)
@@ -226,6 +248,10 @@ struct CreateCardView: View {
                     .font(.system(size: geoReader.size.height * 0.05))
             }
         }
+    }
+    
+    private func dismissKeyboard() {
+        UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.endEditing(true)
     }
 }
 

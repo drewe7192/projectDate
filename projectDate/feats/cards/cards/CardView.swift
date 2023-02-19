@@ -14,7 +14,7 @@ struct Contact: Identifiable {
 
 struct CardView: View {
     @ObservedObject private var viewModel = HomeViewModel()
-    @State private var selectedChoice = "Choose answer"
+    @State private var selectedChoice = "Your Matches answer"
     
     @State
     private var translation: CGSize = .zero
@@ -41,7 +41,7 @@ struct CardView: View {
                         .foregroundColor(Color.iceBreakrrrBlue)
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
-                               height: geoReader.size.height * 0.50)
+                               height: geoReader.size.height * 0.45)
                     
                     VStack{
                         Text("\(card.question)")
