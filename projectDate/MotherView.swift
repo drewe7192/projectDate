@@ -41,6 +41,8 @@ struct MotherView: View {
                 SignInView()
             case .confirmationPage:
                 ConfirmationView()
+            case .failedPage:
+                FailedView()
             }
         }
     }

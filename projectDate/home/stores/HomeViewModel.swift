@@ -130,13 +130,14 @@ class HomeViewModel: ObservableObject {
     }
     
     public func createNewCard(id: String, question: String, choices: [String], categoryType: String, profileType: String ,completed: @escaping (_ success: Bool) -> Void){
-        
         let docData: [String: Any] = [
             "id" : id,
             "question": question,
             "choices": choices,
             "categoryType": categoryType,
-            "profileType": profileType
+            "profileType": profileType,
+            "createdBy": Auth.auth().currentUser?.uid,
+            "createdDate": Timestamp(date: Date())
         ]
         
         let docRef = db.collection("cards").document()

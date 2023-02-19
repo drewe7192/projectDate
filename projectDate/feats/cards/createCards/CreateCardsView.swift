@@ -17,6 +17,7 @@ struct CreateCardsView: View {
     @State var answerB: String = ""
     @State var answerC: String = ""
     @State var categoryType: String = ""
+    @State var selectedCategories: [String] = []
     @State var profileType: String = ""
     
     @State private var showFriendDisplay: Bool = false
@@ -66,6 +67,8 @@ struct CreateCardsView: View {
                     isLoading = false
 //                    showCardCreatedAlert = true
                     
+                } else{
+                    viewRouter.currentPage = .failedPage
                 }
                 
             }
@@ -84,7 +87,7 @@ struct CreateCardsView: View {
                 // display each card counting backwards till you reach the 4th to last card in the index
                 // after that dont display anymore cards. Notice the array will update after you swipe each card
                 //Change the 4 to show more cards in deck
-                if Int(card.id) ?? 0 > viewModel.createCards.count - 4 {
+                if Int(card.id) ?? 0 > viewModel.createCards.count - 5 {
                     CreateCardView(
                         card: card,
                         onRemove: {
@@ -92,11 +95,6 @@ struct CreateCardsView: View {
                             //remove card that equals current id
                             viewModel.createCards.removeAll {
                                 $0.id == removedUser.id
-                            }
-                            
-                            //after removing 2nd to last card
-                            if(removedUser.id == "1"){
-                                displayCreateButton = true
                             }
                             
                             //after removing last card

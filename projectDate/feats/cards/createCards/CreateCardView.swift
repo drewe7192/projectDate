@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+struct Categories: Identifiable {
+    let id: Int
+    let category: String
+}
 struct CreateCardView: View {
     @State private var selectedColor = ""
     
@@ -15,6 +19,7 @@ struct CreateCardView: View {
     @State var translation: CGSize = .zero
     @State var card: CardModel
     @State var onRemove: (_ card: CardModel) -> Void
+    @State var selectedCategoryState: String = ""
     
     @ObservedObject private var viewModel = EventViewModel()
     @Binding var swipeStatus: CreateCardsView.LikeDislike
@@ -69,20 +74,27 @@ struct CreateCardView: View {
                             translation = $0.translation
                             
                             if swipeStatus == .dislike {
-                                if (Int(card.id) == 2 && !question.isEmpty){
+                                if (Int(card.id) == 3 && !question.isEmpty){
                                     question = ""
-                                } else if (Int(card.id) == 1 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
+                                } else if (Int(card.id) == 2 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
                                     answerA = ""
                                     answerB = ""
                                     answerC = ""
+                                } else  if (Int(card.id) == 1 && !categoryType.isEmpty){
+                                    categoryType = ""
+                                }else if (Int(card.id) == 0){
+                                    onRemove(self.card)
                                 }
                                 translation = .zero
                             } else if swipeStatus == .like {
-                                if (Int(card.id) == 2 && !question.isEmpty){
+                                if (Int(card.id) == 3 && !question.isEmpty){
                                     onRemove(self.card)
-                                } else if (Int(card.id) == 1 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
+                                } else if (Int(card.id) == 2 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
                                     onRemove(self.card)
-                                } else if (Int(card.id) == 0){
+                                }else  if (Int(card.id) == 1 && !categoryType.isEmpty){
+                                    onRemove(self.card)
+                                }
+                                else if (Int(card.id) == 0){
                                     onRemove(self.card)
                                 }
                             }
@@ -95,7 +107,7 @@ struct CreateCardView: View {
     
     private func cardViews(for geoReader: GeometryProxy) -> some View {
         VStack{
-            if(Int(card.id) == 2){
+            if(Int(card.id) == 3){
                 Text("Question:")
                     .foregroundColor(.white)
                     .bold()
@@ -152,7 +164,7 @@ struct CreateCardView: View {
                 }
             }
             
-            if(Int(card.id) == 1){
+            if(Int(card.id) == 2){
                 Text("Top answers you're looking for?")
                     .foregroundColor(Color.white)
                     .bold()
@@ -239,6 +251,52 @@ struct CreateCardView: View {
                             RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
                         )
                 }
+            }
+            
+            if(Int(card.id) == 1){
+                let contacts = [
+                    //started with 1 instead of 0 becuase selectedCategory state default value is 0
+                    Categories(id: 1, category: "Values"),
+                    Categories(id: 2, category: "Little things"),
+                    Categories(id: 3, category: "Commitment"),
+                ]
+                
+                VStack(spacing: 20){
+                    Text("Choose Category Type")
+                        .foregroundColor(Color.white)
+                        .bold()
+                        .font(.system(size: geoReader.size.height * 0.04))
+                        .padding(.bottom)
+                    
+                    ForEach(contacts) {contact in
+                        Button(action: {
+                            if(selectedCategoryState == contact.category){
+                                    selectedCategoryState = ""
+                                categoryType = ""
+                            } else{
+                                selectedCategoryState = contact.category
+                                categoryType = contact.category
+                            }
+
+
+                        }) {
+                            Text("\(contact.category)")
+                                .bold()
+                                .foregroundColor(.white)
+                        }
+                            .frame(width: 300,height: 50)
+                            .background(categoryType == contact.category ? Color.iceBreakrrrPink : Color.mainGrey)
+                            .foregroundColor(.white)
+                            .cornerRadius(22)
+
+                            .shadow(radius: 5, x: 7, y: 10)
+
+
+                    }
+                    
+                }
+              
+            
             }
             
             if(Int(card.id) == 0){
