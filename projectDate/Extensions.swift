@@ -62,3 +62,28 @@ extension Color {
     static let iceBreakrrrBlue = Color("IceBreakrrrBlue")
     static let iceBreakrrrPink = Color("IceBreakrrrPink")
 }
+
+
+extension String {
+    //havent use this but maybe in the future
+    func toImage() -> UIImage? {
+        if let data = Data(base64Encoded: self, options: .ignoreUnknownCharacters) {
+            return UIImage(data: data)
+        }
+        return nil
+    }
+}
+
+extension UIImage {
+    //havent use this but maybe in the future
+    func toPngString() -> String? {
+        let data = self.pngData()
+        return data?.base64EncodedString(options: .endLineWithLineFeed)
+    }
+    
+    //havent use this but maybe in the future
+    func toJpegString(compressionQuality cq: CGFloat) -> String? {
+        let data = self.jpegData(compressionQuality: cq)
+        return data?.base64EncodedString(options: .endLineWithLineFeed)
+    }
+}

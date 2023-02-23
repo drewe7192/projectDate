@@ -7,21 +7,10 @@
 
 import Foundation
 
-struct ProfileModel: Identifiable {
-    let id = UUID().uuidString
-    var firstName: String
-    var lastName: String
+struct ProfileModel: Codable, Identifiable, Hashable  {
+    var id : String
+    var fullName: String
     var location: String
-    var images: [String]
-    var info: ProfileInfoModel
-    var cards: [CardModel]
-    var topRatedProfiles: [ProfileModel?]
-    var recommendedProfiles: [ProfileModel?]
-//    var sds: [sdModel?]
-    var tabCardNumber: Int
-    //var EventsAttending: [String]
-   
-    var fullName: String {
-        lastName + ", " + firstName
-    }
+//    var image: String
+//    var userId: String
 }

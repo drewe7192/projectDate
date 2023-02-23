@@ -14,7 +14,7 @@ struct ProfileView: View {
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
-                ImageSlider(person: participant)
+//                ImageSlider(person: participant)
                 
                 ProfileInfoOverlay(participant: participant)
                     .padding(.top, geoReader.size.height * 0.15)

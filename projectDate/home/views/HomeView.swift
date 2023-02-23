@@ -15,10 +15,10 @@ struct HomeView: View {
     @State private var littleThingsCount = 0.0
     @State private var commitmentCount = 0.0
     @State var showCardCreatedAlert: Bool = false
-    
+    @State private var image = UIImage()
     @State private var profileText = ""
+    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-
     
     var body: some View {
         NavigationView{
@@ -30,6 +30,8 @@ struct HomeView: View {
                     VStack{
                         headerSection(for: geoReader)
                         Divider()
+                            .frame(height: geoReader.size.height * 0.001)
+                            .overlay(Color.iceBreakrrrPink)
                         
                         Text("\(displayText())")
                             .bold()
@@ -38,7 +40,6 @@ struct HomeView: View {
                             .padding(.trailing,geoReader.size.width * 0.44)
                         
                         profilerSection(for: geoReader)
-                        
                         
                         Text("How would your perfect match answer?")
                             .bold()
@@ -68,6 +69,17 @@ struct HomeView: View {
                 .resizable()
                 .frame(width: 105,height: 35)
             
+            NavigationLink(destination: SettingsView()) {
+                Image(uiImage: viewModel.profileImage)
+                    .resizable()
+                    .cornerRadius(20)
+                    .frame(width: 50, height: 50)
+                    .background(Color.black.opacity(0.2))
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(Circle())
+                    .padding(.leading, geoReader.size.width * 0.8)
+            }
+            
             // Dating/Friend Toggle button
             // adding this back in future versions
 
@@ -82,12 +94,8 @@ struct HomeView: View {
     private func profilerSection(for geoReader: GeometryProxy) -> some View {
         HStack {
             ZStack{
-                // 20 cards is equal to 100%: 20 * 5 = 100
-                // the 0.01 is just something thats needed to make the Double type work properly
-                
                 CircularProgressView(progress: setProgress())
                     .frame(width: geoReader.size.width * 0.4, height: geoReader.size.height * 0.2)
-                
                 
                 Text("\(progress * 100, specifier: "%.0f")%")
                     .font(.custom("Superclarendon", size: 45))
@@ -144,7 +152,7 @@ struct HomeView: View {
                 NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert)) {
                     ZStack{
                         Circle()
-                            .foregroundColor(Color.iceBreakrrrBlue)
+                            .foregroundColor(Color.iceBreakrrrPink)
                             .frame(width: geoReader.size.width * 0.2, height: geoReader.size.width * 0.2)
                             .shadow(radius: 10)
                         

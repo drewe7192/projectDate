@@ -39,14 +39,17 @@ struct CreateCardsView: View {
                     loadingIndicator
                     VStack{
                         Text("Create New Card")
+                            .bold()
+                            .foregroundColor(.white)
                             .font(.system(size: 40))
-                            .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03)
-                        
+                    }
+                    .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.03 )
+                    
+                    VStack{
                         cards(for: geoReader)
                     }
-                
+                    .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                 }
-                .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
             }
         }
         .navigationBarBackButtonHidden(true)

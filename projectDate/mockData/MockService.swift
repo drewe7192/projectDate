@@ -22,16 +22,10 @@ enum MockService {
     
     static var profileSampleData: ProfileModel {
         ProfileModel(
-            firstName: "John",
-            lastName: "Bon",
-            location: "Tampa, Fl",
-            images: ["animeGirl","animeGirl2","sasuke"],
-            info: profileInfoSampleData,
-            cards: cardsSampleData,
-            topRatedProfiles: [],
-            recommendedProfiles: [],
-           // sds: [],
-            tabCardNumber: 0
+            id: "John",
+            fullName: "Bon",
+            location: "Tampa, Fl"
+//            image: "animeGirl"
         )
     }
     
@@ -46,40 +40,28 @@ enum MockService {
     static var profilesSampleData: [ProfileModel] {
         [
             ProfileModel(
-                firstName: "Travon",
-                lastName: "Dayvon",
-                location: "ClearWater, Fl",
-                images: ["animeGirl2","sasuke"],
-                info: profileInfoSampleData,
-                cards: cardsSampleData,
-                topRatedProfiles: [],
-                recommendedProfiles: [],
-               // sds: [],
-            tabCardNumber: 0
+                id: "John",
+                fullName: "Bon",
+                location: "Tampa, Fl"
+//                image: "animeGirl"
             ),
             ProfileModel(
-                firstName: "Travon",
-                lastName: "Dayvon",
-                location: "ClearWater, Fl",
-                images: ["animeGirl2","sasuke"],
-                info: profileInfoSampleData,
-                cards: cardsSampleData,
-                topRatedProfiles: [],
-                recommendedProfiles: [],
-               // sds: [],
-            tabCardNumber: 0
+                id: "John",
+                fullName: "Bon",
+                location: "Tampa, Fl"
+//                image: "animeGirl"
             ),
             ProfileModel(
-                firstName: "Travon",
-                lastName: "Dayvon",
-                location: "ClearWater, Fl",
-                images: ["animeGirl2","sasuke"],
-                info: profileInfoSampleData,
-                cards: cardsSampleData,
-                topRatedProfiles: [],
-                recommendedProfiles: [],
-                //sds: [],
-            tabCardNumber: 0
+                id: "John",
+                fullName: "Bon",
+                location: "Tampa, Fl"
+//                image: "animeGirl"
+            ),
+            ProfileModel(
+                id: "John",
+                fullName: "Bon",
+                location: "Tampa, Fl"
+//                image: "animeGirl"
             )
         ]
     }
