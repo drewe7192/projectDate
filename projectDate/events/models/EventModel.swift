@@ -8,18 +8,22 @@
 import Foundation
 
 
-struct EventModel: Identifiable {
-    var id: Int
+struct EventModel: Codable, Identifiable, Hashable {
+    var id: String
     var title: String
     var location: String
     var creationDate: Date
     var description: String
-    var participants: [ProfileModel?]
+    var participants: [String]
     var eventDate: Date
     
-    var dateString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE, dd 'of' MMMM"
-        return formatter.string(from: eventDate)
-    }
+    
+//    private enum CodingKeys: String, CodingKey {
+//        case participants
+//    }
+//    var dateString: String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "EEE, dd 'of' MMMM"
+//        return formatter.string(from: eventDate)
+//    }
 }

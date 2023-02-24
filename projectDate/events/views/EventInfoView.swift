@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EventInfoView: View {
     let event: EventModel
-    @Binding var selected: [Int]
+    @Binding var selected: [String]
     
     var body: some View {
         GeometryReader{ geoReader in
@@ -76,7 +76,7 @@ struct EventInfoView: View {
                     .foregroundColor(.iceBreakrrrBlue)
                 
                 ZStack{
-                    ForEach(event.participants, id: \.!.id){ item in
+                    ForEach(event.participants, id: \.self){ item in
                         Text("AV")
                             .foregroundColor(.black)
                             .frame(width: 40, height: 40)
@@ -149,6 +149,6 @@ struct EventInfoView: View {
 
 struct EventInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        EventInfoView(event: MockService.eventsSampleData.first!, selected: .constant([0,1]))
+        EventInfoView(event: MockService.eventsSampleData.first!, selected: .constant(["0","1"]))
     }
 }

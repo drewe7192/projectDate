@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseFirestoreSwift
+import FirebaseStorage
 
 struct EventHomeView: View {
     @State var searchText: String = ""
-    @State var isJoining: Bool = false 
+    @State var isJoining: Bool = false
     @ObservedObject private var viewModel = EventViewModel()
-    @State var selected: [Int] = []
+    @State var selected: [String] = []
     
     var body: some View {
         NavigationView{
@@ -54,7 +60,6 @@ struct EventHomeView: View {
                                             .foregroundColor(.white)
                                             .font(.system(size: 15))
                                         
-                                        
                                         Text("\(event.title)")
                                             .bold()
                                             .foregroundColor(.white)
@@ -78,24 +83,21 @@ struct EventHomeView: View {
                                         }
                                         
                                         Button(action: {
-                                            if(selected.contains(event.id)){
-                                                if let index = selected.firstIndex(of: event.id) {
-                                                    selected.remove(at: index)
-                                                }
+                                            if(event.participants.contains(Auth.auth().currentUser!.uid)){
+                                                viewModel.updateEventParticipants(event: event, action: "remove")
+                                                
                                             } else{
-                                                selected.append(event.id)
+                                                viewModel.updateEventParticipants(event: event, action: "add")
                                             }
-                                            
-    
                                         }) {
-                                            Text(selected.contains(event.id) ? "UnJoin" : "Join")
+                                            Text(event.participants.contains(Auth.auth().currentUser!.uid) ? "UnJoin" : "Join")
                                         }
-                                            .frame(width: 80,height: 25)
-                                            .background(selected.contains(event.id) ? Color.iceBreakrrrPink : Color.mainGrey)
-                                            .foregroundColor(.white)
-                                            .cornerRadius(22)
-                                            .padding(.leading,100)
-                                            .shadow(radius: 5, x: 7, y: 10)
+                                        .frame(width: 80,height: 25)
+                                        .background(event.participants.contains(Auth.auth().currentUser!.uid) ? Color.iceBreakrrrPink : Color.mainGrey)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(22)
+                                        .padding(.leading,100)
+                                        .shadow(radius: 5, x: 7, y: 10)
                                     }
                                 }
                                 .padding()
@@ -105,7 +107,6 @@ struct EventHomeView: View {
                     }
                 }
             }.padding(.top, -300)
-            
         }
     }
 }

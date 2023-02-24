@@ -156,41 +156,41 @@ enum MockService {
     static var eventsSampleData: [EventModel] {
         [
            EventModel(
-            id: 0,
+            id: "0",
             title: "Event title 1",
             location: "Tampa, Fl",
             creationDate: Date(),
             description: "fdsfdsfdsafsdfsd",
-            participants: profilesSampleData,
-            eventDate: Date()
-           ),
-           EventModel(
-            id: 1,
-            title: "Event title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
-            location: "Tampa, Fl",
-            creationDate: Date(),
-            description: "fdsfdsfdsafsdfsd nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1 nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
-            participants: profilesSampleData,
-            eventDate: Date()
-           ),
-           EventModel(
-            id: 2,
-            title: "Drew title 1",
-            location: "Tampa, Fl",
-            creationDate: Date(),
-            description: "fdsfdsfdsafsdfsd",
-            participants: profilesSampleData,
-            eventDate: Date()
-           ),
-           EventModel(
-            id: 3,
-            title: "Drew drew 1",
-            location: "Tampa, Fl",
-            creationDate: Date(),
-            description: "fdsfdsfdsafsdfsd",
-            participants: profilesSampleData,
+            participants: ["fadsfdsfds"],
             eventDate: Date()
            )
+//           EventModel(
+//            id: 1,
+//            title: "Event title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
+//            location: "Tampa, Fl",
+//            creationDate: Date(),
+//            description: "fdsfdsfdsafsdfsd nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1 nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
+//            participants: profilesSampleData,
+//            eventDate: Date()
+//           ),
+//           EventModel(
+//            id: 2,
+//            title: "Drew title 1",
+//            location: "Tampa, Fl",
+//            creationDate: Date(),
+//            description: "fdsfdsfdsafsdfsd",
+//            participants: profilesSampleData,
+//            eventDate: Date()
+//           ),
+//           EventModel(
+//            id: 3,
+//            title: "Drew drew 1",
+//            location: "Tampa, Fl",
+//            creationDate: Date(),
+//            description: "fdsfdsfdsafsdfsd",
+//            participants: profilesSampleData,
+//            eventDate: Date()
+//           )
         ]
     }
     
