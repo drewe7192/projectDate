@@ -65,9 +65,9 @@ struct HomeView: View {
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            Image("logoBlue")
+            Image("logo")
                 .resizable()
-                .frame(width: 105,height: 35)
+                .frame(width: 150,height: 50)
             
             NavigationLink(destination: SettingsView()) {
                 Image(uiImage: viewModel.profileImage)

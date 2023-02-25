@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import Firebase
+//import FirebaseCore
+//import FirebaseFirestore
+//import FirebaseAuth
+//import FirebaseFirestoreSwift
+//import FirebaseStorage
 
 struct EventInfoView: View {
+    @ObservedObject private var viewModel = EventViewModel()
     let event: EventModel
-    @Binding var selected: [String]
     
     var body: some View {
         GeometryReader{ geoReader in
@@ -88,7 +94,7 @@ struct EventInfoView: View {
                         .overlay(Circle().foregroundColor(Color.white))
                         .offset(x:-20, y: 0)
                     
-                    Text("+2")
+                    Text("+\(event.participants.count)")
                         .foregroundColor(.black)
                         .bold()
                         .frame(width: 40, height: 40)
@@ -130,25 +136,29 @@ struct EventInfoView: View {
 //                    .font(.system(size: 30))
 //            }
             
+            // this button crashes the preview for some reason
             Button(action: {
-         print("fdsafdsf")
+                if(event.participants.contains(Auth.auth().currentUser!.uid)){
+                    viewModel.updateEventParticipants(event: event, action: "remove")
+
+                } else{
+                    viewModel.updateEventParticipants(event: event, action: "add")
+                }
             }) {
-                Text("Join")
+                Text(event.participants.contains(Auth.auth().currentUser!.uid) ? "UnJoin" : "Join")
                     .frame(width: 350,height: 80)
                     .padding(7)
-                    .background(Color.mainGrey)
+                    .background(event.participants.contains(Auth.auth().currentUser!.uid) ? Color.iceBreakrrrPink : Color.mainGrey)
                     .cornerRadius(30)
                     .shadow(radius: 5, x: 4, y: 10)
             }
         }
-        
         .foregroundColor(.white)
-        
     }
 }
 
 struct EventInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        EventInfoView(event: MockService.eventsSampleData.first!, selected: .constant(["0","1"]))
+        EventInfoView(event: MockService.eventsSampleData.first!)
     }
 }

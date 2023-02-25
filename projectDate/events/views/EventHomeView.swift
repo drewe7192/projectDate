@@ -7,17 +7,17 @@
 
 import SwiftUI
 import Firebase
-import FirebaseCore
-import FirebaseFirestore
-import FirebaseAuth
-import FirebaseFirestoreSwift
-import FirebaseStorage
+//import FirebaseCore
+//import FirebaseFirestore
+//import FirebaseAuth
+//import FirebaseFirestoreSwift
+//import FirebaseStorage
 
 struct EventHomeView: View {
+    @ObservedObject private var viewModel = EventViewModel()
+    
     @State var searchText: String = ""
     @State var isJoining: Bool = false
-    @ObservedObject private var viewModel = EventViewModel()
-    @State var selected: [String] = []
     
     var body: some View {
         NavigationView{
@@ -44,7 +44,7 @@ struct EventHomeView: View {
                 VStack{
                     // filter is used for the SearchInput() above this scrollView
                     ForEach(viewModel.events.filter({searchText.isEmpty ? true : $0.title.contains(searchText)})) { event in
-                        NavigationLink(destination: EventInfoView(event: event, selected: $selected)){
+                        NavigationLink(destination: EventInfoView(event: event)){
                             ZStack{
                                 VStack{
                                     Text("")
