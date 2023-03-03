@@ -33,7 +33,7 @@ struct MotherView: View {
                             Label("Settings", systemImage: "gearshape")
                         }.tag(3)
                 }
-                .frame(height: geoReader.size.height * 1.05)
+                .frame(height: geoReader.size.height * 1.07)
                 
             case .signUpPage :
                 SignUpView()

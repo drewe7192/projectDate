@@ -81,9 +81,6 @@ struct CardView: View {
                 DragGesture()
                     .onChanged {
                         translation = $0.translation
-                        print("translation", translation)
-                        print("percentage",geoReader.size.width)
-                        print("threshold", threshold)
                         if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                             self.swipeStatus = .dislike
                         } else if $0.percentage(in: geoReader) >= threshold && translation.width > 110 {
@@ -92,16 +89,12 @@ struct CardView: View {
                             self.swipeStatus = .none
                         }
                     }.onEnded {_ in
-                            if (self.swipeStatus == .like) && (selectedChoice != "Choose answer") {
+                            if (self.swipeStatus == .like) && (selectedChoice != "Your Matches answer") {
                                 onRemove(self.card)
                                 
                                 // after each swipe save the card data and update the profiler section
                                 viewModel.saveSwipedCard(card: self.card, answer: selectedChoice)
-                                 viewModel.getCardsSwipedToday(){ (success) -> Void in
-                                     if !success.isEmpty {
-                                      print("success!")
-                                    }
-                                }
+                                 viewModel.getCardsSwipedToday()
                             } else if (self.swipeStatus == .dislike) {
                                 onRemove(self.card)
                                 

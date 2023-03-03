@@ -13,7 +13,7 @@ struct CardsView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                ForEach(Array(viewModel.cards.enumerated()), id: \.element) { index, card in
+                ForEach(Array(viewModel.cards.enumerated()), id: \.offset) { index, card in
                     if index > viewModel.cards.count - 4 {
                         CardView(card: card, onRemove: {
                             removedUser in

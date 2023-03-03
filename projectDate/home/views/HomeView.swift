@@ -7,7 +7,35 @@
 
 import SwiftUI
 
+
 struct HomeView: View {
+    init(){
+        
+//        HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
+//            if success {
+////                        self.readUserProfile()
+////                        self.getStorageFile()
+//            }
+//        }
+        
+        //HomeViewModel().bullshitAddCards()
+        
+        
+//        HomeViewModel().getCardsSwipedToday() { (success) -> Void in
+//          //  if !success.isEmpty {
+//                print("what is success and array", success)
+
+//                HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
+//                    if success {
+////                        self.readUserProfile()
+////                        self.getStorageFile()
+//                    }
+//                }
+                    //self.getCardFromIds(cardIds: success)
+          //  }
+       // }
+    }
+    
     @ObservedObject private var viewModel = HomeViewModel()
     @State private var showFriendDisplay = false
     @State private var progress: Double = 0.0
@@ -41,12 +69,15 @@ struct HomeView: View {
                         
                         profilerSection(for: geoReader)
                         
+        
+                        
+                        
                         Text("How would your perfect match answer?")
                             .bold()
                             .multilineTextAlignment(.center)
                             .foregroundColor(.white)
                             .font(.custom("Superclarendon", size: geoReader.size.height * 0.03))
-                            .padding(geoReader.size.width * 0.001)
+                            .padding(geoReader.size.width * -0.03)
                         
                         cardsSection(for: geoReader)
                         

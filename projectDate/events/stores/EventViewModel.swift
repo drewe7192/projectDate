@@ -35,7 +35,6 @@ class EventViewModel: ObservableObject {
            
             self.events = documents.compactMap {document -> EventModel? in
                  do {
-                     print("these are the docs", document.data())
                      return try document.data(as: EventModel.self)
                  } catch {
                      print("Error decoding document into Message: \(error)")
