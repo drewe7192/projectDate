@@ -19,27 +19,27 @@ import UIKit
 struct HomeView: View {
     init(){
         
-//        HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
-//            if success {
-////                        self.readUserProfile()
-////                        self.getStorageFile()
-//            }
-//        }
+        //        HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
+        //            if success {
+        ////                        self.readUserProfile()
+        ////                        self.getStorageFile()
+        //            }
+        //        }
         
         
-//        HomeViewModel().getCardsSwipedToday() { (success) -> Void in
-//          //  if !success.isEmpty {
-//                print("what is success and array", success)
-
-//                HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
-//                    if success {
-////                        self.readUserProfile()
-////                        self.getStorageFile()
-//                    }
-//                }
-                    //self.getCardFromIds(cardIds: success)
-          //  }
-       // }
+        //        HomeViewModel().getCardsSwipedToday() { (success) -> Void in
+        //          //  if !success.isEmpty {
+        //                print("what is success and array", success)
+        
+        //                HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
+        //                    if success {
+        ////                        self.readUserProfile()
+        ////                        self.getStorageFile()
+        //                    }
+        //                }
+        //self.getCardFromIds(cardIds: success)
+        //  }
+        // }
     }
     
     @ObservedObject private var viewModel = HomeViewModel()
@@ -51,9 +51,13 @@ struct HomeView: View {
     @State var showCardCreatedAlert: Bool = false
     @State private var image = UIImage()
     @State private var profileText = ""
+    @State var updateData: Bool = false
     
     @State var cards: [CardModel] = []
     @State var lastDoc: Any = []
+    
+    @State var cardsSwipedTodayIds: [String] = [""]
+    @State var cardsFromSwipedIds: [CardModel] = []
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -100,6 +104,13 @@ struct HomeView: View {
                             message: Text("You'll get a notification if someone matches your perfered answer!")
                         )
                     }
+                    .onChange(of: updateData) { newValue in
+                        getCardsSwipedToday() {(cardIds) -> Void in
+                            if !cardIds.isEmpty {
+                                getCardFromIds(cardIds: cardIds)
+                            }
+                        }
+                    }
             }
         }
     }
@@ -123,12 +134,12 @@ struct HomeView: View {
             
             // Dating/Friend Toggle button
             // adding this back in future versions
-
-//            Toggle(isOn: $showFriendDisplay, label: {
-//
-//            })
-//            .padding(geoReader.size.width * 0.02)
-//            .toggleStyle(SwitchToggleStyle(tint: .white))
+            
+            //            Toggle(isOn: $showFriendDisplay, label: {
+            //
+            //            })
+            //            .padding(geoReader.size.width * 0.02)
+            //            .toggleStyle(SwitchToggleStyle(tint: .white))
         }
     }
     
@@ -148,39 +159,39 @@ struct HomeView: View {
             
             VStack(alignment: .leading){
                 VStack{
-                    ProgressView("Values: " + "\(valuesCount)%", value: valuesCount, total: 100)
+                    ProgressView("Values: " + "\(self.valuesCount)%", value: self.valuesCount, total: 100)
                         .foregroundColor(.white)
                         .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
-                        .onReceive(timer) {_ in
-                            if valuesCount < (Double(viewModel.valuesCount.count) * 10)  {
-                                valuesCount += 2
-                            }
-                        }
+                    //                        .onReceive(timer) {_ in
+                    //                            if self.valuesCount < (Double(viewModel.valuesCount.count) * 10)  {
+                    //                                self.valuesCount += 2
+                    //                            }
+                    //                        }
                 }
                 
                 VStack{
                     ProgressView("little things: " + "\(littleThingsCount)%", value: littleThingsCount, total: 100)
                         .foregroundColor(.white)
-                        .tint(.white)
+                        .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
-                        .onReceive(timer) {_ in
-                            if littleThingsCount < (Double(viewModel.littleThingsCount.count) * 10) {
-                                littleThingsCount += 2
-                            }
-                        }
+                    //                        .onReceive(timer) {_ in
+                    //                            if littleThingsCount < (Double(viewModel.littleThingsCount.count) * 10) {
+                    //                                littleThingsCount += 2
+                    //                            }
+                    //                        }
                 }
                 
                 VStack{
                     ProgressView("Commitment: " + "\(commitmentCount)%", value: commitmentCount, total: 100)
                         .foregroundColor(.white)
-                        .tint(.white)
+                        .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
-                        .onReceive(timer) {_ in
-                            if commitmentCount < (Double(viewModel.commitmentCount.count) * 10) {
-                                commitmentCount += 2
-                            }
-                        }
+                    //                        .onReceive(timer) {_ in
+                    //                            if commitmentCount < (Double(viewModel.commitmentCount.count) * 10) {
+                    //                                commitmentCount += 2
+                    //                            }
+                    //                        }
                 }
             }
         }
@@ -188,7 +199,7 @@ struct HomeView: View {
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            CardsView()
+            CardsView(updateData: $updateData)
             VStack{
                 NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert)) {
                     ZStack{
@@ -208,6 +219,65 @@ struct HomeView: View {
         }
     }
     
+    public func getCardsSwipedToday(completed: @escaping (_ cardIds: [String]) -> Void) {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let start = calendar.date(from: components)!
+        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        
+        db.collection("swipedCards")
+            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
+            .whereField("swipedDate", isGreaterThan: start)
+            .whereField("swipedDate", isLessThan: end)
+            .addSnapshotListener {(querySnapshot, error) in
+                guard let documents = querySnapshot?.documents
+                else{
+                    print("No documents")
+                    return completed([])
+                }
+                self.cardsSwipedTodayIds = documents.map { $0["cardId"]! as! String }
+                completed(self.cardsSwipedTodayIds)
+            }
+    }
+    
+    public func getCardFromIds(cardIds: [String]) {
+        db.collection("cards")
+        // have to pass these cardIds in instead of directly using self.cardsSwipedToday
+        // causing preview in LocalHomeView() to crash
+            .whereField("id", in: cardIds)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        do{
+                            if !data.isEmpty{
+                                let card = CardModel(id: document.documentID, question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                                
+                                self.cardsFromSwipedIds.append(card)
+                            }
+                        } catch {
+                            print("Error!")
+                        }
+                    }
+                    
+                    if(!self.cardsFromSwipedIds.isEmpty){
+                        for card in self.cardsFromSwipedIds {
+                            if card.categoryType == "values" {
+                                self.valuesCount += 1
+                            }else if card.categoryType == "littleThings" {
+                                self.littleThingsCount += 1
+                            }else if card.categoryType == "commitment" {
+                                self.commitmentCount += 1
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
     private func displayText() -> String{
         showFriendDisplay ? (profileText = "Friend Profile") : (profileText = "Dating Profile")
         return profileText;
@@ -218,8 +288,6 @@ struct HomeView: View {
         progress = Double(viewModel.cardsSwipedToday.count) * 0.1
         return Double(viewModel.cardsSwipedToday.count) * 5 * 0.01
     }
-    
-  
 } 
 
 struct HomeView_Previews: PreviewProvider {

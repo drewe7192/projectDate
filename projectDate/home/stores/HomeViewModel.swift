@@ -30,11 +30,20 @@ class HomeViewModel: ObservableObject {
     let db = Firestore.firestore()
     let storage = Storage.storage()
     
-    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
+    init(){
+        self.clearData()
+    }
+    
+    public func clearData(){
         //this clear the cache documents from your db
         let settings2 = FirestoreSettings()
         settings2.isPersistenceEnabled = false
         db.settings = settings2
+        
+    }
+        
+    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
+      
         
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
@@ -57,36 +66,7 @@ class HomeViewModel: ObservableObject {
             }
         completed(true)
     }
-    
-    
 
-    
-    
-    
-    
-    
- 
-    
-    public func getCardsSwipedToday(completed: @escaping (_ successArray: [String]) -> Void) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-        
-        db.collection("swipedCards")
-            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
-            .whereField("swipedDate", isGreaterThan: start)
-            .whereField("swipedDate", isLessThan: end)
-            .addSnapshotListener {(querySnapshot, error) in
-                guard let documents = querySnapshot?.documents
-                else{
-                    print("No documents")
-                    return completed([])
-                }
-                self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
-                completed(self.cardsSwipedToday)
-            }
-    }
     
     public func readUserProfile(){
         db.collection("profiles")
@@ -150,43 +130,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    private func getCardFromIds(cardIds: [String]) {
-        db.collection("cards")
-        // have to pass these cardIds in instead of directly using self.cardsSwipedToday
-        // causing preview in LocalHomeView() to crash
-            .whereField("id", in: cardIds)
-            .addSnapshotListener{(querySnapshot, error) in
-                guard let documents = querySnapshot?.documents
-                else{
-                    print("no documents")
-                    return
-                }
-                
-                self.cardsFromSwipedIds = documents.compactMap {document -> CardModel? in
-                    do {
-                        return try document.data(as: CardModel.self)
-                    } catch {
-                        print("Error decoding document into Message: \(error)")
-                        return nil
-                    }
-                }
-            }
-        
-        // setting ProgressBars for Profiler on HomeScreen
-        if(!self.cardsFromSwipedIds.isEmpty){
-            for card in self.cardsFromSwipedIds {
-                if card.categoryType == "values" {
-                    self.valuesCount.append(card)
-                }else if card.categoryType == "littleThings" {
-                    self.littleThingsCount.append(card)
-                }else if card.categoryType == "commitment" {
-                    self.commitmentCount.append(card)
-                }
-            }
-        }
-    }
-    
-    public func saveSwipedCard(card: CardModel, answer: String){
+    public func saveSwipedCard(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
         let docData: [String: Any] = [
             "cardId": card.id,
             "answer": cardChoices(choices: card.choices, answer: answer),
@@ -200,8 +144,10 @@ class HomeViewModel: ObservableObject {
         docRef.setData(docData) {error in
             if let error = error {
                 print("Error writing document: \(error)")
+                completed(false)
             }else {
                 print("Document successfully written!")
+                completed(true)
             }
         }
     }

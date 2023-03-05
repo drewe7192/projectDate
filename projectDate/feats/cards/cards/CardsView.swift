@@ -18,9 +18,12 @@ import UIKit
 struct CardsView: View {
     @State var cards: [CardModel] = []
     @State var lastDoc: DocumentSnapshot!
-    @State var updateData: Bool = false
+    @Binding var updateData: Bool
+
     
     let db = Firestore.firestore()
+    
+    
     let storage = Storage.storage()
     
     var body: some View {
@@ -50,6 +53,7 @@ struct CardsView: View {
     }
     
     public func getAllCards(isUpdating: Bool){
+        
         var query: Query!
         
         if !isUpdating {
@@ -85,6 +89,6 @@ struct CardsView: View {
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView()
+        CardsView(updateData: .constant(false))
     }
 }

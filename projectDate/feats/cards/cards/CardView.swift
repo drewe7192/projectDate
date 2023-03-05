@@ -107,22 +107,30 @@ struct CardView: View {
                             onRemove(self.card)
                             
                             // after each swipe save the card data and update the profiler section
-                            viewModel.saveSwipedCard(card: self.card, answer: selectedChoice)
-                            //going to track end of cards list
-                            if(viewModel.cards.last?.id == self.card.id){
-                                //get new cards swiped this week and refresh profilerCircle and bars
-                                updateData = true
+                            viewModel.saveSwipedCard(card: self.card, answer: selectedChoice){ (success) in
+                                if success{
+                                    //going to track end of cards list
+                                    if(index == 0){
+                                        //get new cards swiped this week and refresh profilerCircle and bars
+                                        updateData.toggle()
+                                    }
+                                }
                             }
+                            //going to track end of cards list
+                             
+                                updateData.toggle()
                         } else if (self.swipeStatus == .dislike) {
                             onRemove(self.card)
                             
                             //save swiped card after each swipe
-                            viewModel.saveSwipedCard(card: self.card, answer: "")
-                            
-                            //going to track end of cards list
-                            if(index == 0){
-                                //get new cards swiped this week and refresh profilerCircle and bars
-                                updateData.toggle()
+                            viewModel.saveSwipedCard(card: self.card, answer: "") { (success) in
+                                if success{
+                                    //going to track end of cards list
+                                    if(index == 0){
+                                        //get new cards swiped this week and refresh profilerCircle and bars
+                                        updateData.toggle()
+                                    }
+                                }
                             }
                         }
                         translation = .zero
