@@ -15,20 +15,10 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
 
-// When in the init() functions fire twice for some reason
-// When you attach a .addSnapshotListener function fires 8 times
 class HomeViewModel: ObservableObject {
-    init(){
-        self.getAllData(){ (success) -> Void in
-            if success {
-                self.readUserProfile()
-                self.getStorageFile()
-            }
-        }
-    }
-    
     @Published var createCards: [CardModel] = MockService.cardObjectSampleData.cards
     @Published var cards: [CardModel] = []
+    @Published var allCards: [CardModel] = []
     @Published var cardsSwipedToday: [String] = [""]
     @Published var cardsFromSwipedIds: [CardModel] = []
     @Published var valuesCount: [CardModel] = []
@@ -64,39 +54,20 @@ class HomeViewModel: ObservableObject {
                     return
                 }
                 self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
-                self.getAllCards()
             }
         completed(true)
     }
     
-    public func getAllCards(){
-        self.db.collection("cards")
-        // .limit(to: 20)
-            .addSnapshotListener{ (querySnapshot, error) in
-                guard let documents = querySnapshot?.documents
-                else {
-                    print("No documents")
-                    return
-                }
-                
-                self.cards = documents.compactMap {document -> CardModel? in
-                    do {
-                        return try document.data(as: CardModel.self)
-                    } catch {
-                        print("Error decoding document into Message: \(error)")
-                        return nil
-                    }
-                }
-                
-                // how we get only the cards a user hasnt seen for 3 months --> suppose to be 3 months not 1 day fix!
-                self.cards = self.cards.filter {!self.cardsSwipedToday.contains($0.id)}
-                //           print("self.cards",self.cards)
-                //           print("self.cardsSwipedToday",self.cardsSwipedToday)
-            }
-        
-    }
     
-    public func getCardsSwipedToday() {
+
+    
+    
+    
+    
+    
+ 
+    
+    public func getCardsSwipedToday(completed: @escaping (_ successArray: [String]) -> Void) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
@@ -110,9 +81,10 @@ class HomeViewModel: ObservableObject {
                 guard let documents = querySnapshot?.documents
                 else{
                     print("No documents")
-                    return
+                    return completed([])
                 }
                 self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
+                completed(self.cardsSwipedToday)
             }
     }
     

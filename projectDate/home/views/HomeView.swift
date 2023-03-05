@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseFirestoreSwift
+import FirebaseStorage
+import UIKit
+
 
 struct HomeView: View {
     init(){
@@ -17,8 +25,6 @@ struct HomeView: View {
 ////                        self.getStorageFile()
 //            }
 //        }
-        
-        //HomeViewModel().bullshitAddCards()
         
         
 //        HomeViewModel().getCardsSwipedToday() { (success) -> Void in
@@ -46,6 +52,13 @@ struct HomeView: View {
     @State private var image = UIImage()
     @State private var profileText = ""
     
+    @State var cards: [CardModel] = []
+    @State var lastDoc: Any = []
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
+    
+    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -69,8 +82,6 @@ struct HomeView: View {
                         
                         profilerSection(for: geoReader)
                         
-        
-                        
                         
                         Text("How would your perfect match answer?")
                             .bold()
@@ -89,7 +100,6 @@ struct HomeView: View {
                             message: Text("You'll get a notification if someone matches your perfered answer!")
                         )
                     }
-                
             }
         }
     }
@@ -208,6 +218,8 @@ struct HomeView: View {
         progress = Double(viewModel.cardsSwipedToday.count) * 0.1
         return Double(viewModel.cardsSwipedToday.count) * 5 * 0.01
     }
+    
+  
 } 
 
 struct HomeView_Previews: PreviewProvider {

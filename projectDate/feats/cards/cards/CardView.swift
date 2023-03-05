@@ -6,19 +6,32 @@
 //
 
 import SwiftUI
+
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseFirestoreSwift
+import FirebaseStorage
+import UIKit
+
 struct Contact: Identifiable {
     let id = UUID()
     let name: String
 }
 
-
 struct CardView: View {
-    @ObservedObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = HomeViewModel()
     @State private var selectedChoice = "Your Matches answer"
+    @Binding var updateData: Bool
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
     
     @State
     private var translation: CGSize = .zero
     private var card: CardModel
+    private var index: Int
     private var onRemove: (_ card: CardModel) -> Void
     private var threshold: CGFloat = 0.1
     
@@ -27,10 +40,12 @@ struct CardView: View {
     }
     @State var swipeStatus: LikeDislike = .none
     
-    init(card: CardModel, onRemove: @escaping (_ card: CardModel)
-         -> Void) {
+    init(card: CardModel, index: Int, onRemove: @escaping (_ card: CardModel)
+         -> Void, updateData: Binding<Bool>) {
         self.card = card
+        self.index = index
         self.onRemove = onRemove
+        self._updateData = updateData
     }
     
     var body: some View {
@@ -62,7 +77,6 @@ struct CardView: View {
                                 .font(.system(size: 20))
                         }
                         .accentColor(.white)
-                               
                     }
                     .frame(height: geoReader.size.height * 0.4)
                 }
@@ -89,20 +103,30 @@ struct CardView: View {
                             self.swipeStatus = .none
                         }
                     }.onEnded {_ in
-                            if (self.swipeStatus == .like) && (selectedChoice != "Your Matches answer") {
-                                onRemove(self.card)
-                                
-                                // after each swipe save the card data and update the profiler section
-                                viewModel.saveSwipedCard(card: self.card, answer: selectedChoice)
-                                 viewModel.getCardsSwipedToday()
-                            } else if (self.swipeStatus == .dislike) {
-                                onRemove(self.card)
-                                
-                                //save swiped card after each swipe
-                                viewModel.saveSwipedCard(card: self.card, answer: "")
+                        if (self.swipeStatus == .like) && (selectedChoice != "Your Matches answer") {
+                            onRemove(self.card)
+                            
+                            // after each swipe save the card data and update the profiler section
+                            viewModel.saveSwipedCard(card: self.card, answer: selectedChoice)
+                            //going to track end of cards list
+                            if(viewModel.cards.last?.id == self.card.id){
+                                //get new cards swiped this week and refresh profilerCircle and bars
+                                updateData = true
                             }
-                                translation = .zero
+                        } else if (self.swipeStatus == .dislike) {
+                            onRemove(self.card)
+                            
+                            //save swiped card after each swipe
+                            viewModel.saveSwipedCard(card: self.card, answer: "")
+                            
+                            //going to track end of cards list
+                            if(index == 0){
+                                //get new cards swiped this week and refresh profilerCircle and bars
+                                updateData.toggle()
+                            }
                         }
+                        translation = .zero
+                    }
             )
         }
     }
@@ -110,6 +134,6 @@ struct CardView: View {
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(card: MockService.cardsSampleData.first!, onRemove: {_ in})
+        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true))
     }
 }
