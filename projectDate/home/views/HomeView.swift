@@ -56,7 +56,7 @@ struct HomeView: View {
     @State var cards: [CardModel] = []
     @State var lastDoc: Any = []
     
-    @State var cardsSwipedTodayIds: [String] = [""]
+    @State var cardsSwipedTodayIds: [SwipedCardsModel] = []
     @State var cardsFromSwipedIds: [CardModel] = []
     
     let db = Firestore.firestore()
@@ -105,9 +105,9 @@ struct HomeView: View {
                         )
                     }
                     .onChange(of: updateData) { newValue in
-                        getCardsSwipedToday() {(cardIds) -> Void in
-                            if !cardIds.isEmpty {
-                                getCardFromIds(cardIds: cardIds)
+                        getCardsSwipedToday() {(swipedCards) -> Void in
+                            if !swipedCards.isEmpty {
+                                getCardFromIds(swipedCards: swipedCards)
                             }
                         }
                     }
@@ -219,7 +219,7 @@ struct HomeView: View {
         }
     }
     
-    public func getCardsSwipedToday(completed: @escaping (_ cardIds: [String]) -> Void) {
+    public func getCardsSwipedToday(completed: @escaping (_ cardIds: [SwipedCardsModel]) -> Void) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
@@ -229,18 +229,35 @@ struct HomeView: View {
             .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
             .whereField("swipedDate", isGreaterThan: start)
             .whereField("swipedDate", isLessThan: end)
-            .addSnapshotListener {(querySnapshot, error) in
-                guard let documents = querySnapshot?.documents
-                else{
-                    print("No documents")
-                    return completed([])
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        do{
+                            if !data.isEmpty{
+                                let swipedCard = SwipedCardsModel(id: document.documentID, answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "")
+                                
+                                self.cardsSwipedTodayIds.append(swipedCard)
+                            }
+                        } catch {
+                            print("Error!")
+                        }
+                    }
+                    completed(self.cardsSwipedTodayIds)
                 }
-                self.cardsSwipedTodayIds = documents.map { $0["cardId"]! as! String }
-                completed(self.cardsSwipedTodayIds)
             }
     }
     
-    public func getCardFromIds(cardIds: [String]) {
+    public func getCardFromIds(swipedCards: [SwipedCardsModel]) {
+        var cardIds: [String] = []
+        var answeredCards = swipedCards.filter{$0.answer != ""}
+        for card in answeredCards {
+            cardIds.append(card.cardId)
+        }
+
         db.collection("cards")
         // have to pass these cardIds in instead of directly using self.cardsSwipedToday
         // causing preview in LocalHomeView() to crash
@@ -264,6 +281,7 @@ struct HomeView: View {
                     }
                     
                     if(!self.cardsFromSwipedIds.isEmpty){
+                        print("how many cards wtf??", self.cardsFromSwipedIds.count)
                         for card in self.cardsFromSwipedIds {
                             if card.categoryType == "values" {
                                 self.valuesCount += 1
@@ -284,9 +302,8 @@ struct HomeView: View {
     }
     
     private func setProgress() -> Double{
-        // might what to change this to update on only unique cards
-        progress = Double(viewModel.cardsSwipedToday.count) * 0.1
-        return Double(viewModel.cardsSwipedToday.count) * 5 * 0.01
+        progress = Double(self.cardsSwipedTodayIds.count) * 0.1
+        return Double(self.cardsSwipedTodayIds.count) * 5 * 0.01
     }
 } 
 

@@ -116,9 +116,6 @@ struct CardView: View {
                                     }
                                 }
                             }
-                            //going to track end of cards list
-                             
-                                updateData.toggle()
                         } else if (self.swipeStatus == .dislike) {
                             onRemove(self.card)
                             

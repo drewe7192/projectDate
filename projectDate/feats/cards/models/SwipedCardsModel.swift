@@ -9,8 +9,8 @@ import Foundation
 
 struct SwipedCardsModel: Identifiable {
     var id : String
-    var cardId: String
-    var userId: String
     var answer: String
-    var swipedDate: String
+    var cardId: String
+    //    var userId: String
+    //    var swipedDate: String
 }
