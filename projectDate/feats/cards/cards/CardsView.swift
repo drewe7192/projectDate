@@ -18,12 +18,10 @@ import UIKit
 struct CardsView: View {
     @State var cards: [CardModel] = []
     @State var lastDoc: DocumentSnapshot!
+    
     @Binding var updateData: Bool
 
-    
     let db = Firestore.firestore()
-    
-    
     let storage = Storage.storage()
     
     var body: some View {
@@ -53,7 +51,6 @@ struct CardsView: View {
     }
     
     public func getAllCards(isUpdating: Bool){
-        
         var query: Query!
         
         if !isUpdating {

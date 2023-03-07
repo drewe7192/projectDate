@@ -41,7 +41,7 @@
 		776DFB5B28B286B300F9AC63 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 776DFB5A28B286B300F9AC63 /* FirebaseAuth */; };
 		7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7770E2BF297E755300C70469 /* BarProgressView.swift */; };
 		777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C2CD0298A373A00CD3CCE /* CreateCardView.swift */; };
-		778A5F8B2998CA65004EA498 /* SwipedCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A5F8A2998CA65004EA498 /* SwipedCardsModel.swift */; };
+		778A5F8B2998CA65004EA498 /* SwipedCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A5F8A2998CA65004EA498 /* SwipedCardModel.swift */; };
 		779985DA298EC07D00D3FD74 /* CreateCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779985D9298EC07D00D3FD74 /* CreateCardsView.swift */; };
 		77A0F9BB2986CEA1009CD1E0 /* LogInItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */; };
 		77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */; };
@@ -115,7 +115,7 @@
 		776D47122964053100754DE5 /* SideBarInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarInfoModel.swift; sourceTree = "<group>"; };
 		7770E2BF297E755300C70469 /* BarProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarProgressView.swift; sourceTree = "<group>"; };
 		777C2CD0298A373A00CD3CCE /* CreateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardView.swift; sourceTree = "<group>"; };
-		778A5F8A2998CA65004EA498 /* SwipedCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipedCardsModel.swift; sourceTree = "<group>"; };
+		778A5F8A2998CA65004EA498 /* SwipedCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipedCardModel.swift; sourceTree = "<group>"; };
 		779985D9298EC07D00D3FD74 /* CreateCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardsView.swift; sourceTree = "<group>"; };
 		77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInItems.swift; sourceTree = "<group>"; };
 		77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModel.swift; sourceTree = "<group>"; };
@@ -341,7 +341,7 @@
 			children = (
 				771AE4212979B44F00F3A6A1 /* CardsModel.swift */,
 				77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */,
-				778A5F8A2998CA65004EA498 /* SwipedCardsModel.swift */,
+				778A5F8A2998CA65004EA498 /* SwipedCardModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -716,7 +716,7 @@
 				77626AEE28C87AF600D1DD9E /* AppleAuth.swift in Sources */,
 				77E88D752987ED9C00F20B29 /* FacebookSignInManager.swift in Sources */,
 				7756A48328C5192C0038903D /* MotherView.swift in Sources */,
-				778A5F8B2998CA65004EA498 /* SwipedCardsModel.swift in Sources */,
+				778A5F8B2998CA65004EA498 /* SwipedCardModel.swift in Sources */,
 				771AE42B2979DE3500F3A6A1 /* HomeViewModel.swift in Sources */,
 				7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */,
 				7753927729A2316F00AA2B74 /* FailedView.swift in Sources */,

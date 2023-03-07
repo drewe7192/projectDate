@@ -15,34 +15,9 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
 
-
 struct HomeView: View {
-    init(){
-        
-        //        HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
-        //            if success {
-        ////                        self.readUserProfile()
-        ////                        self.getStorageFile()
-        //            }
-        //        }
-        
-        
-        //        HomeViewModel().getCardsSwipedToday() { (success) -> Void in
-        //          //  if !success.isEmpty {
-        //                print("what is success and array", success)
-        
-        //                HomeViewModel().getAllData(foo: [""]){ (success) -> Void in
-        //                    if success {
-        ////                        self.readUserProfile()
-        ////                        self.getStorageFile()
-        //                    }
-        //                }
-        //self.getCardFromIds(cardIds: success)
-        //  }
-        // }
-    }
-    
     @ObservedObject private var viewModel = HomeViewModel()
+    
     @State private var showFriendDisplay = false
     @State private var progress: Double = 0.0
     @State private var valuesCount = 0.0
@@ -52,17 +27,13 @@ struct HomeView: View {
     @State private var image = UIImage()
     @State private var profileText = ""
     @State var updateData: Bool = false
-    
     @State var cards: [CardModel] = []
     @State var lastDoc: Any = []
-    
-    @State var cardsSwipedTodayIds: [SwipedCardsModel] = []
+    @State var cardsSwipedTodayIds: [SwipedCardModel] = []
     @State var cardsFromSwipedIds: [CardModel] = []
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
-    
-    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -103,6 +74,13 @@ struct HomeView: View {
                             title: Text("New Card Created!"),
                             message: Text("You'll get a notification if someone matches your perfered answer!")
                         )
+                    }
+                    .onAppear {
+                        getCardsSwipedToday() {(swipedCards) -> Void in
+                            if !swipedCards.isEmpty {
+                                getCardFromIds(swipedCards: swipedCards)
+                            }
+                        }
                     }
                     .onChange(of: updateData) { newValue in
                         getCardsSwipedToday() {(swipedCards) -> Void in
@@ -219,7 +197,7 @@ struct HomeView: View {
         }
     }
     
-    public func getCardsSwipedToday(completed: @escaping (_ cardIds: [SwipedCardsModel]) -> Void) {
+    public func getCardsSwipedToday(completed: @escaping (_ cardIds: [SwipedCardModel]) -> Void) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
@@ -238,7 +216,7 @@ struct HomeView: View {
                         
                         do{
                             if !data.isEmpty{
-                                let swipedCard = SwipedCardsModel(id: document.documentID, answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "")
+                                let swipedCard = SwipedCardModel(id: document.documentID, answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "")
                                 
                                 self.cardsSwipedTodayIds.append(swipedCard)
                             }
@@ -249,51 +227,78 @@ struct HomeView: View {
                     completed(self.cardsSwipedTodayIds)
                 }
             }
+        
     }
     
-    public func getCardFromIds(swipedCards: [SwipedCardsModel]) {
+    public func getCardFromIds(swipedCards: [SwipedCardModel]) {
         var cardIds: [String] = []
-        var answeredCards = swipedCards.filter{$0.answer != ""}
-        for card in answeredCards {
+        let answeredCards = swipedCards.filter{$0.answer != ""}
+        //you shouldnt get the same answered card twice but just in case make it unique
+        let uniqueCards = answeredCards.unique{$0.cardId}
+
+        for card in uniqueCards {
             cardIds.append(card.cardId)
         }
-
-        db.collection("cards")
-        // have to pass these cardIds in instead of directly using self.cardsSwipedToday
-        // causing preview in LocalHomeView() to crash
-            .whereField("id", in: cardIds)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                } else {
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        
-                        do{
-                            if !data.isEmpty{
-                                let card = CardModel(id: document.documentID, question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
-                                
-                                self.cardsFromSwipedIds.append(card)
-                            }
-                        } catch {
-                            print("Error!")
-                        }
-                    }
-                    
-                    if(!self.cardsFromSwipedIds.isEmpty){
-                        print("how many cards wtf??", self.cardsFromSwipedIds.count)
-                        for card in self.cardsFromSwipedIds {
-                            if card.categoryType == "values" {
-                                self.valuesCount += 1
-                            }else if card.categoryType == "littleThings" {
-                                self.littleThingsCount += 1
-                            }else if card.categoryType == "commitment" {
-                                self.commitmentCount += 1
-                            }
-                        }
-                    }
-                }
+        
+        let collectionPath = db.collection("cards")
+        var batches: [Any] = []
+        
+        self.cardsFromSwipedIds.removeAll()
+        self.valuesCount = 0
+        self.littleThingsCount = 0
+        self.commitmentCount = 0
+        
+        while(!cardIds.isEmpty){
+            let batch = Array(cardIds.prefix(10))
+            let count = cardIds.count
+            if count < 10{
+                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
+            } else{
+                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
             }
+           
+            
+            batches.append(
+                // have to pass these cardIds in instead of directly using self.cardsSwipedToday
+                // causing preview in LocalHomeView() to crash
+                collectionPath
+                    .whereField("id", in: batch)
+                    .getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                                let data = document.data()
+                                
+                                do{
+                                    if !data.isEmpty{
+                                        let card = CardModel(id: document.documentID, question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                                        
+                                        self.cardsFromSwipedIds.append(card)
+                                    }
+                                } catch {
+                                    print("Error!")
+                                }
+                            }
+                            
+                            if(!self.cardsFromSwipedIds.isEmpty){
+                                print("how much cards are in self.cardsFromSwipedIds", self.cardsFromSwipedIds.count)
+                                for card in self.cardsFromSwipedIds {
+                                    if card.categoryType == "values" {
+                                        print("how many  value cards")
+                                        self.valuesCount += 1
+                                    }else if card.categoryType == "littleThings" {
+                                        print("how many  littleThings cards")
+                                        self.littleThingsCount += 1
+                                    }else if card.categoryType == "commitment" {
+                                        self.commitmentCount += 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+            )
+        }
     }
     
     private func displayText() -> String{
@@ -302,8 +307,8 @@ struct HomeView: View {
     }
     
     private func setProgress() -> Double{
-        progress = Double(self.cardsSwipedTodayIds.count) * 0.1
-        return Double(self.cardsSwipedTodayIds.count) * 5 * 0.01
+        self.progress = Double(self.cardsFromSwipedIds.count) * 0.1
+        return Double(self.cardsFromSwipedIds.count) * 5 * 0.01
     }
 } 
 
