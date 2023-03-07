@@ -20,7 +20,7 @@ struct CardsView: View {
     @State var lastDoc: DocumentSnapshot!
     
     @Binding var updateData: Bool
-
+    
     let db = Firestore.firestore()
     let storage = Storage.storage()
     
@@ -50,9 +50,10 @@ struct CardsView: View {
         }.padding()
     }
     
-    public func getAllCards(isUpdating: Bool){
+    private func getAllCards(isUpdating: Bool){
         var query: Query!
         
+        //pagination: get first n cards or get the next n cards
         if !isUpdating {
             query = db.collection("cards").limit(to: 3)
         } else {
@@ -78,6 +79,7 @@ struct CardsView: View {
                         print("Error!")
                     }
                 }
+                //important to get the next n cards from the db
                 self.lastDoc = querySnapshot!.documents.last
             }
         }

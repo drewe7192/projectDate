@@ -23,14 +23,14 @@ struct HomeView: View {
     @State private var valuesCount = 0.0
     @State private var littleThingsCount = 0.0
     @State private var commitmentCount = 0.0
-    @State var showCardCreatedAlert: Bool = false
+    @State private var showCardCreatedAlert: Bool = false
     @State private var image = UIImage()
     @State private var profileText = ""
-    @State var updateData: Bool = false
-    @State var cards: [CardModel] = []
-    @State var lastDoc: Any = []
-    @State var cardsSwipedTodayIds: [SwipedCardModel] = []
-    @State var cardsFromSwipedIds: [CardModel] = []
+    @State private var updateData: Bool = false
+    @State private var cards: [CardModel] = []
+    @State private var lastDoc: Any = []
+    @State private var cardsSwipedTodayIds: [SwipedCardModel] = []
+    @State private var cardsFromSwipedIds: [CardModel] = []
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -82,7 +82,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .onChange(of: updateData) { newValue in
+                    .onChange(of: updateData) { _ in
                         getCardsSwipedToday() {(swipedCards) -> Void in
                             if !swipedCards.isEmpty {
                                 getCardFromIds(swipedCards: swipedCards)
@@ -141,11 +141,6 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
-                    //                        .onReceive(timer) {_ in
-                    //                            if self.valuesCount < (Double(viewModel.valuesCount.count) * 10)  {
-                    //                                self.valuesCount += 2
-                    //                            }
-                    //                        }
                 }
                 
                 VStack{
@@ -153,11 +148,6 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
-                    //                        .onReceive(timer) {_ in
-                    //                            if littleThingsCount < (Double(viewModel.littleThingsCount.count) * 10) {
-                    //                                littleThingsCount += 2
-                    //                            }
-                    //                        }
                 }
                 
                 VStack{
@@ -165,11 +155,6 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
-                    //                        .onReceive(timer) {_ in
-                    //                            if commitmentCount < (Double(viewModel.commitmentCount.count) * 10) {
-                    //                                commitmentCount += 2
-                    //                            }
-                    //                        }
                 }
             }
         }
@@ -227,28 +212,17 @@ struct HomeView: View {
                     completed(self.cardsSwipedTodayIds)
                 }
             }
-        
     }
     
-    public func getCardFromIds(swipedCards: [SwipedCardModel]) {
-        var cardIds: [String] = []
-        let answeredCards = swipedCards.filter{$0.answer != ""}
-        //you shouldnt get the same answered card twice but just in case make it unique
-        let uniqueCards = answeredCards.unique{$0.cardId}
-
-        for card in uniqueCards {
-            cardIds.append(card.cardId)
-        }
-        
-        let collectionPath = db.collection("cards")
+    private func getCardFromIds(swipedCards: [SwipedCardModel]) {
+        var cardIds = getUniqueCards(swipedCards: swipedCards)
         var batches: [Any] = []
         
-        self.cardsFromSwipedIds.removeAll()
-        self.valuesCount = 0
-        self.littleThingsCount = 0
-        self.commitmentCount = 0
+        clearStates()
         
+        // workaround for the Firebase Query "IN" Limit of 10
         while(!cardIds.isEmpty){
+            //splice Array: get first 10 and remove the same 10 from array
             let batch = Array(cardIds.prefix(10))
             let count = cardIds.count
             if count < 10{
@@ -256,12 +230,11 @@ struct HomeView: View {
             } else{
                 cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
             }
-           
             
+            //Batch queue to call db for every batch
             batches.append(
-                // have to pass these cardIds in instead of directly using self.cardsSwipedToday
-                // causing preview in LocalHomeView() to crash
-                collectionPath
+                db.collection("cards")
+                //here's the issue: batch has a limit of 10
                     .whereField("id", in: batch)
                     .getDocuments() { (querySnapshot, err) in
                         if let err = err {
@@ -280,24 +253,44 @@ struct HomeView: View {
                                     print("Error!")
                                 }
                             }
-                            
-                            if(!self.cardsFromSwipedIds.isEmpty){
-                                print("how much cards are in self.cardsFromSwipedIds", self.cardsFromSwipedIds.count)
-                                for card in self.cardsFromSwipedIds {
-                                    if card.categoryType == "values" {
-                                        print("how many  value cards")
-                                        self.valuesCount += 1
-                                    }else if card.categoryType == "littleThings" {
-                                        print("how many  littleThings cards")
-                                        self.littleThingsCount += 1
-                                    }else if card.categoryType == "commitment" {
-                                        self.commitmentCount += 1
-                                    }
-                                }
-                            }
+                            updateProfilerBars()
                         }
                     }
             )
+        }
+    }
+    
+    private func getUniqueCards(swipedCards: [SwipedCardModel]) -> [String] {
+        var cardIds: [String] = []
+        let answeredCards = swipedCards.filter{$0.answer != ""}
+        //you shouldnt get the same answered card twice but just in case make it unique
+        let uniqueCards = answeredCards.unique{$0.cardId}
+        
+        for card in uniqueCards {
+            cardIds.append(card.cardId)
+        }
+        
+        return cardIds
+    }
+    
+    private func clearStates(){
+        self.cardsFromSwipedIds.removeAll()
+        self.valuesCount = 0
+        self.littleThingsCount = 0
+        self.commitmentCount = 0
+    }
+    
+    private func updateProfilerBars(){
+        if(!self.cardsFromSwipedIds.isEmpty){
+            for card in self.cardsFromSwipedIds {
+                if card.categoryType == "values" {
+                    self.valuesCount += 1
+                }else if card.categoryType == "littleThings" {
+                    self.littleThingsCount += 1
+                }else if card.categoryType == "commitment" {
+                    self.commitmentCount += 1
+                }
+            }
         }
     }
     

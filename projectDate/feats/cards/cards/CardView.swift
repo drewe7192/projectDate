@@ -15,11 +15,6 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
 
-struct Contact: Identifiable {
-    let id = UUID()
-    let name: String
-}
-
 struct CardView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var selectedChoice = "Your Matches answer"
@@ -94,6 +89,8 @@ struct CardView: View {
             .gesture(
                 DragGesture()
                     .onChanged {
+                        //translation changes as you drag card;
+                        // if card gets dragged a certain distance, set it to like/dislike
                         translation = $0.translation
                         if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                             self.swipeStatus = .dislike
@@ -103,15 +100,16 @@ struct CardView: View {
                             self.swipeStatus = .none
                         }
                     }.onEnded {_ in
+                        // cant swipe right/like if question hasnt been answered
                         if (self.swipeStatus == .like) && (selectedChoice != "Your Matches answer") {
                             onRemove(self.card)
                             
                             // after each swipe save the card data and update the profiler section
                             viewModel.saveSwipedCard(card: self.card, answer: selectedChoice){ (success) in
                                 if success{
-                                    //going to track end of cards list
+                                    //last card in set is always index 0
                                     if(index == 0){
-                                        //get new cards swiped this week and refresh profilerCircle and bars
+                                        // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
                                 }
@@ -119,12 +117,11 @@ struct CardView: View {
                         } else if (self.swipeStatus == .dislike) {
                             onRemove(self.card)
                             
-                            //save swiped card after each swipe
                             viewModel.saveSwipedCard(card: self.card, answer: "") { (success) in
                                 if success{
-                                    //going to track end of cards list
+                                    //last card in set is always index 0
                                     if(index == 0){
-                                        //get new cards swiped this week and refresh profilerCircle and bars
+                                        // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
                                 }
