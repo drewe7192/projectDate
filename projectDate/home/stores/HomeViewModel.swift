@@ -20,10 +20,10 @@ class HomeViewModel: ObservableObject {
     @Published var cards: [CardModel] = []
     @Published var allCards: [CardModel] = []
     @Published var cardsSwipedToday: [String] = [""]
-    @Published var cardsFromSwipedIds: [CardModel] = []
+    //@Published var cardsNotSwiped: [CardModel] = []
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
-    @Published var commitmentCount: [CardModel] = []
+    @Published var personalityCount: [CardModel] = []
     @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "")
     @Published var profileImage: UIImage = UIImage()
     

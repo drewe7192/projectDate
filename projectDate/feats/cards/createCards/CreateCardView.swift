@@ -258,7 +258,7 @@ struct CreateCardView: View {
                     //started with 1 instead of 0 becuase selectedCategory state default value is 0
                     Categories(id: 1, category: "Values"),
                     Categories(id: 2, category: "Little things"),
-                    Categories(id: 3, category: "Commitment"),
+                    Categories(id: 3, category: "Personality"),
                 ]
                 
                 VStack(spacing: 20){
@@ -288,15 +288,9 @@ struct CreateCardView: View {
                             .background(categoryType == contact.category ? Color.iceBreakrrrPink : Color.mainGrey)
                             .foregroundColor(.white)
                             .cornerRadius(22)
-
                             .shadow(radius: 5, x: 7, y: 10)
-
-
                     }
-                    
                 }
-              
-            
             }
             
             if(Int(card.id) == 0){

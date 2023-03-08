@@ -112,6 +112,7 @@ struct CardView: View {
                                         // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
+                                    self.selectedChoice = "Your Matches Answer"
                                 }
                             }
                         } else if (self.swipeStatus == .dislike) {
@@ -124,6 +125,7 @@ struct CardView: View {
                                         // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
+                                    self.selectedChoice = "Your Matches Answer"
                                 }
                             }
                         }

@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 import GoogleSignIn
+import FirebaseStorage
 
 struct SettingsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
@@ -21,6 +22,9 @@ struct SettingsView: View {
     @State private var showSheet = false
     @State private var showSaveButton = false
     @State private var editInfo = false
+    @State private var profileImage: UIImage = UIImage()
+    
+    let storage = Storage.storage()
     
     var body: some View {
         GeometryReader {geoReader in
@@ -48,18 +52,20 @@ struct SettingsView: View {
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .sheet(isPresented: $showSheet){
                     // Pick an image from the photo library:
-                    ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.profileImage)
+                    ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
                     
                     //  If you wish to take a photo from camera instead:
                     // ImagePicker(sourceType: .camera, selectedImage: self.$image)
                 }
+            }.onAppear{
+                getStorageFile()
             }
         }
     }
     
     private func imageSection(for geoReader: GeometryProxy) -> some View {
         VStack{
-            Image(uiImage: viewModel.profileImage)
+            Image(uiImage: self.profileImage)
                 .resizable()
                 .cornerRadius(50)
                 .frame(width: 200, height: 200)
@@ -194,6 +200,22 @@ struct SettingsView: View {
             viewModel.updateUserProfile(updatedProfile: ProfileModel(id: viewModel.userProfile.id, fullName: name, location: location))
             
             viewModel.uploadStorageFile(image: viewModel.profileImage)
+        }
+    }
+    
+    public func getStorageFile() {
+        let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+        
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        imageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                // Uh-oh, an error occurred!
+                print("Error getting file: ", error)
+            } else {
+                let image = UIImage(data: data!)
+                self.profileImage = image!
+                
+            }
         }
     }
 }

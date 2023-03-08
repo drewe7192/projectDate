@@ -16,6 +16,7 @@ import FirebaseStorage
 import UIKit
 
 struct CardsView: View {
+    @ObservedObject var viewModel = HomeViewModel()
     @State var cards: [CardModel] = []
     @State var lastDoc: DocumentSnapshot!
     
@@ -27,7 +28,7 @@ struct CardsView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                ForEach(Array(self.cards.enumerated()), id: \.element) { index, card in
+                ForEach(Array(self.cards.enumerated()), id: \.offset) { index, card in
                     if index > self.cards.count - 4 {
                         CardView(card: card,index: index, onRemove: {
                             removedUser in
@@ -41,7 +42,8 @@ struct CardsView: View {
                                 y: self.cards.cardOffset(
                                     cardId: index))
                     }
-                }.onChange(of: updateData) { newValue in
+                }
+                .onChange(of: updateData) { newValue in
                     getAllCards(isUpdating: true)
                 }
             }.onAppear{
@@ -50,7 +52,7 @@ struct CardsView: View {
         }.padding()
     }
     
-    private func getAllCards(isUpdating: Bool){
+    public func getAllCards(isUpdating: Bool){
         var query: Query!
         
         //pagination: get first n cards or get the next n cards

@@ -22,15 +22,19 @@ struct HomeView: View {
     @State private var progress: Double = 0.0
     @State private var valuesCount = 0.0
     @State private var littleThingsCount = 0.0
-    @State private var commitmentCount = 0.0
+    @State private var personalityCount = 0.0
     @State private var showCardCreatedAlert: Bool = false
     @State private var image = UIImage()
     @State private var profileText = ""
     @State private var updateData: Bool = false
     @State private var cards: [CardModel] = []
     @State private var lastDoc: Any = []
-    @State private var cardsSwipedTodayIds: [SwipedCardModel] = []
-    @State private var cardsFromSwipedIds: [CardModel] = []
+    @State private var swipedCards: [SwipedCardModel] = []
+    @State private var cardsNotSwiped: [CardModel] = []
+    @State private var cardsForProgressCircle: [CardModel] = []
+    
+    @State private var profileImage: UIImage = UIImage()
+    
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -76,6 +80,8 @@ struct HomeView: View {
                         )
                     }
                     .onAppear {
+                        getStorageFile()
+                        // keep on forgetting but you gotta swipe cards today/this week to have  profiler display data
                         getCardsSwipedToday() {(swipedCards) -> Void in
                             if !swipedCards.isEmpty {
                                 getCardFromIds(swipedCards: swipedCards)
@@ -100,7 +106,7 @@ struct HomeView: View {
                 .frame(width: 150,height: 50)
             
             NavigationLink(destination: SettingsView()) {
-                Image(uiImage: viewModel.profileImage)
+                Image(uiImage: self.profileImage)
                     .resizable()
                     .cornerRadius(20)
                     .frame(width: 50, height: 50)
@@ -144,14 +150,14 @@ struct HomeView: View {
                 }
                 
                 VStack{
-                    ProgressView("little things: " + "\(littleThingsCount)%", value: littleThingsCount, total: 100)
+                    ProgressView("Little Things: " + "\(littleThingsCount)%", value: littleThingsCount, total: 100)
                         .foregroundColor(.white)
                         .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
                 }
                 
                 VStack{
-                    ProgressView("Commitment: " + "\(commitmentCount)%", value: commitmentCount, total: 100)
+                    ProgressView("Personality: " + "\(personalityCount)%", value: personalityCount, total: 100)
                         .foregroundColor(.white)
                         .tint(Color.iceBreakrrrPink)
                         .frame(width: geoReader.size.width * 0.4)
@@ -199,17 +205,14 @@ struct HomeView: View {
                     for document in querySnapshot!.documents {
                         let data = document.data()
                         
-                        do{
-                            if !data.isEmpty{
-                                let swipedCard = SwipedCardModel(id: document.documentID, answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "")
-                                
-                                self.cardsSwipedTodayIds.append(swipedCard)
-                            }
-                        } catch {
-                            print("Error!")
+                        if !data.isEmpty{
+                            let swipedCard = SwipedCardModel(id: document.documentID, answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "")
+                            
+                            self.swipedCards.append(swipedCard)
                         }
                     }
-                    completed(self.cardsSwipedTodayIds)
+                    
+                    completed(self.swipedCards)
                 }
             }
     }
@@ -217,6 +220,7 @@ struct HomeView: View {
     private func getCardFromIds(swipedCards: [SwipedCardModel]) {
         var cardIds = getUniqueCards(swipedCards: swipedCards)
         var batches: [Any] = []
+        var results: [CardModel] = []
         
         clearStates()
         
@@ -243,17 +247,16 @@ struct HomeView: View {
                             for document in querySnapshot!.documents {
                                 let data = document.data()
                                 
-                                do{
-                                    if !data.isEmpty{
-                                        let card = CardModel(id: document.documentID, question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
-                                        
-                                        self.cardsFromSwipedIds.append(card)
-                                    }
-                                } catch {
-                                    print("Error!")
+                                if !data.isEmpty{
+                                    let card = CardModel(id: document.documentID, question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                                    
+                                    self.cardsNotSwiped.append(card)
+                                    self.cardsForProgressCircle.append(card)
                                 }
+                                print("in while loop",self.littleThingsCount)
                             }
-                            updateProfilerBars()
+                            updateProfilerBars(otherSwipedCards: self.cardsNotSwiped)
+                            self.cardsNotSwiped.removeAll()
                         }
                     }
             )
@@ -269,27 +272,43 @@ struct HomeView: View {
         for card in uniqueCards {
             cardIds.append(card.cardId)
         }
-        
         return cardIds
     }
     
     private func clearStates(){
-        self.cardsFromSwipedIds.removeAll()
+        self.cardsNotSwiped.removeAll()
+        self.cardsForProgressCircle.removeAll()
         self.valuesCount = 0
         self.littleThingsCount = 0
-        self.commitmentCount = 0
+        self.personalityCount = 0
     }
     
-    private func updateProfilerBars(){
-        if(!self.cardsFromSwipedIds.isEmpty){
-            for card in self.cardsFromSwipedIds {
+    private func updateProfilerBars(otherSwipedCards: [CardModel]){
+        if(!otherSwipedCards.isEmpty){
+            for card in otherSwipedCards {
                 if card.categoryType == "values" {
                     self.valuesCount += 1
                 }else if card.categoryType == "littleThings" {
                     self.littleThingsCount += 1
-                }else if card.categoryType == "commitment" {
-                    self.commitmentCount += 1
+                }else if card.categoryType == "personality" {
+                    self.personalityCount += 1
                 }
+            }
+        }
+    }
+    
+    public func getStorageFile() {
+        let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+        
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        imageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                // Uh-oh, an error occurred!
+                print("Error getting file: ", error)
+            } else {
+                let image = UIImage(data: data!)
+                self.profileImage = image!
+                
             }
         }
     }
@@ -300,8 +319,10 @@ struct HomeView: View {
     }
     
     private func setProgress() -> Double{
-        self.progress = Double(self.cardsFromSwipedIds.count) * 0.1
-        return Double(self.cardsFromSwipedIds.count) * 5 * 0.01
+        // 1.0 fully fills up the circle
+        self.progress = Double(self.cardsForProgressCircle.count) * 0.05
+        
+        return Double(self.cardsForProgressCircle.count) * 0.05
     }
 } 
 
