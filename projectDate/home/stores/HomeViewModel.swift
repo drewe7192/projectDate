@@ -24,7 +24,7 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "")
+    //@Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "")
     @Published var profileImage: UIImage = UIImage()
     
     let db = Firestore.firestore()
@@ -42,124 +42,63 @@ class HomeViewModel: ObservableObject {
         
     }
         
-    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
-      
-        
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        
-        //still gotta change these to a week!
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-        
-        db.collection("swipedCards")
-            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
-            .whereField("swipedDate", isGreaterThan: start)
-            .whereField("swipedDate", isLessThan: end)
-            .addSnapshotListener {(querySnapshot, error) in
-                guard let documents = querySnapshot?.documents
-                else{
-                    print("No documents")
-                    return
-                }
-                self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
-            }
-        completed(true)
-    }
+//    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
+//
+//
+//        let calendar = Calendar.current
+//        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+//
+//        //still gotta change these to a week!
+//        let start = calendar.date(from: components)!
+//        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+//
+//        db.collection("swipedCards")
+//            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
+//            .whereField("swipedDate", isGreaterThan: start)
+//            .whereField("swipedDate", isLessThan: end)
+//            .addSnapshotListener {(querySnapshot, error) in
+//                guard let documents = querySnapshot?.documents
+//                else{
+//                    print("No documents")
+//                    return
+//                }
+//                self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
+//            }
+//        completed(true)
+//    }
 
     
-    public func readUserProfile(){
-        db.collection("profiles")
-            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                } else {
-                    for document in querySnapshot!.documents {
-                        //                        print("\(document.documentID) => \(document.data())")
-                        let data = document.data()
-                        do{
-                            if !data.isEmpty{
-                                self.userProfile = try document.data(as: ProfileModel.self)
-                            }
-                        } catch {
-                            print("Error!")
-                        }
-                        
-                    }
-                }
-            }
-    }
     
-    public func createUserProfile(){
-        
-        let id = UUID().uuidString
-        
-        let docData: [String: Any] = [
-            "id": id,
-            "fullName": userProfile.fullName,
-            "location": userProfile.location,
-            "userId": Auth.auth().currentUser?.uid as Any
-        ]
-        
-        let docRef = db.collection("profiles").document(id)
-        
-        docRef.setData(docData) {error in
-            if let error = error{
-                print("Error creating new card: \(error)")
-            } else {
-                print("Successfully created userProfile!")
-            }
-        }
-    }
+//    public func saveSwipedCard(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
+//        let docData: [String: Any] = [
+//            "cardId": card.id,
+//            "answer": cardChoices(choices: card.choices, answer: answer),
+//            "id": UUID().uuidString,
+//            "swipedDate": Timestamp(date: Date()),
+//            "userId": Auth.auth().currentUser?.uid as Any
+//        ]
+//
+//        let docRef = db.collection("swipedCards").document()
+//
+//        docRef.setData(docData) {error in
+//            if let error = error {
+//                print("Error writing document: \(error)")
+//                completed(false)
+//            }else {
+//                print("Document successfully written!")
+//                completed(true)
+//            }
+//        }
+//    }
     
-    public func updateUserProfile(updatedProfile: ProfileModel){
-        let docData: [String: Any] = [
-            "fullName": updatedProfile.fullName,
-            "location": updatedProfile.location
-        ]
-        
-        let docRef = db.collection("profiles").document(userProfile.id)
-        
-        docRef.updateData(docData) {error in
-            if let error = error{
-                print("Error creating new card: \(error)")
-            } else {
-                print("Document successfully updated userProfile!")
-            }
-        }
-    }
-    
-    public func saveSwipedCard(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
-        let docData: [String: Any] = [
-            "cardId": card.id,
-            "answer": cardChoices(choices: card.choices, answer: answer),
-            "id": UUID().uuidString,
-            "swipedDate": Timestamp(date: Date()),
-            "userId": Auth.auth().currentUser?.uid as Any
-        ]
-        
-        let docRef = db.collection("swipedCards").document()
-        
-        docRef.setData(docData) {error in
-            if let error = error {
-                print("Error writing document: \(error)")
-                completed(false)
-            }else {
-                print("Document successfully written!")
-                completed(true)
-            }
-        }
-    }
-    
-    public func createNewCard(id: String, question: String, choices: [String], categoryType: String, profileType: String ,completed: @escaping (_ success: Bool) -> Void){
+    public func createNewCard(id: String, question: String, choices: [String], categoryType: String, profileType: String , profileId: String, completed: @escaping (_ success: Bool) -> Void){
         let docData: [String: Any] = [
             "id" : id,
             "question": question,
             "choices": choices,
             "categoryType": categoryType,
             "profileType": profileType,
-            "createdBy": Auth.auth().currentUser?.uid as Any,
+            "createdBy": profileId,
             "createdDate": Timestamp(date: Date())
         ]
         
@@ -183,42 +122,42 @@ class HomeViewModel: ObservableObject {
         return date
     }
     
-    private func cardChoices(choices: [String], answer: String) -> String{
-        let choiceIndex = choices.firstIndex(where: { $0 == answer})
-        var choice = ""
-        
-        switch choiceIndex {
-        case 0:
-            choice = "A"
-        case 1:
-            choice = "B"
-        case 2:
-            choice = "C"
-        default:
-            break
-        }
-        return choice;
-    }
+//    private func cardChoices(choices: [String], answer: String) -> String{
+//        let choiceIndex = choices.firstIndex(where: { $0 == answer})
+//        var choice = ""
+//        
+//        switch choiceIndex {
+//        case 0:
+//            choice = "A"
+//        case 1:
+//            choice = "B"
+//        case 2:
+//            choice = "C"
+//        default:
+//            break
+//        }
+//        return choice;
+//    }
     
-    public func uploadStorageFile(image: UIImage){
-        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
-        let data = image.jpegData(compressionQuality: 0.2)
-        
-        let metadata = StorageMetadata()
-        metadata.contentType = "image/jpg"
-        
-        if let data = data {
-            storageRef.putData(data, metadata: metadata) { (metadata, error) in
-                if let error = error {
-                    print("Error while uploading file: ", error)
-                }
-                
-                if let metadata = metadata {
-                    print("Metadata: ", metadata)
-                }
-            }
-        }
-    }
+//    public func uploadStorageFile(image: UIImage){
+//        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+//        let data = image.jpegData(compressionQuality: 0.2)
+//        
+//        let metadata = StorageMetadata()
+//        metadata.contentType = "image/jpg"
+//        
+//        if let data = data {
+//            storageRef.putData(data, metadata: metadata) { (metadata, error) in
+//                if let error = error {
+//                    print("Error while uploading file: ", error)
+//                }
+//                
+//                if let metadata = metadata {
+//                    print("Metadata: ", metadata)
+//                }
+//            }
+//        }
+//    }
     
     public func getStorageFile() {
         let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")

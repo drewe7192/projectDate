@@ -21,6 +21,7 @@ struct CardsView: View {
     @State var lastDoc: DocumentSnapshot!
     
     @Binding var updateData: Bool
+    let userProfile: ProfileModel
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -30,10 +31,15 @@ struct CardsView: View {
             ZStack {
                 ForEach(Array(self.cards.enumerated()), id: \.offset) { index, card in
                     if index > self.cards.count - 4 {
-                        CardView(card: card,index: index, onRemove: {
+                        CardView(
+                            card: card,
+                            index: index,
+                            onRemove: {
                             removedUser in
                             self.cards.removeAll { $0.id == removedUser.id }
-                        }, updateData: $updateData)
+                        },
+                        updateData: $updateData,
+                        userProfile: self.userProfile)
                         .animation(.spring())
                         .frame(width:
                                 self.cards.cardWidth(in: geometry,
@@ -73,7 +79,7 @@ struct CardsView: View {
                     
                     do{
                         if !data.isEmpty{
-                            let card = CardModel(id: document.documentID, question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                            let card = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
                             
                             self.cards.append(card)
                         }
@@ -90,6 +96,6 @@ struct CardsView: View {
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView(updateData: .constant(false))
+        CardsView(updateData: .constant(false), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: ""))
     }
 }

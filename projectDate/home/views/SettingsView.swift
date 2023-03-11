@@ -23,6 +23,7 @@ struct SettingsView: View {
     @State private var showSaveButton = false
     @State private var editInfo = false
     @State private var profileImage: UIImage = UIImage()
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "")
     
     let storage = Storage.storage()
     
@@ -74,19 +75,19 @@ struct SettingsView: View {
                 .clipShape(Circle())
             
             if(editInfo){
-                Text("Upload Image")
-                    .font(.headline)
-                    .frame(width: geoReader.size.width * 0.6)
-                    .frame(height: geoReader.size.height * 0.04)
-                    .background(Color.mainGrey)
-                    .cornerRadius(40)
-                    .shadow(radius: 10, x: 10, y: 10)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .onTapGesture {
-                        showSheet = true
-                        showSaveButton = true
-                    }
+                Button(action: {
+                    showSheet = true
+                }) {
+                    Text("Upload Image")
+                        .font(.headline)
+                        .frame(width: geoReader.size.width * 0.6)
+                        .frame(height: geoReader.size.height * 0.04)
+                        .background(Color.mainGrey)
+                        .cornerRadius(40)
+                        .shadow(radius: 10, x: 10, y: 10)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                }
             }
         }
     }
@@ -127,7 +128,7 @@ struct SettingsView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }else {
-                            Text(name == "" ? "\(viewModel.userProfile.fullName)" : "\(name)")
+                            Text(name == "" ? "\(self.userProfile.fullName)" : "\(name)")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: geoReader.size.height * 0.025))
                         }
@@ -142,7 +143,7 @@ struct SettingsView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }else {
-                            Text(location == "" ? "\(viewModel.userProfile.location)" : "\(location)")
+                            Text(location == "" ? "\(self.userProfile.location)" : "\(location)")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: geoReader.size.height * 0.025))
                         }
@@ -197,9 +198,9 @@ struct SettingsView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            viewModel.updateUserProfile(updatedProfile: ProfileModel(id: viewModel.userProfile.id, fullName: name, location: location))
+            //viewModel.updateUserProfile(updatedProfile: ProfileModel(id: self.userProfile.id, fullName: name, location: location, gender: ""))
             
-            viewModel.uploadStorageFile(image: viewModel.profileImage)
+            uploadStorageFile(image: viewModel.profileImage)
         }
     }
     
@@ -207,7 +208,7 @@ struct SettingsView: View {
         let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        imageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
             if let error = error {
                 // Uh-oh, an error occurred!
                 print("Error getting file: ", error)
@@ -218,6 +219,29 @@ struct SettingsView: View {
             }
         }
     }
+    
+    
+    public func uploadStorageFile(image: UIImage){
+        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+        
+        let data = image.jpegData(compressionQuality: 0.2)
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpg"
+        
+        if let data = data {
+            storageRef.putData(data, metadata: metadata) { (metadata, error) in
+                if let error = error {
+                    print("Error while uploading file: ", error)
+                }
+                
+                if let metadata = metadata {
+                    print("Metadata: ", metadata)
+                }
+            }
+        }
+    }
+    
 }
 
 struct SettingsView_Previews: PreviewProvider {

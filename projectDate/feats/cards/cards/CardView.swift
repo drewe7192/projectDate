@@ -22,6 +22,7 @@ struct CardView: View {
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
+    let userProfile: ProfileModel
     
     @State
     private var translation: CGSize = .zero
@@ -36,11 +37,12 @@ struct CardView: View {
     @State var swipeStatus: LikeDislike = .none
     
     init(card: CardModel, index: Int, onRemove: @escaping (_ card: CardModel)
-         -> Void, updateData: Binding<Bool>) {
+         -> Void, updateData: Binding<Bool>, userProfile: ProfileModel) {
         self.card = card
         self.index = index
         self.onRemove = onRemove
         self._updateData = updateData
+        self.userProfile = userProfile
     }
     
     var body: some View {
@@ -105,7 +107,7 @@ struct CardView: View {
                             onRemove(self.card)
                             
                             // after each swipe save the card data and update the profiler section
-                            viewModel.saveSwipedCard(card: self.card, answer: selectedChoice){ (success) in
+                            saveSwipedRecords(card: self.card, answer: selectedChoice){ (success) in
                                 if success{
                                     //last card in set is always index 0
                                     if(index == 0){
@@ -118,7 +120,7 @@ struct CardView: View {
                         } else if (self.swipeStatus == .dislike) {
                             onRemove(self.card)
                             
-                            viewModel.saveSwipedCard(card: self.card, answer: "") { (success) in
+                            saveSwipedRecords(card: self.card, answer: "") { (success) in
                                 if success{
                                     //last card in set is always index 0
                                     if(index == 0){
@@ -134,10 +136,50 @@ struct CardView: View {
             )
         }
     }
+    
+    public func saveSwipedRecords(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
+        let id = UUID().uuidString
+        let docData: [String: Any] = [
+            "id": id,
+            "cardId": card.id,
+            "answer": cardChoices(choices: card.choices, answer: answer),
+            "swipedDate": Timestamp(date: Date()),
+            "profileId": userProfile.id
+        ]
+        
+        let docRef = db.collection("swipedRecords").document(id)
+        
+        docRef.setData(docData) {error in
+            if let error = error {
+                print("Error writing document to swipedRecords: \(error)")
+                completed(false)
+            }else {
+                print("Document successfully written to swipedRecords!")
+                completed(true)
+            }
+        }
+    }
+    
+    private func cardChoices(choices: [String], answer: String) -> String{
+        let choiceIndex = choices.firstIndex(where: { $0 == answer})
+        var choice = ""
+        
+        switch choiceIndex {
+        case 0:
+            choice = "A"
+        case 1:
+            choice = "B"
+        case 2:
+            choice = "C"
+        default:
+            break
+        }
+        return choice;
+    }
 }
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true))
+        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: ""))
     }
 }

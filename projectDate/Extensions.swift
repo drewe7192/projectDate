@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import HMSSDK
 
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
@@ -69,7 +68,7 @@ extension Array where Element == CardModel {
     }
 }
 
-extension Array where Element == SwipedCardModel {
+extension Array where Element == SwipedRecordModel {
     
     func unique<T:Hashable>(by: ((Element) -> (T)))  -> [Element] {
         var set = Set<T>() //the unique list kept in a Set for fast retrieval

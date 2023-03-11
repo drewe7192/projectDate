@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct SwipedCardModel: Identifiable, Hashable {
+struct SwipedRecordModel: Identifiable, Hashable {
     var id : String
     var answer: String
     var cardId: String
-    //    var userId: String
+    var profileId: String
     //    var swipedDate: String
 }

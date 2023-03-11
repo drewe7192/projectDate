@@ -29,6 +29,8 @@ struct CreateCardsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @Binding var showCardCreatedAlert: Bool
     
+    let userProfile: ProfileModel
+    
     var body: some View {
         NavigationView{
             GeometryReader{ geoReader in
@@ -64,7 +66,8 @@ struct CreateCardsView: View {
             question: question,
             choices: [answerA,answerB,answerC],
             categoryType: categoryType,
-            profileType: profileType) { (success) -> Void in
+            profileType: profileType,
+            profileId: userProfile.id) { (success) -> Void in
                 if success{
                     viewRouter.currentPage = .confirmationPage
                     isLoading = false
@@ -148,6 +151,6 @@ struct CreateCardsView: View {
 
 struct CreateCardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCardsView(showCardCreatedAlert: .constant(true))
+        CreateCardsView(showCardCreatedAlert: .constant(true), userProfile: ProfileModel(id: "fj8fsnfuh439", fullName: "dotZe30", location: "Tampa,Fl", gender: "Male"))
     }
 }
