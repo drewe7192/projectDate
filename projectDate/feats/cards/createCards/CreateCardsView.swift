@@ -54,7 +54,6 @@ struct CreateCardsView: View {
                 }
             }
         }
-        .navigationBarBackButtonHidden(true)
     }
     
     func createCard(){

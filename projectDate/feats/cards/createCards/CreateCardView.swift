@@ -294,7 +294,7 @@ struct CreateCardView: View {
             }
             
             if(Int(card.id) == 0){
-                Text("Create New Card?")
+                Text("Swipe right to create new Card!")
                     .foregroundColor(Color.white)
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
