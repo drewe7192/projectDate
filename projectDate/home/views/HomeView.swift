@@ -25,7 +25,6 @@ struct HomeView: View {
     @State private var littleThingsCount = 0.0
     @State private var personalityCount = 0.0
     @State private var showCardCreatedAlert: Bool = false
-    @State private var image = UIImage()
     @State private var profileText = ""
     @State private var updateData: Bool = false
     @State private var cards: [CardModel] = []
@@ -45,14 +44,12 @@ struct HomeView: View {
             otherCardGroups: []
     )
     
-    @State private var profileImage: UIImage = UIImage()
+    @State private var profileImage: UIImage? = UIImage()
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
-    @State private var showingPopover: Bool = false
-    @State private var basicInfoPopover: Bool = false
-    
-    
+    @State private var showingInstructionsPopover: Bool = false
+    @State private var showingBasicInfoPopover: Bool = false
     
     
     let db = Firestore.firestore()
@@ -111,7 +108,7 @@ struct HomeView: View {
                             } else {
                                 createUserProfile() {(createdUserProfileId) -> Void in
                                     if createdUserProfileId != "" {
-                                        basicInfoPopover.toggle()
+                                        showingBasicInfoPopover.toggle()
                             
                                     }
                                     
@@ -119,7 +116,6 @@ struct HomeView: View {
                                 
                             }
                         }
-                        
                         
                         let weekday = Calendar.current.component(.weekday, from: Date())
                         
@@ -156,13 +152,9 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .popover(isPresented: $showingPopover) {
-                        PopoverView(showingPopover: $showingPopover)
+                    .popover(isPresented: $showingBasicInfoPopover) {
+                        BasicInfoPopoverView(userProfile: $userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                            }
-                    .popover(isPresented: $basicInfoPopover) {
-                        BasicInfoPopoverView(basicInfoPopover: $basicInfoPopover, userProfile: $userProfile)
-                           }
-                   
             }
         }
     }
@@ -174,14 +166,26 @@ struct HomeView: View {
                 .frame(width: 150,height: 50)
             
             NavigationLink(destination: SettingsView()) {
-                Image(uiImage: self.profileImage)
-                    .resizable()
-                    .cornerRadius(20)
-                    .frame(width: 50, height: 50)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Circle())
-                    .padding(.leading, geoReader.size.width * 0.8)
+                if(self.profileImage != nil){
+                    Image(uiImage: self.profileImage!)
+                        .resizable()
+                        .cornerRadius(20)
+                        .frame(width: 50, height: 50)
+                        .background(Color.black.opacity(0.2))
+                        .aspectRatio(contentMode: .fill)
+                        .clipShape(Circle())
+                        .padding(.leading, geoReader.size.width * 0.8)
+                } else {
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .cornerRadius(20)
+                        .frame(width: 50, height: 50)
+                        .background(Color.black.opacity(0.2))
+                        .aspectRatio(contentMode: .fill)
+                        .clipShape(Circle())
+                        .padding(.leading, geoReader.size.width * 0.8)
+                }
+              
             }
             
             // Dating/Friend Toggle button
@@ -280,7 +284,6 @@ struct HomeView: View {
                             self.swipedRecords.append(swipedRecord)
                         }
                     }
-                    print("self.swipedRecords",self.swipedRecords)
                     completed(self.swipedRecords)
                 }
             }

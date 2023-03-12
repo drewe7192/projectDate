@@ -25,7 +25,8 @@ struct SignInView: View {
         NavigationView {
             ZStack{
                 // need a ZStack and color to change the background color
-                LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
+                //LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
+                Color.mainBlack
                     .ignoresSafeArea()
                 
                 
@@ -48,14 +49,16 @@ struct SignInView: View {
     private var headerSection: some View {
         VStack{
             VStack{
-                Text("Welcome,")
-                    .foregroundColor(.white)
-                    .bold()
-                    .font(.system(size: 30))
+             
                 
-                Text("Glad to see you!")
+                Image("logo")
+                    .resizable()
+                    .frame(width: 400, height: 150)
+                
+                Text("The relationship app where you're the matchmaker!")
                     .foregroundColor(.white)
-                    .font(.system(size: 30))
+                    .font(.system(size: 20))
+                    .multilineTextAlignment(.center)
             }
             EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
             
@@ -63,7 +66,6 @@ struct SignInView: View {
                 .padding(.leading, 230)
                 .padding(.top,10)
                 .foregroundColor(.white)
-            
         }
         .padding(.bottom,80)
     }

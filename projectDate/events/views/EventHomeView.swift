@@ -7,11 +7,11 @@
 
 import SwiftUI
 import Firebase
-//import FirebaseCore
-//import FirebaseFirestore
-//import FirebaseAuth
-//import FirebaseFirestoreSwift
-//import FirebaseStorage
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseFirestoreSwift
+import FirebaseStorage
 
 struct EventHomeView: View {
     @ObservedObject private var viewModel = EventViewModel()
@@ -83,17 +83,17 @@ struct EventHomeView: View {
                                         }
                                         
                                         Button(action: {
-                                            if(event.participants.contains(Auth.auth().currentUser!.uid)){
+                                            if(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId")){
                                                 viewModel.updateEventParticipants(event: event, action: "remove")
                                                 
                                             } else{
                                                 viewModel.updateEventParticipants(event: event, action: "add")
                                             }
                                         }) {
-                                            Text(event.participants.contains(Auth.auth().currentUser!.uid) ? "UnJoin" : "Join")
+                                            Text(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId") ? "UnJoin" : "Join")
                                         }
                                         .frame(width: 80,height: 25)
-                                        .background(event.participants.contains(Auth.auth().currentUser!.uid) ? Color.iceBreakrrrPink : Color.mainGrey)
+                                        .background(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId") ? Color.iceBreakrrrPink : Color.mainGrey)
                                         .foregroundColor(.white)
                                         .cornerRadius(22)
                                         .padding(.leading,100)

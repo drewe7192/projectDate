@@ -28,7 +28,7 @@ struct SignUpView: View {
         NavigationView {
             ZStack{
                 // need a ZStack and color to change the background color
-                LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
+                Color.mainBlack
                     .ignoresSafeArea()
                 
                 VStack{
@@ -141,25 +141,32 @@ struct SignUpView: View {
             
             //logIn Button
             Button(action: {
-                signInUser(userEmail: email, userPassword: password)
+                createUser(userEmail: email, userPassword: password)
             }) {
                 Text("Sign Up")
                     .bold()
                     .foregroundColor(.black)
-                    .background(Color.white)
+                    .frame(width: 340, height: 25)
+                    .padding()
+                    .background(Color.iceBreakrrrPink)
+                    .cornerRadius(10)
+                    .textInputAutocapitalization(.never)
+                    .shadow(radius: 5)
+                    .padding(.bottom,10)
+                    .opacity(!signInProcessing && !email.isEmpty && !password.isEmpty && !confirmPasword.isEmpty ? 1 : 0.5)
             }
-            .frame(width: 340, height: 25)
-            .padding()
-            .background(Color.white)
-            .cornerRadius(10)
-            .textInputAutocapitalization(.never)
-            .shadow(radius: 5)
-            .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
-            .padding(.bottom,70)
+            .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty && !confirmPasword.isEmpty ? false : true)
+            
+            if(signInErrorMessage != ""){
+                Text("\(signInErrorMessage)")
+                    .foregroundColor(.red)
+                    .padding(.bottom,10)
+            }
+            
         }
         
         
-        func signInUser(userEmail: String, userPassword: String){
+        private func signInUser(userEmail: String, userPassword: String){
             signInProcessing = true
             
             Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
@@ -177,6 +184,29 @@ struct SignUpView: View {
                     print("User signed in")
                     signInProcessing = false
                     isLoggedIn = true
+                    
+                }
+            }
+        }
+        
+        private func createUser(userEmail: String, userPassword: String){
+            signInProcessing = true
+            
+            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                
+                guard error == nil else{
+                    signInProcessing = false
+                    signInErrorMessage = error!.localizedDescription
+                    return
+                }
+                switch authResult {
+                case .none:
+                    print("Cound not create new user.")
+                    signInProcessing = false
+                case .some(_):
+                    print("User signed in")
+                    signInProcessing = false
+                    viewRouter.currentPage = .homePage
                     
                 }
             }

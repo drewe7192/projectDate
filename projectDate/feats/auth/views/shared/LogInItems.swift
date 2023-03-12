@@ -210,14 +210,14 @@ struct EmailPasswordLogIn: View{
             Text("Login")
                 .bold()
                 .foregroundColor(.black)
-                .background(Color.white)
+                .frame(width: 340, height: 25)
+                .padding()
+                .background(Color.iceBreakrrrPink)
+                .cornerRadius(10)
+                .textInputAutocapitalization(.never)
+                .shadow(radius: 5)
+                .opacity(!signInProcessing && !email.isEmpty && !password.isEmpty ? 1 : 0.5)
         }
-        .frame(width: 340, height: 25)
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .textInputAutocapitalization(.never)
-        .shadow(radius: 5)
         .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty ? false : true)
     }
     

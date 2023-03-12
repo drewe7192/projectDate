@@ -39,7 +39,7 @@
 		776D47112962010000754DE5 /* ProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47102962010000754DE5 /* ProfileInfoModel.swift */; };
 		776D47132964053100754DE5 /* SideBarInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47122964053100754DE5 /* SideBarInfoModel.swift */; };
 		776DFB5B28B286B300F9AC63 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 776DFB5A28B286B300F9AC63 /* FirebaseAuth */; };
-		776E903229BC554800C14F8A /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E903129BC554800C14F8A /* PopoverView.swift */; };
+		776E903229BC554800C14F8A /* InstructionsPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E903129BC554800C14F8A /* InstructionsPopoverView.swift */; };
 		776E903429BC868B00C14F8A /* BasicInfoPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E903329BC868B00C14F8A /* BasicInfoPopoverView.swift */; };
 		7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7770E2BF297E755300C70469 /* BarProgressView.swift */; };
 		777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777C2CD0298A373A00CD3CCE /* CreateCardView.swift */; };
@@ -119,7 +119,7 @@
 		776D470E2961FD9000754DE5 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = projectDate/feats/utils/views/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
 		776D47102962010000754DE5 /* ProfileInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoModel.swift; sourceTree = "<group>"; };
 		776D47122964053100754DE5 /* SideBarInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarInfoModel.swift; sourceTree = "<group>"; };
-		776E903129BC554800C14F8A /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
+		776E903129BC554800C14F8A /* InstructionsPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsPopoverView.swift; sourceTree = "<group>"; };
 		776E903329BC868B00C14F8A /* BasicInfoPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicInfoPopoverView.swift; sourceTree = "<group>"; };
 		7770E2BF297E755300C70469 /* BarProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarProgressView.swift; sourceTree = "<group>"; };
 		777C2CD0298A373A00CD3CCE /* CreateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardView.swift; sourceTree = "<group>"; };
@@ -549,7 +549,7 @@
 			children = (
 				77FB245F294DA8BA008F5469 /* shared */,
 				7753927829A425B300AA2B74 /* ImagePicker.swift */,
-				776E903129BC554800C14F8A /* PopoverView.swift */,
+				776E903129BC554800C14F8A /* InstructionsPopoverView.swift */,
 				776E903329BC868B00C14F8A /* BasicInfoPopoverView.swift */,
 			);
 			path = views;
@@ -648,7 +648,7 @@
 		77C3D4F4289910CD0088554F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
+				BuildIndependentTargetsInParallel = NO;
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
@@ -729,7 +729,7 @@
 				777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */,
 				77A1C7CA297C4528004C8FA6 /* CircularProgressView.swift in Sources */,
 				771AE41E2979263B00F3A6A1 /* CardView.swift in Sources */,
-				776E903229BC554800C14F8A /* PopoverView.swift in Sources */,
+				776E903229BC554800C14F8A /* InstructionsPopoverView.swift in Sources */,
 				77DCADB129BA751000641558 /* MatchView.swift in Sources */,
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */,

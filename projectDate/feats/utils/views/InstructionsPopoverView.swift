@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct PopoverView: View {
-    @Binding var showingPopover: Bool
+struct InstructionsPopoverView: View {
+    @Binding var showingInstructionsPopover: Bool
     
     var body: some View {
         ZStack{
@@ -60,7 +60,7 @@ struct PopoverView: View {
                     .frame(height: 100)
                 
                 Button(action: {
-                    showingPopover.toggle()
+                    doesThisWOrk()
                 }) {
                    Text("Got it")
                         .bold()
@@ -72,12 +72,16 @@ struct PopoverView: View {
                 }
             }
         }
+    }
     
+    private func doesThisWOrk(){
+        showingInstructionsPopover.toggle()
+        print("what is showingInstructionsPopover after toggle", showingInstructionsPopover)
     }
 }
 
-struct PopoverView_Previews: PreviewProvider {
+struct InstructionsPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        PopoverView(showingPopover: .constant(false))
+        InstructionsPopoverView(showingInstructionsPopover: .constant(false))
     }
 }

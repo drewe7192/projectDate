@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct BasicInfoPopoverView: View {
-    @Binding var basicInfoPopover: Bool
     @Binding var userProfile: ProfileModel
+    @Binding var showingBasicInfoPopover: Bool
+    @Binding var showingInstructionsPopover: Bool
+    
     @State private var selectedChoice = "Pick gender"
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var showImageSheet = false
@@ -21,86 +23,144 @@ struct BasicInfoPopoverView: View {
                 Color.mainBlack
                     .ignoresSafeArea()
                 
-                VStack(spacing: 10){
-                    Text("Basic information:")
-                        .foregroundColor(.white)
-                        .font(.system(size: 35))
-                        .multilineTextAlignment(.center)
-                    
-                    Spacer()
-                        .frame(height: 10)
-                    
-                    imageSection(for: geoReader)
-                    
-                    Spacer()
-                        .frame(height: 30)
-                    
-                    HStack{
-                        Text("Name")
+                if(!showingInstructionsPopover){
+                    VStack(spacing: 10){
+                        Text("Basic information:")
                             .foregroundColor(.white)
-                            .font(.system(size: 25))
-                            .padding(.trailing, geoReader.size.width * 0.15)
+                            .font(.system(size: 35))
+                            .multilineTextAlignment(.center)
                         
+                        Spacer()
+                            .frame(height: 10)
                         
-                        TextField("", text: $userProfile.fullName)
-                            .foregroundColor(.black)
-                            .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
-                            .padding()
-                            .background(.white)
-                            .opacity(0.5)
-                            .cornerRadius(geoReader.size.width * 0.03)
-                            .textInputAutocapitalization(.never)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 1)
-                            )
-                    }
-                    
-                    Spacer()
-                        .frame(height: 10)
-                    
-                    Menu {
-                        Picker(selection: $userProfile.gender) {
-                            ForEach(genderChoices, id: \.self) { choice in
-                                Text("\(choice)")
-                                    .tag(choice)
-                                    .font(.system(size: 40))
-                            }
-                        } label: {}
-                    } label: {
-                        Text("\(userProfile.gender)")
-                            .font(.system(size: 30))
-                    }
-                    .accentColor(.white)
-                    
-                    
-                    
-                    Spacer()
-                        .frame(height: 100)
-                    
-                    Button(action: {
-                        HomeView().updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
-                            if profileId != "" {
-                                SettingsView().uploadStorageFile(image: self.profileImage)
-                                basicInfoPopover.toggle()
-                            }
+                        imageSection(for: geoReader)
+                        
+                        Spacer()
+                            .frame(height: 30)
+                        
+                        HStack{
+                            Text("Name")
+                                .foregroundColor(.white)
+                                .font(.system(size: 25))
+                                .padding(.trailing, geoReader.size.width * 0.15)
+                            
+                            
+                            TextField("", text: $userProfile.fullName)
+                                .foregroundColor(.black)
+                                .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
+                                .padding()
+                                .background(.white)
+                                .opacity(0.5)
+                                .cornerRadius(geoReader.size.width * 0.03)
+                                .textInputAutocapitalization(.never)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 1)
+                                )
                         }
                         
-                    }) {
-                        Text("Save")
-                            .bold()
-                            .frame(width: 300, height: 70)
-                            .background(Color.iceBreakrrrPink)
-                            .foregroundColor(.white)
-                            .cornerRadius(20)
-                            .shadow(radius: 8, x: 10, y:10)
+                        Spacer()
+                            .frame(height: 10)
+                        
+                        Menu {
+                            Picker(selection: $userProfile.gender) {
+                                ForEach(genderChoices, id: \.self) { choice in
+                                    Text("\(choice)")
+                                        .tag(choice)
+                                        .font(.system(size: 40))
+                                }
+                            } label: {}
+                        } label: {
+                            Text("\(userProfile.gender)")
+                                .font(.system(size: 30))
+                        }
+                        .accentColor(.white)
+                        
+                        Spacer()
+                            .frame(height: 100)
+                        
+                        Button(action: {
+                            HomeView().updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
+                                if profileId != "" {
+                                    SettingsView().uploadStorageFile(image: self.profileImage)
+                                    showingInstructionsPopover.toggle()
+                                }
+                            }
+                            
+                        }) {
+                            Text("Save")
+                                .bold()
+                                .frame(width: 300, height: 70)
+                                .background(Color.iceBreakrrrPink)
+                                .foregroundColor(.white)
+                                .cornerRadius(20)
+                                .shadow(radius: 8, x: 10, y:10)
+                        }
                     }
-                }
-                .sheet(isPresented: $showImageSheet){
-                    // Pick an image from the photo library:
-                    ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
+                    .sheet(isPresented: $showImageSheet){
+                        // Pick an image from the photo library:
+                        ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
+                        
+                        //  If you wish to take a photo from camera instead:
+                        // ImagePicker(sourceType: .camera, selectedImage: self.$image)
+                    }
+                } else {
                     
-                    //  If you wish to take a photo from camera instead:
-                    // ImagePicker(sourceType: .camera, selectedImage: self.$image)
+                    VStack(spacing: 10){
+                        Text("Welcome to IceBreakrrr:")
+                            .foregroundColor(.white)
+                            .font(.system(size: 35))
+                            .multilineTextAlignment(.center)
+                        
+                        Text("the dating app where you're the Matchmaker!")
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 25))
+                        
+                        Spacer()
+                            .frame(height: 30)
+                        
+                        
+                        Text("Here's how it works:")
+                            .foregroundColor(.white)
+                            .font(.system(size: 30))
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom,5)
+                        
+                        Text("- Answer the questions")
+                            .foregroundColor(.white)
+                            .font(.system(size: 20))
+                            .multilineTextAlignment(.center)
+                        
+                        Text("- Swipe the cards")
+                            .foregroundColor(.white)
+                            .font(.system(size: 20))
+                            .multilineTextAlignment(.center)
+                        
+                        Text("- Every week get a match")
+                            .foregroundColor(.white)
+                            .font(.system(size: 20))
+                            .multilineTextAlignment(.center)
+                        
+                        Text("- Meet match via the Events tab")
+                            .foregroundColor(.white)
+                            .font(.system(size: 20))
+                            .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                            .frame(height: 100)
+                        
+                        Button(action: {
+                            showingBasicInfoPopover.toggle()
+                        }) {
+                            Text("Got it")
+                                .bold()
+                                .frame(width: 300, height: 70)
+                                .background(Color.iceBreakrrrPink)
+                                .foregroundColor(.white)
+                                .cornerRadius(20)
+                                .shadow(radius: 8, x: 10, y:10)
+                        }
+                    }
                 }
             }
         }
@@ -135,6 +195,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(basicInfoPopover: .constant(false), userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender")))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender")), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
     }
 }
