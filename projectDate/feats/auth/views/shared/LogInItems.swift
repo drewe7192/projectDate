@@ -40,9 +40,10 @@ struct LogInItems: View {
                 Image("appleLogo")
                     .resizable()
                     .frame(width: 35, height: 35)
+                    .foregroundColor(Color.white)
             }
             .frame(width: 120, height: 50)
-            .background(.white)
+            .background(Color.mainGrey)
             .cornerRadius(15)
             .shadow(radius: 5)
 
@@ -54,7 +55,7 @@ struct LogInItems: View {
                     .frame(width: 35, height: 35)
             }
             .frame(width: 120, height: 50)
-            .background(.white)
+            .background(Color.mainGrey)
             .cornerRadius(15)
             .shadow(radius: 5)
 
@@ -66,7 +67,7 @@ struct LogInItems: View {
                     .frame(width: 35, height: 35)
             }
             .frame(width: 120, height: 50)
-            .background(.white)
+            .background(Color.mainGrey)
             .cornerRadius(15)
             .shadow(radius: 5)
         }
@@ -111,7 +112,7 @@ struct LogInItems: View {
      var signUpLinkSection: some View {
         HStack{
             Text("Don't have an account?")
-                .foregroundColor(Color.black)
+                .foregroundColor(Color.white)
             NavigationLink(destination: SignUpView()) {
                 Text("Sign up")
             }

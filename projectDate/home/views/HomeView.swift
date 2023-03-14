@@ -77,7 +77,6 @@ struct HomeView: View {
                         
                         profilerSection(for: geoReader)
                         
-                        
                         Text("How would your perfect match answer?")
                             .bold()
                             .multilineTextAlignment(.center)

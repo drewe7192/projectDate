@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import FirebaseStorage
+import FirebaseAuth
+
 
 struct BasicInfoPopoverView: View {
     @Binding var userProfile: ProfileModel
@@ -16,6 +19,9 @@ struct BasicInfoPopoverView: View {
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var showImageSheet = false
     @State private var profileImage: UIImage = UIImage()
+    @State private var editInfo = false
+    
+    let storage = Storage.storage()
     
     var body: some View {
         GeometryReader{geoReader in
@@ -45,17 +51,25 @@ struct BasicInfoPopoverView: View {
                                 .padding(.trailing, geoReader.size.width * 0.15)
                             
                             
-                            TextField("", text: $userProfile.fullName)
-                                .foregroundColor(.black)
-                                .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
-                                .padding()
-                                .background(.white)
-                                .opacity(0.5)
-                                .cornerRadius(geoReader.size.width * 0.03)
-                                .textInputAutocapitalization(.never)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 1)
-                                )
+                            if(editInfo){
+                                TextField("", text: $userProfile.fullName)
+                                    .foregroundColor(.black)
+                                    .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
+                                    .padding()
+                                    .background(.white)
+                                    .opacity(0.5)
+                                    .cornerRadius(geoReader.size.width * 0.03)
+                                    .textInputAutocapitalization(.never)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 1)
+                                    )
+                            }else {
+                                Text(userProfile.fullName == "" ? "Enter Name" : "yo")
+                                    .foregroundColor(Color.gray)
+                                    .font(.system(size: geoReader.size.height * 0.025))
+                            }
+                            
+                     
                         }
                         
                         Spacer()
@@ -74,26 +88,24 @@ struct BasicInfoPopoverView: View {
                                 .font(.system(size: 30))
                         }
                         .accentColor(.white)
+                        .disabled(editInfo == false)
                         
                         Spacer()
                             .frame(height: 100)
                         
                         Button(action: {
-                            HomeView().updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
-                                if profileId != "" {
-                                    SettingsView().uploadStorageFile(image: self.profileImage)
-                                    showingInstructionsPopover.toggle()
-                                }
-                            }
-                            
+                            editInfo.toggle()
+                            saveAllInfo()
                         }) {
-                            Text("Save")
+                            Text(editInfo ? "Save" : "Edit Profile")
                                 .bold()
-                                .frame(width: 300, height: 70)
-                                .background(Color.iceBreakrrrPink)
+                                .font(.system(size: 25))
                                 .foregroundColor(.white)
-                                .cornerRadius(20)
-                                .shadow(radius: 8, x: 10, y:10)
+                                .frame(width: geoReader.size.width * 0.7, height: geoReader.size.height * 0.08)
+                                .background(Color.iceBreakrrrPink)
+                                .cornerRadius(geoReader.size.width * 0.04)
+                                .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
+                            
                         }
                     }
                     .sheet(isPresented: $showImageSheet){
@@ -141,7 +153,7 @@ struct BasicInfoPopoverView: View {
                             .font(.system(size: 20))
                             .multilineTextAlignment(.center)
                         
-                        Text("- Meet match via the Events tab")
+                        Text("- Meet match via biWeekly events in the Events tab!")
                             .foregroundColor(.white)
                             .font(.system(size: 20))
                             .multilineTextAlignment(.center)
@@ -176,18 +188,54 @@ struct BasicInfoPopoverView: View {
                 .aspectRatio(contentMode: .fill)
                 .clipShape(Circle())
             
-            Button(action: {
-                showImageSheet = true
-            }) {
-                Text("Upload Image")
-                    .font(.headline)
-                    .frame(width: geoReader.size.width * 0.6)
-                    .frame(height: geoReader.size.height * 0.04)
-                    .background(Color.mainGrey)
-                    .cornerRadius(40)
-                    .shadow(radius: 10, x: 10, y: 10)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
+            if(editInfo) {
+                Button(action: {
+                    showImageSheet = true
+                }) {
+                    Text("Upload Image")
+                        .font(.headline)
+                        .frame(width: geoReader.size.width * 0.6)
+                        .frame(height: geoReader.size.height * 0.04)
+                        .background(Color.mainGrey)
+                        .cornerRadius(40)
+                        .shadow(radius: 10, x: 10, y: 10)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                }
+                
+            }
+      
+        }
+    }
+    
+    private func saveAllInfo(){
+        if(editInfo == false){
+            HomeView().updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
+                if profileId != "" {
+                    SettingsView().uploadStorageFile(image: self.profileImage)
+                    showingInstructionsPopover.toggle()
+                }
+            }
+        }
+    }
+    
+    private func uploadStorageFile(image: UIImage){
+        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+        
+        let data = image.jpegData(compressionQuality: 0.2)
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpg"
+        
+        if let data = data {
+            storageRef.putData(data, metadata: metadata) { (metadata, error) in
+                if let error = error {
+                    print("Error while uploading file: ", error)
+                }
+                
+                if let metadata = metadata {
+                    print("Metadata: ", metadata)
+                }
             }
         }
     }

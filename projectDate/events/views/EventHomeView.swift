@@ -18,6 +18,9 @@ struct EventHomeView: View {
     
     @State var searchText: String = ""
     @State var isJoining: Bool = false
+    @State var events: [EventModel] = []
+    
+    private var db = Firestore.firestore()
     
     var body: some View {
         NavigationView{
@@ -27,7 +30,11 @@ struct EventHomeView: View {
                         .ignoresSafeArea()
                     
                     eventCardView(for: geoReader)
-                }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
+                }
+                .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
+                .onAppear{
+                    getEvents()
+                }
             }
         }
     }
@@ -37,13 +44,14 @@ struct EventHomeView: View {
             Text("Events")
                 .font(.system(size: geoReader.size.height * 0.05))
                 .bold()
+                .foregroundColor(.white)
             
             SearchInput(searchText: $searchText)
             
             ScrollView{
                 VStack{
                     // filter is used for the SearchInput() above this scrollView
-                    ForEach(viewModel.events.filter({searchText.isEmpty ? true : $0.title.contains(searchText)})) { event in
+                    ForEach(self.events.filter({searchText.isEmpty ? true : $0.title.contains(searchText)})) { event in
                         NavigationLink(destination: EventInfoView(event: event)){
                             ZStack{
                                 VStack{
@@ -51,7 +59,6 @@ struct EventHomeView: View {
                                         .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.25)
                                         .background(Color.mainGrey)
                                         .cornerRadius(30)
-                                    //.overlay(RoundedRectangle(cornerRadius: geoReader.size.width * 0.1).stroke(.black, lineWidth: 6))
                                 }
                                 
                                 VStack{
@@ -63,7 +70,8 @@ struct EventHomeView: View {
                                         Text("\(event.title)")
                                             .bold()
                                             .foregroundColor(.white)
-                                            .font(.system(size: 20))
+                                            .font(.system(size: 25))
+                                            .padding(10)
                                         
                                         VStack{
                                             Text("\(event.location)")
@@ -75,11 +83,14 @@ struct EventHomeView: View {
                                     HStack{
                                         HStack{
                                             Image(systemName: "person.2.fill")
+                                                .resizable()
+                                                .frame(width: 25,height: 15)
                                                 .foregroundColor(.iceBreakrrrPink)
                                             
                                             Text("\(event.participants.count) guests")
                                                 .foregroundColor(.black)
                                                 .shadow(radius: 7, x: 2, y: 5)
+                                                .font(.system(size:15))
                                         }
                                         
                                         Button(action: {
@@ -91,11 +102,12 @@ struct EventHomeView: View {
                                             }
                                         }) {
                                             Text(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId") ? "UnJoin" : "Join")
+                                                .font(.system(size: 15))
                                         }
-                                        .frame(width: 80,height: 25)
+                                        .frame(width: 100,height: 35)
                                         .background(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId") ? Color.iceBreakrrrPink : Color.mainGrey)
                                         .foregroundColor(.white)
-                                        .cornerRadius(22)
+                                        .cornerRadius(15)
                                         .padding(.leading,100)
                                         .shadow(radius: 5, x: 7, y: 10)
                                     }
@@ -109,6 +121,34 @@ struct EventHomeView: View {
             }.padding(.top, -300)
         }
     }
+    
+    private func getEvents(){
+        db.collection("events")
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting events: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                            if !data.isEmpty{
+                                let event = EventModel(id: data["id"] as? String ?? "", title: data["title"] as? String ?? "", location: data["location"] as? String ?? "", description: data["description"] as? String ?? "", participants: data["participants"] as? [String] ?? [], eventDate: data["eventDate"] as? Date ?? Date())
+                                
+                                self.events.append(event)
+                            }
+                    }
+                }
+            }
+    }
+    
+    //    private func removeTimeStamp(fromDate: Date) -> Date {
+    //        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: fromDate)) else {
+    //            fatalError("Failed to strip time from Date object")
+    //        }
+    //        return date
+    //    }
+    
+    
 }
 
 struct EventHomeView_Previews: PreviewProvider {

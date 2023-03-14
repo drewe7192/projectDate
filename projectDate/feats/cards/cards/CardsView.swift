@@ -63,10 +63,10 @@ struct CardsView: View {
         
         //pagination: get first n cards or get the next n cards
         if !isUpdating {
-            query = db.collection("cards").limit(to: 3)
+            query = db.collection("cards").limit(to: 10)
         } else {
             if (self.lastDoc != nil) {
-                query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 3)
+                query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 10)
             }
         }
         

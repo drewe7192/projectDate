@@ -164,7 +164,6 @@ enum MockService {
             id: "0",
             title: "Event title 1",
             location: "Tampa, Fl",
-            creationDate: Date(),
             description: "fdsfdsfdsafsdfsd",
             participants: ["fadsfdsfds"],
             eventDate: Date()

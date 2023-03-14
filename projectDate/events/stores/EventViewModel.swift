@@ -20,29 +20,29 @@ class EventViewModel: ObservableObject {
     
     
     private var db = Firestore.firestore()
+//
+//    init(){
+//        getEvents()
+//    }
     
-    init(){
-        getEvents()
-    }
-    
-    private func getEvents(){
-        db.collection("events").addSnapshotListener{ (querySnapshot, error) in
-             guard let documents = querySnapshot?.documents
-             else {
-                 print("No documents")
-                 return
-             }
-           
-            self.events = documents.compactMap {document -> EventModel? in
-                 do {
-                     return try document.data(as: EventModel.self)
-                 } catch {
-                     print("Error decoding document into Message: \(error)")
-                     return nil
-                 }
-             }
-         }
-    }
+//    private func getEvents(){
+//        db.collection("events").addSnapshotListener{ (querySnapshot, error) in
+//             guard let documents = querySnapshot?.documents
+//             else {
+//                 print("No documents")
+//                 return
+//             }
+//
+//            self.events = documents.compactMap {document -> EventModel? in
+//                 do {
+//                     return try document.data(as: EventModel.self)
+//                 } catch {
+//                     print("Error decoding document into Message: \(error)")
+//                     return nil
+//                 }
+//             }
+//         }
+//    }
     
     public func updateEventParticipants(event: EventModel, action: String){
         let docRef = db.collection("events").document(event.id)

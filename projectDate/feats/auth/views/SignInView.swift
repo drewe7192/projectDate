@@ -49,8 +49,6 @@ struct SignInView: View {
     private var headerSection: some View {
         VStack{
             VStack{
-             
-                
                 Image("logo")
                     .resizable()
                     .frame(width: 400, height: 150)

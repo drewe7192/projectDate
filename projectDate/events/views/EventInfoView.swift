@@ -136,19 +136,18 @@ struct EventInfoView: View {
 //                    .font(.system(size: 30))
 //            }
             
-            // this button crashes the preview for some reason
             Button(action: {
-                if(event.participants.contains(Auth.auth().currentUser!.uid)){
+                if(event.participants.contains(Auth.auth().currentUser?.uid ?? "")){
                     viewModel.updateEventParticipants(event: event, action: "remove")
 
                 } else{
                     viewModel.updateEventParticipants(event: event, action: "add")
                 }
             }) {
-                Text(event.participants.contains(Auth.auth().currentUser!.uid) ? "UnJoin" : "Join")
+                Text(event.participants.contains(Auth.auth().currentUser?.uid ?? "") ? "UnJoin" : "Join")
                     .frame(width: 350,height: 80)
                     .padding(7)
-                    .background(event.participants.contains(Auth.auth().currentUser!.uid) ? Color.iceBreakrrrPink : Color.mainGrey)
+                    .background(event.participants.contains(Auth.auth().currentUser?.uid ?? "") ? Color.iceBreakrrrPink : Color.mainGrey)
                     .cornerRadius(30)
                     .shadow(radius: 5, x: 4, y: 10)
             }

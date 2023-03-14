@@ -80,6 +80,18 @@ import UIKit
 //.cornerRadius(15)
 //.shadow(radius: 5)
 
+//Button(action: {
+//    addNewEvents()
+//}) {
+//    Image("googleLogo")
+//        .resizable()
+//        .frame(width: 35, height: 35)
+//}
+//.frame(width: 120, height: 50)
+//.background(.white)
+//.cornerRadius(15)
+//.shadow(radius: 5)
+
 
 
 
@@ -727,3 +739,70 @@ import UIKit
 ////        "createdDate": Timestamp(date: Date())
 ////    ])
 //}
+
+
+
+//
+//public func addNewEvents(){
+//
+//    let docRefs = db.collection("events")
+//
+//    let id = UUID().uuidString;
+//    docRefs.document(id).setData([
+//        "id" : id,
+//        "title": "Event Test 3",
+//        "createdDate": Timestamp(date: Date()),
+//        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//        "eventDate": Timestamp(date: Date()),
+//        "location": "Tampa,Fl",
+//        "participants": [],
+//    ])
+//
+//    let id2 = UUID().uuidString;
+//    docRefs.document(id2).setData([
+//        "id" : id2,
+//        "title": "Event Test 4",
+//        "createdDate": Timestamp(date: Date()),
+//        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//        "eventDate": Timestamp(date: Date()),
+//        "location": "Tampa,Fl",
+//        "participants": [],
+//    ])
+//
+//    let id3 = UUID().uuidString;
+//    docRefs.document(id3).setData([
+//        "id" : id3,
+//        "title": "Event Test 5",
+//        "createdDate": Timestamp(date: Date()),
+//        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//        "eventDate": Timestamp(date: Date()),
+//        "location": "Tampa,Fl",
+//        "participants": [],
+//    ])
+//
+//    let id4 = UUID().uuidString;
+//    docRefs.document(id4).setData([
+//        "id" : id4,
+//        "title": "Event Test 6",
+//        "createdDate": Timestamp(date: Date()),
+//        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//        "eventDate": Timestamp(date: Date()),
+//        "location": "Tampa,Fl",
+//        "participants": [],
+//    ])
+//
+//    let id5 = UUID().uuidString;
+//    docRefs.document(id5).setData([
+//        "id" : id5,
+//        "title": "Event Test 7",
+//        "createdDate": Timestamp(date: Date()),
+//        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+//        "eventDate": Timestamp(date: Date()),
+//        "location": "Tampa,Fl",
+//        "participants": [],
+//    ])
+//
+//}
+//
+
+

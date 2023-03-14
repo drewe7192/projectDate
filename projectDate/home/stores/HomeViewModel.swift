@@ -102,25 +102,25 @@ class HomeViewModel: ObservableObject {
             "createdDate": Timestamp(date: Date())
         ]
         
-        let docRef = db.collection("cards").document()
+        let docRef = db.collection("cards").document(id)
         
         docRef.setData(docData) {error in
             if let error = error{
                 print("Error creating new card: \(error)")
                 completed(false)
             } else {
-                print("Document successfully written!")
+                print("Card successfully created!")
                 completed(true)
             }
         }
     }
     
-    public func removeTimeStamp(fromDate: Date) -> Date {
-        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: fromDate)) else {
-            fatalError("Failed to strip time from Date object")
-        }
-        return date
-    }
+//    private func removeTimeStamp(fromDate: Date) -> Date {
+//        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: fromDate)) else {
+//            fatalError("Failed to strip time from Date object")
+//        }
+//        return date
+//    }
     
 //    private func cardChoices(choices: [String], answer: String) -> String{
 //        let choiceIndex = choices.firstIndex(where: { $0 == answer})

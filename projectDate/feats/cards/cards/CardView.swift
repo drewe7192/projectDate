@@ -17,7 +17,7 @@ import UIKit
 
 struct CardView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var selectedChoice = "Your Matches answer"
+    @State private var selectedChoice = "Your Match's answer"
     @Binding var updateData: Bool
     
     let db = Firestore.firestore()
@@ -103,7 +103,7 @@ struct CardView: View {
                         }
                     }.onEnded {_ in
                         // cant swipe right/like if question hasnt been answered
-                        if (self.swipeStatus == .like) && (selectedChoice != "Your Matches answer") {
+                        if (self.swipeStatus == .like) && (selectedChoice != "Your Match's answer") {
                             onRemove(self.card)
                             
                             // after each swipe save the card data and update the profiler section
@@ -114,7 +114,7 @@ struct CardView: View {
                                         // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
-                                    self.selectedChoice = "Your Matches Answer"
+                                    self.selectedChoice = "Your Match's answer"
                                 }
                             }
                         } else if (self.swipeStatus == .dislike) {
@@ -127,7 +127,7 @@ struct CardView: View {
                                         // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
-                                    self.selectedChoice = "Your Matches Answer"
+                                    self.selectedChoice = "Your Match's answer"
                                 }
                             }
                         }

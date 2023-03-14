@@ -53,14 +53,22 @@ struct SignUpView: View {
     private var headerSection: some View {
         VStack{
             VStack{
-                Text("Create Account,")
+                Image("logo")
+                    .resizable()
+                    .frame(width: 400, height: 150)
+                
+                Text("Relationship app where you're the matchmaker!")
+                    .foregroundColor(.white)
+                    .font(.system(size: 20))
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.top,10)
+            
+            VStack{
+                Text("Create Account To get started now!")
                     .foregroundColor(.white)
                     .bold()
-                    .font(.system(size: 30))
-                
-                Text("To get started now!")
-                    .foregroundColor(.white)
-                    .font(.system(size: 30))
+                    .font(.system(size: 20))
             }
             
             EmailPasswordLogIn(email: $email, password: $password, confirmPasword: $confirmPassword, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
@@ -84,7 +92,7 @@ struct SignUpView: View {
     private var signUpLinkSection: some View {
         HStack{
             Text("Already have an account?")
-                .foregroundColor(Color.black)
+                .foregroundColor(Color.white)
             NavigationLink(destination: SignInView()) {
                 Text("Login Now")
             }
