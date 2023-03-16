@@ -131,24 +131,19 @@ struct EventHomeView: View {
                     for document in querySnapshot!.documents {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
-                            if !data.isEmpty{
-                                let event = EventModel(id: data["id"] as? String ?? "", title: data["title"] as? String ?? "", location: data["location"] as? String ?? "", description: data["description"] as? String ?? "", participants: data["participants"] as? [String] ?? [], eventDate: data["eventDate"] as? Date ?? Date())
-                                
-                                self.events.append(event)
-                            }
+                        if !data.isEmpty{
+                            let timestamp = data["eventDate"] as? Timestamp
+                            let date = timestamp?.dateValue()
+                            
+                            let event = EventModel(id: data["id"] as? String ?? "", title: data["title"] as? String ?? "", location: data["location"] as? String ?? "", description: data["description"] as? String ?? "", participants: data["participants"] as? [String] ?? [], eventDate: date ?? Date())
+                            
+                            self.events.append(event)
+                            
+                        }
                     }
                 }
             }
     }
-    
-    //    private func removeTimeStamp(fromDate: Date) -> Date {
-    //        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: fromDate)) else {
-    //            fatalError("Failed to strip time from Date object")
-    //        }
-    //        return date
-    //    }
-    
-    
 }
 
 struct EventHomeView_Previews: PreviewProvider {

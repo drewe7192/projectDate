@@ -540,26 +540,25 @@ struct HomeView: View {
     }
     
     private func findMatches(cardGroups: SwipedCardGroupsModel, completed: @escaping(_ successFullMatches: [CardGroupSnapShotModel]) -> Void){
-        var user = cardGroups.userCardGroup
-        var others = cardGroups.otherCardGroups
+        let user = cardGroups.userCardGroup
+        let others = cardGroups.otherCardGroups
        
         for (index,record) in user.cardIds.enumerated() {
-            var userSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: record, answer: user.answers[index])
+            let userSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: record, answer: user.answers[index])
             
             self.userMatchSnapshots.append(userSnapshot)
         }
         
         for(_, item) in others.enumerated() {
             for(index, item2) in item.cardIds.enumerated() {
-                var othersSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: item2, answer: user.answers[index])
+                let othersSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: item2, answer: user.answers[index])
 
                 self.potentialMatchSnapshots.append(othersSnapshot)
             }
         }
         
-        
-        for (index, record) in self.userMatchSnapshots.enumerated() {
-            for(index2, record2) in self.potentialMatchSnapshots.enumerated() {
+        for (_, record) in self.userMatchSnapshots.enumerated() {
+            for(_, record2) in self.potentialMatchSnapshots.enumerated() {
                 if(record.cardId == record2.cardId && record.answer == record2.answer) {
                     self.successfullMatchSnapshots.append(record2)
                 }
@@ -602,7 +601,7 @@ struct HomeView: View {
         let id = UUID().uuidString
         let docData: [String: Any] = [
             "id": id,
-            "fullName": Auth.auth().currentUser?.displayName,
+            "fullName": Auth.auth().currentUser?.displayName as Any,
             "location": "",
             "gender": "",
             "userId": Auth.auth().currentUser?.uid as Any

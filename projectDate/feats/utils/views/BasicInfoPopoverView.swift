@@ -143,7 +143,7 @@ struct BasicInfoPopoverView: View {
                             .font(.system(size: 20))
                             .multilineTextAlignment(.center)
                         
-                        Text("- Swipe the cards")
+                        Text("- Swipe and create your own the cards")
                             .foregroundColor(.white)
                             .font(.system(size: 20))
                             .multilineTextAlignment(.center)
