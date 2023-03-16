@@ -47,19 +47,27 @@ struct CardView: View {
     
     var body: some View {
         GeometryReader { geoReader in
-            VStack(alignment: .leading, spacing: 20) {
+            VStack{
                 ZStack{
                     Rectangle()
-                        .foregroundColor(Color.iceBreakrrrBlue)
+                        .foregroundColor(card.categoryType == "values" ? Color.iceBreakrrrBlue : Color.mainGrey)
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
-                               height: geoReader.size.height * 0.45)
+                               height: geoReader.size.height * 0.65)
+                    VStack{
+                        Text("How would your perfect match answer this question:")
+                            .bold()
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
+                    }
+                    .padding(.bottom,geoReader.size.height * 0.45)
+                
                     
                     VStack{
                         Text("\(card.question)")
-                            .font(.custom("Superclarendon", size: 20))
-                            .foregroundColor(.white)
-                            .padding(geoReader.size.width * 0.03)
+                            .font(.custom("Superclarendon", size: 25))
+                            .foregroundColor(Color.white)
                         
                         Menu {
                             Picker(selection: $selectedChoice) {
@@ -75,11 +83,10 @@ struct CardView: View {
                         }
                         .accentColor(.white)
                     }
-                    .frame(height: geoReader.size.height * 0.4)
                 }
             }
-            .padding(20)
-            .background(Color.mainGrey)
+           .padding()
+           .background(card.categoryType == "values" ? Color.iceBreakrrrBlue: Color.mainGrey)
             .cornerRadius(40)
             .shadow(radius: 5)
             .animation(.spring())

@@ -13,7 +13,6 @@ struct MotherView: View {
     //Change the menuBar color to white
     init() {
         UITabBar.appearance().backgroundColor = UIColor.darkGray
-        
     }
     
     var body: some View {

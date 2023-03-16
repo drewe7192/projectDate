@@ -41,7 +41,7 @@ struct HomeView: View {
             profileId: "",
             cardIds: [],
             answers: []),
-            otherCardGroups: []
+        otherCardGroups: []
     )
     
     @State private var profileImage: UIImage? = UIImage()
@@ -50,7 +50,7 @@ struct HomeView: View {
     @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var showingInstructionsPopover: Bool = false
     @State private var showingBasicInfoPopover: Bool = false
-    
+    @State private var showMatchFeed: Bool = true
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -65,27 +65,60 @@ struct HomeView: View {
                     
                     VStack{
                         headerSection(for: geoReader)
-                        Divider()
-                            .frame(height: geoReader.size.height * 0.001)
-                            .overlay(Color.iceBreakrrrPink)
-                        
-                        Text("\(displayText())")
-                            .bold()
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.03))
-                            .padding(.trailing,geoReader.size.width * 0.44)
-                        
-                        profilerSection(for: geoReader)
-                        
-                        Text("How would your perfect match answer?")
-                            .bold()
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.03))
-                            .padding(geoReader.size.width * -0.03)
+                            .padding(.bottom)
                         
                         cardsSection(for: geoReader)
                         
+                        Text("Match Activity:")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
+                            .padding(.trailing,190)
+                        
+                        ZStack{
+                            if(showMatchFeed){
+                                ScrollView{
+                                    VStack{
+                                        ForEach(0..<9) { card in
+                                            ZStack{
+                                                Text("")
+                                                    .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
+                                                    .background(Color.mainGrey)
+                                                    .cornerRadius(20)
+                                                
+                                                HStack{
+                                                    Image("logo")
+                                                        .resizable()
+                                                        .cornerRadius(50)
+                                                        .frame(width: 40, height: 40)
+                                                        .background(Color.black.opacity(0.2))
+                                                        .aspectRatio(contentMode: .fill)
+                                                        .clipShape(Circle())
+                                                    
+                                                    
+                                                    Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
+                                                        .foregroundColor(.white)
+                                                        .padding(.trailing)
+                                                        .padding(.leading)
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                    }
+                                    
+                                }
+                                .frame(width: 0,height: 115)
+                                .padding(.top,2)
+                                .padding(.bottom,5)
+                            }else{
+                                Text("No Matches Yet")
+                                    .bold()
+                                    .foregroundColor(.gray.opacity(0.3))
+                                    .font(.system(size: 40))
+                                    .padding(.bottom)
+                            }
+                        }
                     }
                 }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                     .alert(isPresented: $showCardCreatedAlert){
@@ -108,7 +141,7 @@ struct HomeView: View {
                                 createUserProfile() {(createdUserProfileId) -> Void in
                                     if createdUserProfileId != "" {
                                         showingBasicInfoPopover.toggle()
-                            
+                                        
                                     }
                                     
                                 }
@@ -127,21 +160,21 @@ struct HomeView: View {
                                     getCardGroups() {(cardGroups) -> Void in
                                         if !cardGroups.userCardGroup.id.isEmpty {
                                             print("we made it here")
-//                                            findMatches(cardGroups: cardGroups) {(successFullMatches) -> Void in
-//                                                if !successFullMatches.isEmpty {
-//                                                    saveMatchRecords(matches: successFullMatches)
-//                                                    viewRouter.currentPage = .matchPage
-//                                                }
-//                                            }
-
-
+                                            //                                            findMatches(cardGroups: cardGroups) {(successFullMatches) -> Void in
+                                            //                                                if !successFullMatches.isEmpty {
+                                            //                                                    saveMatchRecords(matches: successFullMatches)
+                                            //                                                    viewRouter.currentPage = .matchPage
+                                            //                                                }
+                                            //                                            }
+                                            
+                                            
                                         }
-
+                                        
                                     }
                                 }
                             }
                         }
-
+                        
                     }
                     .onChange(of: updateData) { _ in
                         getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
@@ -153,38 +186,63 @@ struct HomeView: View {
                     }
                     .popover(isPresented: $showingBasicInfoPopover) {
                         BasicInfoPopoverView(userProfile: $userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
-                           }
+                    }
             }
         }
     }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            Image("logo")
-                .resizable()
-                .frame(width: 150,height: 50)
+            Text("iceBreakrrr")
+                .font(.custom("Georgia-BoldItalic", size: 20))
+                .bold()
+                .foregroundColor(Color.iceBreakrrrBlue)
+                .padding(.leading, geoReader.size.width * -0.02)
             
             NavigationLink(destination: SettingsView()) {
-                if(self.profileImage != nil){
-                    Image(uiImage: self.profileImage!)
-                        .resizable()
-                        .cornerRadius(20)
-                        .frame(width: 50, height: 50)
-                        .background(Color.black.opacity(0.2))
-                        .aspectRatio(contentMode: .fill)
-                        .clipShape(Circle())
-                        .padding(.leading, geoReader.size.width * 0.8)
+                //change this back
+                if(self.profileImage == nil){
+                    ZStack{
+                        Text("")
+                            .cornerRadius(20)
+                            .frame(width: 40, height: 40)
+                            .background(.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                            .padding(.leading, geoReader.size.width * 0.8)
+                        
+                        Image(uiImage: self.profileImage!)
+                            .resizable()
+                            .cornerRadius(20)
+                            .frame(width: 30, height: 30)
+                            .background(.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                            .padding(.leading, geoReader.size.width * 0.8)
+                    }
                 } else {
-                    Image(systemName: "person.circle")
-                        .resizable()
-                        .cornerRadius(20)
-                        .frame(width: 50, height: 50)
-                        .background(Color.black.opacity(0.2))
-                        .aspectRatio(contentMode: .fill)
-                        .clipShape(Circle())
-                        .padding(.leading, geoReader.size.width * 0.8)
+                    ZStack{
+                        Text("")
+                            .cornerRadius(20)
+                            .frame(width: 40, height: 40)
+                            .background(.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                            .padding(.leading, geoReader.size.width * 0.8)
+                        
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .cornerRadius(20)
+                            .frame(width: 20, height: 20)
+                            .background(Color.black.opacity(0.2))
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                            .padding(.leading, geoReader.size.width * 0.8)
+                        
+                    }
+                    
                 }
-              
             }
             
             // Dating/Friend Toggle button
@@ -195,6 +253,41 @@ struct HomeView: View {
             //            })
             //            .padding(geoReader.size.width * 0.02)
             //            .toggleStyle(SwitchToggleStyle(tint: .white))
+            
+            ZStack{
+                Text("")
+                    .cornerRadius(20)
+                    .frame(width: 40, height: 40)
+                    .background(Color.black.opacity(0.2))
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(Circle())
+                    .padding(.leading, geoReader.size.width * 0.55)
+                
+                Image(systemName: "bell")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.white)
+                    .aspectRatio(contentMode: .fill)
+                    .padding(.leading, geoReader.size.width * 0.55)
+                
+            }
+            
+            ZStack{
+                Text("")
+                    .frame(width: 40, height: 40)
+                    .background(Color.black.opacity(0.2))
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(Rectangle())
+                    .cornerRadius(10)
+                    .padding(.leading, geoReader.size.width * -0.45)
+                
+                Image(systemName: "line.3.horizontal.decrease")
+                    .resizable()
+                    .frame(width: 20, height: 10)
+                    .foregroundColor(.white)
+                    .aspectRatio(contentMode: .fill)
+                    .padding(.leading, geoReader.size.width * -0.425)
+            }
         }
     }
     
@@ -240,23 +333,9 @@ struct HomeView: View {
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
             CardsView(updateData: $updateData, userProfile: self.userProfile)
-            VStack{
-                NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert, userProfile: self.userProfile)) {
-                    ZStack{
-                        Circle()
-                            .foregroundColor(Color.iceBreakrrrPink)
-                            .frame(width: geoReader.size.width * 0.2, height: geoReader.size.width * 0.2)
-                            .shadow(radius: 10)
-                        
-                        Image(systemName:"plus")
-                            .resizable()
-                            .foregroundColor(.white)
-                            .frame(width: 50, height: 50)
-                    }
-                }
-            }
-            .position(x: geoReader.size.height * 0.07, y: geoReader.size.width * 0.85)
+            plusButton()
         }
+        
     }
     
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
@@ -264,7 +343,7 @@ struct HomeView: View {
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
         let end = calendar.date(byAdding: .day, value: 1, to: start)!
-
+        
         db.collection("swipedRecords")
             .whereField("profileId", isEqualTo: userProfile.id)
             .whereField("swipedDate", isGreaterThan: start)
@@ -438,9 +517,9 @@ struct HomeView: View {
                     for document in querySnapshot!.documents {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
-                            if !data.isEmpty{
-                                self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "")
-                            }
+                        if !data.isEmpty{
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "")
+                        }
                     }
                     completed(self.userProfile.id)
                 }
@@ -467,7 +546,7 @@ struct HomeView: View {
                 } else {
                     for document in querySnapshot!.documents {
                         let data = document.data()
-
+                        
                         if !data.isEmpty{
                             let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "")
                             self.matchRecords.append(matchRecord)
@@ -485,17 +564,15 @@ struct HomeView: View {
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
         let end = calendar.date(byAdding: .day, value: 1, to: start)!
-         var swipedCardFoo: SwipedCardGroupsModel = SwipedCardGroupsModel(
+        var swipedCardFoo: SwipedCardGroupsModel = SwipedCardGroupsModel(
             id: "" ,
             userCardGroup: SwipedCardGroupModel(
                 id: "",
                 profileId: "",
                 cardIds: [],
                 answers: []),
-                otherCardGroups: []
+            otherCardGroups: []
         )
-        
-        
         
         db.collection("swipedCardGroups")
             .whereField("profileId", isEqualTo: userProfile.id)
@@ -507,7 +584,7 @@ struct HomeView: View {
                 } else {
                     for document in querySnapshot!.documents {
                         let data = document.data()
-
+                        
                         if !data.isEmpty{
                             self.swipedCardGroups.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
                             swipedCardFoo.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
@@ -526,14 +603,14 @@ struct HomeView: View {
                 } else {
                     for document in querySnapshot!.documents {
                         let data = document.data()
-
+                        
                         if !data.isEmpty{
                             let cardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
                             self.swipedCardGroups.otherCardGroups.append(cardGroup)
                             swipedCardFoo.otherCardGroups.append(cardGroup)
                         }
                     }
-
+                    
                     completed(swipedCardFoo)
                 }
             }
@@ -542,7 +619,7 @@ struct HomeView: View {
     private func findMatches(cardGroups: SwipedCardGroupsModel, completed: @escaping(_ successFullMatches: [CardGroupSnapShotModel]) -> Void){
         let user = cardGroups.userCardGroup
         let others = cardGroups.otherCardGroups
-       
+        
         for (index,record) in user.cardIds.enumerated() {
             let userSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: record, answer: user.answers[index])
             
@@ -552,7 +629,7 @@ struct HomeView: View {
         for(_, item) in others.enumerated() {
             for(index, item2) in item.cardIds.enumerated() {
                 let othersSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: item2, answer: user.answers[index])
-
+                
                 self.potentialMatchSnapshots.append(othersSnapshot)
             }
         }
@@ -565,15 +642,14 @@ struct HomeView: View {
             }
         }
         completed(self.successfullMatchSnapshots)
-        
     }
     
     private func saveMatchRecords(matches: [CardGroupSnapShotModel]){
         let randomMatch = matches.randomElement()
         
-      
-            let id = UUID().uuidString
-            
+        
+        let id = UUID().uuidString
+        
         if((randomMatch) == nil){
             print("you do not have any matches")
         } else {
@@ -622,8 +698,6 @@ struct HomeView: View {
         }
     }
     
-    
-    
     public func updateUserProfile(updatedProfile: ProfileModel, completed: @escaping(_ profileId: String) -> Void){
         let docData: [String: Any] = [
             "fullName": updatedProfile.fullName,
@@ -642,6 +716,27 @@ struct HomeView: View {
                 print("successfully updated userProfile!")
                 completed(updatedProfile.id)
             }
+        }
+    }
+    
+    private func plusButton() -> some View{
+        GeometryReader{ geo in
+            VStack{
+                NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert, userProfile: self.userProfile)) {
+                    ZStack{
+                        Circle()
+                            .foregroundColor(Color.iceBreakrrrPink)
+                            .frame(width: geo.size.width * 0.2, height: geo.size.width * 0.2)
+                            .shadow(radius: 10)
+                        
+                        Image(systemName:"plus")
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 50)
+                    }
+                }
+            }
+            .position(x: geo.size.height * 0.07, y: geo.size.width * 1.15)
         }
     }
 } 

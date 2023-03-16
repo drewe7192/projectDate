@@ -55,7 +55,8 @@ struct CardsView: View {
             }.onAppear{
                 getAllCards(isUpdating: false)
             }
-        }.padding()
+        }
+        .padding(5)
     }
     
     public func getAllCards(isUpdating: Bool){

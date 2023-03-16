@@ -54,12 +54,11 @@ struct EventHomeView: View {
                     ForEach(self.events.filter({searchText.isEmpty ? true : $0.title.contains(searchText)})) { event in
                         NavigationLink(destination: EventInfoView(event: event)){
                             ZStack{
-                                VStack{
                                     Text("")
                                         .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.25)
                                         .background(Color.mainGrey)
                                         .cornerRadius(30)
-                                }
+                                
                                 
                                 VStack{
                                     VStack(spacing: 5){
