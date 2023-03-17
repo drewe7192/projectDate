@@ -34,6 +34,13 @@ struct HomeView: View {
     @State private var swipedcardsForProgressCircle: [CardModel] = []
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender")
     @State private var matchRecords: [MatchRecordModel] = []
+    @State private var profileImage: UIImage? = UIImage()
+    @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
+    @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
+    @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
+    @State private var showingInstructionsPopover: Bool = false
+    @State private var showingBasicInfoPopover: Bool = false
+    @State private var showMatchFeed: Bool = false
     @State private var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
         userCardGroup: SwipedCardGroupModel(
@@ -43,14 +50,6 @@ struct HomeView: View {
             answers: []),
         otherCardGroups: []
     )
-    
-    @State private var profileImage: UIImage? = UIImage()
-    @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
-    @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
-    @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
-    @State private var showingInstructionsPopover: Bool = false
-    @State private var showingBasicInfoPopover: Bool = false
-    @State private var showMatchFeed: Bool = true
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -74,119 +73,129 @@ struct HomeView: View {
                             .foregroundColor(.white)
                             .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
                             .padding(.trailing,190)
+                            .padding(.bottom,3)
                         
                         ZStack{
                             if(showMatchFeed){
-                                ScrollView{
-                                    VStack{
-                                        ForEach(0..<9) { card in
-                                            ZStack{
-                                                Text("")
-                                                    .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
-                                                    .background(Color.mainGrey)
-                                                    .cornerRadius(20)
-                                                
-                                                HStack{
-                                                    Image("logo")
-                                                        .resizable()
-                                                        .cornerRadius(50)
-                                                        .frame(width: 40, height: 40)
-                                                        .background(Color.black.opacity(0.2))
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .clipShape(Circle())
+                                ScrollViewReader{ (proxy: ScrollViewProxy) in
+                                    ScrollView{
+                                        VStack{
+                                            ForEach(0..<9) { card in
+                                                ZStack{
+                                                    Text("")
+                                                        .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
+                                                        .background(Color.mainGrey)
+                                                        .cornerRadius(20)
                                                     
+                                                    HStack{
+                                                        Image("logo")
+                                                            .resizable()
+                                                            .cornerRadius(50)
+                                                            .frame(width: 40, height: 40)
+                                                            .background(Color.black.opacity(0.2))
+                                                            .aspectRatio(contentMode: .fill)
+                                                            .clipShape(Circle())
+                                                        
+                                                        
+                                                        Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
+                                                            .foregroundColor(.white)
+                                                            .padding(.trailing)
+                                                            .padding(.leading)
+                                                    }
                                                     
-                                                    Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
-                                                        .foregroundColor(.white)
-                                                        .padding(.trailing)
-                                                        .padding(.leading)
                                                 }
                                                 
                                             }
-                                            
                                         }
+                                        //                                        .onReceive(timer) { _ in
+                                        //                                            withAnimation {
+                                        //                                                if counter <
+                                        //                                            }
+                                        //                                        }
+                                        
                                     }
-                                    
+                                    .frame(width: 0,height: 115)
+                                    .padding(.top,2)
+                                    .padding(.bottom,5)
                                 }
-                                .frame(width: 0,height: 115)
-                                .padding(.top,2)
-                                .padding(.bottom,5)
+                                
                             }else{
                                 Text("No Matches Yet")
                                     .bold()
                                     .foregroundColor(.gray.opacity(0.3))
                                     .font(.system(size: 40))
-                                    .padding(.bottom)
+                                    .padding(.bottom, 40)
                             }
                         }
                     }
-                }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
-                    .alert(isPresented: $showCardCreatedAlert){
-                        Alert(
-                            title: Text("New Card Created!"),
-                            message: Text("You'll get a notification if someone matches your perfered answer!")
-                        )
-                    }
-                    .onAppear {
-                        getUserProfile(){(profileId) -> Void in
-                            if profileId != "" {
-                                getStorageFile()
-                                // getting these records to update the Profiler
-                                getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
-                                    if !swipedRecords.isEmpty {
-                                        getCardFromRecords(swipedRecords: swipedRecords)
-                                    }
+                }
+                .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
+                .alert(isPresented: $showCardCreatedAlert){
+                    Alert(
+                        title: Text("New Card Created!"),
+                        message: Text("You'll get a notification if someone matches your perfered answer!")
+                    )
+                }
+                .onAppear {
+                    getUserProfile(){(profileId) -> Void in
+                        if profileId != "" {
+                            getStorageFile()
+                            // getting these records to update the Profiler
+                            getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                                if !swipedRecords.isEmpty {
+                                    getCardFromRecords(swipedRecords: swipedRecords)
                                 }
-                            } else {
-                                createUserProfile() {(createdUserProfileId) -> Void in
-                                    if createdUserProfileId != "" {
-                                        showingBasicInfoPopover.toggle()
-                                        
-                                    }
+                            }
+                        } else {
+                            createUserProfile() {(createdUserProfileId) -> Void in
+                                if createdUserProfileId != "" {
+                                    showingBasicInfoPopover.toggle()
                                     
                                 }
                                 
                             }
+                            
                         }
-                        
-                        let weekday = Calendar.current.component(.weekday, from: Date())
-                        
-                        //change this has to 6 for friday
-                        if(weekday == 6) {
-                            // If theres no matchRecords for this week run match logic and find matches
-                            // Runs once a week
-                            getMatchRecordsForThisWeek() {(matchRecords) -> Void in
-                                if matchRecords.isEmpty {
-                                    getCardGroups() {(cardGroups) -> Void in
-                                        if !cardGroups.userCardGroup.id.isEmpty {
-                                            print("we made it here")
-                                            //                                            findMatches(cardGroups: cardGroups) {(successFullMatches) -> Void in
-                                            //                                                if !successFullMatches.isEmpty {
-                                            //                                                    saveMatchRecords(matches: successFullMatches)
-                                            //                                                    viewRouter.currentPage = .matchPage
-                                            //                                                }
-                                            //                                            }
-                                            
-                                            
-                                        }
+                    }
+                    
+                    let weekday = Calendar.current.component(.weekday, from: Date())
+                    
+                    //change this has to 6 for friday
+                    if(weekday == 6) {
+                        // If theres no matchRecords for this week run match logic and find matches
+                        // Runs once a week
+                        getMatchRecordsForThisWeek() {(matchRecords) -> Void in
+                            if matchRecords.isEmpty {
+                                getCardGroups() {(cardGroups) -> Void in
+                                    if !cardGroups.userCardGroup.id.isEmpty {
+                                        print("we made it here")
+                                        //                                            findMatches(cardGroups: cardGroups) {(successFullMatches) -> Void in
+                                        //                                                if !successFullMatches.isEmpty {
+                                        //                                                    saveMatchRecords(matches: successFullMatches)
+                                        //                                                    viewRouter.currentPage = .matchPage
+                                        //                                                }
+                                        //                                            }
+                                        
                                         
                                     }
+                                    
                                 }
                             }
                         }
-                        
                     }
-                    .onChange(of: updateData) { _ in
-                        getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
-                            if !swipedRecords.isEmpty {
-                                saveSwipedCardGroup(swipedRecords: swipedRecords)
-                                getCardFromRecords(swipedRecords: swipedRecords)
-                            }
+                    
+                }
+                .onChange(of: updateData) { _ in
+                    getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                        if !swipedRecords.isEmpty {
+                            saveSwipedCardGroup(swipedRecords: swipedRecords)
+                            getCardFromRecords(swipedRecords: swipedRecords)
                         }
                     }
-                    .popover(isPresented: $showingBasicInfoPopover) {
-                        BasicInfoPopoverView(userProfile: $userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
-                    }
+                }
+                .popover(isPresented: $showingBasicInfoPopover) {
+                    BasicInfoPopoverView(userProfile: $userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
+                }
             }
         }
     }
@@ -201,7 +210,7 @@ struct HomeView: View {
             
             NavigationLink(destination: SettingsView()) {
                 //change this back
-                if(self.profileImage == nil){
+                if(self.profileImage != nil){
                     ZStack{
                         Text("")
                             .cornerRadius(20)
@@ -525,7 +534,6 @@ struct HomeView: View {
                 }
             }
     }
-    
     
     private func getMatchRecordsForThisWeek(completed: @escaping(_ matches: [MatchRecordModel]) -> Void) {
         
