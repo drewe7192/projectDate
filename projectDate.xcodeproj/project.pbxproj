@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		770CF55029C435E100AA90AE /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770CF54F29C435E100AA90AE /* MenuView.swift */; };
 		77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77115F95299EF2EC00705811 /* ConfirmationView.swift */; };
 		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
 		771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* HomeView.swift */; };
@@ -93,6 +94,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		770CF54F29C435E100AA90AE /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		77115F95299EF2EC00705811 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		771AE4152977C46A00F3A6A1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 			children = (
 				77C3D539289912B60088554F /* SettingsView.swift */,
 				771AE4152977C46A00F3A6A1 /* HomeView.swift */,
+				770CF54F29C435E100AA90AE /* MenuView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -753,6 +756,7 @@
 				771AE42B2979DE3500F3A6A1 /* HomeViewModel.swift in Sources */,
 				7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */,
 				7753927729A2316F00AA2B74 /* FailedView.swift in Sources */,
+				770CF55029C435E100AA90AE /* MenuView.swift in Sources */,
 				7753927929A425B300AA2B74 /* ImagePicker.swift in Sources */,
 				771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */,
 				77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */,

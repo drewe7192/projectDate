@@ -50,7 +50,7 @@ struct CardView: View {
             VStack{
                 ZStack{
                     Rectangle()
-                        .foregroundColor(card.categoryType == "values" ? Color.iceBreakrrrBlue : Color.mainGrey)
+                        .foregroundColor(colorSwitch())
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
                                height: geoReader.size.height * 0.65)
@@ -86,7 +86,7 @@ struct CardView: View {
                 }
             }
            .padding()
-           .background(card.categoryType == "values" ? Color.iceBreakrrrBlue: Color.mainGrey)
+           .background(colorSwitch())
             .cornerRadius(40)
             .shadow(radius: 5)
             .animation(.spring())
@@ -182,6 +182,22 @@ struct CardView: View {
             break
         }
         return choice;
+    }
+    private func colorSwitch() -> Color{
+        
+        var foo: Color = Color.mainGrey
+        switch card.categoryType {
+        case "values":
+            foo = Color.iceBreakrrrPink
+        case "littleThings":
+            foo = Color.iceBreakrrrBlue
+        case "personality":
+            foo = Color.mainGrey
+        default:
+            break
+            
+        }
+        return foo
     }
 }
 

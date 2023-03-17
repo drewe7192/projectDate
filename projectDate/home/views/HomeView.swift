@@ -40,7 +40,8 @@ struct HomeView: View {
     @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var showingInstructionsPopover: Bool = false
     @State private var showingBasicInfoPopover: Bool = false
-    @State private var showMatchFeed: Bool = false
+    @State private var showMatchFeed: Bool = true
+    @State private var showMenu: Bool = false
     @State private var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
         userCardGroup: SwipedCardGroupModel(
@@ -65,68 +66,78 @@ struct HomeView: View {
                     VStack{
                         headerSection(for: geoReader)
                             .padding(.bottom)
-                        
-                        cardsSection(for: geoReader)
-                        
-                        Text("Match Activity:")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
-                            .padding(.trailing,190)
-                            .padding(.bottom,3)
-                        
-                        ZStack{
-                            if(showMatchFeed){
-                                ScrollViewReader{ (proxy: ScrollViewProxy) in
-                                    ScrollView{
-                                        VStack{
-                                            ForEach(0..<9) { card in
-                                                ZStack{
-                                                    Text("")
-                                                        .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
-                                                        .background(Color.mainGrey)
-                                                        .cornerRadius(20)
-                                                    
-                                                    HStack{
-                                                        Image("logo")
-                                                            .resizable()
-                                                            .cornerRadius(50)
-                                                            .frame(width: 40, height: 40)
-                                                            .background(Color.black.opacity(0.2))
-                                                            .aspectRatio(contentMode: .fill)
-                                                            .clipShape(Circle())
+                        VStack{
+                            cardsSection(for: geoReader)
+                            
+                            Text("Match Activity:")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
+                                .padding(.trailing,190)
+                                .padding(.bottom,3)
+                            
+                            ZStack{
+                                if(showMatchFeed){
+                                    ScrollViewReader{ (proxy: ScrollViewProxy) in
+                                        ScrollView{
+                                            VStack{
+                                                ForEach(0..<9) { card in
+                                                    ZStack{
+                                                        Text("")
+                                                            .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
+                                                            .background(Color.mainGrey)
+                                                            .cornerRadius(20)
                                                         
+                                                        HStack{
+                                                            Image("logo")
+                                                                .resizable()
+                                                                .cornerRadius(50)
+                                                                .frame(width: 40, height: 40)
+                                                                .background(Color.black.opacity(0.2))
+                                                                .aspectRatio(contentMode: .fill)
+                                                                .clipShape(Circle())
+                                                            
+                                                            
+                                                            Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
+                                                                .foregroundColor(.white)
+                                                                .padding(.trailing)
+                                                                .padding(.leading)
+                                                        }
                                                         
-                                                        Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
-                                                            .foregroundColor(.white)
-                                                            .padding(.trailing)
-                                                            .padding(.leading)
                                                     }
                                                     
                                                 }
-                                                
                                             }
+                                            //                                        .onReceive(timer) { _ in
+                                            //                                            withAnimation {
+                                            //                                                if counter <
+                                            //                                            }
+                                            //                                        }
+                                            
                                         }
-                                        //                                        .onReceive(timer) { _ in
-                                        //                                            withAnimation {
-                                        //                                                if counter <
-                                        //                                            }
-                                        //                                        }
-                                        
+                                        .frame(width: 0,height: 115)
+                                        .padding(.top,2)
+                                        .padding(.bottom,5)
                                     }
-                                    .frame(width: 0,height: 115)
-                                    .padding(.top,2)
-                                    .padding(.bottom,5)
+                                    
+                                }else{
+                                    Text("No Matches Yet")
+                                        .bold()
+                                        .foregroundColor(.gray.opacity(0.3))
+                                        .font(.system(size: 40))
+                                        .padding(.bottom, 40)
                                 }
-                                
-                            }else{
-                                Text("No Matches Yet")
-                                    .bold()
-                                    .foregroundColor(.gray.opacity(0.3))
-                                    .font(.system(size: 40))
-                                    .padding(.bottom, 40)
                             }
                         }
+                     
+                    }
+                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
+                    .disabled(self.showMenu ? true : false)
+                    
+                    if self.showMenu {
+                        MenuView()
+                            .frame(width: geoReader.size.width/2)
+                            .padding(.trailing,200)
                     }
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -201,12 +212,51 @@ struct HomeView: View {
     }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
-        ZStack{
+        HStack{
+            ZStack{
+                Text("")
+                    .frame(width: 40, height: 40)
+                    .background(Color.black.opacity(0.2))
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(Rectangle())
+                    .cornerRadius(10)
+                  //  .padding(.leading, geoReader.size.width * -0.45)
+               
+                
+                Image(systemName: "line.3.horizontal.decrease")
+                    .resizable()
+                    .frame(width: 20, height: 10)
+                    .foregroundColor(.white)
+                    .aspectRatio(contentMode: .fill)
+                  //  .padding(.leading, geoReader.size.width * -0.425)
+            }
+            .padding(.trailing,70)
+            
             Text("iceBreakrrr")
                 .font(.custom("Georgia-BoldItalic", size: 20))
                 .bold()
                 .foregroundColor(Color.iceBreakrrrBlue)
-                .padding(.leading, geoReader.size.width * -0.02)
+                // .padding(.leading, geoReader.size.width * 0.00)
+                //.position(x: geoReader.frame(in: .local).midX, y:geoReader.size.height * 0.02)
+            
+            ZStack{
+                Text("")
+                    .cornerRadius(20)
+                    .frame(width: 40, height: 40)
+                    .background(Color.black.opacity(0.2))
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(Circle())
+                   // .padding(.leading, geoReader.size.width * 0.55)
+                
+                Image(systemName: "bell")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.white)
+                    .aspectRatio(contentMode: .fill)
+                    //.padding(.leading, geoReader.size.width * 0.55)
+                
+            }
+            .padding(.leading,30)
             
             NavigationLink(destination: SettingsView()) {
                 //change this back
@@ -218,7 +268,7 @@ struct HomeView: View {
                             .background(.black.opacity(0.2))
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
+                           // .padding(.leading, geoReader.size.width * 0.8)
                         
                         Image(uiImage: self.profileImage!)
                             .resizable()
@@ -227,8 +277,10 @@ struct HomeView: View {
                             .background(.black.opacity(0.2))
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
+                          //  .padding(.leading, geoReader.size.width * 0.8)
                     }
+                   
+                    
                 } else {
                     ZStack{
                         Text("")
@@ -237,7 +289,7 @@ struct HomeView: View {
                             .background(.black.opacity(0.2))
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
+                          //  .padding(.leading, geoReader.size.width * 0.8)
                         
                         Image(systemName: "person.circle")
                             .resizable()
@@ -247,10 +299,10 @@ struct HomeView: View {
                             .foregroundColor(.white)
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
+                          //  .padding(.leading, geoReader.size.width * 0.8)
                         
                     }
-                    
+              
                 }
             }
             
@@ -263,40 +315,7 @@ struct HomeView: View {
             //            .padding(geoReader.size.width * 0.02)
             //            .toggleStyle(SwitchToggleStyle(tint: .white))
             
-            ZStack{
-                Text("")
-                    .cornerRadius(20)
-                    .frame(width: 40, height: 40)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Circle())
-                    .padding(.leading, geoReader.size.width * 0.55)
-                
-                Image(systemName: "bell")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-                    .aspectRatio(contentMode: .fill)
-                    .padding(.leading, geoReader.size.width * 0.55)
-                
-            }
-            
-            ZStack{
-                Text("")
-                    .frame(width: 40, height: 40)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Rectangle())
-                    .cornerRadius(10)
-                    .padding(.leading, geoReader.size.width * -0.45)
-                
-                Image(systemName: "line.3.horizontal.decrease")
-                    .resizable()
-                    .frame(width: 20, height: 10)
-                    .foregroundColor(.white)
-                    .aspectRatio(contentMode: .fill)
-                    .padding(.leading, geoReader.size.width * -0.425)
-            }
+         
         }
     }
     
@@ -744,7 +763,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .position(x: geo.size.height * 0.07, y: geo.size.width * 1.15)
+            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.2)
         }
     }
 } 

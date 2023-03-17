@@ -43,7 +43,7 @@ struct CardsView: View {
                         .animation(.spring())
                         .frame(width:
                                 self.cards.cardWidth(in: geometry,
-                                                     cardId: index), height: 700)
+                                                     cardId: index), height: geometry.size.height *  1.3)
                         .offset(x: 0,
                                 y: self.cards.cardOffset(
                                     cardId: index))
@@ -55,8 +55,10 @@ struct CardsView: View {
             }.onAppear{
                 getAllCards(isUpdating: false)
             }
+           // .padding(3)
         }
-        .padding(5)
+        .padding(.leading,6)
+        .padding(.trailing,6)
     }
     
     public func getAllCards(isUpdating: Bool){
