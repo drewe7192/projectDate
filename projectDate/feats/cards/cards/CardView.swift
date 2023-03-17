@@ -53,7 +53,7 @@ struct CardView: View {
                         .foregroundColor(colorSwitch())
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
-                               height: geoReader.size.height * 0.65)
+                               height: geoReader.size.height * 0.35)
                     VStack{
                         Text("How would your perfect match answer this question:")
                             .bold()
@@ -83,7 +83,26 @@ struct CardView: View {
                         }
                         .accentColor(.white)
                     }
+                    
+                    ZStack{
+                        Text("")
+                            .foregroundColor(.white)
+                            .bold()
+                            .font(.system(size: 30))
+                            .frame(width: 60, height: 20)
+                            .background(.black)
+                            .cornerRadius(10)
+                        
+                        Text("Values")
+                            .foregroundColor(.white)
+                            .bold()
+                            .font(.system(size: 15))
+                    }
+                    .padding(.leading,300)
+                    .padding(.top,500)
                 }
+           
+                   
             }
            .padding()
            .background(colorSwitch())

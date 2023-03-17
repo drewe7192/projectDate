@@ -43,7 +43,7 @@ struct CardsView: View {
                         .animation(.spring())
                         .frame(width:
                                 self.cards.cardWidth(in: geometry,
-                                                     cardId: index), height: geometry.size.height *  1.3)
+                                                     cardId: index), height: geometry.size.height *  1.4)
                         .offset(x: 0,
                                 y: self.cards.cardOffset(
                                     cardId: index))

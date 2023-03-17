@@ -67,14 +67,29 @@ struct HomeView: View {
                         headerSection(for: geoReader)
                             .padding(.bottom)
                         VStack{
+                    
                             cardsSection(for: geoReader)
-                            
-                            Text("Match Activity:")
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
-                                .padding(.trailing,190)
-                                .padding(.bottom,3)
+                            HStack{
+                                Text("Match Activity:")
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.white)
+                                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
+                                    .padding(.trailing,10)
+                                    .padding(.bottom,3)
+                                
+                                HStack{
+                                    Image(systemName: "flame.circle.fill")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.white)
+                              
+                                    Text("Tuesdays")
+                                        .foregroundColor(.iceBreakrrrBlue)
+                                        .bold()
+                                        .font(.system(size: 20))
+                                }
+                            }
+                         
                             
                             ZStack{
                                 if(showMatchFeed){
@@ -233,7 +248,7 @@ struct HomeView: View {
             .padding(.trailing,70)
             
             Text("iceBreakrrr")
-                .font(.custom("Georgia-BoldItalic", size: 20))
+                .font(.custom("Georgia-BoldItalic", size: 23))
                 .bold()
                 .foregroundColor(Color.iceBreakrrrBlue)
                 // .padding(.leading, geoReader.size.width * 0.00)
@@ -752,18 +767,18 @@ struct HomeView: View {
                 NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert, userProfile: self.userProfile)) {
                     ZStack{
                         Circle()
-                            .foregroundColor(Color.iceBreakrrrPink)
+                            .foregroundColor(Color.mainBlack)
                             .frame(width: geo.size.width * 0.2, height: geo.size.width * 0.2)
                             .shadow(radius: 10)
                         
                         Image(systemName:"plus")
                             .resizable()
-                            .foregroundColor(.white)
+                            .foregroundColor(Color.iceBreakrrrBlue)
                             .frame(width: 50, height: 50)
                     }
                 }
             }
-            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.2)
+            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.1)
         }
     }
 } 
