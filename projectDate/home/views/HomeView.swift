@@ -69,6 +69,7 @@ struct HomeView: View {
                         VStack{
                     
                             cardsSection(for: geoReader)
+                            
                             HStack{
                                 Text("Match Activity:")
                                     .multilineTextAlignment(.center)
@@ -374,6 +375,7 @@ struct HomeView: View {
     }
     
     private func cardsSection(for geoReader: GeometryProxy) -> some View {
+        
         ZStack{
             CardsView(updateData: $updateData, userProfile: self.userProfile)
             plusButton()

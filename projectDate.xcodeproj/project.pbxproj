@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		770CF55029C435E100AA90AE /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770CF54F29C435E100AA90AE /* MenuView.swift */; };
+		770CF55329C6E1EA00AA90AE /* EmailPasswordLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770CF55229C6E1EA00AA90AE /* EmailPasswordLoginView.swift */; };
+		770CF55529C6E80700AA90AE /* CredentialFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770CF55429C6E80700AA90AE /* CredentialFieldsView.swift */; };
 		77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77115F95299EF2EC00705811 /* ConfirmationView.swift */; };
 		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
 		771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* HomeView.swift */; };
@@ -95,6 +97,9 @@
 
 /* Begin PBXFileReference section */
 		770CF54F29C435E100AA90AE /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDateRelease.entitlements; sourceTree = "<group>"; };
+		770CF55229C6E1EA00AA90AE /* EmailPasswordLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailPasswordLoginView.swift; sourceTree = "<group>"; };
+		770CF55429C6E80700AA90AE /* CredentialFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialFieldsView.swift; sourceTree = "<group>"; };
 		77115F95299EF2EC00705811 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		771AE4152977C46A00F3A6A1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -279,6 +284,8 @@
 			children = (
 				77587DE528EEBDDD00A46031 /* signInButtons */,
 				77A0F9BA2986CEA1009CD1E0 /* LogInItems.swift */,
+				770CF55229C6E1EA00AA90AE /* EmailPasswordLoginView.swift */,
+				770CF55429C6E80700AA90AE /* CredentialFieldsView.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -452,6 +459,7 @@
 		77C3D4FE289910CE0088554F /* projectDate */ = {
 			isa = PBXGroup;
 			children = (
+				770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */,
 				77ED84B029890F2000AACD19 /* GoogleService-Info.plist */,
 				77ED84AE298908D700AACD19 /* Info.plist */,
 				776D4700295DCC2700754DE5 /* feats */,
@@ -723,8 +731,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				770CF55529C6E80700AA90AE /* CredentialFieldsView.swift in Sources */,
 				771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */,
 				77FB23C2292B6227008F5469 /* ProfileInfoOverlay.swift in Sources */,
+				770CF55329C6E1EA00AA90AE /* EmailPasswordLoginView.swift in Sources */,
 				775E062928C51B140082C27E /* ViewRouter.swift in Sources */,
 				777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */,
 				77A1C7CA297C4528004C8FA6 /* CircularProgressView.swift in Sources */,
@@ -972,7 +982,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = projectDate/projectDate.entitlements;
+				CODE_SIGN_ENTITLEMENTS = projectDate/projectDateRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

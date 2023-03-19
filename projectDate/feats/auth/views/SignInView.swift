@@ -8,86 +8,76 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
-import GoogleSignIn
-import FacebookLogin
 
 struct SignInView: View {
-    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject private var viewRouter: ViewRouter
     
-    @State var signInErrorMessage = ""
-    @State var email = ""
-    @State var password =  ""
-    @State var isLoggedIn: Bool = false
-    @State var signInProcessing = false
-    @State var toggleButons = false
-
+    @State private var signInErrorMessage: String = ""
+    @State private var email: String = ""
+    @State private var password: String =  ""
+    @State private var confirmPassword: String = ""
+    @State private var isLoggedIn: Bool = false
+    @State private var displayConfirmPassword: Bool = false
+    
     var body: some View {
         NavigationView {
-            ZStack{
-                // need a ZStack and color to change the background color
-                //LinearGradient(gradient: Gradient(colors: [.teal, .teal, .pink]), startPoint: .top, endPoint: .bottom)
-                Color.mainBlack
-                    .ignoresSafeArea()
-                
-                
-                VStack{
-                    headerSection
-                    bodySection
+            GeometryReader{ geoReader in
+                ZStack{
+                    // need a ZStack and color to change the background color
+                    Color.mainBlack
+                        .ignoresSafeArea()
                     
-                    if signInProcessing {
-                        ProgressView()
+                    VStack{
+                        bodySection(for: geoReader)
+                        footerSection(for: geoReader)
                     }
-                }
-                .overlay(
                     LogInItems().loadingIndicator
-                )
+                }
             }
+           
         }
         .navigationBarBackButtonHidden(true)
     }
-
-    private var headerSection: some View {
+    
+    private func bodySection(for geoReader: GeometryProxy) -> some View {
         VStack{
             VStack{
-                Image("logo")
-                    .resizable()
-                    .frame(width: 400, height: 150)
+                Text("iceBreakrrr")
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.07))
+                    .bold()
+                    .foregroundColor(Color.iceBreakrrrBlue)
                 
-                Text("The relationship app where you're the matchmaker!")
+                Text("Relationship app where you're the matchmaker!")
                     .foregroundColor(.white)
-                    .font(.system(size: 20))
+                    .font(.system(size: geoReader.size.height * 0.02))
                     .multilineTextAlignment(.center)
             }
-            EmailPasswordLogIn(email: $email, password: $password, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
+            .padding(.bottom,geoReader.size.height * 0.02)
+            
+            EmailPasswordLoginView(email: $email, password: $password,confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn, displayConfirmPassword: $displayConfirmPassword)
             
             Text("Forgot Password?")
-                .padding(.leading, 230)
-                .padding(.top,10)
+                .padding(.leading, geoReader.size.height * 0.3)
+                .padding(.top,geoReader.size.height * 0.01)
                 .foregroundColor(.white)
         }
-        .padding(.bottom,80)
     }
     
-    private var bodySection: some View {
+    private func footerSection(for geoReader: GeometryProxy) -> some View{
         VStack{
             Text("or Login with")
                 .foregroundColor(.white)
-                .padding(.bottom,20)
+                .padding(.top,geoReader.size.height * 0.08)
             
-          LogInItems()
-            
+            LogInItems()
             LogInItems().signUpLinkSection
-                .padding(.bottom,80)
         }
     }
 }
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
             SignInView()
-                .previewInterfaceOrientation(.portrait)
-        }
     }
 }
 

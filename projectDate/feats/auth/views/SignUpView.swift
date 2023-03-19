@@ -10,214 +10,78 @@ import Firebase
 import FirebaseAuth
 
 struct SignUpView: View {
-    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject private var viewRouter: ViewRouter
     
-    @State var signInErrorMessage = ""
-    @State var email = ""
-    @State var password =  ""
-    @State var confirmPassword = ""
-    @State var isLoggedIn: Bool = false
-    @State var signInProcessing = false
-    @State var isThirdPartyAuth = true
+    @State private var signInErrorMessage: String = ""
+    @State private var email: String = ""
+    @State private var password: String =  ""
+    @State private var confirmPassword: String = ""
+    @State private var isLoggedIn: Bool = false
+    @State private var displayConfirmPassword: Bool = true
     
-    enum signInType {
+    private enum signInType {
         case google, facebook, apple
     }
     
     var body: some View {
         NavigationView {
-            ZStack{
-                // need a ZStack and color to change the background color
-                Color.mainBlack
-                    .ignoresSafeArea()
-                
-                VStack{
-                    headerSection
-                    bodySection
+            GeometryReader{ geoReader in
+                ZStack{
+                    // need a ZStack and color to change the background color
+                    Color.mainBlack
+                        .ignoresSafeArea()
                     
-                    if signInProcessing {
-                        ProgressView()
+                    VStack{
+                        bodySection(for: geoReader)
+                        footerSection(for: geoReader)
                     }
-                }
-                .overlay(
                     LogInItems().loadingIndicator
-                )
-                .fullScreenCover(isPresented: $isLoggedIn) {
-                    HomeView()
                 }
             }
         }
         .navigationBarBackButtonHidden(true)
     }
     
-    private var headerSection: some View {
+    private func bodySection(for geoReader: GeometryProxy) -> some View {
         VStack{
             VStack{
-                Image("logo")
-                    .resizable()
-                    .frame(width: 400, height: 150)
+                Text("iceBreakrrr")
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.07))
+                    .bold()
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                 
                 
                 Text("Relationship app where you're the matchmaker!")
                     .foregroundColor(.white)
-                    .font(.system(size: 20))
+                    .font(.system(size: geoReader.size.height * 0.02))
                     .multilineTextAlignment(.center)
             }
-            .padding(.top,10)
+            .padding(.bottom,geoReader.size.height * 0.02)
             
             VStack{
                 Text("Create Account To get started now!")
                     .foregroundColor(.white)
                     .bold()
-                    .font(.system(size: 20))
+                    .font(.system(size: geoReader.size.height * 0.03))
             }
             
-            EmailPasswordLogIn(email: $email, password: $password, confirmPasword: $confirmPassword, signInProcessing: $signInProcessing, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn)
+            EmailPasswordLoginView(email: $email, password: $password, confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn, displayConfirmPassword: $displayConfirmPassword)
+            
+            Text("Forgot Password?")
+                .padding(.leading, geoReader.size.height * 0.3)
+                .padding(.top,geoReader.size.height * 0.01)
+                .foregroundColor(.white)
         }
-        
     }
     
-    private var bodySection: some View {
+    private func footerSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             Text("or Sign Up with")
                 .foregroundColor(.white)
-                .padding(.bottom,20)
+                .padding(.top,geoReader.size.height * 0.08)
             
             LogInItems()
-            
-            signUpLinkSection
-                .padding(.bottom,80)
-        }
-    }
-    
-    private var signUpLinkSection: some View {
-        HStack{
-            Text("Already have an account?")
-                .foregroundColor(Color.white)
-            NavigationLink(destination: SignInView()) {
-                Text("Login Now")
-            }
-        }
-    }
-    
-    struct CredentialFields: View {
-        @Binding var email: String
-        @Binding var password: String
-        @Binding var confirmPassword: String
-        
-        var body: some View {
-            Group{
-                VStack{
-                    SignInCredentialFields(email: $email, password: $password)
-                        .padding(.bottom,3)
-                    
-                    ZStack{
-                        SecureField("Confirm Password", text: $confirmPassword)
-                            .frame(width: 340, height: 25)
-                            .padding()
-                            .background(.white)
-                            .opacity(0.3)
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            )
-                        
-                        SecureField("Confirm Password", text: $confirmPassword)
-                            .frame(width: 340, height: 25)
-                            .padding()
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            )
-                    }
-                }
-                .padding(.bottom, 30)
-            }
-        }
-    }
-    
-    struct EmailPasswordLogIn: View{
-        @EnvironmentObject var viewRouter: ViewRouter
-        @Binding var email: String
-        @Binding var password: String
-        @Binding var confirmPasword: String
-        @Binding var signInProcessing: Bool
-        @Binding var signInErrorMessage: String
-        @Binding var isLoggedIn: Bool
-        
-        var body: some View{
-            CredentialFields(email: $email, password: $password, confirmPassword: $confirmPasword)
-            
-            //logIn Button
-            Button(action: {
-                createUser(userEmail: email, userPassword: password)
-            }) {
-                Text("Sign Up")
-                    .bold()
-                    .foregroundColor(.black)
-                    .frame(width: 340, height: 25)
-                    .padding()
-                    .background(Color.iceBreakrrrPink)
-                    .cornerRadius(10)
-                    .textInputAutocapitalization(.never)
-                    .shadow(radius: 5)
-                    .padding(.bottom,10)
-                    .opacity(!signInProcessing && !email.isEmpty && !password.isEmpty && !confirmPasword.isEmpty ? 1 : 0.5)
-            }
-            .disabled(!signInProcessing && !email.isEmpty && !password.isEmpty && !confirmPasword.isEmpty ? false : true)
-            
-            if(signInErrorMessage != ""){
-                Text("\(signInErrorMessage)")
-                    .foregroundColor(.red)
-                    .padding(.bottom,10)
-            }
-            
-        }
-        
-        
-        private func signInUser(userEmail: String, userPassword: String){
-            signInProcessing = true
-            
-            Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-                
-                guard error ==  nil else{
-                    signInProcessing = false
-                    signInErrorMessage = error!.localizedDescription
-                    return
-                }
-                switch authResult {
-                case .none:
-                    print("Cound not sign in user.")
-                    signInProcessing = false
-                case .some(_):
-                    print("User signed in")
-                    signInProcessing = false
-                    isLoggedIn = true
-                    
-                }
-            }
-        }
-        
-        private func createUser(userEmail: String, userPassword: String){
-            signInProcessing = true
-            
-            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-                
-                guard error == nil else{
-                    signInProcessing = false
-                    signInErrorMessage = error!.localizedDescription
-                    return
-                }
-                switch authResult {
-                case .none:
-                    print("Cound not create new user.")
-                    signInProcessing = false
-                case .some(_):
-                    print("User signed in")
-                    signInProcessing = false
-                    viewRouter.currentPage = .homePage
-                    
-                }
-            }
+            LogInItems().signInLinkSection
         }
     }
 }

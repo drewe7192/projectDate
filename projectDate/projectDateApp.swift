@@ -17,7 +17,6 @@ struct projectDateApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject var viewRouter = ViewRouter()
 
-    
     var body: some Scene {
         WindowGroup {
             MotherView().environmentObject(viewRouter)

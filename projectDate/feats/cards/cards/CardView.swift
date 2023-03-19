@@ -53,7 +53,7 @@ struct CardView: View {
                         .foregroundColor(colorSwitch())
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
-                               height: geoReader.size.height * 0.35)
+                               height: geoReader.size.height * 0.65)
                     VStack{
                         Text("How would your perfect match answer this question:")
                             .bold()
@@ -99,7 +99,7 @@ struct CardView: View {
                             .font(.system(size: 15))
                     }
                     .padding(.leading,300)
-                    .padding(.top,500)
+                    .padding(.top,geoReader.size.height * 0.6)
                 }
            
                    
@@ -118,7 +118,7 @@ struct CardView: View {
                 DragGesture()
                     .onChanged {
                         //translation changes as you drag card;
-                        // if card gets dragged a certain distance, set it to like/dislike
+                        //if card gets dragged a certain distance, set it to like/dislike
                         translation = $0.translation
                         if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                             self.swipeStatus = .dislike
