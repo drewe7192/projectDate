@@ -131,10 +131,8 @@ struct CredentialFieldsView: View {
                         }
                     }
                 }
-                
             }
         }
-   
     }
 }
 

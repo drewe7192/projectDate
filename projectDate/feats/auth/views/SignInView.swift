@@ -54,7 +54,7 @@ struct SignInView: View {
             }
             .padding(.bottom,geoReader.size.height * 0.02)
             
-            EmailPasswordLoginView(email: $email, password: $password,confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn, displayConfirmPassword: $displayConfirmPassword)
+            EmailPasswordLoginView(email: $email, password: $password,confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, displayConfirmPassword: $displayConfirmPassword)
             
             Text("Forgot Password?")
                 .padding(.leading, geoReader.size.height * 0.3)

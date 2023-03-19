@@ -16,7 +16,6 @@ struct SignUpView: View {
     @State private var email: String = ""
     @State private var password: String =  ""
     @State private var confirmPassword: String = ""
-    @State private var isLoggedIn: Bool = false
     @State private var displayConfirmPassword: Bool = true
     
     private enum signInType {
@@ -65,7 +64,7 @@ struct SignUpView: View {
                     .font(.system(size: geoReader.size.height * 0.03))
             }
             
-            EmailPasswordLoginView(email: $email, password: $password, confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, isLoggedIn: $isLoggedIn, displayConfirmPassword: $displayConfirmPassword)
+            EmailPasswordLoginView(email: $email, password: $password, confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, displayConfirmPassword: $displayConfirmPassword)
             
             Text("Forgot Password?")
                 .padding(.leading, geoReader.size.height * 0.3)

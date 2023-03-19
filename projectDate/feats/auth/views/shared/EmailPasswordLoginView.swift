@@ -15,7 +15,6 @@ struct EmailPasswordLoginView: View{
     @Binding var password: String
     @Binding var confirmPassword: String
     @Binding var signInErrorMessage: String
-    @Binding var isLoggedIn: Bool
     @Binding var displayConfirmPassword: Bool
     
     var body: some View{
@@ -24,6 +23,7 @@ struct EmailPasswordLoginView: View{
             
             Spacer()
                 .frame(height: 20)
+            
             //logIn Button
             Button(action: {
                 if(displayConfirmPassword){
@@ -66,7 +66,6 @@ struct EmailPasswordLoginView: View{
             case .some(_):
                 print("User signed in")
                 LogInItems().isLoading = false
-                //isLoggedIn = true
                 viewRouter.currentPage = .homePage
             }
         }
@@ -98,6 +97,6 @@ struct EmailPasswordLoginView: View{
 
 struct EmailPasswordLoginView_Previews: PreviewProvider {
     static var previews: some View {
-        EmailPasswordLoginView(email: .constant(""), password: .constant(""),confirmPassword: .constant(""),signInErrorMessage: .constant(""), isLoggedIn: .constant(true), displayConfirmPassword: .constant(true))
+        EmailPasswordLoginView(email: .constant(""), password: .constant(""),confirmPassword: .constant(""),signInErrorMessage: .constant(""), displayConfirmPassword: .constant(true))
     }
 }
