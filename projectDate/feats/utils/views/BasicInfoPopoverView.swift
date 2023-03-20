@@ -43,7 +43,7 @@ struct BasicInfoPopoverView: View {
         VStack{
             Image(uiImage: self.profileImage)
                 .resizable()
-                .frame(width: 200, height: 200)
+                .frame(width: 150, height: 150)
                 .background(Color.black.opacity(0.2))
                 .aspectRatio(contentMode: .fill)
                 .clipShape(Circle())

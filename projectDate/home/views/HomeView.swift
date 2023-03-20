@@ -32,7 +32,7 @@ struct HomeView: View {
     @State private var swipedRecords: [SwipedRecordModel] = []
     @State private var swipedCards: [CardModel] = []
     @State private var swipedcardsForProgressCircle: [CardModel] = []
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "iceDay")
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day")
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var profileImage: UIImage? = UIImage()
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -79,12 +79,12 @@ struct HomeView: View {
                                     .padding(.bottom,3)
                                 
                                 HStack{
-                                    Image(systemName: "flame.circle.fill")
+                                    Image(systemName: "snowflake.circle")
                                         .resizable()
                                         .frame(width: 30, height: 30)
                                         .foregroundColor(.white)
                               
-                                    Text("Tuesdays")
+                                    Text("\(userProfile.matchDay)")
                                         .foregroundColor(.iceBreakrrrBlue)
                                         .bold()
                                         .font(.system(size: 20))
@@ -724,7 +724,8 @@ struct HomeView: View {
             "fullName": Auth.auth().currentUser?.displayName as Any,
             "location": "",
             "gender": "",
-            "userId": Auth.auth().currentUser?.uid as Any
+            "userId": Auth.auth().currentUser?.uid as Any,
+            "matchDay": ""
         ]
         
         let docRef = db.collection("profiles").document(id)
@@ -747,7 +748,8 @@ struct HomeView: View {
             "fullName": updatedProfile.fullName,
             "location": updatedProfile.location,
             "gender": updatedProfile.gender,
-            "userId": Auth.auth().currentUser?.uid as Any
+            "userId": Auth.auth().currentUser?.uid as Any,
+            "matchDay": updatedProfile.matchDay
         ]
         
         let docRef = db.collection("profiles").document(updatedProfile.id)
