@@ -15,11 +15,11 @@ struct BasicInfoPopoverView: View {
     @Binding var showingBasicInfoPopover: Bool
     @Binding var showingInstructionsPopover: Bool
     
-    @State private var selectedChoice = "Pick gender"
     @State private var genderChoices: [String] = ["Female","Male"]
-    @State private var showImageSheet = false
+    @State private var matchDayChoices: [String] = ["Saturdays","Fridays","Thursdays","Wednesdays","Tuesdays","Mondays","Sundays"]
+    @State private var showImageSheet: Bool = false
     @State private var profileImage: UIImage = UIImage()
-    @State private var editInfo = false
+    @State private var editInfo: Bool = false
     
     let storage = Storage.storage()
     
@@ -30,151 +30,12 @@ struct BasicInfoPopoverView: View {
                     .ignoresSafeArea()
                 
                 if(!showingInstructionsPopover){
-                    VStack(spacing: 10){
-                        Text("Basic information:")
-                            .foregroundColor(.white)
-                            .font(.system(size: 35))
-                            .multilineTextAlignment(.center)
-                        
-                        Spacer()
-                            .frame(height: 10)
-                        
-                        imageSection(for: geoReader)
-                        
-                        Spacer()
-                            .frame(height: 30)
-                        
-                        HStack{
-                            Text("Name")
-                                .foregroundColor(.white)
-                                .font(.system(size: 25))
-                                .padding(.trailing, geoReader.size.width * 0.15)
-                            
-                            
-                            if(editInfo){
-                                TextField("", text: $userProfile.fullName)
-                                    .foregroundColor(.black)
-                                    .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
-                                    .padding()
-                                    .background(.white)
-                                    .opacity(0.5)
-                                    .cornerRadius(geoReader.size.width * 0.03)
-                                    .textInputAutocapitalization(.never)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 1)
-                                    )
-                            }else {
-                                Text(userProfile.fullName == "" ? "Enter Name" : "yo")
-                                    .foregroundColor(Color.gray)
-                                    .font(.system(size: geoReader.size.height * 0.025))
-                            }
-                            
-                     
-                        }
-                        
-                        Spacer()
-                            .frame(height: 10)
-                        
-                        Menu {
-                            Picker(selection: $userProfile.gender) {
-                                ForEach(genderChoices, id: \.self) { choice in
-                                    Text("\(choice)")
-                                        .tag(choice)
-                                        .font(.system(size: 40))
-                                }
-                            } label: {}
-                        } label: {
-                            Text("\(userProfile.gender)")
-                                .font(.system(size: 30))
-                        }
-                        .accentColor(.white)
-                        .disabled(editInfo == false)
-                        
-                        Spacer()
-                            .frame(height: 100)
-                        
-                        Button(action: {
-                            editInfo.toggle()
-                            saveAllInfo()
-                        }) {
-                            Text(editInfo ? "Save" : "Edit Profile")
-                                .bold()
-                                .font(.system(size: 25))
-                                .foregroundColor(.white)
-                                .frame(width: geoReader.size.width * 0.7, height: geoReader.size.height * 0.08)
-                                .background(Color.iceBreakrrrPink)
-                                .cornerRadius(geoReader.size.width * 0.04)
-                                .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
-                            
-                        }
-                    }
-                    .sheet(isPresented: $showImageSheet){
-                        // Pick an image from the photo library:
-                        ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
-                        
-                        //  If you wish to take a photo from camera instead:
-                        // ImagePicker(sourceType: .camera, selectedImage: self.$image)
-                    }
+                    basicInfoPopover(for: geoReader)
                 } else {
-                    
-                    VStack(spacing: 10){
-                        Text("Welcome to IceBreakrrr:")
-                            .foregroundColor(.white)
-                            .font(.system(size: 35))
-                            .multilineTextAlignment(.center)
-                        
-                        Text("the dating app where you're the Matchmaker!")
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.center)
-                            .font(.system(size: 25))
-                        
-                        Spacer()
-                            .frame(height: 30)
-                        
-                        
-                        Text("Here's how it works:")
-                            .foregroundColor(.white)
-                            .font(.system(size: 30))
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom,5)
-                        
-                        Text("- Answer the questions")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20))
-                            .multilineTextAlignment(.center)
-                        
-                        Text("- Swipe and create your own the cards")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20))
-                            .multilineTextAlignment(.center)
-                        
-                        Text("- Every week get a match")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20))
-                            .multilineTextAlignment(.center)
-                        
-                        Text("- Meet match via biWeekly events in the Events tab!")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20))
-                            .multilineTextAlignment(.center)
-                        
-                        Spacer()
-                            .frame(height: 100)
-                        
-                        Button(action: {
-                            showingBasicInfoPopover.toggle()
-                        }) {
-                            Text("Got it")
-                                .bold()
-                                .frame(width: 300, height: 70)
-                                .background(Color.iceBreakrrrPink)
-                                .foregroundColor(.white)
-                                .cornerRadius(20)
-                                .shadow(radius: 8, x: 10, y:10)
-                        }
-                    }
+                    instructionsPopover(for: geoReader)
                 }
             }
+            .position(x: geoReader.frame(in: .local).midX, y:geoReader.frame(in: .local).midY)
         }
     }
     
@@ -182,7 +43,6 @@ struct BasicInfoPopoverView: View {
         VStack{
             Image(uiImage: self.profileImage)
                 .resizable()
-                .cornerRadius(50)
                 .frame(width: 200, height: 200)
                 .background(Color.black.opacity(0.2))
                 .aspectRatio(contentMode: .fill)
@@ -194,17 +54,15 @@ struct BasicInfoPopoverView: View {
                 }) {
                     Text("Upload Image")
                         .font(.headline)
-                        .frame(width: geoReader.size.width * 0.6)
-                        .frame(height: geoReader.size.height * 0.04)
+                        .frame(width: geoReader.size.width * 0.6, height: geoReader.size.height * 0.04)
                         .background(Color.mainGrey)
-                        .cornerRadius(40)
+                        .cornerRadius(geoReader.size.height * 0.04)
                         .shadow(radius: 10, x: 10, y: 10)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
+                        .foregroundColor(Color.iceBreakrrrBlue)
                 }
                 
             }
-      
+            
         }
     }
     
@@ -239,10 +97,208 @@ struct BasicInfoPopoverView: View {
             }
         }
     }
+    
+    private func instructionsPopover(for geoReader: GeometryProxy) -> some View{
+        VStack(spacing: geoReader.size.height * 0.01){
+            Text("Welcome to IceBreakrrr!")
+                .foregroundColor(Color.iceBreakrrrBlue)
+                .font(.system(size: geoReader.size.height * 0.045))
+                .multilineTextAlignment(.center)
+            
+            Text("the relationship app where you're the Matchmaker!")
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .font(.system(size: geoReader.size.height * 0.03))
+            
+            Spacer()
+                .frame(height: geoReader.size.height * 0.04)
+            
+            Text("Here's how it works:")
+                .foregroundColor(Color.iceBreakrrrBlue)
+                .font(.system(size: geoReader.size.height * 0.04))
+                .multilineTextAlignment(.center)
+                .padding(.bottom,5)
+            
+            Text("- Answer the questions")
+                .foregroundColor(.white)
+                .font(.system(size: geoReader.size.height * 0.025))
+                .multilineTextAlignment(.center)
+            
+            Text("- Swipe and create your own the cards")
+                .foregroundColor(.white)
+                .font(.system(size: geoReader.size.height * 0.025))
+                .multilineTextAlignment(.center)
+            
+            HStack{
+                Text("- Get matches weekly via")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                    .multilineTextAlignment(.center)
+                
+                Image(systemName: "snowflake.circle")
+                    .resizable()
+                    .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+                    .foregroundColor(.white)
+                
+                Text("Day")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                    .multilineTextAlignment(.center)
+            }
+            
+            Text("- Coming Soon: Meet match via bimonthly events in the Events tab!")
+                .foregroundColor(.white)
+                .font(.system(size: geoReader.size.height * 0.025))
+                .multilineTextAlignment(.center)
+            
+            Spacer()
+                .frame(height: geoReader.size.height * 0.03)
+            
+            Button(action: {
+                showingBasicInfoPopover.toggle()
+            }) {
+                Text("Got it")
+                    .bold()
+                    .frame(width: geoReader.size.width * 0.7, height: geoReader.size.height * 0.1)
+                    .background(Color.mainGrey)
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.system(size: geoReader.size.height * 0.035))
+                    .cornerRadius(geoReader.size.height * 0.04)
+                    .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
+            }
+        }
+    }
+    
+    private func basicInfoPopover(for geoReader: GeometryProxy) -> some View{
+        VStack(spacing: geoReader.size.width * 0.02){
+            Text("Create Profile")
+                .foregroundColor(.white)
+                .font(.system(size: geoReader.size.width * 0.1))
+                .multilineTextAlignment(.center)
+            
+            Spacer()
+                .frame(height: geoReader.size.width * 0.05)
+            
+            imageSection(for: geoReader)
+            
+            Spacer()
+                .frame(height: geoReader.size.width * 0.07)
+            
+            nameSection(for: geoReader)
+            
+            Spacer()
+                .frame(height: geoReader.size.height * 0.02)
+            
+            pickerSections(for: geoReader)
+            
+            Spacer()
+                .frame(height: geoReader.size.height * 0.05)
+            
+            basicInfoButton(for: geoReader)
+        }
+        .sheet(isPresented: $showImageSheet){
+            // Pick an image from the photo library:
+            ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
+            
+            //  If you wish to take a photo from camera instead:
+            // ImagePicker(sourceType: .camera, selectedImage: self.$image)
+        }
+    }
+    
+    private func nameSection(for geoReader: GeometryProxy) -> some View{
+        HStack{
+            Text("Name")
+                .foregroundColor(.white)
+                .font(.system(size: geoReader.size.width * 0.07))
+                .padding(.trailing, geoReader.size.width * 0.15)
+            
+            
+            if(editInfo){
+                TextField("", text: $userProfile.fullName)
+                    .foregroundColor(.black)
+                    .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
+                    .padding()
+                    .background(.white)
+                    .opacity(0.5)
+                    .cornerRadius(geoReader.size.width * 0.03)
+                    .textInputAutocapitalization(.never)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 1)
+                    )
+            }else {
+                Text(userProfile.fullName == "" ? "Enter Name" : userProfile.fullName)
+                    .foregroundColor(Color.gray)
+                    .font(.system(size: geoReader.size.height * 0.025))
+            }
+        }
+    }
+    
+    private func pickerSections(for geoReader: GeometryProxy) -> some View{
+        VStack{
+            Menu {
+                Picker(selection: $userProfile.gender) {
+                    ForEach(genderChoices, id: \.self) { choice in
+                        Text("\(choice)")
+                            .tag(choice)
+                            .font(.system(size: geoReader.size.height * 0.04))
+                    }
+                } label: {}
+            } label: {
+                Text("\(userProfile.gender)")
+                    .font(.system(size: geoReader.size.height * 0.04))
+            }
+            .padding(.bottom,geoReader.size.height * 0.02)
+            .accentColor(.white)
+            .disabled(editInfo == false)
+            
+            Menu {
+                Picker(selection: $userProfile.matchDay) {
+                    ForEach(matchDayChoices, id: \.self) { matchDay in
+                        Text("\(matchDay)")
+                            .tag(matchDay)
+                            .font(.system(size: geoReader.size.height * 0.04))
+                    }
+                } label: {}
+            } label: {
+                HStack{
+                    Image(systemName: "snowflake.circle")
+                        .resizable()
+                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+                        .foregroundColor(editInfo ? .white : .mainGrey)
+                    
+                    Text("\(userProfile.matchDay)")
+                        .font(.system(size: geoReader.size.height * 0.04))
+                }
+            }
+            .accentColor(.white)
+            .disabled(editInfo == false)
+            
+            Text("(Weekly match day)")
+                .foregroundColor(.iceBreakrrrBlue)
+        }
+    }
+    
+    private func basicInfoButton(for geoReader: GeometryProxy) -> some View{
+        VStack{
+            Button(action: {
+                editInfo.toggle()
+                saveAllInfo()
+            }) {
+                Text(editInfo ? "Save" : "Edit Profile")
+                    .bold()
+                    .font(.system(size: geoReader.size.height * 0.035))
+                    .foregroundColor(.iceBreakrrrBlue)
+                    .frame(width: geoReader.size.width * 0.7, height: geoReader.size.height * 0.1)
+                    .background(Color.mainGrey)
+                    .cornerRadius(geoReader.size.width * 0.04)
+                    .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
+            }
+        }
+    }
 }
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender")), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day")), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
     }
 }

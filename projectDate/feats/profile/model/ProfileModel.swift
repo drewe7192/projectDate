@@ -12,6 +12,7 @@ struct ProfileModel: Codable, Identifiable, Hashable  {
     var fullName: String
     var location: String
     var gender: String
+    var matchDay: String
 //    var image: String
 //    var userId: String
 }

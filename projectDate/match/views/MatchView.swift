@@ -24,7 +24,7 @@ struct MatchView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     @State private var profileImage: UIImage = UIImage()
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "")
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "")
     @State private var matchRecords: [MatchRecordModel] = []
     
     let db = Firestore.firestore()
@@ -100,7 +100,7 @@ struct MatchView: View {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                             if !data.isEmpty{
-                                self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "")
+                                self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "")
                             }
                     }
                 }

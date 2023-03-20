@@ -25,7 +25,8 @@ enum MockService {
             id: "John",
             fullName: "Bon",
             location: "Tampa, Fl",
-            gender: "Male"
+            gender: "Male",
+            matchDay: "Mondays"
 //            image: "animeGirl"
         )
     }
@@ -44,28 +45,32 @@ enum MockService {
                 id: "John",
                 fullName: "Bon",
                 location: "Tampa, Fl",
-                gender: "Male"
+                gender: "Male",
+                matchDay: "Wednesdays"
 //                image: "animeGirl"
             ),
             ProfileModel(
                 id: "John",
                 fullName: "Bon",
                 location: "Tampa, Fl",
-                gender: "Male"
+                gender: "Male",
+                matchDay: "Wednesdays"
 //                image: "animeGirl"
             ),
             ProfileModel(
                 id: "John",
                 fullName: "Bon",
                 location: "Tampa, Fl",
-                gender: "Male"
+                gender: "Male",
+                matchDay: "Wednesdays"
 //                image: "animeGirl"
             ),
             ProfileModel(
                 id: "John",
                 fullName: "Bon",
                 location: "Tampa, Fl",
-                gender: "Male"
+                gender: "Male",
+                matchDay: "Wednesdays"
 //                image: "animeGirl"
             )
         ]

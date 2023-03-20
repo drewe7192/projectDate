@@ -99,6 +99,6 @@ struct CardsView: View {
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView(updateData: .constant(false), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: ""))
+        CardsView(updateData: .constant(false), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Wednesdays"))
     }
 }

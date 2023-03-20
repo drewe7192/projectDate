@@ -32,7 +32,7 @@ struct HomeView: View {
     @State private var swipedRecords: [SwipedRecordModel] = []
     @State private var swipedCards: [CardModel] = []
     @State private var swipedcardsForProgressCircle: [CardModel] = []
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender")
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "iceDay")
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var profileImage: UIImage? = UIImage()
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -563,7 +563,7 @@ struct HomeView: View {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "")
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "")
                         }
                     }
                     completed(self.userProfile.id)

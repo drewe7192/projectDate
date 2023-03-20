@@ -7,42 +7,6 @@
 
 import SwiftUI
 
-//struct CredentialFieldsView: View {
-//    @Binding var email: String
-//    @Binding var password: String
-//    @Binding var confirmPassword: String
-//
-//    var body: some View {
-//        Group{
-////            VStack{
-////                SignInCredentialFields(email: $email, password: $password)
-////                    .padding(.bottom,3)
-////
-////                ZStack{
-////                    SecureField("Confirm Password", text: $confirmPassword)
-////                        .frame(width: 340, height: 25)
-////                        .padding()
-////                        .background(.white)
-////                        .opacity(0.3)
-////                        .cornerRadius(10)
-////                        .overlay(
-////                            RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-////                        )
-////
-////                    SecureField("Confirm Password", text: $confirmPassword)
-////                        .frame(width: 340, height: 25)
-////                        .padding()
-////                        .cornerRadius(10)
-////                        .overlay(
-////                            RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-////                        )
-////                }
-////            }
-////            .padding(.bottom, 30)
-//        }
-//    }
-//}
-
 struct CredentialFieldsView: View {
     @Binding var email: String
     @Binding var password: String
