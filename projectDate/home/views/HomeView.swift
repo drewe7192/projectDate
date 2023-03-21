@@ -63,12 +63,10 @@ struct HomeView: View {
                     Color.mainBlack
                         .ignoresSafeArea()
                     
-                    VStack{
-                        headerSection(for: geoReader)
-                            .padding(.bottom)
                         VStack{
                     
                             cardsSection(for: geoReader)
+                                .padding(.top,10)
                             
                             HStack{
                                 Text("Match Activity:")
@@ -145,15 +143,13 @@ struct HomeView: View {
                                 }
                             }
                         }
+                        .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
+                        .disabled(self.showMenu ? true : false)
                      
-                    }
-                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
-                    .disabled(self.showMenu ? true : false)
-                    
                     if self.showMenu {
                         MenuView()
                             .frame(width: geoReader.size.width/2)
-                            .padding(.trailing,200)
+                            .padding(.trailing,geoReader.size.width * 0.5)
                     }
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -223,116 +219,115 @@ struct HomeView: View {
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
+                .navigationBarItems(leading: (
+                        headerSection(for: geoReader)
+                            .padding(.leading, geoReader.size.width * 0.25)
+                ))
             }
         }
     }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
-        HStack{
-            ZStack{
-                Text("")
-                    .frame(width: 40, height: 40)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Rectangle())
-                    .cornerRadius(10)
-                  //  .padding(.leading, geoReader.size.width * -0.45)
-               
-                
-                Image(systemName: "line.3.horizontal.decrease")
-                    .resizable()
-                    .frame(width: 20, height: 10)
-                    .foregroundColor(.white)
-                    .aspectRatio(contentMode: .fill)
-                  //  .padding(.leading, geoReader.size.width * -0.425)
-            }
-            .padding(.trailing,70)
+        ZStack{
+                Text("iceBreakrrr")
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
+                    .bold()
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .position(x: geoReader.size.width * 0.27, y: geoReader.size.height * 0.03)
             
-            Text("iceBreakrrr")
-                .font(.custom("Georgia-BoldItalic", size: 23))
-                .bold()
-                .foregroundColor(Color.iceBreakrrrBlue)
-                // .padding(.leading, geoReader.size.width * 0.00)
-                //.position(x: geoReader.frame(in: .local).midX, y:geoReader.size.height * 0.02)
-            
-            ZStack{
-                Text("")
-                    .cornerRadius(20)
-                    .frame(width: 40, height: 40)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Circle())
-                   // .padding(.leading, geoReader.size.width * 0.55)
-                
-                Image(systemName: "bell")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-                    .aspectRatio(contentMode: .fill)
-                    //.padding(.leading, geoReader.size.width * 0.55)
-                
-            }
-            .padding(.leading,30)
-            
-            NavigationLink(destination: SettingsView()) {
-                //change this back
-                if(self.profileImage != nil){
-                    ZStack{
-                        Text("")
-                            .cornerRadius(20)
-                            .frame(width: 40, height: 40)
-                            .background(.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                           // .padding(.leading, geoReader.size.width * 0.8)
-                        
-                        Image(uiImage: self.profileImage!)
-                            .resizable()
-                            .cornerRadius(20)
-                            .frame(width: 30, height: 30)
-                            .background(.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                          //  .padding(.leading, geoReader.size.width * 0.8)
+            HStack{
+                Button(action: {
+                    withAnimation{
+                        self.showMenu.toggle()
                     }
-                   
-                    
-                } else {
+                }) {
                     ZStack{
                         Text("")
-                            .cornerRadius(20)
                             .frame(width: 40, height: 40)
-                            .background(.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                          //  .padding(.leading, geoReader.size.width * 0.8)
-                        
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .cornerRadius(20)
-                            .frame(width: 20, height: 20)
                             .background(Color.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Rectangle())
+                            .cornerRadius(10)
+
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .resizable()
+                            .frame(width: 20, height: 10)
                             .foregroundColor(.white)
                             .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                          //  .padding(.leading, geoReader.size.width * 0.8)
-                        
                     }
-              
                 }
+                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
+
+                Spacer()
+                    .frame(width: geoReader.size.width * 0.55)
+                
+                NavigationLink(destination: NotificationsView(), label: {
+                    ZStack{
+                        Text("")
+                            .cornerRadius(20)
+                            .frame(width: 40, height: 40)
+                            .background(Color.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                        
+                        Image(systemName: "bell")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fill)
+                    }
+                })
+
+                NavigationLink(destination: SettingsView()) {
+                    if(self.profileImage != nil){
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            Image(uiImage: self.profileImage!)
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 30, height: 30)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                        }
+                    } else {
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 20, height: 20)
+                                .background(Color.black.opacity(0.2))
+                                .foregroundColor(.white)
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                        }
+                    }
+                }
+                
+                // Dating/Friend Toggle button
+                // adding this back in future versions
+                
+                //            Toggle(isOn: $showFriendDisplay, label: {
+                //
+                //            })
+                //            .padding(geoReader.size.width * 0.02)
+                //            .toggleStyle(SwitchToggleStyle(tint: .white))
             }
-            
-            // Dating/Friend Toggle button
-            // adding this back in future versions
-            
-            //            Toggle(isOn: $showFriendDisplay, label: {
-            //
-            //            })
-            //            .padding(geoReader.size.width * 0.02)
-            //            .toggleStyle(SwitchToggleStyle(tint: .white))
-            
-         
         }
+       
     }
     
     private func profilerSection(for geoReader: GeometryProxy) -> some View {

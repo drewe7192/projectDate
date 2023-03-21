@@ -23,47 +23,57 @@ struct SettingsView: View {
     @State private var showSaveButton = false
     @State private var editInfo = false
     @State private var profileImage: UIImage = UIImage()
+    @State private var showMenu: Bool = false
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "")
     
     let storage = Storage.storage()
     
     var body: some View {
-        GeometryReader {geoReader in
-            ZStack{
-                Color.mainBlack
-                    .ignoresSafeArea()
-            
-                VStack{
-                    headerSection(for: geoReader)
-                    
-                    Text("Settings")
-                        .foregroundColor(Color.white)
-                        .bold()
-                        .font(.system(size: geoReader.size.height * 0.05))
-                }
-                .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.07)
+        NavigationView {
+            GeometryReader {geoReader in
+                ZStack{
+                    Color.mainBlack
+                        .ignoresSafeArea()
                 
-                VStack{
-                    imageSection(for: geoReader)
-                        .padding(geoReader.size.height * 0.03)
+                    VStack{
+                            Text("Settings")
+                                .foregroundColor(Color.white)
+                                .bold()
+                                .font(.system(size: geoReader.size.height * 0.05))
+                        
+                            imageSection(for: geoReader)
+                                .padding(geoReader.size.height * 0.03)
+                            
+                            infoSection(for: geoReader)
+                                .padding(geoReader.size.height * 0.02)
+                            
+                            buttonsSection(for: geoReader)
+                    }
+                    .sheet(isPresented: $showSheet){
+                        // Pick an image from the photo library:
+                        ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
+                        
+                        //  If you wish to take a photo from camera instead:
+                        // ImagePicker(sourceType: .camera, selectedImage: self.$image)
+                    }
+                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
+                    .disabled(self.showMenu ? true : false)
                     
-                    infoSection(for: geoReader)
-                        .padding(geoReader.size.height * 0.02)
-                    
-                    buttonsSection(for: geoReader)
+                    if self.showMenu {
+                        MenuView()
+                            .frame(width: geoReader.size.width/2)
+                            .padding(.trailing,geoReader.size.width * 0.5)
+                    }
+                  
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
-                .sheet(isPresented: $showSheet){
-                    // Pick an image from the photo library:
-                    ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
-                    
-                    //  If you wish to take a photo from camera instead:
-                    // ImagePicker(sourceType: .camera, selectedImage: self.$image)
+                .onAppear{
+                    getStorageFile()
                 }
-            }
-            .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
-            .onAppear{
-                getStorageFile()
+                .navigationBarItems(leading: (
+                        headerSection(for: geoReader)
+                            .padding(.leading, geoReader.size.width * 0.25)
+                ))
             }
         }
     }
@@ -181,9 +191,6 @@ struct SettingsView: View {
                     .cornerRadius(geoReader.size.width * 0.04)
                     .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
             }
-            //                        .fullScreenCover(isPresented: $isLoggedOut) {
-            //                            SignInView()
-            //                        }
         }
     }
     
@@ -202,8 +209,6 @@ struct SettingsView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            //viewModel.updateUserProfile(updatedProfile: ProfileModel(id: self.userProfile.id, fullName: name, location: location, gender: ""))
-            
             uploadStorageFile(image: viewModel.profileImage)
         }
     }
@@ -223,7 +228,6 @@ struct SettingsView: View {
             }
         }
     }
-    
     
     public func uploadStorageFile(image: UIImage){
         let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
@@ -248,104 +252,107 @@ struct SettingsView: View {
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            Text("iceBreakrrr")
-                .font(.custom("Georgia-BoldItalic", size: 20))
-                .bold()
-                .foregroundColor(Color.iceBreakrrrBlue)
-                .padding(.leading, geoReader.size.width * -0.02)
+                Text("iceBreakrrr")
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
+                    .bold()
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .position(x: geoReader.size.width * 0.26, y: geoReader.size.height * 0.03)
             
-            NavigationLink(destination: SettingsView()) {
-                //change this back
-                if(self.profileImage == nil){
-                    ZStack{
-                        Text("")
-                            .cornerRadius(20)
-                            .frame(width: 40, height: 40)
-                            .background(.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
-                        
-                        Image(uiImage: self.profileImage)
-                            .resizable()
-                            .cornerRadius(20)
-                            .frame(width: 30, height: 30)
-                            .background(.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
+            HStack{
+                Button(action: {
+                    withAnimation{
+                        self.showMenu.toggle()
                     }
-                } else {
+                }) {
                     ZStack{
                         Text("")
-                            .cornerRadius(20)
                             .frame(width: 40, height: 40)
-                            .background(.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
-                        
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .cornerRadius(20)
-                            .frame(width: 20, height: 20)
                             .background(Color.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Rectangle())
+                            .cornerRadius(10)
+
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .resizable()
+                            .frame(width: 20, height: 10)
                             .foregroundColor(.white)
                             .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                            .padding(.leading, geoReader.size.width * 0.8)
-                        
                     }
-                    
                 }
-            }
-            
-            // Dating/Friend Toggle button
-            // adding this back in future versions
-            
-            //            Toggle(isOn: $showFriendDisplay, label: {
-            //
-            //            })
-            //            .padding(geoReader.size.width * 0.02)
-            //            .toggleStyle(SwitchToggleStyle(tint: .white))
-            
-            ZStack{
-                Text("")
-                    .cornerRadius(20)
-                    .frame(width: 40, height: 40)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Circle())
-                    .padding(.leading, geoReader.size.width * 0.55)
+                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
+
+                Spacer()
+                    .frame(width: geoReader.size.width * 0.55)
                 
-                Image(systemName: "bell")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-                    .aspectRatio(contentMode: .fill)
-                    .padding(.leading, geoReader.size.width * 0.55)
+                NavigationLink(destination: NotificationsView(), label: {
+                    ZStack{
+                        Text("")
+                            .cornerRadius(20)
+                            .frame(width: 40, height: 40)
+                            .background(Color.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                        
+                        Image(systemName: "bell")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fill)
+                    }
+                })
+               
+
+                NavigationLink(destination: SettingsView()) {
+                    if(self.profileImage != nil){
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            Image(uiImage: self.profileImage)
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 30, height: 30)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                        }
+                    } else {
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 20, height: 20)
+                                .background(Color.black.opacity(0.2))
+                                .foregroundColor(.white)
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                        }
+                    }
+                }
                 
-            }
-            
-            ZStack{
-                Text("")
-                    .frame(width: 40, height: 40)
-                    .background(Color.black.opacity(0.2))
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Rectangle())
-                    .cornerRadius(10)
-                    .padding(.leading, geoReader.size.width * -0.45)
+                // Dating/Friend Toggle button
+                // adding this back in future versions
                 
-                Image(systemName: "line.3.horizontal.decrease")
-                    .resizable()
-                    .frame(width: 20, height: 10)
-                    .foregroundColor(.white)
-                    .aspectRatio(contentMode: .fill)
-                    .padding(.leading, geoReader.size.width * -0.425)
+                //            Toggle(isOn: $showFriendDisplay, label: {
+                //
+                //            })
+                //            .padding(geoReader.size.width * 0.02)
+                //            .toggleStyle(SwitchToggleStyle(tint: .white))
             }
         }
+       
     }
-    
 }
 
 struct SettingsView_Previews: PreviewProvider {
