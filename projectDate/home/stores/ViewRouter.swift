@@ -10,8 +10,6 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
 
-
-
 class ViewRouter: ObservableObject {
     static let shared = ViewRouter()
     @Published var currentPage: Route = .signUpPage
@@ -26,7 +24,6 @@ class ViewRouter: ObservableObject {
                 self.currentPage = .homePage
             }
         }
-        
     }
 }
 

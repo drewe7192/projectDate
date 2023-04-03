@@ -30,6 +30,14 @@
 		7731738928CE2F6500B8885B /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738828CE2F6500B8885B /* FacebookShare */; };
 		7753927729A2316F00AA2B74 /* FailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753927629A2316F00AA2B74 /* FailedView.swift */; };
 		7753927929A425B300AA2B74 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753927829A425B300AA2B74 /* ImagePicker.swift */; };
+		7753CE0129D6A42B00536968 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0029D6A42B00536968 /* Message.swift */; };
+		7753CE0329D6A44600536968 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0229D6A44600536968 /* MessageViewModel.swift */; };
+		7753CE0529D6A46800536968 /* MessageHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0429D6A46800536968 /* MessageHomeView.swift */; };
+		7753CE0729D6A47200536968 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0629D6A47200536968 /* MessageView.swift */; };
+		7753CE0A29D6A49200536968 /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0929D6A49200536968 /* MessageBubble.swift */; };
+		7753CE0C29D6A4A000536968 /* MessageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0B29D6A4A000536968 /* MessageCardView.swift */; };
+		7753CE0E29D6A4AC00536968 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0D29D6A4AC00536968 /* MessageField.swift */; };
+		7753CE1029D6A4C100536968 /* TitleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0F29D6A4C100536968 /* TitleRow.swift */; };
 		7756A48328C5192C0038903D /* MotherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7756A48228C5192C0038903D /* MotherView.swift */; };
 		775E062928C51B140082C27E /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E062828C51B140082C27E /* ViewRouter.swift */; };
 		775E062C28C51B6F0082C27E /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E062B28C51B6F0082C27E /* SignInView.swift */; };
@@ -115,6 +123,14 @@
 		7731738128CDBE4200B8885B /* FacebookAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAuth.swift; sourceTree = "<group>"; };
 		7753927629A2316F00AA2B74 /* FailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedView.swift; sourceTree = "<group>"; };
 		7753927829A425B300AA2B74 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		7753CE0029D6A42B00536968 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		7753CE0229D6A44600536968 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
+		7753CE0429D6A46800536968 /* MessageHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHomeView.swift; sourceTree = "<group>"; };
+		7753CE0629D6A47200536968 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		7753CE0929D6A49200536968 /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
+		7753CE0B29D6A4A000536968 /* MessageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCardView.swift; sourceTree = "<group>"; };
+		7753CE0D29D6A4AC00536968 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
+		7753CE0F29D6A4C100536968 /* TitleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleRow.swift; sourceTree = "<group>"; };
 		7756A48228C5192C0038903D /* MotherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherView.swift; sourceTree = "<group>"; };
 		775E062828C51B140082C27E /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		775E062B28C51B6F0082C27E /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
@@ -291,6 +307,53 @@
 			path = shared;
 			sourceTree = "<group>";
 		};
+		7753CDFC29D6A3CA00536968 /* messenger */ = {
+			isa = PBXGroup;
+			children = (
+				7753CDFF29D6A41400536968 /* views */,
+				7753CDFE29D6A40B00536968 /* stores */,
+				7753CDFD29D6A3E600536968 /* models */,
+			);
+			path = messenger;
+			sourceTree = "<group>";
+		};
+		7753CDFD29D6A3E600536968 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				7753CE0029D6A42B00536968 /* Message.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		7753CDFE29D6A40B00536968 /* stores */ = {
+			isa = PBXGroup;
+			children = (
+				7753CE0229D6A44600536968 /* MessageViewModel.swift */,
+			);
+			path = stores;
+			sourceTree = "<group>";
+		};
+		7753CDFF29D6A41400536968 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				7753CE0829D6A47F00536968 /* shared */,
+				7753CE0429D6A46800536968 /* MessageHomeView.swift */,
+				7753CE0629D6A47200536968 /* MessageView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		7753CE0829D6A47F00536968 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				7753CE0929D6A49200536968 /* MessageBubble.swift */,
+				7753CE0B29D6A4A000536968 /* MessageCardView.swift */,
+				7753CE0D29D6A4AC00536968 /* MessageField.swift */,
+				7753CE0F29D6A4C100536968 /* TitleRow.swift */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
 		77587DE528EEBDDD00A46031 /* signInButtons */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +376,7 @@
 		776D4700295DCC2700754DE5 /* feats */ = {
 			isa = PBXGroup;
 			children = (
+				7753CDFC29D6A3CA00536968 /* messenger */,
 				77A1C7BF297C3A65004C8FA6 /* cards */,
 				77A1C7C7297C44F9004C8FA6 /* progressCircle */,
 				77ABBE0329182BFD00A7669E /* profile */,
@@ -733,6 +797,7 @@
 			files = (
 				770CF55529C6E80700AA90AE /* CredentialFieldsView.swift in Sources */,
 				771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */,
+				7753CE0729D6A47200536968 /* MessageView.swift in Sources */,
 				77FB23C2292B6227008F5469 /* ProfileInfoOverlay.swift in Sources */,
 				770CF55329C6E1EA00AA90AE /* EmailPasswordLoginView.swift in Sources */,
 				775E062928C51B140082C27E /* ViewRouter.swift in Sources */,
@@ -748,9 +813,13 @@
 				77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */,
 				7731738228CDBE4200B8885B /* FacebookAuth.swift in Sources */,
 				7731737F28CCE50100B8885B /* GoogleAuth.swift in Sources */,
+				7753CE0129D6A42B00536968 /* Message.swift in Sources */,
+				7753CE0329D6A44600536968 /* MessageViewModel.swift in Sources */,
 				770CF55729C97B4200AA90AE /* NotificationsView.swift in Sources */,
 				771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */,
+				7753CE0529D6A46800536968 /* MessageHomeView.swift in Sources */,
 				77A471F529AD0A270047C7EA /* dbFunctions.swift in Sources */,
+				7753CE0A29D6A49200536968 /* MessageBubble.swift in Sources */,
 				77FB247B295DC3AB008F5469 /* ProfileModel.swift in Sources */,
 				77619ED0295DC8AE00B1BF1F /* MockService.swift in Sources */,
 				77DCADAA29B9E62300641558 /* SwipedCardGroupModel.swift in Sources */,
@@ -767,6 +836,7 @@
 				7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */,
 				7753927729A2316F00AA2B74 /* FailedView.swift in Sources */,
 				770CF55029C435E100AA90AE /* MenuView.swift in Sources */,
+				7753CE0E29D6A4AC00536968 /* MessageField.swift in Sources */,
 				7753927929A425B300AA2B74 /* ImagePicker.swift in Sources */,
 				771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */,
 				77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */,
@@ -774,6 +844,7 @@
 				771AE4182979173A00F3A6A1 /* EventInfoView.swift in Sources */,
 				77A1C7C6297C423B004C8FA6 /* EventViewModel.swift in Sources */,
 				776D470F2961FD9000754DE5 /* ProfileViewModel.swift in Sources */,
+				7753CE1029D6A4C100536968 /* TitleRow.swift in Sources */,
 				77C3D536289912B10088554F /* UserProfileView.swift in Sources */,
 				77DCADAE29BA3E1900641558 /* CardGroupSnapshotModel.swift in Sources */,
 				771AE41C297918DB00F3A6A1 /* EventHomeView.swift in Sources */,
@@ -784,6 +855,7 @@
 				77DCADAC29B9E9CE00641558 /* SwipedCardGroupsModel.swift in Sources */,
 				776E903429BC868B00C14F8A /* BasicInfoPopoverView.swift in Sources */,
 				77A1C7C4297C4094004C8FA6 /* EventModel.swift in Sources */,
+				7753CE0C29D6A4A000536968 /* MessageCardView.swift in Sources */,
 				77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

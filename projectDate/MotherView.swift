@@ -28,10 +28,14 @@ struct MotherView: View {
                         .tabItem{
                             Label("Events", systemImage: "calendar")
                         }.tag(2)
+                    MessageHomeView()
+                        .tabItem{
+                            Label("Messenger", systemImage: "message")
+                        }.tag(3)
                     SettingsView()
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")
-                        }.tag(3)
+                        }.tag(4)
                 }
                 .frame(height: geoReader.size.height * 1.07)
                 

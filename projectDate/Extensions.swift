@@ -23,6 +23,11 @@ extension View {
         }
         return root
     }
+    
+    func stacked(at position: Int, in total: Int) -> some View {
+          let offset = Double(total - position)
+          return self.offset(x: offset * 20, y: 0)
+      }
 }
 
 struct RoundedCorner: Shape {

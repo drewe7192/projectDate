@@ -229,11 +229,20 @@ struct HomeView: View {
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
+            HStack{
                 Text("iceBreakrrr")
                     .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
                     .bold()
                     .foregroundColor(Color.iceBreakrrrBlue)
-                    .position(x: geoReader.size.width * 0.27, y: geoReader.size.height * 0.03)
+                    .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.03)
+            
+            Image("logo")
+                .resizable()
+                .frame(width: 40, height: 40)
+                .background(Color.mainBlack)
+                .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
+            }
+            
             
             HStack{
                 Button(action: {
@@ -777,7 +786,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.1)
+            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.4)
         }
     }
 } 

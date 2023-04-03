@@ -84,25 +84,36 @@ struct CardView: View {
                         .accentColor(.white)
                     }
                     
-                    ZStack{
-                        Text("")
-                            .foregroundColor(.white)
-                            .bold()
-                            .font(.system(size: 30))
-                            .frame(width: 60, height: 20)
-                            .background(.black)
-                            .cornerRadius(10)
+                    HStack{
+                        HStack{
+                                Text("Created by:")
+                                .foregroundColor(.white)
+
+                            Image("animeGirl")
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(Circle())
+                                .frame(width: 70,height: 70)
+                        }
+                        Spacer()
                         
-                        Text("Values")
-                            .foregroundColor(.white)
-                            .bold()
-                            .font(.system(size: 15))
+                        ZStack{
+                            Text("")
+                                .foregroundColor(.white)
+                                .bold()
+                                .font(.system(size: 30))
+                                .frame(width: 60, height: 20)
+                                .background(.black)
+                                .cornerRadius(10)
+                            
+                            Text("Values")
+                                .foregroundColor(.white)
+                                .bold()
+                                .font(.system(size: 15))
+                        }
                     }
-                    .padding(.leading,300)
-                    .padding(.top,geoReader.size.height * 0.6)
+                    .padding(.top,geoReader.size.height * 0.5)
                 }
-           
-                   
             }
            .padding()
            .background(colorSwitch())
@@ -202,8 +213,9 @@ struct CardView: View {
         }
         return choice;
     }
+    
+    //color cards based on categoryType
     private func colorSwitch() -> Color{
-        
         var foo: Color = Color.mainGrey
         switch card.categoryType {
         case "values":
@@ -212,9 +224,10 @@ struct CardView: View {
             foo = Color.iceBreakrrrBlue
         case "personality":
             foo = Color.mainGrey
+        case "dealBreaker":
+            foo = Color.red
         default:
             break
-            
         }
         return foo
     }

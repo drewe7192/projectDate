@@ -42,6 +42,12 @@ struct SignInView: View {
     private func bodySection(for geoReader: GeometryProxy) -> some View {
         VStack{
             VStack{
+                Image("logo")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                    .background(Color.mainBlack)
+                    .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.3)
+                
                 Text("iceBreakrrr")
                     .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.07))
                     .bold()

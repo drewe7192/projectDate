@@ -1,19 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "by40 4.png",
+      "filename" : "by40 2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "by60 2.png",
+      "filename" : "by60.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "by58.png",
+      "filename" : "by58 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
@@ -55,7 +55,7 @@
       "size" : "20x20"
     },
     {
-      "filename" : "by40 6.png",
+      "filename" : "by40 1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
@@ -67,7 +67,7 @@
       "size" : "29x29"
     },
     {
-      "filename" : "by58 1.png",
+      "filename" : "by58.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"

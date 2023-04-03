@@ -7,14 +7,11 @@
 
 import SwiftUI
 import Firebase
-//import FirebaseCore
-//import FirebaseFirestore
-//import FirebaseAuth
-//import FirebaseFirestoreSwift
-//import FirebaseStorage
 
 struct EventInfoView: View {
     @ObservedObject private var viewModel = EventViewModel()
+    @State private var imageArray = ["animeGirl","animeGirl2","animeGirl"]
+    
     let event: EventModel
     
     var body: some View {
@@ -25,17 +22,12 @@ struct EventInfoView: View {
                 
                 VStack{
                     headerSection(for: geoReader)
-               
                     bodySection(for: geoReader)
-                    
                     descriptionSection(for: geoReader)
-                    
                     footerSection(for: geoReader)
-                  
                 }
-            
-            }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY )
+            }
+            .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
         }
     }
     
@@ -52,15 +44,12 @@ struct EventInfoView: View {
             Text("\(event.title)")
                 .foregroundColor(Color.iceBreakrrrBlue)
                 .font(.system(size: 55))
-            
         }
         .foregroundColor(.white)
         .padding()
-        
     }
     
     func bodySection(for geoReader: GeometryProxy) -> some View {
-        
         HStack{
             VStack(alignment: .leading){
                 Text("Time of Event")
@@ -76,39 +65,60 @@ struct EventInfoView: View {
             
             Spacer()
             
-            
-            VStack(){
+            VStack{
                 Text("Guests")
                     .foregroundColor(.iceBreakrrrBlue)
                 
-                ZStack{
-                    ForEach(event.participants, id: \.self){ item in
-                        Text("AV")
-                            .foregroundColor(.black)
-                            .frame(width: 40, height: 40)
-                            .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+                HStack{
+                    ZStack {
+                        ForEach(0..<imageArray.count, id: \.self) { index in
+                            Image(imageArray[index])
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(Circle())
+                                .frame(width: 70,height: 70)
+                                .stacked(at: index, in: imageArray.count)
+                        }
                     }
-                    
-                    Text("")
-                        .frame(width: 40, height: 40)
-                        .overlay(Circle().foregroundColor(Color.white))
-                        .offset(x:-20, y: 0)
-                    
-                    Text("+\(event.participants.count)")
-                        .foregroundColor(.black)
-                        .bold()
-                        .frame(width: 40, height: 40)
-                        .offset(x:-20, y: 0)
+                    ZStack{
+                        Text("")
+                            .frame(width: 50,height: 50)
+                            .background(Color.black)
+                            .clipShape(Circle())
+                        
+                        Text("+2")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 20))
+                    }
+                    .padding(.leading,20)
                 }
+                
+//                ZStack{
+//                    ForEach(event.participants, id: \.self){ item in
+//                        Text("AV")
+//                            .foregroundColor(.black)
+//                            .frame(width: 40, height: 40)
+//                            .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+//                    }
+//                    
+//                    Text("")
+//                        .frame(width: 40, height: 40)
+//                        .overlay(Circle().foregroundColor(Color.white))
+//                        .offset(x:-20, y: 0)
+//                    
+//                    Text("+\(event.participants.count)")
+//                        .foregroundColor(.black)
+//                        .bold()
+//                        .frame(width: 40, height: 40)
+//                        .offset(x:-20, y: 0)
+//                }
             }
         }
         .foregroundColor(.white)
         .padding()
-        
     }
     
     func descriptionSection(for geoReader: GeometryProxy) -> some View {
-        
         VStack{
             Text("Description")
                 .foregroundColor(Color.iceBreakrrrBlue)
@@ -118,7 +128,6 @@ struct EventInfoView: View {
         }
         .foregroundColor(.white)
         .padding()
-        
     }
     
     func footerSection(for geoReader: GeometryProxy) -> some View {
