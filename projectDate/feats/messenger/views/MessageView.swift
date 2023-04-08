@@ -19,12 +19,12 @@ struct MessageView: View {
                         ForEach(viewModel.messages, id:
                                     \.id) {message in
                             MessageBubble(message: message)
-                            Text("")
-                                  .frame(width: 100,height: 100)
+                            Spacer()
+                                  .frame(height: 40)
                         }
                     }
                     .padding(.top, 10)
-                    .background(.white)
+                    .background(Color.mainBlack)
                     .cornerRadius(30, corners:[.topLeft, .topRight])
                     .onChange(of:
                                 viewModel.lastMessageId) { id in
@@ -34,10 +34,12 @@ struct MessageView: View {
                     }
                 }
             }
-            .background(Color("Peach"))
-            
             MessageField()
                 .environmentObject(viewModel)
+        }
+        .background(Color.mainBlack)
+        .onAppear{
+            viewModel.getMessages()
         }
     }
 }

@@ -25,6 +25,7 @@ struct TitleRow: View {
             VStack(alignment: .leading){
                 Text(name)
                     .font(.title).bold()
+                    .foregroundColor(.white)
                 
                 Text("Online")
                     .font(.caption)
@@ -34,11 +35,11 @@ struct TitleRow: View {
             .padding()
             
             Image(systemName: "phone.fill")
-                .foregroundColor(.gray)
+                .foregroundColor(.white)
                 .padding(10)
-                .background(.white)
+                .background(Color.iceBreakrrrBlue)
                 .cornerRadius(50)
-        }.background(Color("Peach"))
+        }.background(Color.mainBlack)
     }
 }
 

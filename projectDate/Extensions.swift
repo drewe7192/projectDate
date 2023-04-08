@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import HMSSDK
 
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
@@ -118,5 +119,63 @@ extension UIImage {
     func toJpegString(compressionQuality cq: CGFloat) -> String? {
         let data = self.jpegData(compressionQuality: cq)
         return data?.base64EncodedString(options: .endLineWithLineFeed)
+    }
+}
+
+extension FacetimeView {
+    class ViewModel: ObservableObject, HMSUpdateListener{
+
+        @Published var addVideoView: ((_ videoView: HMSVideoTrack) -> ())?
+        @Published var removeVideoView: ((_ videoView: HMSVideoTrack) -> ())?
+
+
+        func on(join room: HMSRoom) {
+
+        }
+
+        func on(room: HMSRoom, update: HMSRoomUpdate) {
+
+        }
+
+        func on(peer: HMSPeer, update: HMSPeerUpdate) {
+
+        }
+
+        func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer) {
+            switch update {
+            case .trackAdded:
+                if let videoTrack = track as? HMSVideoTrack {
+                    addVideoView?(videoTrack)
+                }
+            case .trackRemoved:
+                if let videoTrack = track as? HMSVideoTrack {
+                    removeVideoView?(videoTrack)
+                }
+            default:
+                break
+            }
+        }
+
+        func on(error: Error) {
+
+        }
+
+        func on(message: HMSMessage) {
+
+        }
+
+        func on(updated speakers: [HMSSpeaker]) {
+
+        }
+
+        func onReconnecting() {
+
+        }
+
+        func onReconnected() {
+
+        }
+
+
     }
 }

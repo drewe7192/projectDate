@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MotherView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @StateObject var viewModel = HomeViewModel()
     
     //Change the menuBar color to white
     init() {

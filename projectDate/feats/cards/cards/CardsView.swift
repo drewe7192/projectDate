@@ -43,7 +43,7 @@ struct CardsView: View {
                         .animation(.spring())
                         .frame(width:
                                 self.cards.cardWidth(in: geometry,
-                                                     cardId: index), height: geometry.size.height *  1.4)
+                                                     cardId: index), height: geometry.size.height *  1.1)
                         .offset(x: 0,
                                 y: self.cards.cardOffset(
                                     cardId: index))
@@ -55,7 +55,6 @@ struct CardsView: View {
             }.onAppear{
                 getAllCards(isUpdating: false)
             }
-           // .padding(3)
         }
         .padding(.leading,6)
         .padding(.trailing,6)
@@ -99,6 +98,6 @@ struct CardsView: View {
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView(updateData: .constant(false), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Wednesdays"))
+        CardsView(updateData: .constant(false), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Wednesdays", messageThreadIds: []))
     }
 }

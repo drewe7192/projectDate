@@ -24,7 +24,7 @@ struct SettingsView: View {
     @State private var editInfo = false
     @State private var profileImage: UIImage = UIImage()
     @State private var showMenu: Bool = false
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "")
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
     
     let storage = Storage.storage()
     

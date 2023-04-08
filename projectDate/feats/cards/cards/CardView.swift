@@ -235,6 +235,6 @@ struct CardView: View {
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Tuesdays"))
+        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Tuesdays", messageThreadIds: []))
     }
 }

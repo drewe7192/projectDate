@@ -13,7 +13,10 @@ struct MessageField: View {
     
     var body: some View {
         HStack {
-            CustomTextField(placeholder: Text("Enter your text message here"), text: $message)
+            CustomTextField(
+                placeholder: Text("Enter your text message here").foregroundColor(.white),
+                text: $message)
+            .foregroundColor(.white)
             
             Button {
                 viewModel.sendMessage(text: message)
@@ -22,13 +25,13 @@ struct MessageField: View {
                 Image(systemName: "paperplane.fill")
                     .foregroundColor(.white)
                     .padding(10)
-                    .background(Color("Peach"))
+                    .background(Color.iceBreakrrrBlue)
                     .cornerRadius(50)
             }
         }
         .padding(.horizontal)
         .padding(.vertical)
-        .background(Color("Gray"))
+        .background(Color.mainGrey)
         .cornerRadius(50)
         .padding()
     }

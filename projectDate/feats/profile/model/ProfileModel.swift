@@ -7,12 +7,13 @@
 
 import Foundation
 
-struct ProfileModel: Codable, Identifiable, Hashable  {
+struct ProfileModel: Codable, Identifiable  {
     var id : String
     var fullName: String
     var location: String
     var gender: String
     var matchDay: String
+    var messageThreadIds: [String]
 //    var image: String
 //    var userId: String
 }

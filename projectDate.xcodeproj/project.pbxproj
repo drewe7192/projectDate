@@ -12,6 +12,8 @@
 		770CF55529C6E80700AA90AE /* CredentialFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770CF55429C6E80700AA90AE /* CredentialFieldsView.swift */; };
 		770CF55729C97B4200AA90AE /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770CF55629C97B4200AA90AE /* NotificationsView.swift */; };
 		77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77115F95299EF2EC00705811 /* ConfirmationView.swift */; };
+		7714060229DD4279008C0BC1 /* VideoSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714060129DD4279008C0BC1 /* VideoSDK.swift */; };
+		7714060429E162EF008C0BC1 /* MessageThreadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714060329E162EF008C0BC1 /* MessageThreadModel.swift */; };
 		771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */; };
 		771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4152977C46A00F3A6A1 /* HomeView.swift */; };
 		771AE4182979173A00F3A6A1 /* EventInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4172979173A00F3A6A1 /* EventInfoView.swift */; };
@@ -28,9 +30,19 @@
 		7731738528CE2F6500B8885B /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738428CE2F6500B8885B /* FacebookCore */; };
 		7731738728CE2F6500B8885B /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738628CE2F6500B8885B /* FacebookLogin */; };
 		7731738928CE2F6500B8885B /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738828CE2F6500B8885B /* FacebookShare */; };
+		77433FD029DBDAB400D62F31 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FCF29DBDAB400D62F31 /* TokenProvider.swift */; };
+		77433FD229DBDB0400D62F31 /* speedDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD129DBDB0400D62F31 /* speedDateModel.swift */; };
+		77433FD529DBDB3800D62F31 /* FaceTimeVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */; };
+		77433FD729DBDB6F00D62F31 /* SpeedDateHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD629DBDB6F00D62F31 /* SpeedDateHomeView.swift */; };
+		77433FD929DBDB9A00D62F31 /* SpeedDateInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD829DBDB9A00D62F31 /* SpeedDateInfoView.swift */; };
+		77433FDB29DBDBBC00D62F31 /* SpeedDateCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FDA29DBDBBC00D62F31 /* SpeedDateCardView.swift */; };
+		77433FDD29DBDBDD00D62F31 /* SpeedDateInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FDC29DBDBDD00D62F31 /* SpeedDateInfoCardView.swift */; };
+		77433FDF29DBDC0100D62F31 /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FDE29DBDC0100D62F31 /* VideoView.swift */; };
+		77433FE229DBDC6F00D62F31 /* HMSSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 77433FE129DBDC6F00D62F31 /* HMSSDK */; };
+		774AB94729DBE0C000380091 /* speedDateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774AB94629DBE0C000380091 /* speedDateViewModel.swift */; };
 		7753927729A2316F00AA2B74 /* FailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753927629A2316F00AA2B74 /* FailedView.swift */; };
 		7753927929A425B300AA2B74 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753927829A425B300AA2B74 /* ImagePicker.swift */; };
-		7753CE0129D6A42B00536968 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0029D6A42B00536968 /* Message.swift */; };
+		7753CE0129D6A42B00536968 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0029D6A42B00536968 /* MessageModel.swift */; };
 		7753CE0329D6A44600536968 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0229D6A44600536968 /* MessageViewModel.swift */; };
 		7753CE0529D6A46800536968 /* MessageHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0429D6A46800536968 /* MessageHomeView.swift */; };
 		7753CE0729D6A47200536968 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7753CE0629D6A47200536968 /* MessageView.swift */; };
@@ -62,6 +74,10 @@
 		77A1C7C6297C423B004C8FA6 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C5297C423B004C8FA6 /* EventViewModel.swift */; };
 		77A1C7CA297C4528004C8FA6 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C9297C4528004C8FA6 /* CircularProgressView.swift */; };
 		77A471F529AD0A270047C7EA /* dbFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A471F429AD0A270047C7EA /* dbFunctions.swift */; };
+		77BA2C7529DBF53200AC1C1C /* CountdownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BA2C7429DBF53200AC1C1C /* CountdownTimerView.swift */; };
+		77BA2C7729DBF5DD00AC1C1C /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BA2C7629DBF5DD00AC1C1C /* ImageGridView.swift */; };
+		77BA2C7929DBF62600AC1C1C /* DropViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BA2C7829DBF62600AC1C1C /* DropViewDelegate.swift */; };
+		77BA2C7B29DBF68D00AC1C1C /* PageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77BA2C7A29DBF68D00AC1C1C /* PageViewModel.swift */; };
 		77C3D500289910CE0088554F /* projectDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D4FF289910CE0088554F /* projectDateApp.swift */; };
 		77C3D504289910CF0088554F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77C3D503289910CF0088554F /* Assets.xcassets */; };
 		77C3D507289910CF0088554F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77C3D506289910CF0088554F /* Preview Assets.xcassets */; };
@@ -110,6 +126,8 @@
 		770CF55429C6E80700AA90AE /* CredentialFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialFieldsView.swift; sourceTree = "<group>"; };
 		770CF55629C97B4200AA90AE /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		77115F95299EF2EC00705811 /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
+		7714060129DD4279008C0BC1 /* VideoSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSDK.swift; sourceTree = "<group>"; };
+		7714060329E162EF008C0BC1 /* MessageThreadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageThreadModel.swift; sourceTree = "<group>"; };
 		771AE40E296ACE7700F3A6A1 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		771AE4152977C46A00F3A6A1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		771AE4172979173A00F3A6A1 /* EventInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoView.swift; sourceTree = "<group>"; };
@@ -121,9 +139,18 @@
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		7731737E28CCE50100B8885B /* GoogleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuth.swift; sourceTree = "<group>"; };
 		7731738128CDBE4200B8885B /* FacebookAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAuth.swift; sourceTree = "<group>"; };
+		77433FCF29DBDAB400D62F31 /* TokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
+		77433FD129DBDB0400D62F31 /* speedDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedDateModel.swift; sourceTree = "<group>"; };
+		77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTimeVIew.swift; sourceTree = "<group>"; };
+		77433FD629DBDB6F00D62F31 /* SpeedDateHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateHomeView.swift; sourceTree = "<group>"; };
+		77433FD829DBDB9A00D62F31 /* SpeedDateInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateInfoView.swift; sourceTree = "<group>"; };
+		77433FDA29DBDBBC00D62F31 /* SpeedDateCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateCardView.swift; sourceTree = "<group>"; };
+		77433FDC29DBDBDD00D62F31 /* SpeedDateInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateInfoCardView.swift; sourceTree = "<group>"; };
+		77433FDE29DBDC0100D62F31 /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
+		774AB94629DBE0C000380091 /* speedDateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedDateViewModel.swift; sourceTree = "<group>"; };
 		7753927629A2316F00AA2B74 /* FailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedView.swift; sourceTree = "<group>"; };
 		7753927829A425B300AA2B74 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		7753CE0029D6A42B00536968 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		7753CE0029D6A42B00536968 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		7753CE0229D6A44600536968 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		7753CE0429D6A46800536968 /* MessageHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHomeView.swift; sourceTree = "<group>"; };
 		7753CE0629D6A47200536968 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -153,6 +180,10 @@
 		77A1C7C5297C423B004C8FA6 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		77A1C7C9297C4528004C8FA6 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		77A471F429AD0A270047C7EA /* dbFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dbFunctions.swift; sourceTree = "<group>"; };
+		77BA2C7429DBF53200AC1C1C /* CountdownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownTimerView.swift; sourceTree = "<group>"; };
+		77BA2C7629DBF5DD00AC1C1C /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
+		77BA2C7829DBF62600AC1C1C /* DropViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropViewDelegate.swift; sourceTree = "<group>"; };
+		77BA2C7A29DBF68D00AC1C1C /* PageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewModel.swift; sourceTree = "<group>"; };
 		77C3D4FC289910CE0088554F /* projectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = projectDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77C3D4FF289910CE0088554F /* projectDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectDateApp.swift; sourceTree = "<group>"; };
 		77C3D503289910CF0088554F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -185,6 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77433FE229DBDC6F00D62F31 /* HMSSDK in Frameworks */,
 				77626AF828CB1D2F00D1DD9E /* GoogleSignInSwift in Frameworks */,
 				7731738528CE2F6500B8885B /* FacebookCore in Frameworks */,
 				7731738928CE2F6500B8885B /* FacebookShare in Frameworks */,
@@ -286,6 +318,55 @@
 			path = stores;
 			sourceTree = "<group>";
 		};
+		77433FCB29DBDA4700D62F31 /* speedDate */ = {
+			isa = PBXGroup;
+			children = (
+				77433FCE29DBDA6100D62F31 /* models */,
+				77433FCD29DBDA5800D62F31 /* stores */,
+				77433FCC29DBDA5300D62F31 /* views */,
+			);
+			path = speedDate;
+			sourceTree = "<group>";
+		};
+		77433FCC29DBDA5300D62F31 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				77433FD329DBDB2200D62F31 /* shared */,
+				77433FD629DBDB6F00D62F31 /* SpeedDateHomeView.swift */,
+				77433FD829DBDB9A00D62F31 /* SpeedDateInfoView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		77433FCD29DBDA5800D62F31 /* stores */ = {
+			isa = PBXGroup;
+			children = (
+				77433FCF29DBDAB400D62F31 /* TokenProvider.swift */,
+			);
+			path = stores;
+			sourceTree = "<group>";
+		};
+		77433FCE29DBDA6100D62F31 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				77433FD129DBDB0400D62F31 /* speedDateModel.swift */,
+				774AB94629DBE0C000380091 /* speedDateViewModel.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		77433FD329DBDB2200D62F31 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				77433FDA29DBDBBC00D62F31 /* SpeedDateCardView.swift */,
+				77433FDC29DBDBDD00D62F31 /* SpeedDateInfoCardView.swift */,
+				77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */,
+				77433FDE29DBDC0100D62F31 /* VideoView.swift */,
+				7714060129DD4279008C0BC1 /* VideoSDK.swift */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
 		77493D18291D12F400C9E283 /* match */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,7 +401,8 @@
 		7753CDFD29D6A3E600536968 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				7753CE0029D6A42B00536968 /* Message.swift */,
+				7753CE0029D6A42B00536968 /* MessageModel.swift */,
+				7714060329E162EF008C0BC1 /* MessageThreadModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -376,6 +458,7 @@
 		776D4700295DCC2700754DE5 /* feats */ = {
 			isa = PBXGroup;
 			children = (
+				77433FCB29DBDA4700D62F31 /* speedDate */,
 				7753CDFC29D6A3CA00536968 /* messenger */,
 				77A1C7BF297C3A65004C8FA6 /* cards */,
 				77A1C7C7297C44F9004C8FA6 /* progressCircle */,
@@ -623,6 +706,10 @@
 				77FB245F294DA8BA008F5469 /* shared */,
 				7753927829A425B300AA2B74 /* ImagePicker.swift */,
 				776E903329BC868B00C14F8A /* BasicInfoPopoverView.swift */,
+				77BA2C7429DBF53200AC1C1C /* CountdownTimerView.swift */,
+				77BA2C7629DBF5DD00AC1C1C /* ImageGridView.swift */,
+				77BA2C7829DBF62600AC1C1C /* DropViewDelegate.swift */,
+				77BA2C7A29DBF68D00AC1C1C /* PageViewModel.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -673,6 +760,7 @@
 				7731738628CE2F6500B8885B /* FacebookLogin */,
 				7731738828CE2F6500B8885B /* FacebookShare */,
 				77CB961629A68DE200D5BD7D /* FirebaseStorage */,
+				77433FE129DBDC6F00D62F31 /* HMSSDK */,
 			);
 			productName = projectDate;
 			productReference = 77C3D4FC289910CE0088554F /* projectDate.app */;
@@ -751,6 +839,7 @@
 				776DFB5928B286B300F9AC63 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				7731738328CE2F6500B8885B /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				77433FE029DBDC6F00D62F31 /* XCRemoteSwiftPackageReference "100ms-ios-sdk" */,
 			);
 			productRefGroup = 77C3D4FD289910CE0088554F /* Products */;
 			projectDirPath = "";
@@ -803,31 +892,39 @@
 				775E062928C51B140082C27E /* ViewRouter.swift in Sources */,
 				777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */,
 				77A1C7CA297C4528004C8FA6 /* CircularProgressView.swift in Sources */,
+				77BA2C7529DBF53200AC1C1C /* CountdownTimerView.swift in Sources */,
 				771AE41E2979263B00F3A6A1 /* CardView.swift in Sources */,
 				77DCADB129BA751000641558 /* MatchView.swift in Sources */,
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */,
 				77A0F9BB2986CEA1009CD1E0 /* LogInItems.swift in Sources */,
+				77BA2C7929DBF62600AC1C1C /* DropViewDelegate.swift in Sources */,
 				77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */,
+				77433FDB29DBDBBC00D62F31 /* SpeedDateCardView.swift in Sources */,
 				775E062E28C51B850082C27E /* SignUpView.swift in Sources */,
 				77115F96299EF2EC00705811 /* ConfirmationView.swift in Sources */,
 				7731738228CDBE4200B8885B /* FacebookAuth.swift in Sources */,
+				77BA2C7729DBF5DD00AC1C1C /* ImageGridView.swift in Sources */,
 				7731737F28CCE50100B8885B /* GoogleAuth.swift in Sources */,
-				7753CE0129D6A42B00536968 /* Message.swift in Sources */,
+				7753CE0129D6A42B00536968 /* MessageModel.swift in Sources */,
 				7753CE0329D6A44600536968 /* MessageViewModel.swift in Sources */,
 				770CF55729C97B4200AA90AE /* NotificationsView.swift in Sources */,
+				77BA2C7B29DBF68D00AC1C1C /* PageViewModel.swift in Sources */,
 				771AE4162977C46A00F3A6A1 /* HomeView.swift in Sources */,
 				7753CE0529D6A46800536968 /* MessageHomeView.swift in Sources */,
 				77A471F529AD0A270047C7EA /* dbFunctions.swift in Sources */,
 				7753CE0A29D6A49200536968 /* MessageBubble.swift in Sources */,
 				77FB247B295DC3AB008F5469 /* ProfileModel.swift in Sources */,
 				77619ED0295DC8AE00B1BF1F /* MockService.swift in Sources */,
+				77433FD729DBDB6F00D62F31 /* SpeedDateHomeView.swift in Sources */,
 				77DCADAA29B9E62300641558 /* SwipedCardGroupModel.swift in Sources */,
 				775E062C28C51B6F0082C27E /* SignInView.swift in Sources */,
 				77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */,
+				77433FDD29DBDBDD00D62F31 /* SpeedDateInfoCardView.swift in Sources */,
 				779985DA298EC07D00D3FD74 /* CreateCardsView.swift in Sources */,
 				77C3D52E289912840088554F /* EditProfileView.swift in Sources */,
 				77DCADA829B9D69D00641558 /* MatchRecordModel.swift in Sources */,
+				77433FDF29DBDC0100D62F31 /* VideoView.swift in Sources */,
 				771AE4202979B40B00F3A6A1 /* CardsView.swift in Sources */,
 				77626AEE28C87AF600D1DD9E /* AppleAuth.swift in Sources */,
 				7756A48328C5192C0038903D /* MotherView.swift in Sources */,
@@ -835,21 +932,26 @@
 				771AE42B2979DE3500F3A6A1 /* HomeViewModel.swift in Sources */,
 				7770E2C0297E755300C70469 /* BarProgressView.swift in Sources */,
 				7753927729A2316F00AA2B74 /* FailedView.swift in Sources */,
+				77433FD029DBDAB400D62F31 /* TokenProvider.swift in Sources */,
 				770CF55029C435E100AA90AE /* MenuView.swift in Sources */,
+				77433FD529DBDB3800D62F31 /* FaceTimeVIew.swift in Sources */,
 				7753CE0E29D6A4AC00536968 /* MessageField.swift in Sources */,
 				7753927929A425B300AA2B74 /* ImagePicker.swift in Sources */,
 				771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */,
 				77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */,
 				776D47112962010000754DE5 /* ProfileInfoModel.swift in Sources */,
+				77433FD229DBDB0400D62F31 /* speedDateModel.swift in Sources */,
 				771AE4182979173A00F3A6A1 /* EventInfoView.swift in Sources */,
 				77A1C7C6297C423B004C8FA6 /* EventViewModel.swift in Sources */,
 				776D470F2961FD9000754DE5 /* ProfileViewModel.swift in Sources */,
 				7753CE1029D6A4C100536968 /* TitleRow.swift in Sources */,
 				77C3D536289912B10088554F /* UserProfileView.swift in Sources */,
 				77DCADAE29BA3E1900641558 /* CardGroupSnapshotModel.swift in Sources */,
+				7714060429E162EF008C0BC1 /* MessageThreadModel.swift in Sources */,
 				771AE41C297918DB00F3A6A1 /* EventHomeView.swift in Sources */,
 				776D47132964053100754DE5 /* SideBarInfoModel.swift in Sources */,
 				77C3D500289910CE0088554F /* projectDateApp.swift in Sources */,
+				7714060229DD4279008C0BC1 /* VideoSDK.swift in Sources */,
 				771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */,
 				776D4709295F359100754DE5 /* UserModel.swift in Sources */,
 				77DCADAC29B9E9CE00641558 /* SwipedCardGroupsModel.swift in Sources */,
@@ -857,6 +959,8 @@
 				77A1C7C4297C4094004C8FA6 /* EventModel.swift in Sources */,
 				7753CE0C29D6A4A000536968 /* MessageCardView.swift in Sources */,
 				77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */,
+				774AB94729DBE0C000380091 /* speedDateViewModel.swift in Sources */,
+				77433FD929DBDB9A00D62F31 /* SpeedDateInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1229,6 +1333,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		77433FE029DBDC6F00D62F31 /* XCRemoteSwiftPackageReference "100ms-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/100mslive/100ms-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 0.5.1;
+			};
+		};
 		77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -1272,6 +1384,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7731738328CE2F6500B8885B /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookShare;
+		};
+		77433FE129DBDC6F00D62F31 /* HMSSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 77433FE029DBDC6F00D62F31 /* XCRemoteSwiftPackageReference "100ms-ios-sdk" */;
+			productName = HMSSDK;
 		};
 		77626AF528CB1D2F00D1DD9E /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

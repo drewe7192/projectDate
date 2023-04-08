@@ -17,6 +17,8 @@ import UIKit
 
 struct HomeView: View {
     @ObservedObject private var viewModel = HomeViewModel()
+    @ObservedObject private var messageViewModel = MessageViewModel()
+    
     @EnvironmentObject var viewRouter: ViewRouter
     
     @State private var showFriendDisplay = false
@@ -32,7 +34,7 @@ struct HomeView: View {
     @State private var swipedRecords: [SwipedRecordModel] = []
     @State private var swipedCards: [CardModel] = []
     @State private var swipedcardsForProgressCircle: [CardModel] = []
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day")
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var profileImage: UIImage? = UIImage()
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -64,84 +66,86 @@ struct HomeView: View {
                         .ignoresSafeArea()
                     
                         VStack{
-                    
-                            cardsSection(for: geoReader)
-                                .padding(.top,10)
-                            
-                            HStack{
-                                Text("Match Activity:")
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.white)
-                                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
-                                    .padding(.trailing,10)
-                                    .padding(.bottom,3)
+                                cardsSection(for: geoReader)
+                                    .padding(.top,10)
                                 
-                                HStack{
-                                    Image(systemName: "snowflake.circle")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(.white)
+    
                               
-                                    Text("\(userProfile.matchDay)")
-                                        .foregroundColor(.iceBreakrrrBlue)
-                                        .bold()
-                                        .font(.system(size: 20))
-                                }
-                            }
-                         
+                               
                             
-                            ZStack{
-                                if(showMatchFeed){
-                                    ScrollViewReader{ (proxy: ScrollViewProxy) in
-                                        ScrollView{
-                                            VStack{
-                                                ForEach(0..<9) { card in
-                                                    ZStack{
-                                                        Text("")
-                                                            .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
-                                                            .background(Color.mainGrey)
-                                                            .cornerRadius(20)
-                                                        
-                                                        HStack{
-                                                            Image("logo")
-                                                                .resizable()
-                                                                .cornerRadius(50)
-                                                                .frame(width: 40, height: 40)
-                                                                .background(Color.black.opacity(0.2))
-                                                                .aspectRatio(contentMode: .fill)
-                                                                .clipShape(Circle())
-                                                            
-                                                            
-                                                            Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
-                                                                .foregroundColor(.white)
-                                                                .padding(.trailing)
-                                                                .padding(.leading)
-                                                        }
-                                                        
-                                                    }
-                                                    
-                                                }
-                                            }
-                                            //                                        .onReceive(timer) { _ in
-                                            //                                            withAnimation {
-                                            //                                                if counter <
-                                            //                                            }
-                                            //                                        }
-                                            
-                                        }
-                                        .frame(width: 0,height: 115)
-                                        .padding(.top,2)
-                                        .padding(.bottom,5)
-                                    }
-                                    
-                                }else{
-                                    Text("No Matches Yet")
-                                        .bold()
-                                        .foregroundColor(.gray.opacity(0.3))
-                                        .font(.system(size: 40))
-                                        .padding(.bottom, 40)
-                                }
-                            }
+                          
+//                            HStack{
+//                                Text("Match Activity:")
+//                                    .multilineTextAlignment(.center)
+//                                    .foregroundColor(.white)
+//                                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
+//                                    .padding(.trailing,10)
+//                                    .padding(.bottom,3)
+//
+//                                HStack{
+//                                    Image(systemName: "snowflake.circle")
+//                                        .resizable()
+//                                        .frame(width: 30, height: 30)
+//                                        .foregroundColor(.white)
+//
+//                                    Text("\(userProfile.matchDay)")
+//                                        .foregroundColor(.iceBreakrrrBlue)
+//                                        .bold()
+//                                        .font(.system(size: 20))
+//                                }
+//                            }
+//                            ZStack{
+//                                if(showMatchFeed){
+//                                    ScrollViewReader{ (proxy: ScrollViewProxy) in
+//                                        ScrollView{
+//                                            VStack{
+//                                                ForEach(0..<9) { card in
+//                                                    ZStack{
+//                                                        Text("")
+//                                                            .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
+//                                                            .background(Color.mainGrey)
+//                                                            .cornerRadius(20)
+//
+//                                                        HStack{
+//                                                            Image("logo")
+//                                                                .resizable()
+//                                                                .cornerRadius(50)
+//                                                                .frame(width: 40, height: 40)
+//                                                                .background(Color.black.opacity(0.2))
+//                                                                .aspectRatio(contentMode: .fill)
+//                                                                .clipShape(Circle())
+//
+//
+//                                                            Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
+//                                                                .foregroundColor(.white)
+//                                                                .padding(.trailing)
+//                                                                .padding(.leading)
+//                                                        }
+//
+//                                                    }
+//
+//                                                }
+//                                            }
+//                                            //                                        .onReceive(timer) { _ in
+//                                            //                                            withAnimation {
+//                                            //                                                if counter <
+//                                            //                                            }
+//                                            //                                        }
+//
+//                                        }
+//                                        .frame(width: 0,height: 115)
+//                                        .padding(.top,2)
+//                                        .padding(.bottom,5)
+//                                    }
+//
+//                                }else{
+//                                    Text("No Matches Yet")
+//                                        .bold()
+//                                        .foregroundColor(.gray.opacity(0.3))
+//                                        .font(.system(size: 40))
+//                                        .padding(.bottom, 40)
+//                                }
+//                            }
                         }
                         .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
                         .disabled(self.showMenu ? true : false)
@@ -383,6 +387,20 @@ struct HomeView: View {
         ZStack{
             CardsView(updateData: $updateData, userProfile: self.userProfile)
             plusButton()
+            
+            VStack{
+                Text("Upcoming SpeedDate:")
+                    .bold()
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.white)
+                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                NavigationLink(destination: SpeedDateHomeView(displayType: "Host") , label: {
+                    CountdownTimerView(timeRemaining: 80400, geoReader: geoReader)
+                })
+           
+            }
+            .padding(.top,geoReader.size.height * 0.05)
+                .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.85)
         }
         
     }
@@ -567,8 +585,10 @@ struct HomeView: View {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "")
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
                         }
+                        
+                        messageViewModel.getMessageThreads(threadIds: self.userProfile.messageThreadIds)
                     }
                     completed(self.userProfile.id)
                 }
@@ -786,7 +806,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.4)
+            .position(x: geo.size.height * 0.09, y: geo.size.width * 1.2)
         }
     }
 } 

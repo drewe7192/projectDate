@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
-import SwiftUI
 
-struct Message: Identifiable, Codable{
+struct MessageModel: Identifiable, Codable{
     var id: String
     var received: Bool
     var text: String

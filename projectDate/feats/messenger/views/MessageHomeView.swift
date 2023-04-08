@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MessageHomeView: View {
+    @StateObject var viewModel = MessageViewModel()
+    
     @State private var foo: [String] = ["","","::"]
     @State private var profileImage: UIImage = UIImage()
     @State private var showMenu: Bool = false
@@ -20,9 +22,8 @@ struct MessageHomeView: View {
                         .ignoresSafeArea()
                     
                     VStack(spacing: 1 ){
-                        ForEach(foo, id: \.self){ item in
+                        ForEach(viewModel.messageThreads){ messageThread in
                             NavigationLink(destination: MessageView()) {
-                                
                                 messageCardView(for: geoReader)
                             }
                         }

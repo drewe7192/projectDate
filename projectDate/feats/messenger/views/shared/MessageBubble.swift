@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct MessageBubble: View {
-    var message: Message
+    var message: MessageModel
     @State private var showTime = false
     
     var body: some View {
         VStack(alignment: message.received ? .leading: .trailing){
             HStack{
                 Text(message.text)
+                    .foregroundColor(.white)
                     .padding()
                     .background(message.received ?
-                                Color("Gray") : Color("Peach"))
+                                Color.mainGrey : Color.iceBreakrrrBlue)
                     .cornerRadius(30)
             }
             .frame(maxWidth: 300, alignment: message.received ?
@@ -26,6 +27,7 @@ struct MessageBubble: View {
                 showTime.toggle()
             }
 
+            // show the time message was made/received
             if showTime{
                 Text("\(message.timeStamp.formatted(.dateTime.hour().minute()))")
                     .font(.caption2)
@@ -42,7 +44,6 @@ struct MessageBubble: View {
 
 struct MessageBubble_Previews: PreviewProvider {
     static var previews: some View {
-        MessageBubble(message: Message(id: "233", received: false, text: "holla at me Im getting it outchea ya heard??"
-                                       , timeStamp: Date()))
+        MessageBubble(message: MessageModel(id: "233", received: false, text: "holla at me Im getting it outchea ya heard??", timeStamp: Date()))
     }
 }

@@ -26,7 +26,8 @@ enum MockService {
             fullName: "Bon",
             location: "Tampa, Fl",
             gender: "Male",
-            matchDay: "Mondays"
+            matchDay: "Mondays",
+            messageThreadIds: []
 //            image: "animeGirl"
         )
     }
@@ -46,7 +47,8 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays"
+                matchDay: "Wednesdays",
+                messageThreadIds: []
 //                image: "animeGirl"
             ),
             ProfileModel(
@@ -54,7 +56,8 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays"
+                matchDay: "Wednesdays",
+                messageThreadIds: []
 //                image: "animeGirl"
             ),
             ProfileModel(
@@ -62,7 +65,8 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays"
+                matchDay: "Wednesdays",
+                messageThreadIds: []
 //                image: "animeGirl"
             ),
             ProfileModel(
@@ -70,7 +74,8 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays"
+                matchDay: "Wednesdays",
+                messageThreadIds: []
 //                image: "animeGirl"
             )
         ]
@@ -203,67 +208,67 @@ enum MockService {
         ]
     }
     
-//    static var sdSampleData: sdModel {
-//        sdModel(
-//            firstName: "Drew",
-//            lastName: "Drew",
-//            time: 4743843,
-//            userRoleType: "host",
-//            roomNumber: "638d9e07aee54625da64dfe2",
-//            profiles: profilesSampleData
-//        )
-//    }
-//    
-//    static var sdsSampleData: [sdModel] {
-//        [
-//            sdModel(
-//                firstName: "Drew",
-//                lastName: "Drew",
-//                time: 172805,
-//                userRoleType: "host",
-//                roomNumber: "638d9e07aee54625da64dfe2",
-//                profiles: profilesSampleData
-//            ),
-//            sdModel(
-//                firstName: "D",
-//                lastName: "ew",
-//                time: 384585,
-//                userRoleType: "guest",
-//                roomNumber: "638d9e07aee54625da64dfe2",
-//                profiles: profilesSampleData
-//            ),
-//            sdModel(
-//                firstName: "w",
-//                lastName: "w",
-//                time: 5059448,
-//                userRoleType: "host",
-//                roomNumber: "638d9e07aee54625da64dfe2",
-//                profiles: profilesSampleData
-//            ),
-//            sdModel(
-//                firstName: "D",
-//                lastName: "ew",
-//                time: 384585,
-//                userRoleType: "guest",
-//                roomNumber: "638d9e07aee54625da64dfe2",
-//                profiles: profilesSampleData
-//            ),
-//            sdModel(
-//                firstName: "D",
-//                lastName: "ew",
-//                time: 384585,
-//                userRoleType: "guest",
-//                roomNumber: "638d9e07aee54625da64dfe2",
-//                profiles: profilesSampleData
-//            ),
-//            sdModel(
-//                firstName: "D",
-//                lastName: "ew",
-//                time: 384585,
-//                userRoleType: "guest",
-//                roomNumber: "638d9e07aee54625da64dfe2",
-//                profiles: profilesSampleData
-//            )
-//        ]
-//    }
+    static var sdSampleData: speedDateModel {
+        speedDateModel(
+            firstName: "Drew",
+            lastName: "Drew",
+            time: 4743843,
+            userRoleType: "host",
+            roomNumber: "638d9e07aee54625da64dfe2",
+            profiles: profilesSampleData
+        )
+    }
+    
+    static var sdsSampleData: [speedDateModel] {
+        [
+            speedDateModel(
+                firstName: "Drew",
+                lastName: "Drew",
+                time: 172805,
+                userRoleType: "host",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            speedDateModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            speedDateModel(
+                firstName: "w",
+                lastName: "w",
+                time: 5059448,
+                userRoleType: "host",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            speedDateModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            speedDateModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            ),
+            speedDateModel(
+                firstName: "D",
+                lastName: "ew",
+                time: 384585,
+                userRoleType: "guest",
+                roomNumber: "638d9e07aee54625da64dfe2",
+                profiles: profilesSampleData
+            )
+        ]
+    }
 }
