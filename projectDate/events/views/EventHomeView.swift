@@ -15,12 +15,12 @@ import FirebaseStorage
 
 struct EventHomeView: View {
     @ObservedObject private var viewModel = EventViewModel()
+    @StateObject private var homeViewModel = HomeViewModel()
     
     @State private var searchText: String = ""
     @State private var isJoining: Bool = false
     @State private var showMenu: Bool = false
     @State private var events: [EventModel] = []
-    @State private var profileImage: UIImage? = UIImage()
     
     private var db = Firestore.firestore()
     
@@ -46,6 +46,7 @@ struct EventHomeView: View {
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .onAppear{
                     getEvents()
+                    homeViewModel.getStorageFile()
                 }
                 .navigationBarItems(leading: (
                         headerSection(for: geoReader)
@@ -220,7 +221,7 @@ struct EventHomeView: View {
                 })
 
                 NavigationLink(destination: SettingsView()) {
-                    if(self.profileImage != nil){
+                    if(!homeViewModel.profileImage.size.width.isZero){
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
@@ -229,7 +230,7 @@ struct EventHomeView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: self.profileImage!)
+                            Image(uiImage: homeViewModel.profileImage)
                                 .resizable()
                                 .cornerRadius(20)
                                 .frame(width: 30, height: 30)

@@ -12,6 +12,7 @@ import FirebaseAuth
 
 struct BasicInfoPopoverView: View {
     @Binding var userProfile: ProfileModel
+    @Binding var profileImage: UIImage
     @Binding var showingBasicInfoPopover: Bool
     @Binding var showingInstructionsPopover: Bool
     
@@ -20,7 +21,6 @@ struct BasicInfoPopoverView: View {
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var matchDayChoices: [String] = ["Saturdays","Fridays","Thursdays","Wednesdays","Tuesdays","Mondays","Sundays"]
     @State private var showImageSheet: Bool = false
-    @State private var profileImage: UIImage = UIImage()
     @State private var editInfo: Bool = false
     
     let storage = Storage.storage()
@@ -43,7 +43,7 @@ struct BasicInfoPopoverView: View {
     
     private func imageSection(for geoReader: GeometryProxy) -> some View {
         VStack{
-            Image(uiImage: self.profileImage)
+            Image(uiImage: profileImage)
                 .resizable()
                 .frame(width: 150, height: 150)
                 .background(Color.black.opacity(0.2))
@@ -72,7 +72,7 @@ struct BasicInfoPopoverView: View {
         if(editInfo == false){
             viewModel.updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
                 if profileId != "" {
-                    SettingsView().uploadStorageFile(image: self.profileImage)
+                    SettingsView().uploadStorageFile(image: profileImage)
                     showingInstructionsPopover.toggle()
                 }
             }
@@ -315,6 +315,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), showingBasicInfoPopover: .constant(true), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(true), showingInstructionsPopover: .constant(false))
     }
 }

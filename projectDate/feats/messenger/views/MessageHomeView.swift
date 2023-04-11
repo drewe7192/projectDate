@@ -17,12 +17,13 @@ import UIKit
 
 struct MessageHomeView: View {
     @ObservedObject var viewModel = MessageViewModel()
+    @StateObject var homeViewModel = HomeViewModel()
     
     @State private var foo: [String] = ["","","::"]
-    @State private var profileImage: UIImage = UIImage()
     @State private var showMenu: Bool = false
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
     @State private var messageThreads: [MessageThreadModel] = []
+    @State private var showSheet = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -45,6 +46,7 @@ struct MessageHomeView: View {
                 .onAppear {
                     getUserProfile(){(profileId) -> Void in
                         if profileId != "" {
+                            homeViewModel.getStorageFile()
                             if viewModel.messageThreads.isEmpty {
                                 viewModel.getMessageThreads()
                             }
@@ -150,7 +152,7 @@ struct MessageHomeView: View {
                
 
                 NavigationLink(destination: SettingsView()) {
-                    if(self.profileImage != nil){
+                    if(!homeViewModel.profileImage.size.width.isZero){
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
@@ -159,7 +161,7 @@ struct MessageHomeView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: self.profileImage)
+                            Image(uiImage: homeViewModel.profileImage)
                                 .resizable()
                                 .cornerRadius(20)
                                 .frame(width: 30, height: 30)

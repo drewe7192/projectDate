@@ -22,8 +22,8 @@ struct MatchView: View {
         getMatchRecords()
     }
     
+    @StateObject var viewModel = HomeViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
-    @State private var profileImage: UIImage = UIImage()
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
     
@@ -34,7 +34,7 @@ struct MatchView: View {
         VStack{
             Text("Its a Match!")
             HStack{
-                Image(uiImage: self.profileImage)
+                Image(uiImage: viewModel.profileImage)
                     .resizable()
                     .cornerRadius(50)
                     .frame(width: 100, height: 100)
@@ -42,7 +42,7 @@ struct MatchView: View {
                     .aspectRatio(contentMode: .fill)
                     .clipShape(Circle())
                 
-                Image(uiImage: self.profileImage)
+                Image(uiImage: viewModel.profileImage)
                     .resizable()
                     .cornerRadius(50)
                     .frame(width: 100, height: 100)
@@ -117,7 +117,7 @@ struct MatchView: View {
                 print("Error getting file: ", error)
             } else {
                 let image = UIImage(data: data!)
-                self.profileImage = image!
+                viewModel.profileImage = image!
                 
             }
         }

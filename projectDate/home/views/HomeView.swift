@@ -33,7 +33,6 @@ struct HomeView: View {
     @State private var lastDoc: Any = []
 //    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
-    @State private var profileImage: UIImage? = UIImage()
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -140,7 +139,7 @@ struct HomeView: View {
                     }
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
-                    BasicInfoPopoverView(userProfile: $viewModel.userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
+                    BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
                 .navigationBarItems(leading: (
                     headerSection(for: geoReader)
@@ -219,7 +218,7 @@ struct HomeView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: self.profileImage!)
+                            Image(uiImage: viewModel.profileImage)
                                 .resizable()
                                 .cornerRadius(20)
                                 .frame(width: 30, height: 30)

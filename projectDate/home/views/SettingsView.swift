@@ -13,7 +13,7 @@ import FirebaseStorage
 
 struct SettingsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @ObservedObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = HomeViewModel()
     
     @State var isLoggedOut = false
     @State private var image = UIImage()
@@ -22,7 +22,6 @@ struct SettingsView: View {
     @State private var showSheet = false
     @State private var showSaveButton = false
     @State private var editInfo = false
-    @State private var profileImage: UIImage = UIImage()
     @State private var showMenu: Bool = false
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
     
@@ -51,7 +50,7 @@ struct SettingsView: View {
                     }
                     .sheet(isPresented: $showSheet){
                         // Pick an image from the photo library:
-                        ImagePicker(sourceType: .photoLibrary, selectedImage: $profileImage)
+                        ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.profileImage)
                         
                         //  If you wish to take a photo from camera instead:
                         // ImagePicker(sourceType: .camera, selectedImage: self.$image)
@@ -68,7 +67,7 @@ struct SettingsView: View {
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .onAppear{
-                    getStorageFile()
+                    viewModel.getStorageFile()
                 }
                 .navigationBarItems(leading: (
                         headerSection(for: geoReader)
@@ -80,7 +79,7 @@ struct SettingsView: View {
     
     private func imageSection(for geoReader: GeometryProxy) -> some View {
         VStack{
-            Image(uiImage: self.profileImage)
+            Image(uiImage: viewModel.profileImage)
                 .resizable()
                 .cornerRadius(50)
                 .frame(width: 200, height: 200)
@@ -209,23 +208,7 @@ struct SettingsView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            uploadStorageFile(image: viewModel.profileImage)
-        }
-    }
-    
-    public func getStorageFile() {
-        let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
-        
-        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
-            if let error = error {
-                // Uh-oh, an error occurred!
-                print("Error getting file: ", error)
-            } else {
-                let image = UIImage(data: data!)
-                self.profileImage = image!
-                
-            }
+            uploadStorageFile(image: viewModel.profileImage ?? UIImage())
         }
     }
     
@@ -311,7 +294,7 @@ struct SettingsView: View {
                
 
                 NavigationLink(destination: SettingsView()) {
-                    if(self.profileImage != nil){
+                    if(viewModel.profileImage != nil){
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
@@ -320,7 +303,7 @@ struct SettingsView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: self.profileImage)
+                            Image(uiImage: viewModel.profileImage)
                                 .resizable()
                                 .cornerRadius(20)
                                 .frame(width: 30, height: 30)
