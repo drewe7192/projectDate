@@ -24,8 +24,10 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    //@Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "")
+    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "", messageThreadIds: [])
     @Published var profileImage: UIImage = UIImage()
+    @Published var swipedRecords: [SwipedRecordModel] = []
+    @Published var swipedCards: [CardModel] = []
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -159,11 +161,31 @@ class HomeViewModel: ObservableObject {
 //        }
 //    }
     
+    public func getUserProfile(completed: @escaping (_ profileId: String) -> Void){
+        db.collection("profiles")
+            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    completed("")
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        if !data.isEmpty{
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
+                        }
+                    }
+                    completed(self.userProfile.id)
+                }
+            }
+    }
+    
     public func getStorageFile() {
         let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        imageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
             if let error = error {
                 // Uh-oh, an error occurred!
                 print("Error getting file: ", error)
@@ -174,5 +196,144 @@ class HomeViewModel: ObservableObject {
             }
         }
     }
+    
+    public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let start = calendar.date(from: components)!
+        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        
+        db.collection("swipedRecords")
+            .whereField("profileId", isEqualTo: userProfile.id)
+            .whereField("swipedDate", isGreaterThan: start)
+            .whereField("swipedDate", isLessThan: end)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents from swipedRecords: \(err)")
+                    completed([])
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        if !data.isEmpty{
+                            let swipedRecord = SwipedRecordModel(id: data["id"] as? String ?? "", answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "", profileId: data["profileId"] as? String ?? "")
+                            
+                            self.swipedRecords.append(swipedRecord)
+                        }
+                    }
+                    completed(self.swipedRecords)
+                }
+            }
+    }
+    
+    // not using this func right now but we're definitely gonna need this for future features
+    public func getSwipedCardsFromSwipedRecords(swipedRecords: [SwipedRecordModel]) {
+        //using this func because swipedRecords could include cards user hasnt answered & possible duplicates
+        var cardIds = getUniqueSwipedCardRecords(swipedRecords: swipedRecords)
+        var batches: [Any] = []
+        
+        //sanity check: making swipedCards clean if dirty
+        self.swipedCards.removeAll()
+        
+        // workaround for the Firebase Query "IN" Limit of 10
+        while(!cardIds.isEmpty){
+            //splice Array: get first 10 and remove the same 10 from array
+            let batch = Array(cardIds.prefix(10))
+            let count = cardIds.count
+            if count < 10{
+                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
+            } else{
+                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
+            }
+            
+            //Batch queue to call db for every batch
+            batches.append(
+                db.collection("cards")
+                //here's the issue: batch has a limit of 10
+                // condition because your getting this data for the Profiler which shows how many cards you've swiped
+                    .whereField("id", in: batch)
+                    .getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                                let data = document.data()
+                                
+                                if !data.isEmpty{
+                                    let swipedCards = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                                    
+                                    self.swipedCards.append(swipedCards)
+                                }
+                            }
+                            //another sanity check if dirty.. not sure if we need this
+                            self.swipedCards.removeAll()
+                        }
+                    }
+            )
+        }
+    }
+    
+    public func createUserProfile(completed: @escaping(_ createdUserProfileId: String) -> Void){
+        
+        let id = UUID().uuidString
+        let docData: [String: Any] = [
+            "id": id,
+            "fullName": Auth.auth().currentUser?.displayName as Any,
+            "location": "",
+            "gender": "",
+            "userId": Auth.auth().currentUser?.uid as Any,
+            "matchDay": "",
+            "messageThreadIds": []
+        ]
+        
+        let docRef = db.collection("profiles").document(id)
+        
+        docRef.setData(docData) {error in
+            if let error = error{
+                print("Error creating new userProfile: \(error)")
+                completed("")
+            } else {
+                print("Successfully created userProfile!")
+                self.userProfile.id = id
+                self.userProfile.fullName = Auth.auth().currentUser?.displayName ?? ""
+                completed(self.userProfile.id)
+            }
+        }
+    }
+    
+    public func updateUserProfile(updatedProfile: ProfileModel, completed: @escaping(_ profileId: String) -> Void){
+        let docData: [String: Any] = [
+            "fullName": updatedProfile.fullName,
+            "location": updatedProfile.location,
+            "gender": updatedProfile.gender,
+            "userId": Auth.auth().currentUser?.uid as Any,
+            "matchDay": updatedProfile.matchDay
+        ]
+        
+        let docRef = db.collection("profiles").document(updatedProfile.id)
+        
+        docRef.updateData(docData) {error in
+            if let error = error{
+                print("Error updating userProfile: \(error)")
+                completed("")
+            } else {
+                print("successfully updated userProfile!")
+                completed(updatedProfile.id)
+            }
+        }
+    }
+    
+    private func getUniqueSwipedCardRecords(swipedRecords: [SwipedRecordModel]) -> [String] {
+        var cardIds: [String] = []
+        let answeredRecords = swipedRecords.filter{$0.answer != ""}
+        //you shouldnt get the same answered card twice but just in case make it unique
+        let uniqueRecords = answeredRecords.unique{$0.cardId}
+        
+        for card in uniqueRecords {
+            cardIds.append(card.cardId)
+        }
+        return cardIds
+    }
+
 }
 

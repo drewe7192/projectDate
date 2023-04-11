@@ -11,12 +11,13 @@ import FirebaseFirestore
 class MessageViewModel: ObservableObject {
     @Published private(set) var messages: [MessageModel] = []
     @Published private(set) var lastMessageId = ""
-    @Published private(set) var messageThreads: [MessageThreadModel] = []
+    @Published public var messageThreads: [MessageThreadModel] = []
     
     let db = Firestore.firestore()
     
-    func getMessages() {
+    public func getMessages(messageIds: [String]) {
         db.collection("messages")
+            .whereField("id", in: messageIds)
             .addSnapshotListener { QuerySnapshot, error in
             guard let documents = QuerySnapshot?.documents else {
                 print("Error fetching documents: \(String(describing: error))")
@@ -49,7 +50,7 @@ class MessageViewModel: ObservableObject {
         }
     }
     
-    public func getMessageThreads(threadIds: [String]) {
+    public func getMessageThreads() {
         db.collection("messageThreads")
             //.whereField("id", in: threadIds)
             .getDocuments() { (querySnapshot, err) in
@@ -61,9 +62,9 @@ class MessageViewModel: ObservableObject {
                         let data = document.data()
                         if !data.isEmpty{
                             let messageThread = MessageThreadModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", messageIds: data["messageIds"] as? [String] ?? [])
-                            
+
                             self.messageThreads.append(messageThread)
-                            
+
                         }
                     }
                 }

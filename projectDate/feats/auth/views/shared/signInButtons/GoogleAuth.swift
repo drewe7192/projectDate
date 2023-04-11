@@ -26,7 +26,7 @@ struct GoogleAuth: View {
                 .fontWeight(.medium)
                 .kerning(1.1)
                 .foregroundColor(.white)
-                .frame(width: 400, height: 60)
+                .frame(width: 350, height: 60)
                 .background(.red)
                 .cornerRadius(20)
                 .shadow(radius: 5)

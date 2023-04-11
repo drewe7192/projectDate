@@ -19,6 +19,8 @@ struct LogInItems: View {
     @State var isLoading: Bool = false
     @State var showAlert: Bool = false
     
+    let isSignInPage: Bool
+    
     var body: some View {
         if(toggleButtons){
             thirdPartyButtons
@@ -28,57 +30,82 @@ struct LogInItems: View {
     }
     
     public var initalButtons: some View {
-        HStack{
-            Button(action: {
-                self.toggleButtons.toggle()
-            }) {
-                Image("appleLogo")
-                    .resizable()
-                    .frame(width: 35, height: 35)
-                    .foregroundColor(Color.white)
+        VStack{
+            if(isSignInPage) {
+                Text("or Sign In with")
+                    .foregroundColor(.white)
+            } else {
+                Text("or Sign Up with")
+                    .foregroundColor(.white)
             }
-            .frame(width: 120, height: 50)
-            .background(Color.mainGrey)
-            .cornerRadius(15)
-            .shadow(radius: 5)
             
-            Button(action: {
-                self.toggleButtons.toggle()
-            }) {
-                Image("googleLogo")
-                    .resizable()
-                    .frame(width: 35, height: 35)
+            HStack{
+                Button(action: {
+                    self.toggleButtons.toggle()
+                }) {
+                    Image("appleLogo")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .foregroundColor(Color.white)
+                }
+                .frame(width: 120, height: 50)
+                .background(Color.mainGrey)
+                .cornerRadius(15)
+                .shadow(radius: 5)
+                
+                Button(action: {
+                    self.toggleButtons.toggle()
+                }) {
+                    Image("googleLogo")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                }
+                .frame(width: 120, height: 50)
+                .background(Color.mainGrey)
+                .cornerRadius(15)
+                .shadow(radius: 5)
+                
+                Button(action: {
+                    self.toggleButtons.toggle()
+                }) {
+                    Image("facebookLogo")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                }
+                .frame(width: 120, height: 50)
+                .background(Color.mainGrey)
+                .cornerRadius(15)
+                .shadow(radius: 5)
             }
-            .frame(width: 120, height: 50)
-            .background(Color.mainGrey)
-            .cornerRadius(15)
-            .shadow(radius: 5)
-            
-            Button(action: {
-                self.toggleButtons.toggle()
-            }) {
-                Image("facebookLogo")
-                    .resizable()
-                    .frame(width: 35, height: 35)
-            }
-            .frame(width: 120, height: 50)
-            .background(Color.mainGrey)
-            .cornerRadius(15)
-            .shadow(radius: 5)
         }
+    
         
     }
     
     public var thirdPartyButtons: some View {
         VStack{
+            if(isSignInPage) {
+                Text("or Sign In with")
+                    .foregroundColor(.white)
+            } else {
+                Text("or Sign Up with")
+                    .foregroundColor(.white)
+            }
+           
             GoogleAuth(showAlert: $showAlert)
             
             FacebookLoginView(showAlert: $showAlert)
-                .frame(width: 400, height: 60)
+                .frame(width: 350, height: 60)
                 .cornerRadius(20)
                 .shadow(radius: 5)
             
             AppleAuth()
+            
+            if(isSignInPage) {
+                signUpLinkSection
+            } else {
+                signInLinkSection
+            }
         }.alert(isPresented: $showAlert) {
             Alert(
                 title: Text("Account already exists"),
@@ -126,6 +153,6 @@ struct LogInItems: View {
 
 struct LogInItems_Previews: PreviewProvider {
     static var previews: some View {
-        LogInItems()
+        LogInItems(isSignInPage: true)
     }
 }

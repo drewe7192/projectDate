@@ -15,6 +15,8 @@ struct BasicInfoPopoverView: View {
     @Binding var showingBasicInfoPopover: Bool
     @Binding var showingInstructionsPopover: Bool
     
+    @ObservedObject var viewModel = HomeViewModel()
+    
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var matchDayChoices: [String] = ["Saturdays","Fridays","Thursdays","Wednesdays","Tuesdays","Mondays","Sundays"]
     @State private var showImageSheet: Bool = false
@@ -68,7 +70,7 @@ struct BasicInfoPopoverView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            HomeView().updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
+            viewModel.updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
                 if profileId != "" {
                     SettingsView().uploadStorageFile(image: self.profileImage)
                     showingInstructionsPopover.toggle()
@@ -100,56 +102,69 @@ struct BasicInfoPopoverView: View {
     
     private func instructionsPopover(for geoReader: GeometryProxy) -> some View{
         VStack(spacing: geoReader.size.height * 0.01){
-            Text("Welcome to IceBreakrrr!")
-                .foregroundColor(Color.iceBreakrrrBlue)
-                .font(.system(size: geoReader.size.height * 0.045))
-                .multilineTextAlignment(.center)
             
-            Text("the relationship app where you're the Matchmaker!")
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .font(.system(size: geoReader.size.height * 0.03))
-            
-            Spacer()
-                .frame(height: geoReader.size.height * 0.04)
-            
-            Text("Here's how it works:")
-                .foregroundColor(Color.iceBreakrrrBlue)
-                .font(.system(size: geoReader.size.height * 0.04))
-                .multilineTextAlignment(.center)
-                .padding(.bottom,5)
-            
-            Text("- Answer the questions")
-                .foregroundColor(.white)
-                .font(.system(size: geoReader.size.height * 0.025))
-                .multilineTextAlignment(.center)
-            
-            Text("- Swipe and create your own the cards")
-                .foregroundColor(.white)
-                .font(.system(size: geoReader.size.height * 0.025))
-                .multilineTextAlignment(.center)
-            
-            HStack{
-                Text("- Get matches weekly via")
+            Group {
+                Text("Welcome to IceBreakrrr!")
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.custom("Chalkduster", size: geoReader.size.height * 0.045))
+                    .multilineTextAlignment(.center)
+                
+                Text("Yupp: this is another dating app..")
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                    .padding(.bottom,5)
+                
+                Text("But this focuses more on matching values & personalities")
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                
+                Spacer()
+                    .frame(height: geoReader.size.height * 0.04)
+                
+                Text("Here's how it works:")
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.custom("Chalkduster",size: geoReader.size.height * 0.04))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
+                
+                Text("Answer questions on each card based on how you would like your perfect match to answer")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
+                    .padding(2)
                 
-                Image(systemName: "snowflake.circle")
-                    .resizable()
-                    .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+                Text("Submit card by swiping right, skip card by swiping left")
                     .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
                 
-                Text("Day")
+                Text("Create your own cards via plus button")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
+             
+                HStack{
+                    Image(systemName: "snowflake.circle")
+                        .resizable()
+                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+                        .foregroundColor(.white)
+                    
+                    Text(": Pick a day once a week to get matches")
+                        .foregroundColor(.white)
+                        .font(.system(size: geoReader.size.height * 0.025))
+                        .multilineTextAlignment(.center)
+                }
+                .padding(5)
+                
+                Text("Meet via speed-dating video chats!")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
             }
-            
-            Text("- Coming Soon: Meet match via bimonthly events in the Events tab!")
-                .foregroundColor(.white)
-                .font(.system(size: geoReader.size.height * 0.025))
-                .multilineTextAlignment(.center)
             
             Spacer()
                 .frame(height: geoReader.size.height * 0.03)
@@ -255,8 +270,8 @@ struct BasicInfoPopoverView: View {
                 Picker(selection: $userProfile.matchDay) {
                     ForEach(matchDayChoices, id: \.self) { matchDay in
                         Text("\(matchDay)")
-                            .tag(matchDay)
-                            .font(.system(size: geoReader.size.height * 0.04))
+                           // .tag(matchDay)
+                            .font(.system(size: geoReader.size.height * 0.01))
                     }
                 } label: {}
             } label: {
@@ -273,9 +288,10 @@ struct BasicInfoPopoverView: View {
             .accentColor(.white)
             .disabled(editInfo == false)
             
-            Text("(Weekly match day)")
+            Text("(pick day to get matches)")
                 .foregroundColor(.iceBreakrrrBlue)
         }
+        
     }
     
     private func basicInfoButton(for geoReader: GeometryProxy) -> some View{
@@ -299,6 +315,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), showingBasicInfoPopover: .constant(true), showingInstructionsPopover: .constant(false))
     }
 }

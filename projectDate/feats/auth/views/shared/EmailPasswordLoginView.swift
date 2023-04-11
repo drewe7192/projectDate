@@ -50,44 +50,44 @@ struct EmailPasswordLoginView: View{
     }
     
    private func signInUser(userEmail: String, userPassword: String){
-        LogInItems().isLoading = true
+        LogInItems(isSignInPage: true).isLoading = true
         
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             
             guard error ==  nil else{
-                LogInItems().isLoading  = false
+                LogInItems(isSignInPage: true).isLoading  = false
                 signInErrorMessage = error!.localizedDescription
                 return
             }
             switch authResult {
             case .none:
                 print("Cound not sign in user.")
-                LogInItems().isLoading  = false
+                LogInItems(isSignInPage: true).isLoading  = false
             case .some(_):
                 print("User signed in")
-                LogInItems().isLoading = false
+                LogInItems(isSignInPage: true).isLoading = false
                 viewRouter.currentPage = .homePage
             }
         }
     }
     
     private func createUser(userEmail: String, userPassword: String){
-        LogInItems().isLoading = true
+        LogInItems(isSignInPage: true).isLoading = true
         
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             
             guard error == nil else{
-                LogInItems().isLoading = false
+                LogInItems(isSignInPage: true).isLoading = false
                 signInErrorMessage = error!.localizedDescription
                 return
             }
             switch authResult {
             case .none:
                 print("Cound not create new user.")
-                LogInItems().isLoading = false
+                LogInItems(isSignInPage: true).isLoading = false
             case .some(_):
                 print("User signed in")
-                LogInItems().isLoading = false
+                LogInItems(isSignInPage: true).isLoading = false
                 viewRouter.currentPage = .homePage
                 
             }

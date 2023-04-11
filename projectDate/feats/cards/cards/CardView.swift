@@ -85,17 +85,17 @@ struct CardView: View {
                     }
                     
                     HStack{
-                        HStack{
-                                Text("Created by:")
-                                .foregroundColor(.white)
-
-                            Image("animeGirl")
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(Circle())
-                                .frame(width: 70,height: 70)
-                        }
-                        Spacer()
+//                        HStack{
+//                                Text("Created by:")
+//                                .foregroundColor(.white)
+//
+//                            Image("animeGirl")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .clipShape(Circle())
+//                                .frame(width: 70,height: 70)
+//                        }
+//                        Spacer()
                         
                         ZStack{
                             Text("")

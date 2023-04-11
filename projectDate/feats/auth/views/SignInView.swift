@@ -31,59 +31,58 @@ struct SignInView: View {
                         bodySection(for: geoReader)
                         footerSection(for: geoReader)
                     }
-                    LogInItems().loadingIndicator
+                    LogInItems(isSignInPage: true).loadingIndicator
                 }
+                .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
             }
-           
         }
         .navigationBarBackButtonHidden(true)
     }
     
     private func bodySection(for geoReader: GeometryProxy) -> some View {
-        VStack{
+        ZStack{
+            Image("logo")
+                .resizable()
+                .frame(width: 100, height: 100)
+                .background(Color.mainBlack)
+                .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.1)
+            
             VStack{
-                Image("logo")
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                    .background(Color.mainBlack)
-                    .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.3)
-                
                 Text("iceBreakrrr")
                     .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.07))
                     .bold()
                     .foregroundColor(Color.iceBreakrrrBlue)
                 
-                Text("Relationship app where you're the matchmaker!")
+                Text("Less messaging, more speed-dating")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.02))
                     .multilineTextAlignment(.center)
             }
-            .padding(.bottom,geoReader.size.height * 0.02)
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.17)
             
-            EmailPasswordLoginView(email: $email, password: $password,confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, displayConfirmPassword: $displayConfirmPassword)
-            
-            Text("Forgot Password?")
-                .padding(.leading, geoReader.size.height * 0.3)
-                .padding(.top,geoReader.size.height * 0.01)
-                .foregroundColor(.white)
+            VStack{
+                EmailPasswordLoginView(email: $email, password: $password,confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, displayConfirmPassword: $displayConfirmPassword)
+                
+                Text("Forgot Password?")
+                    .padding(.leading, geoReader.size.height * 0.3)
+                    .padding(.top,geoReader.size.height * 0.01)
+                    .foregroundColor(.white)
+            }
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.42)
         }
     }
     
     private func footerSection(for geoReader: GeometryProxy) -> some View{
         VStack{
-            Text("or Login with")
-                .foregroundColor(.white)
-                .padding(.top,geoReader.size.height * 0.08)
-            
-            LogInItems()
-            LogInItems().signUpLinkSection
+            LogInItems(isSignInPage: true)
         }
+        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.3)
     }
 }
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
-            SignInView()
+        SignInView()
     }
 }
 

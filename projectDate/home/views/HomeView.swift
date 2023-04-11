@@ -16,7 +16,7 @@ import FirebaseStorage
 import UIKit
 
 struct HomeView: View {
-    @ObservedObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = HomeViewModel()
     @ObservedObject private var messageViewModel = MessageViewModel()
     
     @EnvironmentObject var viewRouter: ViewRouter
@@ -31,10 +31,7 @@ struct HomeView: View {
     @State private var updateData: Bool = false
     @State private var cards: [CardModel] = []
     @State private var lastDoc: Any = []
-    @State private var swipedRecords: [SwipedRecordModel] = []
-    @State private var swipedCards: [CardModel] = []
-    @State private var swipedcardsForProgressCircle: [CardModel] = []
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
+//    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var profileImage: UIImage? = UIImage()
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -65,91 +62,13 @@ struct HomeView: View {
                     Color.mainBlack
                         .ignoresSafeArea()
                     
-                        VStack{
-                                cardsSection(for: geoReader)
-                                    .padding(.top,10)
-                                
-    
-                              
-                               
-                            
-                          
-//                            HStack{
-//                                Text("Match Activity:")
-//                                    .multilineTextAlignment(.center)
-//                                    .foregroundColor(.white)
-//                                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
-//                                    .padding(.trailing,10)
-//                                    .padding(.bottom,3)
-//
-//                                HStack{
-//                                    Image(systemName: "snowflake.circle")
-//                                        .resizable()
-//                                        .frame(width: 30, height: 30)
-//                                        .foregroundColor(.white)
-//
-//                                    Text("\(userProfile.matchDay)")
-//                                        .foregroundColor(.iceBreakrrrBlue)
-//                                        .bold()
-//                                        .font(.system(size: 20))
-//                                }
-//                            }
-//                            ZStack{
-//                                if(showMatchFeed){
-//                                    ScrollViewReader{ (proxy: ScrollViewProxy) in
-//                                        ScrollView{
-//                                            VStack{
-//                                                ForEach(0..<9) { card in
-//                                                    ZStack{
-//                                                        Text("")
-//                                                            .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.09)
-//                                                            .background(Color.mainGrey)
-//                                                            .cornerRadius(20)
-//
-//                                                        HStack{
-//                                                            Image("logo")
-//                                                                .resizable()
-//                                                                .cornerRadius(50)
-//                                                                .frame(width: 40, height: 40)
-//                                                                .background(Color.black.opacity(0.2))
-//                                                                .aspectRatio(contentMode: .fill)
-//                                                                .clipShape(Circle())
-//
-//
-//                                                            Text("Bob jones matched your answer: take a long walk and ride a bike or some shit")
-//                                                                .foregroundColor(.white)
-//                                                                .padding(.trailing)
-//                                                                .padding(.leading)
-//                                                        }
-//
-//                                                    }
-//
-//                                                }
-//                                            }
-//                                            //                                        .onReceive(timer) { _ in
-//                                            //                                            withAnimation {
-//                                            //                                                if counter <
-//                                            //                                            }
-//                                            //                                        }
-//
-//                                        }
-//                                        .frame(width: 0,height: 115)
-//                                        .padding(.top,2)
-//                                        .padding(.bottom,5)
-//                                    }
-//
-//                                }else{
-//                                    Text("No Matches Yet")
-//                                        .bold()
-//                                        .foregroundColor(.gray.opacity(0.3))
-//                                        .font(.system(size: 40))
-//                                        .padding(.bottom, 40)
-//                                }
-//                            }
-                        }
-                        .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
-                        .disabled(self.showMenu ? true : false)
-                     
+                    VStack{
+                        cardsAndCountdownSection(for: geoReader)
+                            .padding(.top,10)
+                    }
+                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
+                    .disabled(self.showMenu ? true : false)
+                    
                     if self.showMenu {
                         MenuView()
                             .frame(width: geoReader.size.width/2)
@@ -164,24 +83,25 @@ struct HomeView: View {
                     )
                 }
                 .onAppear {
-                    getUserProfile(){(profileId) -> Void in
-                        if profileId != "" {
-                            getStorageFile()
-                            // getting these records to update the Profiler
-                            getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
-                                if !swipedRecords.isEmpty {
-                                    getCardFromRecords(swipedRecords: swipedRecords)
+                    //inital check to make sure we're not always getting data if we already have data
+                    if viewModel.userProfile.id == "" {
+                        viewModel.getUserProfile(){(profileId) -> Void in
+                            if profileId != "" {
+                                //get profileImage
+                                viewModel.getStorageFile()
+                                // getting these records to display new cards user hasn't seen yet
+                                viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                                    if !swipedRecords.isEmpty {
+                                        viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
+                                    }
+                                }
+                            } else {
+                                viewModel.createUserProfile() {(createdUserProfileId) -> Void in
+                                    if createdUserProfileId != "" {
+                                        showingBasicInfoPopover.toggle()
+                                    }
                                 }
                             }
-                        } else {
-                            createUserProfile() {(createdUserProfileId) -> Void in
-                                if createdUserProfileId != "" {
-                                    showingBasicInfoPopover.toggle()
-                                    
-                                }
-                                
-                            }
-                            
                         }
                     }
                     
@@ -210,22 +130,21 @@ struct HomeView: View {
                             }
                         }
                     }
-                    
                 }
                 .onChange(of: updateData) { _ in
-                    getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
                         if !swipedRecords.isEmpty {
                             saveSwipedCardGroup(swipedRecords: swipedRecords)
-                            getCardFromRecords(swipedRecords: swipedRecords)
+                            viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
                         }
                     }
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
-                    BasicInfoPopoverView(userProfile: $userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
+                    BasicInfoPopoverView(userProfile: $viewModel.userProfile, showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
                 .navigationBarItems(leading: (
-                        headerSection(for: geoReader)
-                            .padding(.leading, geoReader.size.width * 0.25)
+                    headerSection(for: geoReader)
+                        .padding(.leading, geoReader.size.width * 0.25)
                 ))
             }
         }
@@ -239,14 +158,13 @@ struct HomeView: View {
                     .bold()
                     .foregroundColor(Color.iceBreakrrrBlue)
                     .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.03)
-            
-            Image("logo")
-                .resizable()
-                .frame(width: 40, height: 40)
-                .background(Color.mainBlack)
-                .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
+                
+                Image("logo")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .background(Color.mainBlack)
+                    .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
             }
-            
             
             HStack{
                 Button(action: {
@@ -261,7 +179,7 @@ struct HomeView: View {
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Rectangle())
                             .cornerRadius(10)
-
+                        
                         Image(systemName: "line.3.horizontal.decrease")
                             .resizable()
                             .frame(width: 20, height: 10)
@@ -270,7 +188,7 @@ struct HomeView: View {
                     }
                 }
                 .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
-
+                
                 Spacer()
                     .frame(width: geoReader.size.width * 0.55)
                 
@@ -290,9 +208,9 @@ struct HomeView: View {
                             .aspectRatio(contentMode: .fill)
                     }
                 })
-
+                
                 NavigationLink(destination: SettingsView()) {
-                    if(self.profileImage != nil){
+                    if(viewModel.profileImage != nil){
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
@@ -317,7 +235,7 @@ struct HomeView: View {
                                 .background(.black.opacity(0.2))
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
-
+                            
                             Image(systemName: "person.circle")
                                 .resizable()
                                 .cornerRadius(20)
@@ -340,52 +258,11 @@ struct HomeView: View {
                 //            .toggleStyle(SwitchToggleStyle(tint: .white))
             }
         }
-       
     }
     
-    private func profilerSection(for geoReader: GeometryProxy) -> some View {
-        HStack {
-            ZStack{
-                CircularProgressView(progress: setProgress())
-                    .frame(width: geoReader.size.width * 0.4, height: geoReader.size.height * 0.2)
-                
-                Text("\(progress * 100, specifier: "%.0f")%")
-                    .font(.custom("Superclarendon", size: 45))
-                    .foregroundColor(.white)
-            }
-            
-            Spacer()
-                .frame(width: geoReader.size.width * 0.1)
-            
-            VStack(alignment: .leading){
-                VStack{
-                    ProgressView("Values: " + "\(self.valuesCount)%", value: self.valuesCount, total: 100)
-                        .foregroundColor(.white)
-                        .tint(Color.iceBreakrrrPink)
-                        .frame(width: geoReader.size.width * 0.4)
-                }
-                
-                VStack{
-                    ProgressView("Little Things: " + "\(littleThingsCount)%", value: littleThingsCount, total: 100)
-                        .foregroundColor(.white)
-                        .tint(Color.iceBreakrrrPink)
-                        .frame(width: geoReader.size.width * 0.4)
-                }
-                
-                VStack{
-                    ProgressView("Personality: " + "\(personalityCount)%", value: personalityCount, total: 100)
-                        .foregroundColor(.white)
-                        .tint(Color.iceBreakrrrPink)
-                        .frame(width: geoReader.size.width * 0.4)
-                }
-            }
-        }
-    }
-    
-    private func cardsSection(for geoReader: GeometryProxy) -> some View {
-        
+    private func cardsAndCountdownSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            CardsView(updateData: $updateData, userProfile: self.userProfile)
+            CardsView(updateData: $updateData, userProfile: viewModel.userProfile)
             plusButton()
             
             VStack{
@@ -397,135 +274,10 @@ struct HomeView: View {
                 NavigationLink(destination: SpeedDateHomeView(displayType: "Host") , label: {
                     CountdownTimerView(timeRemaining: 80400, geoReader: geoReader)
                 })
-           
-            }
-            .padding(.top,geoReader.size.height * 0.05)
-                .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.85)
-        }
-        
-    }
-    
-    public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-        
-        db.collection("swipedRecords")
-            .whereField("profileId", isEqualTo: userProfile.id)
-            .whereField("swipedDate", isGreaterThan: start)
-            .whereField("swipedDate", isLessThan: end)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents from swipedRecords: \(err)")
-                    completed([])
-                } else {
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        
-                        if !data.isEmpty{
-                            let swipedRecord = SwipedRecordModel(id: data["id"] as? String ?? "", answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "", profileId: data["profileId"] as? String ?? "")
-                            
-                            self.swipedRecords.append(swipedRecord)
-                        }
-                    }
-                    completed(self.swipedRecords)
-                }
-            }
-    }
-    
-    private func getCardFromRecords(swipedRecords: [SwipedRecordModel]) {
-        var cardIds = getUniqueRecords(swipedRecords: swipedRecords)
-        var batches: [Any] = []
-        
-        clearStates()
-        
-        // workaround for the Firebase Query "IN" Limit of 10
-        while(!cardIds.isEmpty){
-            //splice Array: get first 10 and remove the same 10 from array
-            let batch = Array(cardIds.prefix(10))
-            let count = cardIds.count
-            if count < 10{
-                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
-            } else{
-                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
-            }
-            
-            //Batch queue to call db for every batch
-            batches.append(
-                db.collection("cards")
-                //here's the issue: batch has a limit of 10
-                // condition because your getting this data for the Profiler which shows how many cards you've swiped
-                    .whereField("id", in: batch)
-                    .getDocuments() { (querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                        } else {
-                            for document in querySnapshot!.documents {
-                                let data = document.data()
-                                
-                                if !data.isEmpty{
-                                    let swipedCards = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
-                                    
-                                    self.swipedCards.append(swipedCards)
-                                    self.swipedcardsForProgressCircle.append(swipedCards)
-                                }
-                            }
-                            updateProfilerBars(cardsSwiped: self.swipedCards)
-                            self.swipedCards.removeAll()
-                        }
-                    }
-            )
-        }
-    }
-    
-    private func getUniqueRecords(swipedRecords: [SwipedRecordModel]) -> [String] {
-        var cardIds: [String] = []
-        let answeredRecords = swipedRecords.filter{$0.answer != ""}
-        //you shouldnt get the same answered card twice but just in case make it unique
-        let uniqueRecords = answeredRecords.unique{$0.cardId}
-        
-        for card in uniqueRecords {
-            cardIds.append(card.cardId)
-        }
-        return cardIds
-    }
-    
-    private func clearStates(){
-        self.swipedCards.removeAll()
-        self.swipedcardsForProgressCircle.removeAll()
-        self.valuesCount = 0
-        self.littleThingsCount = 0
-        self.personalityCount = 0
-    }
-    
-    private func updateProfilerBars(cardsSwiped: [CardModel]){
-        if(!cardsSwiped.isEmpty){
-            for card in cardsSwiped {
-                if card.categoryType == "values" {
-                    self.valuesCount += 1
-                }else if card.categoryType == "littleThings" {
-                    self.littleThingsCount += 1
-                }else if card.categoryType == "personality" {
-                    self.personalityCount += 1
-                }
-            }
-        }
-    }
-    
-    private func getStorageFile() {
-        let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
-        
-        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
-            if let error = error {
-                // Uh-oh, an error occurred!
-                print("Error getting file: ", error)
-            } else {
-                let image = UIImage(data: data!)
-                self.profileImage = image!
                 
             }
+            .padding(.top,geoReader.size.height * 0.05)
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.85)
         }
     }
     
@@ -544,7 +296,7 @@ struct HomeView: View {
         
         let docData: [String: Any] = [
             "id": id,
-            "profileId": self.userProfile.id,
+            "profileId": viewModel.userProfile.id,
             "cardIds": cardIds,
             "answers": answers,
             "createdDate": Timestamp(date: Date())
@@ -566,45 +318,14 @@ struct HomeView: View {
         return profileText;
     }
     
-    private func setProgress() -> Double{
-        // 1.0 fully fills up the circle
-        self.progress = Double(self.swipedcardsForProgressCircle.count) * 0.05
-        
-        return Double(self.swipedcardsForProgressCircle.count) * 0.05
-    }
-    
-    private func getUserProfile(completed: @escaping (_ profileId: String) -> Void){
-        db.collection("profiles")
-            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    completed("")
-                } else {
-                    for document in querySnapshot!.documents {
-                        //                        print("\(document.documentID) => \(document.data())")
-                        let data = document.data()
-                        if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
-                        }
-                        
-                        messageViewModel.getMessageThreads(threadIds: self.userProfile.messageThreadIds)
-                    }
-                    completed(self.userProfile.id)
-                }
-            }
-    }
-    
     private func getMatchRecordsForThisWeek(completed: @escaping(_ matches: [MatchRecordModel]) -> Void) {
-        
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
         let end = calendar.date(byAdding: .day, value: 1, to: start)!
         
-        
         db.collection("matchRecords")
-            .whereField("profileId", isEqualTo: userProfile.id)
+            .whereField("profileId", isEqualTo: viewModel.userProfile.id)
             .whereField("createdDate", isGreaterThan: start)
             .whereField("createdDate", isLessThan: end)
             .getDocuments() { (querySnapshot, err) in
@@ -643,7 +364,7 @@ struct HomeView: View {
         )
         
         db.collection("swipedCardGroups")
-            .whereField("profileId", isEqualTo: userProfile.id)
+            .whereField("profileId", isEqualTo: viewModel.userProfile.id)
             .whereField("createdDate", isGreaterThan: start)
             .whereField("createdDate", isLessThan: end)
             .getDocuments() { (querySnapshot, err) in
@@ -678,7 +399,6 @@ struct HomeView: View {
                             swipedCardFoo.otherCardGroups.append(cardGroup)
                         }
                     }
-                    
                     completed(swipedCardFoo)
                 }
             }
@@ -701,7 +421,6 @@ struct HomeView: View {
                 self.potentialMatchSnapshots.append(othersSnapshot)
             }
         }
-        
         for (_, record) in self.userMatchSnapshots.enumerated() {
             for(_, record2) in self.potentialMatchSnapshots.enumerated() {
                 if(record.cardId == record2.cardId && record.answer == record2.answer) {
@@ -714,8 +433,6 @@ struct HomeView: View {
     
     private func saveMatchRecords(matches: [CardGroupSnapShotModel]){
         let randomMatch = matches.randomElement()
-        
-        
         let id = UUID().uuidString
         
         if((randomMatch) == nil){
@@ -723,7 +440,7 @@ struct HomeView: View {
         } else {
             let docData: [String: Any] = [
                 "id": id,
-                "userProfileId": self.userProfile.id,
+                "userProfileId": viewModel.userProfile.id,
                 "matchProfileId": randomMatch!.profileId,
                 "createdDate": Timestamp(date: Date())
             ]
@@ -740,59 +457,10 @@ struct HomeView: View {
         }
     }
     
-    private func createUserProfile(completed: @escaping(_ createdUserProfileId: String) -> Void){
-        
-        let id = UUID().uuidString
-        let docData: [String: Any] = [
-            "id": id,
-            "fullName": Auth.auth().currentUser?.displayName as Any,
-            "location": "",
-            "gender": "",
-            "userId": Auth.auth().currentUser?.uid as Any,
-            "matchDay": ""
-        ]
-        
-        let docRef = db.collection("profiles").document(id)
-        
-        docRef.setData(docData) {error in
-            if let error = error{
-                print("Error creating new userProfile: \(error)")
-                completed("")
-            } else {
-                print("Successfully created userProfile!")
-                self.userProfile.id = id
-                self.userProfile.fullName = Auth.auth().currentUser?.displayName ?? ""
-                completed(self.userProfile.id)
-            }
-        }
-    }
-    
-    public func updateUserProfile(updatedProfile: ProfileModel, completed: @escaping(_ profileId: String) -> Void){
-        let docData: [String: Any] = [
-            "fullName": updatedProfile.fullName,
-            "location": updatedProfile.location,
-            "gender": updatedProfile.gender,
-            "userId": Auth.auth().currentUser?.uid as Any,
-            "matchDay": updatedProfile.matchDay
-        ]
-        
-        let docRef = db.collection("profiles").document(updatedProfile.id)
-        
-        docRef.updateData(docData) {error in
-            if let error = error{
-                print("Error updating userProfile: \(error)")
-                completed("")
-            } else {
-                print("successfully updated userProfile!")
-                completed(updatedProfile.id)
-            }
-        }
-    }
-    
     private func plusButton() -> some View{
         GeometryReader{ geo in
             VStack{
-                NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert, userProfile: self.userProfile)) {
+                NavigationLink(destination: CreateCardsView(showCardCreatedAlert: $showCardCreatedAlert, userProfile: viewModel.userProfile)) {
                     ZStack{
                         Circle()
                             .foregroundColor(Color.mainBlack)

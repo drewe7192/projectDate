@@ -10,6 +10,7 @@ import SwiftUI
 struct MessageView: View {
     @StateObject var viewModel = MessageViewModel()
     
+    let messageIds: [String]
     var body: some View {
         VStack {
             VStack {
@@ -39,13 +40,13 @@ struct MessageView: View {
         }
         .background(Color.mainBlack)
         .onAppear{
-            viewModel.getMessages()
+            viewModel.getMessages(messageIds: messageIds)
         }
     }
 }
 
 struct MessageView_Previews: PreviewProvider {
     static var previews: some View {
-        MessageView()
+        MessageView(messageIds: [""])
     }
 }

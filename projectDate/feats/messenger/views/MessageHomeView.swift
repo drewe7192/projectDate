@@ -7,12 +7,25 @@
 
 import SwiftUI
 
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseFirestoreSwift
+import FirebaseStorage
+import UIKit
+
 struct MessageHomeView: View {
-    @StateObject var viewModel = MessageViewModel()
+    @ObservedObject var viewModel = MessageViewModel()
     
     @State private var foo: [String] = ["","","::"]
     @State private var profileImage: UIImage = UIImage()
     @State private var showMenu: Bool = false
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
+    @State private var messageThreads: [MessageThreadModel] = []
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
     
     var body: some View {
         NavigationView{
@@ -23,9 +36,19 @@ struct MessageHomeView: View {
                     
                     VStack(spacing: 1 ){
                         ForEach(viewModel.messageThreads){ messageThread in
-                            NavigationLink(destination: MessageView()) {
+                            NavigationLink(destination: MessageView(messageIds: messageThread.messageIds)) {
                                 messageCardView(for: geoReader)
                             }
+                        }
+                    }
+                }
+                .onAppear {
+                    getUserProfile(){(profileId) -> Void in
+                        if profileId != "" {
+                            if viewModel.messageThreads.isEmpty {
+                                viewModel.getMessageThreads()
+                            }
+                         
                         }
                     }
                 }
@@ -176,6 +199,71 @@ struct MessageHomeView: View {
             }
         }
        
+    }
+    
+    private func getUserProfile(completed: @escaping (_ profileId: String) -> Void){
+        db.collection("profiles")
+            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    completed("")
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        if !data.isEmpty{
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
+                        }
+                    }
+                    completed(self.userProfile.id)
+                }
+            }
+    }
+    
+    private func getMessageThreads(completed: @escaping (_ messageThreads: [MessageThreadModel]) -> Void){
+        db.collection("messageThreads")
+            .whereField("id", in: userProfile.messageThreadIds)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting  messageThread documents: \(err)")
+                    completed([])
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        if !data.isEmpty{
+                            var messageThread = MessageThreadModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", messageIds: data["messageIds"] as? [String] ?? [])
+                            
+                            messageThreads.append(messageThread)
+                        }
+                    }
+                    completed(self.messageThreads)
+                }
+            }
+    }
+    
+    private func createMessageThreads(completed: @escaping(_ createdMessageThreadId: String) -> Void){
+        let id = UUID().uuidString
+        let docData: [String: Any] = [
+            "id": id,
+            "profileId": "",
+            "messageIds": []
+        ]
+        
+        let docRef = db.collection("messageThreads").document(id)
+        
+        docRef.setData(docData) {error in
+            if let error = error{
+                print("Error creating new messageThread: \(error)")
+                completed("")
+            } else {
+                print("Successfully created messageThread!")
+                self.userProfile.id = id
+                self.userProfile.fullName = Auth.auth().currentUser?.displayName ?? ""
+                completed(self.userProfile.id)
+            }
+        }
     }
 }
 
