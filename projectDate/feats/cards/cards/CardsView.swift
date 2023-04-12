@@ -16,7 +16,7 @@ import FirebaseStorage
 import UIKit
 
 struct CardsView: View {
-    @ObservedObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = HomeViewModel()
     @State var cards: [CardModel] = []
     @State var lastDoc: DocumentSnapshot!
     
@@ -30,16 +30,21 @@ struct CardsView: View {
         GeometryReader { geometry in
             ZStack {
                 ForEach(Array(self.cards.enumerated()), id: \.offset) { index, card in
+                    //becuase of forEach in Zstack cards are stacked on top of each other
+                    //[10,9,8,7,6,5,4,3,2,1,0] : index is reversed
+                    //displays only "first" 4 cards at a time
                     if index > self.cards.count - 4 {
                         CardView(
                             card: card,
                             index: index,
+                            // as cards are removed from stack index will decrement
                             onRemove: {
-                            removedUser in
-                            self.cards.removeAll { $0.id == removedUser.id }
-                        },
-                        updateData: $updateData,
-                        userProfile: self.userProfile)
+                                removedUser in
+                                self.cards.removeAll { $0.id == removedUser.id }
+                            },
+                            updateData: $updateData,
+                            userProfile: self.userProfile
+                        )
                         .animation(.spring())
                         .frame(width:
                                 self.cards.cardWidth(in: geometry,
@@ -56,11 +61,11 @@ struct CardsView: View {
                 getAllCards(isUpdating: false)
             }
         }
-        .padding(.leading,6)
+        .padding(.leading,13)
         .padding(.trailing,6)
     }
     
-    public func getAllCards(isUpdating: Bool){
+    private func getAllCards(isUpdating: Bool){
         var query: Query!
         
         //pagination: get first n cards or get the next n cards
@@ -79,17 +84,13 @@ struct CardsView: View {
                 for document in querySnapshot!.documents {
                     let data = document.data()
                     
-                    do{
-                        if !data.isEmpty{
-                            let card = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
-                            
-                            self.cards.append(card)
-                        }
-                    } catch {
-                        print("Error!")
+                    if !data.isEmpty{
+                        let card = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                        
+                        self.cards.append(card)
                     }
                 }
-                //important to get the next n cards from the db
+                //important so we can get the next n cards from the db
                 self.lastDoc = querySnapshot!.documents.last
             }
         }

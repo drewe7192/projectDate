@@ -13,7 +13,6 @@ struct Categories: Identifiable {
 }
 struct CreateCardView: View {
     @State private var selectedColor = ""
-    
     @State private var showFriendDisplay: Bool = false
     @State var isLoading: Bool = false
     @State var translation: CGSize = .zero
@@ -21,7 +20,6 @@ struct CreateCardView: View {
     @State var onRemove: (_ card: CardModel) -> Void
     @State var selectedCategoryState: String = ""
     
-    @ObservedObject private var viewModel = EventViewModel()
     @Binding var swipeStatus: CreateCardsView.LikeDislike
     @Binding var question: String
     @Binding var answerA: String
@@ -37,7 +35,7 @@ struct CreateCardView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     ZStack{
                         Rectangle()
-                            .foregroundColor(.mainGrey)
+                            .foregroundColor(Color.iceBreakrrrBlue)
                             .cornerRadius(geoReader.size.width * 0.1)
                             .frame(width: geoReader.size.width * 0.9,
                                    height: geoReader.size.height * 0.75)
@@ -45,7 +43,7 @@ struct CreateCardView: View {
                         cardViews(for: geoReader)
                     }
                 }
-                .padding(geoReader.size.width * 0.05)
+                .padding(geoReader.size.width * 0.02)
                 .background(Color.iceBreakrrrBlue)
                 .cornerRadius(geoReader.size.width * 0.1)
                 .shadow(radius: geoReader.size.width * 0.05)
@@ -58,9 +56,9 @@ struct CreateCardView: View {
                 .gesture(
                     DragGesture()
                         .onChanged {
-                            translation = $0.translation
+                            //DUPLICATE CODE!
                             
-                            //duplicate code
+                            translation = $0.translation
                             // if card gets dragged to certain point on screen, deem it as like or dislike
                             if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                                 swipeStatus = .dislike
@@ -70,10 +68,10 @@ struct CreateCardView: View {
                                 swipeStatus = .none
                             }
                         }.onEnded {
-                            
                             translation = $0.translation
                             
                             if swipeStatus == .dislike {
+                                //validations to prevent user from swiping cards with empty values
                                 if (Int(card.id) == 3 && !question.isEmpty){
                                     question = ""
                                 } else if (Int(card.id) == 2 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
@@ -87,6 +85,7 @@ struct CreateCardView: View {
                                 }
                                 translation = .zero
                             } else if swipeStatus == .like {
+                                //validations to prevent user from swiping cards with empty values
                                 if (Int(card.id) == 3 && !question.isEmpty){
                                     onRemove(self.card)
                                 } else if (Int(card.id) == 2 && !answerA.isEmpty && !answerB.isEmpty && !answerC.isEmpty){
@@ -113,39 +112,13 @@ struct CreateCardView: View {
                     .bold()
                     .font(.system(size: geoReader.size.height * 0.05))
                 
-                //FriendCard toggle feature for future versions
-                //                HStack{
-                //                    Text("\(showFriendDisplay ? "Friend" : "Dater")")
-                //                        .font(.system(size: 40))
-                //                        .foregroundColor(.white)
-                //                        .position(x: geoReader.frame(in: .local).midX * 0.5 , y: geoReader.size.height * 0.05)
-                //
-                //
-                //                    Toggle(isOn: $showFriendDisplay, label: {
-                //
-                //                    })
-                //                    .toggleStyle(SwitchToggleStyle(tint: .white))
-                //                    .position(x: geoReader.frame(in: .local).midX * 0.1 , y: geoReader.size.height * 0.05)
-                //                }
-                
-                //                TextEditor(text: $question)
-                //                    .frame(width: geoReader.size.width * 0.8, height: geoReader.size.height * 0.2)
-                //                    .foregroundColor(.white)
-                //                    .cornerRadius(geoReader.size.width * 0.03)
-                //                    .opacity(0.5)
-                //                    .textInputAutocapitalization(.never)
-                //                    .overlay(
-                //                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 2)
-                //                    )
-                //                    .padding(.bottom,geoReader.size.width * 0.2)
-                
                 VStack {
                     TextEditor(text: $question)
                         .frame(width: geoReader.size.width * 0.8, height: geoReader.size.height * 0.2)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .cornerRadius(geoReader.size.width * 0.03)
                         .opacity(0.5)
-                        .textInputAutocapitalization(.never)
+                        .textInputAutocapitalization(.sentences)
                         .overlay(
                             RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 2)
                         )
@@ -165,10 +138,11 @@ struct CreateCardView: View {
             }
             
             if(Int(card.id) == 2){
-                Text("Top answers you're looking for?")
+                Text("Write 1 perfect answer you're looking...the other 2 not so much")
                     .foregroundColor(Color.white)
                     .bold()
-                    .font(.system(size: geoReader.size.height * 0.05))
+                    .font(.system(size: geoReader.size.height * 0.04))
+                    .multilineTextAlignment(.center)
                 ZStack{
                     // using 2 text fields to get the proper effect I want:
                     // a faded background inside textField but text is still bold

@@ -21,7 +21,6 @@ struct CreateCardsView: View {
     @State var profileType: String = ""
     
     @State private var showFriendDisplay: Bool = false
-    @State private var displayCreateButton: Bool = true
     @State private var isLoading: Bool = false
     @State var swipeStatus: LikeDislike = .none
     
@@ -56,10 +55,10 @@ struct CreateCardsView: View {
         }
     }
     
-    func createCard(){
+    private func createCard(){
         viewModel.createCards.removeAll()
-        displayCreateButton = false
         isLoading = true
+        
         viewModel.createNewCard(
             id: UUID().uuidString,
             question: question,
@@ -70,16 +69,10 @@ struct CreateCardsView: View {
                 if success{
                     viewRouter.currentPage = .confirmationPage
                     isLoading = false
-//                    showCardCreatedAlert = true
-                    
                 } else{
                     viewRouter.currentPage = .failedPage
                 }
-                
             }
-        
-        
-        
     }
     
     private func cards(for geoReader: GeometryProxy) -> some View {
@@ -91,7 +84,7 @@ struct CreateCardsView: View {
                 // as explained above the card indices are reversed cause of ZStack
                 // display each card counting backwards till you reach the 4th to last card in the index
                 // after that dont display anymore cards. Notice the array will update after you swipe each card
-                //Change the 4 to show more cards in deck
+                //Change the 5 to show more cards in deck
                 if Int(card.id) ?? 0 > viewModel.createCards.count - 5 {
                     CreateCardView(
                         card: card,
@@ -104,11 +97,9 @@ struct CreateCardsView: View {
                             
                             //after removing last card
                             if (removedUser.id == "0"){
-                                displayCreateButton = false
                                 isLoading = true
                                 createCard()
                             }
-                            
                         },
                         swipeStatus: $swipeStatus,
                         question: $question,
@@ -125,7 +116,6 @@ struct CreateCardsView: View {
                     .offset(x: 0,
                             y: viewModel.createCards.cardOffset(
                                 cardId: Int(card.id) ?? 0))
-                   
                 }
             }
         }

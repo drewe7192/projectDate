@@ -209,7 +209,7 @@ struct HomeView: View {
                 })
                 
                 NavigationLink(destination: SettingsView()) {
-                    if(viewModel.profileImage != nil){
+                    if(!viewModel.profileImage.size.width.isZero){
                         ZStack{
                             Text("")
                                 .cornerRadius(20)

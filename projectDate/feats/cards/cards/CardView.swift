@@ -17,7 +17,7 @@ import UIKit
 
 struct CardView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var selectedChoice = "Your Match's answer"
+    @State private var selectedChoice = "Your Match's Answer"
     @Binding var updateData: Bool
     
     let db = Firestore.firestore()
@@ -54,69 +54,14 @@ struct CardView: View {
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
                                height: geoReader.size.height * 0.65)
-                    VStack{
-                        Text("How would your perfect match answer this question:")
-                            .bold()
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.025))
-                    }
-                    .padding(.bottom,geoReader.size.height * 0.45)
-                
                     
-                    VStack{
-                        Text("\(card.question)")
-                            .font(.custom("Superclarendon", size: 25))
-                            .foregroundColor(Color.white)
-                        
-                        Menu {
-                            Picker(selection: $selectedChoice) {
-                                ForEach(card.choices, id: \.self) { choice in
-                                    Text("\(choice)")
-                                        .tag(choice)
-                                        .font(.system(size: 20))
-                                }
-                            } label: {}
-                        } label: {
-                            Text("\(selectedChoice)")
-                                .font(.system(size: 20))
-                        }
-                        .accentColor(.white)
-                    }
-                    
-                    HStack{
-//                        HStack{
-//                                Text("Created by:")
-//                                .foregroundColor(.white)
-//
-//                            Image("animeGirl")
-//                                .resizable()
-//                                .scaledToFit()
-//                                .clipShape(Circle())
-//                                .frame(width: 70,height: 70)
-//                        }
-//                        Spacer()
-                        
-                        ZStack{
-                            Text("")
-                                .foregroundColor(.white)
-                                .bold()
-                                .font(.system(size: 30))
-                                .frame(width: 60, height: 20)
-                                .background(.black)
-                                .cornerRadius(10)
-                            
-                            Text("Values")
-                                .foregroundColor(.white)
-                                .bold()
-                                .font(.system(size: 15))
-                        }
-                    }
-                    .padding(.top,geoReader.size.height * 0.5)
+                    title(for: geoReader)
+                    question(for: geoReader)
+                    answer(for: geoReader)
                 }
             }
-           .padding()
-           .background(colorSwitch())
+            .padding()
+            .background(colorSwitch())
             .cornerRadius(40)
             .shadow(radius: 5)
             .animation(.spring())
@@ -129,8 +74,9 @@ struct CardView: View {
                 DragGesture()
                     .onChanged {
                         //translation changes as you drag card;
-                        //if card gets dragged a certain distance, set it to like/dislike
                         translation = $0.translation
+                        
+                        //if card gets dragged a certain distance, set it to like/dislike
                         if $0.percentage(in: geoReader) >= threshold && translation.width < -110 {
                             self.swipeStatus = .dislike
                         } else if $0.percentage(in: geoReader) >= threshold && translation.width > 110 {
@@ -138,12 +84,13 @@ struct CardView: View {
                         } else {
                             self.swipeStatus = .none
                         }
-                    }.onEnded {_ in
-                        // cant swipe right/like if question hasnt been answered
-                        if (self.swipeStatus == .like) && (selectedChoice != "Your Match's answer") {
+                    }
+                    .onEnded {_ in
+                        // cant swipe right(.like) if question hasnt been answered
+                        if (self.swipeStatus == .like) && (selectedChoice != "Your Match's Answer") {
                             onRemove(self.card)
                             
-                            // after each swipe save the card data and update the profiler section
+                            // after each swipe save the card data
                             saveSwipedRecords(card: self.card, answer: selectedChoice){ (success) in
                                 if success{
                                     //last card in set is always index 0
@@ -151,7 +98,7 @@ struct CardView: View {
                                         // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
-                                    self.selectedChoice = "Your Match's answer"
+                                    self.selectedChoice = "Your Match's Answer"
                                 }
                             }
                         } else if (self.swipeStatus == .dislike) {
@@ -164,7 +111,7 @@ struct CardView: View {
                                         // fires off the ".onChange" in the HomeView and CardsView
                                         updateData.toggle()
                                     }
-                                    self.selectedChoice = "Your Match's answer"
+                                    self.selectedChoice = "Your Match's Answer"
                                 }
                             }
                         }
@@ -173,8 +120,57 @@ struct CardView: View {
             )
         }
     }
+    private func title(for geoReader: GeometryProxy) -> some View {
+        VStack{
+            Text("How would your perfect match answer this question:")
+                .bold()
+                .multilineTextAlignment(.center)
+                .foregroundColor(.white)
+                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+        }
+        .padding(.bottom,geoReader.size.height * 0.40)
+    }
     
-    public func saveSwipedRecords(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
+    private func question(for geoReader: GeometryProxy) -> some View {
+        VStack{
+            Text("\(card.question)")
+                .font(.custom("Superclarendon", size: 25))
+                .foregroundColor(Color.white)
+            
+            Menu {
+                Picker(selection: $selectedChoice) {
+                    ForEach(card.choices, id: \.self) { choice in
+                        Text("\(choice)")
+                            .tag(choice)
+                            .font(.system(size: 30))
+                    }
+                } label: {}
+            } label: {
+                Text("\(selectedChoice)")
+                    .font(.system(size: 30))
+            }
+            .accentColor(.white)
+        }
+    }
+    
+    private func answer(for geoReader: GeometryProxy) -> some View {
+        ZStack{
+            Text("")
+                .bold()
+                .frame(width: geoReader.size.width * 0.24, height: geoReader.size.height * 0.05)
+                .background(.white)
+                .cornerRadius(20)
+            
+            Text("\(card.categoryType)")
+                .foregroundColor(colorSwitch())
+                .bold()
+                .font(.system(size: 16))
+        }
+        .padding(.top,geoReader.size.height * 0.55)
+        .padding(.leading,geoReader.size.width * 0.6)
+    }
+    
+    private func saveSwipedRecords(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
         let id = UUID().uuidString
         let docData: [String: Any] = [
             "id": id,
@@ -196,7 +192,6 @@ struct CardView: View {
             }
         }
     }
-    
     private func cardChoices(choices: [String], answer: String) -> String{
         let choiceIndex = choices.firstIndex(where: { $0 == answer})
         var choice = ""
@@ -216,20 +211,21 @@ struct CardView: View {
     
     //color cards based on categoryType
     private func colorSwitch() -> Color{
-        var foo: Color = Color.mainGrey
+        var cardColor: Color = Color.mainGrey
+        
         switch card.categoryType {
         case "values":
-            foo = Color.iceBreakrrrPink
+            cardColor = Color.iceBreakrrrPink
         case "littleThings":
-            foo = Color.iceBreakrrrBlue
+            cardColor = Color.iceBreakrrrBlue
         case "personality":
-            foo = Color.mainGrey
+            cardColor = Color.mainGrey
         case "dealBreaker":
-            foo = Color.red
+            cardColor = Color.red
         default:
             break
         }
-        return foo
+        return cardColor
     }
 }
 
