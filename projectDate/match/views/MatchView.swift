@@ -15,13 +15,6 @@ import FirebaseStorage
 import UIKit
 
 struct MatchView: View {
-    
-    init(){
-        getUserProfile()
-        getStorageFile()
-        getMatchRecords()
-    }
-    
     @StateObject var viewModel = HomeViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
@@ -53,11 +46,11 @@ struct MatchView: View {
             
             Spacer()
                 .frame(height: 50)
-           
+            
             Button(action: {
                 viewRouter.currentPage = .homePage
             }) {
-               Text("Return to Home")
+                Text("Return to Home")
                     .bold()
                     .frame(width: 300, height: 70)
                     .background(.green)
@@ -66,7 +59,11 @@ struct MatchView: View {
                     .shadow(radius: 8, x: 10, y:10)
             }
         }
-        
+        .onAppear{
+            getUserProfile()
+            getStorageFile()
+            getMatchRecords()
+        }
     }
     
     private func getMatchRecords(){
@@ -79,11 +76,11 @@ struct MatchView: View {
                     for document in querySnapshot!.documents {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
-                            if !data.isEmpty{
-                                let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "")
-                                
-                                self.matchRecords.append(matchRecord)
-                            }
+                        if !data.isEmpty{
+                            let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "")
+                            
+                            self.matchRecords.append(matchRecord)
+                        }
                     }
                 }
             }
@@ -99,9 +96,9 @@ struct MatchView: View {
                     for document in querySnapshot!.documents {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
-                            if !data.isEmpty{
-                                self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
-                            }
+                        if !data.isEmpty{
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
+                        }
                     }
                 }
             }
@@ -118,7 +115,6 @@ struct MatchView: View {
             } else {
                 let image = UIImage(data: data!)
                 viewModel.profileImage = image!
-                
             }
         }
     }

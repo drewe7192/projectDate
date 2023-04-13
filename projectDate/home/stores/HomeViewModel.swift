@@ -197,11 +197,15 @@ class HomeViewModel: ObservableObject {
         }
     }
     
+    //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
         let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        
+        // if dirty clean up
+        self.swipedRecords.removeAll()
         
         db.collection("swipedRecords")
             .whereField("profileId", isEqualTo: userProfile.id)
@@ -333,6 +337,38 @@ class HomeViewModel: ObservableObject {
             cardIds.append(card.cardId)
         }
         return cardIds
+    }
+    
+    public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
+        var cardIds: [String] = []
+        var answers: [String] = []
+        let id = UUID().uuidString
+        
+        let answeredRecords = swipedRecords.filter{$0.answer != ""}
+        let uniqueRecords = answeredRecords.unique{$0.cardId}
+        
+        for card in uniqueRecords {
+            cardIds.append(card.cardId)
+            answers.append(card.answer)
+        }
+        
+        let docData: [String: Any] = [
+            "id": id,
+            "profileId": self.userProfile.id,
+            "cardIds": cardIds,
+            "answers": answers,
+            "createdDate": Timestamp(date: Date())
+        ]
+        
+        let docRef = db.collection("swipedCardGroups").document(id)
+        
+        docRef.setData(docData) {error in
+            if let error = error{
+                print("Error creating new card: \(error)")
+            } else {
+                print("Document successfully updated swipedCardGroups!")
+            }
+        }
     }
 
 }

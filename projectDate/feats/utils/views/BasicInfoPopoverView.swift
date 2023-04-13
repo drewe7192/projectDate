@@ -19,7 +19,7 @@ struct BasicInfoPopoverView: View {
     @ObservedObject var viewModel = HomeViewModel()
     
     @State private var genderChoices: [String] = ["Female","Male"]
-    @State private var matchDayChoices: [String] = ["Saturdays","Fridays","Thursdays","Wednesdays","Tuesdays","Mondays","Sundays"]
+    @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]
     @State private var showImageSheet: Bool = false
     @State private var editInfo: Bool = false
     

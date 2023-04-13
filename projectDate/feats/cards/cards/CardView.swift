@@ -134,7 +134,7 @@ struct CardView: View {
     private func question(for geoReader: GeometryProxy) -> some View {
         VStack{
             Text("\(card.question)")
-                .font(.custom("Superclarendon", size: 25))
+                .font(.custom("Superclarendon", size: 20))
                 .foregroundColor(Color.white)
             
             Menu {
@@ -147,7 +147,8 @@ struct CardView: View {
                 } label: {}
             } label: {
                 Text("\(selectedChoice)")
-                    .font(.system(size: 30))
+                    .font(.system(size: 20))
+                    .padding(.top)
             }
             .accentColor(.white)
         }

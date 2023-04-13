@@ -31,7 +31,6 @@ struct HomeView: View {
     @State private var updateData: Bool = false
     @State private var cards: [CardModel] = []
     @State private var lastDoc: Any = []
-//    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -82,58 +81,19 @@ struct HomeView: View {
                     )
                 }
                 .onAppear {
-                    //inital check to make sure we're not always getting data if we already have data
-                    if viewModel.userProfile.id == "" {
-                        viewModel.getUserProfile(){(profileId) -> Void in
-                            if profileId != "" {
-                                //get profileImage
-                                viewModel.getStorageFile()
-                                // getting these records to display new cards user hasn't seen yet
-                                viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
-                                    if !swipedRecords.isEmpty {
-                                        viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
-                                    }
-                                }
-                            } else {
-                                viewModel.createUserProfile() {(createdUserProfileId) -> Void in
-                                    if createdUserProfileId != "" {
-                                        showingBasicInfoPopover.toggle()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    let weekday = Calendar.current.component(.weekday, from: Date())
-                    
-                    //change this has to 6 for friday
-                    if(weekday == 6) {
-                        // If theres no matchRecords for this week run match logic and find matches
-                        // Runs once a week
-                        getMatchRecordsForThisWeek() {(matchRecords) -> Void in
-                            if matchRecords.isEmpty {
-                                getCardGroups() {(cardGroups) -> Void in
-                                    if !cardGroups.userCardGroup.id.isEmpty {
-                                        print("we made it here")
-                                        //                                            findMatches(cardGroups: cardGroups) {(successFullMatches) -> Void in
-                                        //                                                if !successFullMatches.isEmpty {
-                                        //                                                    saveMatchRecords(matches: successFullMatches)
-                                        //                                                    viewRouter.currentPage = .matchPage
-                                        //                                                }
-                                        //                                            }
-                                        
-                                        
-                                    }
-                                    
-                                }
-                            }
+                    getProfileAndRecords() {(getProfileId) -> Void in
+                        if getProfileId != "" {
+                            getMatchData()
                         }
                     }
                 }
+                // QUESTION: make a cardGroup for every week or for every 20 cards??
                 .onChange(of: updateData) { _ in
+                    //make a cardGroup out of all the cards user swiped this week
                     viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
                         if !swipedRecords.isEmpty {
-                            saveSwipedCardGroup(swipedRecords: swipedRecords)
+                            viewModel.saveSwipedCardGroup(swipedRecords: swipedRecords)
+                            //not using this func right now but will in the future
                             viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
                         }
                     }
@@ -145,6 +105,56 @@ struct HomeView: View {
                     headerSection(for: geoReader)
                         .padding(.leading, geoReader.size.width * 0.25)
                 ))
+            }
+        }
+    }
+    
+    private func getMatchData(){
+       let f = DateFormatter()
+        //The -1 is added at the end because Calendar.current.component(.weekday, from: Date()) returns values from 1-7 but weekdaySymbols expects array indices
+       let weekday = f.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
+        
+        if(weekday == "Thursday" && self.successfullMatchSnapshots.isEmpty) {
+            getMatchRecordsForThisWeek() {(matchRecords) -> Void in
+                // If theres no matchRecords for this week run match logic and find matches
+                if matchRecords.isEmpty {
+                    getCardGroups() {(userCardGroup) -> Void in
+                        if !userCardGroup.userCardGroup.id.isEmpty {
+                            findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
+                                if !successFullMatches.isEmpty {
+                                    saveMatchRecords(matches: successFullMatches)
+                                    viewRouter.currentPage = .matchPage
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
+        //inital check to make sure we're not always getting data if we already have data
+        if viewModel.userProfile.id == "" {
+            viewModel.getUserProfile(){(profileId) -> Void in
+                if profileId != "" {
+                    //get profileImage
+                    viewModel.getStorageFile()
+                    // getting these records to display new cards user hasn't seen yet
+                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                        if !swipedRecords.isEmpty {
+                            viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
+                        }
+                        completed(profileId)
+                    }
+                   
+                } else {
+                    viewModel.createUserProfile() {(createdUserProfileId) -> Void in
+                        if createdUserProfileId != "" {
+                            showingBasicInfoPopover.toggle()
+                        }
+                        completed(createdUserProfileId)
+                    }
+                }
             }
         }
     }
@@ -280,38 +290,6 @@ struct HomeView: View {
         }
     }
     
-    private func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
-        var cardIds: [String] = []
-        var answers: [String] = []
-        let id = UUID().uuidString
-        
-        let answeredRecords = swipedRecords.filter{$0.answer != ""}
-        let uniqueRecords = answeredRecords.unique{$0.cardId}
-        
-        for card in uniqueRecords {
-            cardIds.append(card.cardId)
-            answers.append(card.answer)
-        }
-        
-        let docData: [String: Any] = [
-            "id": id,
-            "profileId": viewModel.userProfile.id,
-            "cardIds": cardIds,
-            "answers": answers,
-            "createdDate": Timestamp(date: Date())
-        ]
-        
-        let docRef = db.collection("swipedCardGroups").document(id)
-        
-        docRef.setData(docData) {error in
-            if let error = error{
-                print("Error creating new card: \(error)")
-            } else {
-                print("Document successfully updated swipedCardGroups!")
-            }
-        }
-    }
-    
     private func displayText() -> String{
         showFriendDisplay ? (profileText = "Friend Profile") : (profileText = "Dating Profile")
         return profileText;
@@ -347,7 +325,6 @@ struct HomeView: View {
     
     private func getCardGroups(completed: @escaping(_ userCardGroup: SwipedCardGroupsModel) -> Void){
         // get your cardGroup for this week as well as 20 other random cardGroups
-        
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
@@ -362,25 +339,44 @@ struct HomeView: View {
             otherCardGroups: []
         )
         
+        getUserCardGroup(start:start, end: end){(userGroup) -> Void in
+            if (userGroup.id != "") {
+                getOtherCardGroups(start: start, end: end){(otherGroups) -> Void in
+                    if(!otherGroups.isEmpty) {
+                        completed(self.swipedCardGroups)
+                    }
+                }
+            }
+            
+        }
+        
+       
+    }
+    
+    private func getUserCardGroup(start: Date, end: Date, completed: @escaping(_ userGroup: SwipedCardGroupModel) -> Void){
         db.collection("swipedCardGroups")
             .whereField("profileId", isEqualTo: viewModel.userProfile.id)
-            .whereField("createdDate", isGreaterThan: start)
-            .whereField("createdDate", isLessThan: end)
+            //.whereField("createdDate", isGreaterThan: start)
+            //.whereField("createdDate", isLessThan: end)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents for swipedCardGroups: \(err)")
                 } else {
                     for document in querySnapshot!.documents {
                         let data = document.data()
-                        
                         if !data.isEmpty{
                             self.swipedCardGroups.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
-                            swipedCardFoo.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
+//                            swipedCardFoo.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
+                            
+                            completed(self.swipedCardGroups.userCardGroup)
                         }
                     }
                 }
             }
-        
+    }
+    
+    
+    private func getOtherCardGroups(start: Date, end: Date, completed: @escaping(_ otherGroups: [SwipedCardGroupModel]) -> Void){
         db.collection("swipedCardGroups")
             .whereField("createdDate", isGreaterThan: start)
             .whereField("createdDate", isLessThan: end)
@@ -391,68 +387,74 @@ struct HomeView: View {
                 } else {
                     for document in querySnapshot!.documents {
                         let data = document.data()
-                        
+
                         if !data.isEmpty{
                             let cardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
                             self.swipedCardGroups.otherCardGroups.append(cardGroup)
-                            swipedCardFoo.otherCardGroups.append(cardGroup)
+//                            swipedCardFoo.otherCardGroups.append(cardGroup)
+                            
+                            
                         }
                     }
-                    completed(swipedCardFoo)
+                    completed(self.swipedCardGroups.otherCardGroups)
                 }
             }
     }
-    
     private func findMatches(cardGroups: SwipedCardGroupsModel, completed: @escaping(_ successFullMatches: [CardGroupSnapShotModel]) -> Void){
         let user = cardGroups.userCardGroup
         let others = cardGroups.otherCardGroups
         
+        // looping through to get the each cardId with its answer(based on index)
         for (index,record) in user.cardIds.enumerated() {
             let userSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: record, answer: user.answers[index])
             
             self.userMatchSnapshots.append(userSnapshot)
         }
+
         
-        for(_, item) in others.enumerated() {
-            for(index, item2) in item.cardIds.enumerated() {
-                let othersSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: user.profileId, cardId: item2, answer: user.answers[index])
+        for(_, other) in others.enumerated() {
+            for(otherIndex, otherItem) in other.cardIds.enumerated() {
+                let othersSnapshot = CardGroupSnapShotModel(id: UUID().uuidString, profileId: other.profileId, cardId: otherItem, answer: other.answers[otherIndex])
                 
                 self.potentialMatchSnapshots.append(othersSnapshot)
             }
         }
-        for (_, record) in self.userMatchSnapshots.enumerated() {
-            for(_, record2) in self.potentialMatchSnapshots.enumerated() {
-                if(record.cardId == record2.cardId && record.answer == record2.answer) {
-                    self.successfullMatchSnapshots.append(record2)
+        //main matching logic
+        if(self.successfullMatchSnapshots.isEmpty){
+            for (_, record) in self.userMatchSnapshots.enumerated() {
+                for(_, record2) in self.potentialMatchSnapshots.enumerated() {
+                    if(record.cardId == record2.cardId && record.answer == record2.answer) {
+                        self.successfullMatchSnapshots.append(record2)
+                    }
                 }
             }
+            print("self.successfullMatchSnapshots: \(self.successfullMatchSnapshots)")
+            completed(self.successfullMatchSnapshots)
         }
-        completed(self.successfullMatchSnapshots)
+      
     }
     
     private func saveMatchRecords(matches: [CardGroupSnapShotModel]){
-        let randomMatch = matches.randomElement()
-        let id = UUID().uuidString
-        
-        if((randomMatch) == nil){
-            print("you do not have any matches")
-        } else {
-            let docData: [String: Any] = [
-                "id": id,
-                "userProfileId": viewModel.userProfile.id,
-                "matchProfileId": randomMatch!.profileId,
-                "createdDate": Timestamp(date: Date())
-            ]
+        for (randomMatch) in matches {
+            let id = UUID().uuidString
             
-            let docRef = db.collection("matchRecords").document(id)
-            
-            docRef.setData(docData) {error in
-                if let error = error{
-                    print("Error creating new card: \(error)")
-                } else {
-                    print("Document successfully created Match record!")
+                let docData: [String: Any] = [
+                    "id": id,
+                    "userProfileId": viewModel.userProfile.id,
+                    "matchProfileId": randomMatch.profileId,
+                    "createdDate": Timestamp(date: Date())
+                ]
+                
+                let docRef = db.collection("matchRecords").document(id)
+                
+                docRef.setData(docData) {error in
+                    if let error = error{
+                        print("Error creating new card: \(error)")
+                    } else {
+                        print("Document successfully created Match record!")
+                    }
                 }
-            }
+            
         }
     }
     

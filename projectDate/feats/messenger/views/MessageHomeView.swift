@@ -36,11 +36,19 @@ struct MessageHomeView: View {
                         .ignoresSafeArea()
                     
                     VStack(spacing: 1 ){
-                        ForEach(viewModel.messageThreads){ messageThread in
-                            NavigationLink(destination: MessageView(messageIds: messageThread.messageIds)) {
-                                messageCardView(for: geoReader)
-                            }
-                        }
+//                        ForEach(viewModel.messageThreads){ messageThread in
+//                            NavigationLink(destination: MessageView(messageIds: messageThread.messageIds)) {
+//                                messageCardView(for: geoReader)
+//                            }
+//                        }
+                        
+                        Text("DISABLED UNTIL YOU MEET MATCHES VIA SPEEDDATING")
+                            .bold()
+                            .foregroundColor(.gray)
+                            .opacity(0.5)
+                            .font(.system(size: 30))
+                            .multilineTextAlignment(.center)
+                            .padding()
                     }
                 }
                 .onAppear {
