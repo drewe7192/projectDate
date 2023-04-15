@@ -15,8 +15,8 @@ import FirebaseStorage
 import UIKit
 
 struct MatchView: View {
-    @StateObject var viewModel = HomeViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
+    @StateObject var viewModel = HomeViewModel()
     @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
     
@@ -60,13 +60,18 @@ struct MatchView: View {
             }
         }
         .onAppear{
-            getUserProfile()
-            getStorageFile()
-            getMatchRecords()
+//            getUserProfile()
+//            getStorageFile()
+            getMatchRecords() {(matchRecords) -> Void in
+                if !matchRecords.isEmpty {
+                    updateMatchRecords(matchRecords: matchRecords)
+                }
+                
+            }
         }
     }
     
-    private func getMatchRecords(){
+    private func getMatchRecords(completed: @escaping(_ matchRecords: [MatchRecordModel]) -> Void){
         db.collection("matchRecords")
             .whereField("userProfilId", isEqualTo: self.userProfile.id)
             .getDocuments() { (querySnapshot, err) in
@@ -82,8 +87,34 @@ struct MatchView: View {
                             self.matchRecords.append(matchRecord)
                         }
                     }
+                    completed(self.matchRecords)
                 }
             }
+    }
+    
+    public func updateMatchRecords(matchRecords: [MatchRecordModel]){
+        for (randomMatch) in matchRecords {
+            let id = UUID().uuidString
+            
+                let docData: [String: Any] = [
+                    "id": randomMatch.id,
+                    "userProfileId": randomMatch.userProfileId,
+                    "matchProfileId": randomMatch.matchProfileId,
+                    "isNew": false,
+                    "createdDate": Timestamp(date: Date())
+                ]
+                
+                let docRef = db.collection("matchRecords").document(id)
+                
+                docRef.updateData(docData) {error in
+                    if let error = error{
+                        print("Error creating new card: \(error)")
+                    } else {
+                        print("Document successfully created Match record!")
+                    }
+                }
+            
+        }
     }
     
     private func getUserProfile(){
@@ -122,6 +153,6 @@ struct MatchView: View {
 
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView()
+        MatchView(viewModel: HomeViewModel())
     }
 }

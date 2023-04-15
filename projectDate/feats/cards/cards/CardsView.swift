@@ -16,12 +16,13 @@ import FirebaseStorage
 import UIKit
 
 struct CardsView: View {
-    @StateObject var viewModel = HomeViewModel()
     @State var cards: [CardModel] = []
     @State var lastDoc: DocumentSnapshot!
+    @State var cardGroupId: String = UUID().uuidString
     
     @Binding var updateData: Bool
-    let userProfile: ProfileModel
+    @Binding var gotSwipedRecords: Bool
+    let viewModel: HomeViewModel
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -40,10 +41,19 @@ struct CardsView: View {
                             // as cards are removed from stack index will decrement
                             onRemove: {
                                 removedUser in
+                                
+                                // updating groupId to make it easy to save cardGroup
+                                if(viewModel.increm == 19){
+                                    self.cardGroupId = UUID().uuidString
+                                    viewModel.increm = 0
+                                } else {
+                                    viewModel.updateCount()
+                                }
                                 self.cards.removeAll { $0.id == removedUser.id }
                             },
                             updateData: $updateData,
-                            userProfile: self.userProfile
+                            userProfile: viewModel.userProfile,
+                            cardGroupId: self.cardGroupId
                         )
                         .animation(.spring())
                         .frame(width:
@@ -57,7 +67,8 @@ struct CardsView: View {
                 .onChange(of: updateData) { newValue in
                     getAllCards(isUpdating: true)
                 }
-            }.onAppear{
+            }
+            .onChange(of: gotSwipedRecords ){ newValue in
                 getAllCards(isUpdating: false)
             }
         }
@@ -66,39 +77,62 @@ struct CardsView: View {
     }
     
     private func getAllCards(isUpdating: Bool){
-        var query: Query!
+        var cardIdsFromSwipedRecords: [String] = []
         
-        //pagination: get first n cards or get the next n cards
-        if !isUpdating {
-            query = db.collection("cards").limit(to: 10)
-        } else {
-            if (self.lastDoc != nil) {
-                query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 10)
-            }
+        for record in viewModel.swipedRecords {
+            cardIdsFromSwipedRecords.append(record.cardId)
         }
         
-        query.getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    
-                    if !data.isEmpty{
-                        let card = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
-                        
-                        self.cards.append(card)
-                    }
-                }
-                //important so we can get the next n cards from the db
-                self.lastDoc = querySnapshot!.documents.last
+        var batches: [Any] = []
+        //workaround for the Firebase Query "IN" Limit of 10
+        while(!cardIdsFromSwipedRecords.isEmpty){
+            //splice Array: get first 10 and remove the same 10 from array
+            let batch = Array(cardIdsFromSwipedRecords.prefix(10))
+            let count = cardIdsFromSwipedRecords.count
+            if count < 10{
+                cardIdsFromSwipedRecords.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
+            } else{
+                cardIdsFromSwipedRecords.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
             }
+            
+            var query: Query!
+            
+            //pagination: get first n cards or get the next n cards
+            if !isUpdating {
+                query = db.collection("cards").limit(to: 20)
+            } else {
+                if (self.lastDoc != nil) {
+                    query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 20)
+                }
+            }
+            
+            batches.append(
+                query
+                    .whereField("id", notIn: batch)
+                    .getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                                let data = document.data()
+                                
+                                if !data.isEmpty{
+                                    let card = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                                    
+                                    self.cards.append(card)
+                                }
+                            }
+                            //important so we can get the next n cards from the db
+                            self.lastDoc = querySnapshot!.documents.last
+                        }
+                    }
+            )
         }
     }
 }
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView(updateData: .constant(false), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Wednesdays", messageThreadIds: []))
+        CardsView(updateData: .constant(false), gotSwipedRecords: .constant(true), viewModel: HomeViewModel())
     }
 }

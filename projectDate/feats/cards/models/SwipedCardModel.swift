@@ -12,5 +12,5 @@ struct SwipedRecordModel: Identifiable, Hashable {
     var answer: String
     var cardId: String
     var profileId: String
-    //    var swipedDate: String
+    var cardGroupId: String
 }

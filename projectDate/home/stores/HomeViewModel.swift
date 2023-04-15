@@ -28,13 +28,16 @@ class HomeViewModel: ObservableObject {
     @Published var profileImage: UIImage = UIImage()
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
+    @Published var lastDoc: DocumentSnapshot!
+    
+    @Published var increm: Int = 0
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
     
-    init(){
-        self.clearData()
-    }
+//    init(){
+//        self.clearData()
+//    }
     
     public func clearData(){
         //this clear the cache documents from your db
@@ -197,38 +200,49 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
-    public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-        
-        // if dirty clean up
-        self.swipedRecords.removeAll()
-        
-        db.collection("swipedRecords")
-            .whereField("profileId", isEqualTo: userProfile.id)
-            .whereField("swipedDate", isGreaterThan: start)
-            .whereField("swipedDate", isLessThan: end)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents from swipedRecords: \(err)")
-                    completed([])
-                } else {
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        
-                        if !data.isEmpty{
-                            let swipedRecord = SwipedRecordModel(id: data["id"] as? String ?? "", answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "", profileId: data["profileId"] as? String ?? "")
-                            
-                            self.swipedRecords.append(swipedRecord)
-                        }
-                    }
-                    completed(self.swipedRecords)
-                }
-            }
-    }
+//    //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
+//    public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
+//        let calendar = Calendar.current
+//        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+//        let start = calendar.date(from: components)!
+//        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+//
+//        // if dirty clean up
+//        self.swipedRecords.removeAll()
+//
+//        var query: Query!
+//
+//        //pagination: get first n cards or get the next n cards
+//            query = db.collection("swipedRecords")
+//
+////            if (self.lastDoc != nil) {
+////                query = db.collection("swipedRecords").start(afterDocument: self.lastDoc).limit(to: 10)
+////            }x
+//
+//            query
+//            .whereField("profileId", isEqualTo: userProfile.id)
+//            .whereField("swipedDate", isGreaterThan: start)
+//            .whereField("swipedDate", isLessThan: end)
+//            .getDocuments() { (querySnapshot, err) in
+//                if let err = err {
+//                    print("Error getting documents from swipedRecords: \(err)")
+//                    completed([])
+//                } else {
+//                    for document in querySnapshot!.documents {
+//                        let data = document.data()
+//
+//                        if !data.isEmpty{
+//                            let swipedRecord = SwipedRecordModel(id: data["id"] as? String ?? "", answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardGroupId: data["cardGroupId"] as? String ?? "")
+//
+//                            self.swipedRecords.append(swipedRecord)
+//                        }
+//                    }
+//                   // self.lastDoc = querySnapshot!.documents.last
+//                    completed(self.swipedRecords)
+//
+//                }
+//            }
+//    }
     
     // not using this func right now but we're definitely gonna need this for future features
     public func getSwipedCardsFromSwipedRecords(swipedRecords: [SwipedRecordModel]) {
@@ -342,12 +356,13 @@ class HomeViewModel: ObservableObject {
     public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
         var cardIds: [String] = []
         var answers: [String] = []
-        let id = UUID().uuidString
+        let id = swipedRecords.first!.cardGroupId
         
         let answeredRecords = swipedRecords.filter{$0.answer != ""}
         let uniqueRecords = answeredRecords.unique{$0.cardId}
+        let sameIdRecords = uniqueRecords.filter{$0.cardGroupId == id}
         
-        for card in uniqueRecords {
+        for card in sameIdRecords {
             cardIds.append(card.cardId)
             answers.append(card.answer)
         }
@@ -369,6 +384,11 @@ class HomeViewModel: ObservableObject {
                 print("Document successfully updated swipedCardGroups!")
             }
         }
+    }
+    
+    public func updateCount() {
+        self.increm += 1
+       
     }
 
 }

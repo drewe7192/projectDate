@@ -29,8 +29,9 @@ struct HomeView: View {
     @State private var showCardCreatedAlert: Bool = false
     @State private var profileText = ""
     @State private var updateData: Bool = false
+    @State private var gotSwipedRecords: Bool = false
     @State private var cards: [CardModel] = []
-    @State private var lastDoc: Any = []
+    //@State private var lastDoc: Any = []
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -48,6 +49,7 @@ struct HomeView: View {
             answers: []),
         otherCardGroups: []
     )
+    @State private var isDirty: Bool = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -61,7 +63,7 @@ struct HomeView: View {
                         .ignoresSafeArea()
                     
                     VStack{
-                        cardsAndCountdownSection(for: geoReader)
+                        cardsAndSpeeDateSection(for: geoReader)
                             .padding(.top,10)
                     }
                     .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
@@ -90,7 +92,7 @@ struct HomeView: View {
                 // QUESTION: make a cardGroup for every week or for every 20 cards??
                 .onChange(of: updateData) { _ in
                     //make a cardGroup out of all the cards user swiped this week
-                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                    getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
                         if !swipedRecords.isEmpty {
                             viewModel.saveSwipedCardGroup(swipedRecords: swipedRecords)
                             //not using this func right now but will in the future
@@ -114,7 +116,7 @@ struct HomeView: View {
         //The -1 is added at the end because Calendar.current.component(.weekday, from: Date()) returns values from 1-7 but weekdaySymbols expects array indices
        let weekday = f.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
-        if(weekday == "Thursday" && self.successfullMatchSnapshots.isEmpty) {
+        if(weekday == "Monday" && self.successfullMatchSnapshots.isEmpty) {
             getMatchRecordsForThisWeek() {(matchRecords) -> Void in
                 // If theres no matchRecords for this week run match logic and find matches
                 if matchRecords.isEmpty {
@@ -140,7 +142,8 @@ struct HomeView: View {
                     //get profileImage
                     viewModel.getStorageFile()
                     // getting these records to display new cards user hasn't seen yet
-                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                    getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                        gotSwipedRecords.toggle()
                         if !swipedRecords.isEmpty {
                             viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
                         }
@@ -269,9 +272,9 @@ struct HomeView: View {
         }
     }
     
-    private func cardsAndCountdownSection(for geoReader: GeometryProxy) -> some View {
+    private func cardsAndSpeeDateSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
-            CardsView(updateData: $updateData, userProfile: viewModel.userProfile)
+            CardsView(updateData: $updateData, gotSwipedRecords: $gotSwipedRecords, viewModel: viewModel)
             plusButton()
             
             VStack{
@@ -305,6 +308,7 @@ struct HomeView: View {
             .whereField("profileId", isEqualTo: viewModel.userProfile.id)
             .whereField("createdDate", isGreaterThan: start)
             .whereField("createdDate", isLessThan: end)
+            .whereField("isNew", isEqualTo: true)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents from matchRecords: \(err)")
@@ -442,6 +446,7 @@ struct HomeView: View {
                     "id": id,
                     "userProfileId": viewModel.userProfile.id,
                     "matchProfileId": randomMatch.profileId,
+                    "isNew": true,
                     "createdDate": Timestamp(date: Date())
                 ]
                 
@@ -477,6 +482,50 @@ struct HomeView: View {
             }
             .position(x: geo.size.height * 0.09, y: geo.size.width * 1.2)
         }
+    }
+    
+    //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
+    private func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let start = calendar.date(from: components)!
+        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        
+        // if dirty clean up
+        //viewModel.swipedRecords.removeAll()
+        
+        var query: Query!
+        
+        //pagination: get first n cards or get the next n cards
+            query = db.collection("swipedRecords")
+   
+//            if (self.lastDoc != nil) {
+//                query = db.collection("swipedRecords").start(afterDocument: self.lastDoc).limit(to: 10)
+//            }x
+        
+            query
+            .whereField("profileId", isEqualTo: viewModel.userProfile.id)
+            .whereField("swipedDate", isGreaterThan: start)
+            .whereField("swipedDate", isLessThan: end)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents from swipedRecords: \(err)")
+                    completed([])
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        if !data.isEmpty{
+                            let swipedRecord = SwipedRecordModel(id: data["id"] as? String ?? "", answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardGroupId: data["cardGroupId"] as? String ?? "")
+                            
+                            viewModel.swipedRecords.append(swipedRecord)
+                        }
+                    }
+                   // self.lastDoc = querySnapshot!.documents.last
+                    completed(viewModel.swipedRecords)
+                   
+                }
+            }
     }
 } 
 
