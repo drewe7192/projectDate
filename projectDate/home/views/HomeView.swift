@@ -37,10 +37,9 @@ struct HomeView: View {
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
-    @State private var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
+   
     @State private var showingInstructionsPopover: Bool = false
     @State private var showingBasicInfoPopover: Bool = false
-    @State private var showMatchFeed: Bool = true
     @State private var showMenu: Bool = false
     @State private var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
@@ -51,7 +50,6 @@ struct HomeView: View {
             answers: []),
         otherCardGroups: []
     )
-   // @State private var isDirty: Bool = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -120,7 +118,8 @@ struct HomeView: View {
         //The -1 is added at the end because Calendar.current.component(.weekday, from: Date()) returns values from 1-7 but weekdaySymbols expects array indices
        let weekday = f.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
-        if(weekday == "Monday" && self.successfullMatchSnapshots.isEmpty) {
+       // if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty)
+        if(weekday == "nothing" && viewModel.successfullMatchSnapshots.isEmpty) {
             getMatchRecordsForThisWeek() {(matchRecords) -> Void in
                 // If theres no matchRecords for this week run match logic and find matches
                 if matchRecords.isEmpty {
@@ -129,6 +128,7 @@ struct HomeView: View {
                             findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
                                 if !successFullMatches.isEmpty {
                                     saveMatchRecords(matches: successFullMatches)
+                                    
                                     viewRouter.currentPage = .matchPage
                                 }
                             }
@@ -289,7 +289,7 @@ struct HomeView: View {
                     .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
                 NavigationLink(destination: SpeedDateHomeView(displayType: "Host") , label: {
                     CountdownTimerView(timeRemaining: 80400, geoReader: geoReader)
-                })
+                }).disabled(true)
                 
             }
             .padding(.top,geoReader.size.height * 0.05)
@@ -361,8 +361,8 @@ struct HomeView: View {
     private func getUserCardGroup(start: Date, end: Date, completed: @escaping(_ userGroup: SwipedCardGroupModel) -> Void){
         db.collection("swipedCardGroups")
             .whereField("profileId", isEqualTo: viewModel.userProfile.id)
-            //.whereField("createdDate", isGreaterThan: start)
-            //.whereField("createdDate", isLessThan: end)
+            .whereField("createdDate", isGreaterThan: start)
+            .whereField("createdDate", isLessThan: end)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents for swipedCardGroups: \(err)")
@@ -404,7 +404,7 @@ struct HomeView: View {
     }
     private func findMatches(cardGroups: SwipedCardGroupsModel, completed: @escaping(_ successFullMatches: [CardGroupSnapShotModel]) -> Void){
         let user = cardGroups.userCardGroup
-        let others = cardGroups.otherCardGroups
+        let others = cardGroups.otherCardGroups.filter{$0.profileId != user.profileId}
         
         // looping through to get the each cardId with its answer(based on index)
         for (index,record) in user.cardIds.enumerated() {
@@ -422,16 +422,19 @@ struct HomeView: View {
             }
         }
         //main matching logic
-        if(self.successfullMatchSnapshots.isEmpty){
+        if(viewModel.successfullMatchSnapshots.isEmpty){
             for (_, record) in self.userMatchSnapshots.enumerated() {
                 for(_, record2) in self.potentialMatchSnapshots.enumerated() {
                     if(record.cardId == record2.cardId && record.answer == record2.answer) {
-                        self.successfullMatchSnapshots.append(record2)
+                        viewModel.successfullMatchSnapshots.append(record2)
                     }
                 }
             }
-            print("self.successfullMatchSnapshots: \(self.successfullMatchSnapshots)")
-            completed(self.successfullMatchSnapshots)
+            let crossRef = Dictionary(grouping: viewModel.successfullMatchSnapshots, by: \.profileId)
+            let maximum = crossRef.max{a, b in a.value.count > b.value.count}
+            
+            print("self.successfullMatchSnapshots: \(String(describing: maximum))")
+            completed(viewModel.successfullMatchSnapshots)
         }
     }
     

@@ -29,6 +29,7 @@ class HomeViewModel: ObservableObject {
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
     @Published var lastDoc: DocumentSnapshot!
+    @Published var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
     
     @Published var increm: Int = 0
     

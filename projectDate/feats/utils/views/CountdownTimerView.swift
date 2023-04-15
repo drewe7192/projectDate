@@ -39,6 +39,7 @@ struct CountdownTimerView: View {
                     .foregroundColor(Color.iceBreakrrrBlue)
                     .cornerRadius(geoReader.size.width * 0.05)
                     .shadow(radius: 10, x: 3, y: 10)
+                    .opacity(0.3)
                 }
     
     

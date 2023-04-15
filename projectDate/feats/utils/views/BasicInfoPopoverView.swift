@@ -315,6 +315,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(true), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true))
     }
 }
