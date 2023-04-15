@@ -28,10 +28,12 @@ struct HomeView: View {
     @State private var personalityCount = 0.0
     @State private var showCardCreatedAlert: Bool = false
     @State private var profileText = ""
+    
     @State private var updateData: Bool = false
     @State private var gotSwipedRecords: Bool = false
+    
     @State private var cards: [CardModel] = []
-    //@State private var lastDoc: Any = []
+
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
     @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
@@ -49,7 +51,7 @@ struct HomeView: View {
             answers: []),
         otherCardGroups: []
     )
-    @State private var isDirty: Bool = false
+   // @State private var isDirty: Bool = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -92,13 +94,15 @@ struct HomeView: View {
                 // QUESTION: make a cardGroup for every week or for every 20 cards??
                 .onChange(of: updateData) { _ in
                     //make a cardGroup out of all the cards user swiped this week
-                    getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
                         if !swipedRecords.isEmpty {
                             viewModel.saveSwipedCardGroup(swipedRecords: swipedRecords)
                             //not using this func right now but will in the future
                             viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
                         }
                     }
+                    
+
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
@@ -142,7 +146,7 @@ struct HomeView: View {
                     //get profileImage
                     viewModel.getStorageFile()
                     // getting these records to display new cards user hasn't seen yet
-                    getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
                         gotSwipedRecords.toggle()
                         if !swipedRecords.isEmpty {
                             viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
@@ -351,10 +355,7 @@ struct HomeView: View {
                     }
                 }
             }
-            
         }
-        
-       
     }
     
     private func getUserCardGroup(start: Date, end: Date, completed: @escaping(_ userGroup: SwipedCardGroupModel) -> Void){
@@ -379,7 +380,6 @@ struct HomeView: View {
             }
     }
     
-    
     private func getOtherCardGroups(start: Date, end: Date, completed: @escaping(_ otherGroups: [SwipedCardGroupModel]) -> Void){
         db.collection("swipedCardGroups")
             .whereField("createdDate", isGreaterThan: start)
@@ -396,8 +396,6 @@ struct HomeView: View {
                             let cardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
                             self.swipedCardGroups.otherCardGroups.append(cardGroup)
 //                            swipedCardFoo.otherCardGroups.append(cardGroup)
-                            
-                            
                         }
                     }
                     completed(self.swipedCardGroups.otherCardGroups)
@@ -435,7 +433,6 @@ struct HomeView: View {
             print("self.successfullMatchSnapshots: \(self.successfullMatchSnapshots)")
             completed(self.successfullMatchSnapshots)
         }
-      
     }
     
     private func saveMatchRecords(matches: [CardGroupSnapShotModel]){
@@ -459,7 +456,6 @@ struct HomeView: View {
                         print("Document successfully created Match record!")
                     }
                 }
-            
         }
     }
     
@@ -482,50 +478,6 @@ struct HomeView: View {
             }
             .position(x: geo.size.height * 0.09, y: geo.size.width * 1.2)
         }
-    }
-    
-    //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
-    private func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-        
-        // if dirty clean up
-        //viewModel.swipedRecords.removeAll()
-        
-        var query: Query!
-        
-        //pagination: get first n cards or get the next n cards
-            query = db.collection("swipedRecords")
-   
-//            if (self.lastDoc != nil) {
-//                query = db.collection("swipedRecords").start(afterDocument: self.lastDoc).limit(to: 10)
-//            }x
-        
-            query
-            .whereField("profileId", isEqualTo: viewModel.userProfile.id)
-            .whereField("swipedDate", isGreaterThan: start)
-            .whereField("swipedDate", isLessThan: end)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents from swipedRecords: \(err)")
-                    completed([])
-                } else {
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        
-                        if !data.isEmpty{
-                            let swipedRecord = SwipedRecordModel(id: data["id"] as? String ?? "", answer: data["answer"] as? String ?? "", cardId: data["cardId"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardGroupId: data["cardGroupId"] as? String ?? "")
-                            
-                            viewModel.swipedRecords.append(swipedRecord)
-                        }
-                    }
-                   // self.lastDoc = querySnapshot!.documents.last
-                    completed(viewModel.swipedRecords)
-                   
-                }
-            }
     }
 } 
 

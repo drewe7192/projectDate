@@ -18,10 +18,10 @@ import UIKit
 struct CardsView: View {
     @State var cards: [CardModel] = []
     @State var lastDoc: DocumentSnapshot!
-    @State var cardGroupId: String = UUID().uuidString
     
     @Binding var updateData: Bool
     @Binding var gotSwipedRecords: Bool
+
     let viewModel: HomeViewModel
     
     let db = Firestore.firestore()
@@ -42,18 +42,10 @@ struct CardsView: View {
                             onRemove: {
                                 removedUser in
                                 
-                                // updating groupId to make it easy to save cardGroup
-                                if(viewModel.increm == 19){
-                                    self.cardGroupId = UUID().uuidString
-                                    viewModel.increm = 0
-                                } else {
-                                    viewModel.updateCount()
-                                }
                                 self.cards.removeAll { $0.id == removedUser.id }
                             },
                             updateData: $updateData,
-                            userProfile: viewModel.userProfile,
-                            cardGroupId: self.cardGroupId
+                            userProfile: viewModel.userProfile
                         )
                         .animation(.spring())
                         .frame(width:
@@ -78,37 +70,51 @@ struct CardsView: View {
     
     private func getAllCards(isUpdating: Bool){
         var cardIdsFromSwipedRecords: [String] = []
+        var query: Query!
+        var batches: [Any] = []
+        var batch: [String] = []
         
         for record in viewModel.swipedRecords {
             cardIdsFromSwipedRecords.append(record.cardId)
         }
-        
-        var batches: [Any] = []
+      
         //workaround for the Firebase Query "IN" Limit of 10
         while(!cardIdsFromSwipedRecords.isEmpty){
             //splice Array: get first 10 and remove the same 10 from array
-            let batch = Array(cardIdsFromSwipedRecords.prefix(10))
+             batch = Array(cardIdsFromSwipedRecords.prefix(10))
             let count = cardIdsFromSwipedRecords.count
             if count < 10{
                 cardIdsFromSwipedRecords.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
             } else{
                 cardIdsFromSwipedRecords.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
             }
-            
-            var query: Query!
+        }
+        
+        
             
             //pagination: get first n cards or get the next n cards
             if !isUpdating {
-                query = db.collection("cards").limit(to: 20)
+                if !batch.isEmpty {
+                    query = db.collection("cards").limit(to: 20)
+                        .whereField("id", notIn: batch)
+                } else {
+                    query = db.collection("cards").limit(to: 20)
+                }
+              
             } else {
                 if (self.lastDoc != nil) {
-                    query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 20)
+                    if !batch.isEmpty {
+                        query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 20)
+                            .whereField("id", notIn: batch)
+                    } else {
+                        query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 20)
+                    }
+                   
                 }
             }
             
             batches.append(
                 query
-                    .whereField("id", notIn: batch)
                     .getDocuments() { (querySnapshot, err) in
                         if let err = err {
                             print("Error getting documents: \(err)")
@@ -127,12 +133,12 @@ struct CardsView: View {
                         }
                     }
             )
-        }
+        
     }
 }
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView(updateData: .constant(false), gotSwipedRecords: .constant(true), viewModel: HomeViewModel())
+        CardsView(updateData: .constant(false), gotSwipedRecords: .constant(false), viewModel: HomeViewModel())
     }
 }

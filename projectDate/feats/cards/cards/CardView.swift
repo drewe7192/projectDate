@@ -23,7 +23,6 @@ struct CardView: View {
     let db = Firestore.firestore()
     let storage = Storage.storage()
     let userProfile: ProfileModel
-    let cardGroupId: String
     
     @State
     private var translation: CGSize = .zero
@@ -38,13 +37,12 @@ struct CardView: View {
     @State var swipeStatus: LikeDislike = .none
     
     init(card: CardModel, index: Int, onRemove: @escaping (_ card: CardModel)
-         -> Void, updateData: Binding<Bool>, userProfile: ProfileModel, cardGroupId: String) {
+         -> Void, updateData: Binding<Bool>, userProfile: ProfileModel) {
         self.card = card
         self.index = index
         self.onRemove = onRemove
         self._updateData = updateData
         self.userProfile = userProfile
-        self.cardGroupId = cardGroupId
     }
     
     var body: some View {
@@ -91,14 +89,13 @@ struct CardView: View {
                         // cant swipe right(.like) if question hasnt been answered
                         if (self.swipeStatus == .like) && (selectedChoice != "Your Match's Answer") {
                             onRemove(self.card)
-                            viewModel.updateCount()
+
                             // after each swipe save the card data
-                            saveSwipedRecords(card: self.card, answer: selectedChoice, cardGroupId: cardGroupId){ (success) in
+                            saveSwipedRecords(card: self.card, answer: selectedChoice){ (success) in
                                 if success{
                                     //last card in set is always index 0
                                     if(index == 0){
                                         // fires off the ".onChange" in the HomeView and CardsView
-                             
                                         updateData.toggle()
                                     }
                                     self.selectedChoice = "Your Match's Answer"
@@ -107,7 +104,7 @@ struct CardView: View {
                         } else if (self.swipeStatus == .dislike) {
                             onRemove(self.card)
                    
-                            saveSwipedRecords(card: self.card, answer: "", cardGroupId: cardGroupId) { (success) in
+                            saveSwipedRecords(card: self.card, answer: "") { (success) in
                                 if success{
                                     //last card in set is always index 0
                                     if(index == 0){
@@ -176,7 +173,7 @@ struct CardView: View {
         .padding(.leading,geoReader.size.width * 0.6)
     }
     
-    private func saveSwipedRecords(card: CardModel, answer: String, cardGroupId: String, completed: @escaping (_ success: Bool) -> Void){
+    private func saveSwipedRecords(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
         let id = UUID().uuidString
         let docData: [String: Any] = [
             "id": id,
@@ -184,7 +181,6 @@ struct CardView: View {
             "answer": cardChoices(choices: card.choices, answer: answer),
             "swipedDate": Timestamp(date: Date()),
             "profileId": userProfile.id,
-            "cardGroupId": cardGroupId
         ]
         
    
@@ -239,6 +235,6 @@ struct CardView: View {
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Tuesdays", messageThreadIds: []), cardGroupId: UUID().uuidString)
+        CardView(card: MockService.cardsSampleData.first!,index: 19, onRemove: {_ in}, updateData: .constant(true), userProfile: ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "Tuesdays", messageThreadIds: []))
     }
 }
