@@ -141,6 +141,14 @@ struct BasicInfoPopoverView: View {
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
                 
+                Text("Swipe at least 20 cards to get a match")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.height * 0.025))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
+            }
+            
+            Group{
                 Text("Create your own cards via plus button")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))

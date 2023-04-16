@@ -11,4 +11,6 @@ struct MatchRecordModel: Identifiable {
     var id: String
     var userProfileId: String
     var matchProfileId: String
+    var cardIds: [String]
+    var answers: [String]
 }

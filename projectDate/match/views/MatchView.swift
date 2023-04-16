@@ -82,7 +82,7 @@ struct MatchView: View {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "")
+                            let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [], answers: data["answers"] as? [String] ?? [])
                             
                             self.matchRecords.append(matchRecord)
                         }

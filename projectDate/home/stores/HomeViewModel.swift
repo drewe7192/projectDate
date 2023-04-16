@@ -29,7 +29,7 @@ class HomeViewModel: ObservableObject {
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
     @Published var lastDoc: DocumentSnapshot!
-    @Published var successfullMatchSnapshots: [CardGroupSnapShotModel] = []
+    @Published var successfullMatchSnapshots: [MatchRecordModel] = []
     
     @Published var increm: Int = 0
     
@@ -210,7 +210,7 @@ class HomeViewModel: ObservableObject {
         
         // if dirty clean up
         self.swipedRecords.removeAll()
-        
+        print("count: \(self.swipedRecords.count)")
         var query: Query!
         
         //pagination: get first n cards or get the next n cards
@@ -234,6 +234,7 @@ class HomeViewModel: ObservableObject {
                             self.swipedRecords.append(swipedRecord)
                         }
                     }
+                    print("count after: \(self.swipedRecords.count)")
                     completed(self.swipedRecords)
                 }
             }
@@ -349,6 +350,16 @@ class HomeViewModel: ObservableObject {
     }
     
     public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let start = calendar.date(from: components)!
+        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-YY"
+        let startDateString = dateFormatter.string(from: start)
+        let endDateString = dateFormatter.string(from: end)
+      //  let fallsBetween = (start...end).contains(Date())
+        
         var cardIds: [String] = []
         var answers: [String] = []
         let id = UUID().uuidString
@@ -361,21 +372,37 @@ class HomeViewModel: ObservableObject {
             answers.append(card.answer)
         }
         
-        let docData: [String: Any] = [
-            "id": id,
-            "profileId": self.userProfile.id,
-            "cardIds": cardIds,
-            "answers": answers,
-            "createdDate": Timestamp(date: Date())
-        ]
+        let docRef = db.collection("swipedCardGroups").document("Week: \(startDateString)-\(endDateString)")
         
-        let docRef = db.collection("swipedCardGroups").document(id)
-        
-        docRef.setData(docData) {error in
-            if let error = error{
-                print("Error creating new card: \(error)")
+        docRef.getDocument{ (document, error) in
+            if ((document?.exists) != nil) {
+                let docData2: [String: Any] = [
+                    "id": id,
+                    "profileId": self.userProfile.id,
+                    "cardIds": cardIds,
+                    "answers": answers,
+                    "createdDate": Timestamp(date: Date())
+                ]
+                
+                docRef.setData(docData2) {error in
+                    if let error = error{
+                        print("Error creating new cardGroup: \(error)")
+                    } else {
+                        print("Document successfully created swipedCardGroups!")
+                    }
+            }
             } else {
-                print("Document successfully updated swipedCardGroups!")
+                let docData: [String: Any] = [
+                    "cardIds": cardIds,
+                    "answers": answers
+                ]
+                docRef.updateData(docData) {error in
+                    if let error = error{
+                        print("Error updating cardGroup: \(error)")
+                    } else {
+                        print("Document successfully updated swipedCardGroups!")
+                    }
+                }
             }
         }
     }
