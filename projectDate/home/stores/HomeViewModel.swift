@@ -206,7 +206,7 @@ class HomeViewModel: ObservableObject {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        let end = calendar.date(byAdding: .day, value: 6, to: start)!
         
         // if dirty clean up
         self.swipedRecords.removeAll()
@@ -351,7 +351,7 @@ class HomeViewModel: ObservableObject {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        let end = calendar.date(byAdding: .day, value: 6, to: start)!
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd-YY"
         let startDateString = dateFormatter.string(from: start)

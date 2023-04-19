@@ -304,7 +304,7 @@ struct HomeView: View {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        let end = calendar.date(byAdding: .day, value: 6, to: start)!
         
         db.collection("matchRecords")
             .whereField("userProfileId", isEqualTo: viewModel.userProfile.id)
@@ -334,16 +334,7 @@ struct HomeView: View {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
         let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-        var swipedCardFoo: SwipedCardGroupsModel = SwipedCardGroupsModel(
-            id: "" ,
-            userCardGroup: SwipedCardGroupModel(
-                id: "",
-                profileId: "",
-                cardIds: [],
-                answers: []),
-            otherCardGroups: []
-        )
+        let end = calendar.date(byAdding: .day, value: 6, to: start)!
         
         getUserCardGroup(start:start, end: end){(userGroup) -> Void in
             if (userGroup.id != "") {

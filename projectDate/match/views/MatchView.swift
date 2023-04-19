@@ -79,6 +79,21 @@ struct MatchView: View {
                             .cornerRadius(20)
                             .shadow(radius: 8, x: 10, y:10)
                     }
+                    
+                    Button(action: {
+                        viewRouter.currentPage = .homePage
+                    }) {
+                        Text("Schedule SpeedDate")
+                            .bold()
+                            .frame(width: 300, height: 70)
+                            .background(Color.mainGrey)
+                            .foregroundColor(.iceBreakrrrBlue)
+                            .font(.system(size: 20))
+                            .cornerRadius(20)
+                            .shadow(radius: 8, x: 10, y:10)
+                            .opacity(0.5)
+                    }
+                    .disabled(true)
                 }
                 .onAppear{
                     viewModel.getUserProfile(){(profileId) -> Void in
@@ -114,7 +129,7 @@ struct MatchView: View {
         
                 //still gotta change these to a week!
                 let start = calendar.date(from: components)!
-                let end = calendar.date(byAdding: .day, value: 1, to: start)!
+                let end = calendar.date(byAdding: .day, value: 6, to: start)!
     
         db.collection("matchRecords")
             .whereField("userProfileId", isEqualTo: viewModel.userProfile.id)
@@ -161,11 +176,6 @@ struct MatchView: View {
     }
     
     private func getProfiles(matchRecords: [MatchRecordModel], completed: @escaping(_ matchProfiles: [ProfileModel]) -> Void ){
-        
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 1, to: start)!
         
         var matchIds: [String] = []
         

@@ -98,18 +98,6 @@ struct SpeedDateHomeView: View {
                 }
             }
             .padding(.trailing,geoReader.size.width * 0.45)
-            
-            ScrollView(.horizontal){
-                HStack{
-                    ForEach(viewModel.sd.profiles){ participant in
-                        NavigationLink(destination: ProfileView(participant: participant), label: {
-                            SpeedDateCardView(participant: participant)
-                                .padding(.trailing, geoReader.size.width * 0.02)
-                        })
-                        
-                    }
-                }
-            }
         }
     }
     
@@ -121,8 +109,7 @@ struct SpeedDateHomeView: View {
                 .foregroundColor(.gray)
                 .cornerRadius(geoReader.size.width * 0.15)
                 .shadow(radius: geoReader.size.width * 0.05)
-            
-            SpeedDateInfoCardView()
+        
         }
     }
     
