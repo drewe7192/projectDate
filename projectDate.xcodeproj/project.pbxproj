@@ -94,7 +94,6 @@
 		77DCADAC29B9E9CE00641558 /* SwipedCardGroupsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADAB29B9E9CE00641558 /* SwipedCardGroupsModel.swift */; };
 		77DCADAE29BA3E1900641558 /* CardGroupSnapshotModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADAD29BA3E1900641558 /* CardGroupSnapshotModel.swift */; };
 		77DCADB129BA751000641558 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADB029BA751000641558 /* MatchView.swift */; };
-		77ED84B129890F2000AACD19 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77ED84B029890F2000AACD19 /* GoogleService-Info.plist */; };
 		77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB23BE292B5E62008F5469 /* ProfileView.swift */; };
 		77FB23C2292B6227008F5469 /* ProfileInfoOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB23C1292B6227008F5469 /* ProfileInfoOverlay.swift */; };
 		77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2460294DA8D2008F5469 /* SearchInput.swift */; };
@@ -148,6 +147,8 @@
 		77433FDC29DBDBDD00D62F31 /* SpeedDateInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateInfoCardView.swift; sourceTree = "<group>"; };
 		77433FDE29DBDC0100D62F31 /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		774AB94629DBE0C000380091 /* speedDateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedDateViewModel.swift; sourceTree = "<group>"; };
+		774FB7C429EC34C4000B382C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		774FB7C629EC34C4000B382C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7753927629A2316F00AA2B74 /* FailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedView.swift; sourceTree = "<group>"; };
 		7753927829A425B300AA2B74 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		7753CE0029D6A42B00536968 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
@@ -203,7 +204,6 @@
 		77DCADAD29BA3E1900641558 /* CardGroupSnapshotModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGroupSnapshotModel.swift; sourceTree = "<group>"; };
 		77DCADB029BA751000641558 /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		77ED84AE298908D700AACD19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		77ED84B029890F2000AACD19 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77FB23BE292B5E62008F5469 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		77FB23C1292B6227008F5469 /* ProfileInfoOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoOverlay.swift; sourceTree = "<group>"; };
 		77FB2460294DA8D2008F5469 /* SearchInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInput.swift; sourceTree = "<group>"; };
@@ -386,6 +386,31 @@
 				770CF55429C6E80700AA90AE /* CredentialFieldsView.swift */,
 			);
 			path = shared;
+			sourceTree = "<group>";
+		};
+		774FB7C229EC34C4000B382C /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				774FB7C329EC34C4000B382C /* Prod */,
+				774FB7C529EC34C4000B382C /* Dev */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
+		774FB7C329EC34C4000B382C /* Prod */ = {
+			isa = PBXGroup;
+			children = (
+				774FB7C429EC34C4000B382C /* GoogleService-Info.plist */,
+			);
+			path = Prod;
+			sourceTree = "<group>";
+		};
+		774FB7C529EC34C4000B382C /* Dev */ = {
+			isa = PBXGroup;
+			children = (
+				774FB7C629EC34C4000B382C /* GoogleService-Info.plist */,
+			);
+			path = Dev;
 			sourceTree = "<group>";
 		};
 		7753CDFC29D6A3CA00536968 /* messenger */ = {
@@ -608,7 +633,6 @@
 			isa = PBXGroup;
 			children = (
 				770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */,
-				77ED84B029890F2000AACD19 /* GoogleService-Info.plist */,
 				77ED84AE298908D700AACD19 /* Info.plist */,
 				776D4700295DCC2700754DE5 /* feats */,
 				77619ECE295DC88C00B1BF1F /* mockData */,
@@ -617,6 +641,7 @@
 				771EA00E28A045EC007EBC40 /* Extensions.swift */,
 				7756A48228C5192C0038903D /* MotherView.swift */,
 				77C3D4FF289910CE0088554F /* projectDateApp.swift */,
+				774FB7C229EC34C4000B382C /* Firebase */,
 				77C3D503289910CF0088554F /* Assets.xcassets */,
 				775E062F28C72B450082C27E /* projectDate.entitlements */,
 				77C3D505289910CF0088554F /* Preview Content */,
@@ -743,6 +768,7 @@
 			buildPhases = (
 				77C3D4F8289910CE0088554F /* Sources */,
 				77C3D4F9289910CE0088554F /* Frameworks */,
+				774FB7C929EC35A6000B382C /* Setup Firebase Environment GoogleService-Info.plist */,
 				77C3D4FA289910CE0088554F /* Resources */,
 			);
 			buildRules = (
@@ -859,7 +885,6 @@
 			files = (
 				77C3D507289910CF0088554F /* Preview Assets.xcassets in Resources */,
 				77C3D504289910CF0088554F /* Assets.xcassets in Resources */,
-				77ED84B129890F2000AACD19 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -878,6 +903,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		774FB7C929EC35A6000B382C /* Setup Firebase Environment GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Firebase Environment GoogleService-Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Name of the resource we're selectively copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\n\n# Get references to dev and prod versions of the GoogleService-Info.plist\n# NOTE: These should only live on the file system and should NOT be part of the target (since we'll be adding them to the target manually)\nGOOGLESERVICE_INFO_DEV=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Dev/${GOOGLESERVICE_INFO_PLIST}\nGOOGLESERVICE_INFO_PROD=${PROJECT_DIR}/${TARGET_NAME}/Firebase/Prod/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure the dev version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_DEV}\"\nif [ ! -f $GOOGLESERVICE_INFO_DEV ]\nthen\n    echo \"No Development GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Make sure the prod version of GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_PROD}\"\nif [ ! -f $GOOGLESERVICE_INFO_PROD ]\nthen\n    echo \"No Production GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\n    exit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\nif [ \"${CONFIGURATION}\" == \"Release\" ]\nthen\n    echo \"Using ${GOOGLESERVICE_INFO_PROD}\"\n    cp \"${GOOGLESERVICE_INFO_PROD}\" \"${PLIST_DESTINATION}\"\nelse\n    echo \"Using ${GOOGLESERVICE_INFO_DEV}\"\n    cp \"${GOOGLESERVICE_INFO_DEV}\" \"${PLIST_DESTINATION}\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		77C3D4F8289910CE0088554F /* Sources */ = {

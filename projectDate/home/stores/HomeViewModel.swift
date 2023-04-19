@@ -24,7 +24,7 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "", messageThreadIds: [])
+    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [])
     @Published var profileImage: UIImage = UIImage()
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
@@ -36,9 +36,9 @@ class HomeViewModel: ObservableObject {
     let db = Firestore.firestore()
     let storage = Storage.storage()
     
-//    init(){
-//        self.clearData()
-//    }
+    init(){
+        self.clearData()
+    }
     
     public func clearData(){
         //this clear the cache documents from your db
@@ -185,8 +185,8 @@ class HomeViewModel: ObservableObject {
             }
     }
     
-    public func getStorageFile() {
-        let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+    public func getStorageFile(profileId: String) {
+        let imageRef = storage.reference().child("\(String(describing: profileId))"+"/images/image.jpg")
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
         imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in

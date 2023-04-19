@@ -46,7 +46,11 @@ struct EventHomeView: View {
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .onAppear{
                     getEvents()
-                    homeViewModel.getStorageFile()
+                    homeViewModel.getUserProfile(){(profileId) -> Void in
+                        if profileId != "" {
+                            homeViewModel.getStorageFile(profileId: profileId)
+                        }
+                    }
                 }
                 .navigationBarItems(leading: (
                         headerSection(for: geoReader)

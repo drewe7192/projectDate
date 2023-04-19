@@ -54,7 +54,7 @@ struct MessageHomeView: View {
                 .onAppear {
                     getUserProfile(){(profileId) -> Void in
                         if profileId != "" {
-                            homeViewModel.getStorageFile()
+                            homeViewModel.getStorageFile(profileId: profileId)
                             if viewModel.messageThreads.isEmpty {
                                 viewModel.getMessageThreads()
                             }

@@ -116,11 +116,14 @@ struct HomeView: View {
         //The -1 is added at the end because Calendar.current.component(.weekday, from: Date()) returns values from 1-7 but weekdaySymbols expects array indices
         let weekday = f.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
-        // if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty)
-        if(weekday == "Sunday" && viewModel.successfullMatchSnapshots.isEmpty) {
-            getMatchRecordsForThisWeek() {(matchRecords) -> Void in
+         if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty) {
+            getMatchRecordsForThisWeek() {(alreadySeenMatchRecords) -> Void in
                 // If theres no matchRecords for this week run match logic and find matches
-                if matchRecords.isEmpty {
+                
+               // let results = matchRecords.filter{$0.isNew == true}
+                //let exists = results.isEmpty == false
+                
+                if alreadySeenMatchRecords.isEmpty {
                     getCardGroups() {(userCardGroup) -> Void in
                         if !userCardGroup.userCardGroup.id.isEmpty {
                             findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
@@ -141,7 +144,7 @@ struct HomeView: View {
             viewModel.getUserProfile(){(profileId) -> Void in
                 if profileId != "" {
                     //get profileImage
-                    viewModel.getStorageFile()
+                    viewModel.getStorageFile(profileId: profileId)
                     // getting these records to display new cards user hasn't seen yet
                     viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
                         gotSwipedRecords.toggle()
@@ -154,6 +157,7 @@ struct HomeView: View {
                 } else {
                     viewModel.createUserProfile() {(createdUserProfileId) -> Void in
                         if createdUserProfileId != "" {
+                            gotSwipedRecords.toggle()
                             showingBasicInfoPopover.toggle()
                         }
                         completed(createdUserProfileId)
@@ -306,10 +310,10 @@ struct HomeView: View {
         let end = calendar.date(byAdding: .day, value: 1, to: start)!
         
         db.collection("matchRecords")
-            .whereField("profileId", isEqualTo: viewModel.userProfile.id)
+            .whereField("userProfileId", isEqualTo: viewModel.userProfile.id)
             .whereField("createdDate", isGreaterThan: start)
             .whereField("createdDate", isLessThan: end)
-            .whereField("isNew", isEqualTo: true)
+            .whereField("isNew", isEqualTo: false)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents from matchRecords: \(err)")
@@ -319,7 +323,7 @@ struct HomeView: View {
                         let data = document.data()
                         
                         if !data.isEmpty{
-                            let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [], answers: data["answers"] as? [String] ?? [])
+                            let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [], answers: data["answers"] as? [String] ?? [], isNew: data["isNew"] as? Bool ?? false)
                             self.matchRecords.append(matchRecord)
                         }
                     }
@@ -446,14 +450,14 @@ struct HomeView: View {
                     maximum!.value.forEach({cardsIds.append($0.cardId)})
                     maximum!.value.forEach({answers.append($0.answer)})
                     
-                    let firstMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum!.key, cardIds: cardsIds, answers: answers)
+                    let firstMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum!.key, cardIds: cardsIds, answers: answers, isNew: true)
                     
                     var cardsIds2: [String] = []
                     var answers2: [String] = []
                     maximum2!.value.forEach({cardsIds2.append($0.cardId)})
                     maximum2!.value.forEach({answers2.append($0.answer)})
                     
-                    let secondMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum2!.key, cardIds: cardsIds2, answers: answers2)
+                    let secondMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum2!.key, cardIds: cardsIds2, answers: answers2, isNew: true)
                     
                     viewModel.successfullMatchSnapshots.append(firstMatch)
                     viewModel.successfullMatchSnapshots.append(secondMatch)

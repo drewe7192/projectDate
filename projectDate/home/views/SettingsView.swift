@@ -67,7 +67,11 @@ struct SettingsView: View {
                 }
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .onAppear{
-                    viewModel.getStorageFile()
+                    viewModel.getUserProfile(){(profileId) -> Void in
+                        if profileId != "" {
+                            viewModel.getStorageFile(profileId: profileId)
+                        }
+                    }
                 }
                 .navigationBarItems(leading: (
                         headerSection(for: geoReader)
@@ -208,12 +212,12 @@ struct SettingsView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            uploadStorageFile(image: viewModel.profileImage ?? UIImage())
+            uploadStorageFile(image: viewModel.profileImage, profileId: self.userProfile.id)
         }
     }
     
-    public func uploadStorageFile(image: UIImage){
-        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+    public func uploadStorageFile(image: UIImage, profileId: String){
+        let storageRef = storage.reference().child("\(String(describing: profileId))"+"/images/image.jpg")
         
         let data = image.jpegData(compressionQuality: 0.2)
         

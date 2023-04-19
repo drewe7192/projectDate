@@ -20,8 +20,8 @@ class ViewRouter: ObservableObject {
     
     func run(){
         Auth.auth().addStateDidChangeListener { auth, user in
-            if user != nil {
-                self.currentPage = .homePage
+            if auth.currentUser != nil {
+                    self.currentPage = .homePage
             }
         }
     }

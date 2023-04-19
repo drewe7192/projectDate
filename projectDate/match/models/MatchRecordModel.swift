@@ -13,4 +13,5 @@ struct MatchRecordModel: Identifiable {
     var matchProfileId: String
     var cardIds: [String]
     var answers: [String]
+    var isNew: Bool
 }

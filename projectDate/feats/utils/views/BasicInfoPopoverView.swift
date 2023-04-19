@@ -72,7 +72,7 @@ struct BasicInfoPopoverView: View {
         if(editInfo == false){
             viewModel.updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
                 if profileId != "" {
-                    SettingsView().uploadStorageFile(image: profileImage)
+                    SettingsView().uploadStorageFile(image: profileImage, profileId: profileId)
                     showingInstructionsPopover.toggle()
                 }
             }
@@ -299,7 +299,6 @@ struct BasicInfoPopoverView: View {
             Text("(pick day to get matches)")
                 .foregroundColor(.iceBreakrrrBlue)
         }
-        
     }
     
     private func basicInfoButton(for geoReader: GeometryProxy) -> some View{
@@ -323,6 +322,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Day", messageThreadIds: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: " Pick Day", messageThreadIds: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
     }
 }
