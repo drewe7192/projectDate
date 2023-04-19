@@ -210,7 +210,6 @@ class HomeViewModel: ObservableObject {
         
         // if dirty clean up
         self.swipedRecords.removeAll()
-        print("count: \(self.swipedRecords.count)")
         var query: Query!
         
         //pagination: get first n cards or get the next n cards
@@ -234,7 +233,6 @@ class HomeViewModel: ObservableObject {
                             self.swipedRecords.append(swipedRecord)
                         }
                     }
-                    print("count after: \(self.swipedRecords.count)")
                     completed(self.swipedRecords)
                 }
             }

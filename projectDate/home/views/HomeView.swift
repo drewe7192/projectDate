@@ -116,13 +116,10 @@ struct HomeView: View {
         //The -1 is added at the end because Calendar.current.component(.weekday, from: Date()) returns values from 1-7 but weekdaySymbols expects array indices
         let weekday = f.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
-         if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty) {
+        if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty) {
             getMatchRecordsForThisWeek() {(alreadySeenMatchRecords) -> Void in
                 // If theres no matchRecords for this week run match logic and find matches
-                
-               // let results = matchRecords.filter{$0.isNew == true}
-                //let exists = results.isEmpty == false
-                
+    
                 if alreadySeenMatchRecords.isEmpty {
                     getCardGroups() {(userCardGroup) -> Void in
                         if !userCardGroup.userCardGroup.id.isEmpty {

@@ -21,8 +21,8 @@ struct MatchView: View {
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userProfileImage: UIImage = UIImage()
     
-    @State private var matchProfileImage: UIImage = UIImage()
-    @State private var match2ProfileImage: UIImage = UIImage()
+    @State private var matchProfileImages: [UIImage] = []
+    @State private var matchProfiles: [ProfileModel] = []
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -35,30 +35,34 @@ struct MatchView: View {
                 
                 VStack{
                     Text("Its a Match!")
+                        .foregroundColor(.white)
+                        .bold()
+                        .font(.custom("Chalkduster", size: geoReader.size.height * 0.05))
+                        .multilineTextAlignment(.center)
+                    
+                    Image(uiImage: viewModel.profileImage)
+                        .resizable()
+                        .cornerRadius(50)
+                        .frame(width: 100, height: 100)
+                        .background(Color.black.opacity(0.2))
+                        .aspectRatio(contentMode: .fill)
+                        .clipShape(Circle())
+                    
+                    Spacer()
+                        .frame(height: 30)
+                    
                     HStack{
-                        Image(uiImage: self.userProfileImage)
-                            .resizable()
-                            .cornerRadius(50)
-                            .frame(width: 100, height: 100)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                        
-                        Image(uiImage: self.matchProfileImage)
-                            .resizable()
-                            .cornerRadius(50)
-                            .frame(width: 100, height: 100)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                        
-                        Image(uiImage: self.match2ProfileImage)
-                            .resizable()
-                            .cornerRadius(50)
-                            .frame(width: 100, height: 100)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
+                        if !self.matchProfileImages.isEmpty {
+                            ForEach(self.matchProfileImages, id: \.self){ profileImage in
+                                Image(uiImage: profileImage)
+                                    .resizable()
+                                    .cornerRadius(50)
+                                    .frame(width: 100, height: 100)
+                                    .background(Color.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
+                        }
                     }
                     
                     Spacer()
@@ -82,8 +86,15 @@ struct MatchView: View {
                             viewModel.getStorageFile(profileId: profileId)
                             getMatchRecordsForThisWeek() {(matchRecords) -> Void in
                                 if !matchRecords.isEmpty {
-                                    //getProfiles(matchRecords: matchRecords)
-                                    //            getStorageFile()
+                                    getProfiles(matchRecords: matchRecords) {(matchProfiles) -> Void in
+                                        if !matchProfiles.isEmpty{
+                                             //let results = matchProfiles.filter{$0.isNew == true}
+                                  
+                                                getMatchStorageFiles(matchProfiles: matchProfiles)
+                            
+                                        }
+                                        
+                                    }
                                     updateMatchRecords(matchRecords: matchRecords)
                                 }
                             }
@@ -149,39 +160,58 @@ struct MatchView: View {
         }
     }
     
-//    private func getProfiles(matchRecords: [MatchRecordModel]){
-//
-//
-//        db.collection("profiles")
-//            .whereField("id", isEqualTo: )
-//            .getDocuments() { (querySnapshot, err) in
-//                if let err = err {
-//                    print("Error getting documents: \(err)")
-//                } else {
-//                    for document in querySnapshot!.documents {
-//                        //                        print("\(document.documentID) => \(document.data())")
-//                        let data = document.data()
-//                        if !data.isEmpty{
-//                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
-//                        }
-//                    }
-//                }
-//            }
-//    }
-    
-    private func getStorageFile() {
-        let imageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+    private func getProfiles(matchRecords: [MatchRecordModel], completed: @escaping(_ matchProfiles: [ProfileModel]) -> Void ){
         
-        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
-            if let error = error {
-                // Uh-oh, an error occurred!
-                print("Error getting file: ", error)
-            } else {
-                let image = UIImage(data: data!)
-                viewModel.profileImage = image!
-            }
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let start = calendar.date(from: components)!
+        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+        
+        var matchIds: [String] = []
+        
+        for matchRecord in matchRecords {
+            matchIds.append(matchRecord.matchProfileId)
         }
+        
+        db.collection("profiles")
+            .whereField("id", in: matchIds)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    completed([])
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        if !data.isEmpty{
+                            var profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
+                            
+                            self.matchProfiles.append(profile)
+                        }
+                    }
+                    completed(self.matchProfiles)
+                }
+            }
+    }
+    
+    private func getMatchStorageFiles(matchProfiles: [ProfileModel]) {
+        for profile in matchProfiles {
+            let imageRef = storage.reference().child("\(String(describing: profile.id))"+"/images/image.jpg")
+            
+            // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+            imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
+                if let error = error {
+                    // Uh-oh, an error occurred!
+                    print("Error getting file: ", error)
+                } else {
+                    let image = UIImage(data: data!)
+                    self.matchProfileImages.append(image!)
+                }
+            }
+            
+        }
+        
+       
     }
 }
 
