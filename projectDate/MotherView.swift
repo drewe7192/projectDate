@@ -50,6 +50,8 @@ struct MotherView: View {
                 FailedView()
             case .matchPage:
                 MatchView()
+            case .scheduleSpeedDatePage:
+                ScheduleSpeedDateView()
             }
         }
     }
