@@ -124,12 +124,11 @@ struct MatchView: View {
     
     private func getMatchRecordsForThisWeek(completed: @escaping(_ matchRecords: [MatchRecordModel]) -> Void){
         
-                let calendar = Calendar.current
-                let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let matchDayString = self.userProfile.matchDay.lowercased()
+        let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
-                //still gotta change these to a week!
-                let start = calendar.date(from: components)!
-                let end = calendar.date(byAdding: .day, value: 6, to: start)!
+        let start = Date.today().previous(enumDayOfWeek!)
+        let end = Date.today().next(enumDayOfWeek!)
     
         db.collection("matchRecords")
             .whereField("userProfileId", isEqualTo: viewModel.userProfile.id)
@@ -156,7 +155,6 @@ struct MatchView: View {
     
     public func updateMatchRecords(matchRecords: [MatchRecordModel]){
         for (randomMatch) in matchRecords {
-            let id = UUID().uuidString
             
                 let docData: [String: Any] = [
                     "isNew": false

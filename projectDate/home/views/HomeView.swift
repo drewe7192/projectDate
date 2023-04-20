@@ -301,10 +301,11 @@ struct HomeView: View {
     }
     
     private func getMatchRecordsForThisWeek(completed: @escaping(_ matches: [MatchRecordModel]) -> Void) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 6, to: start)!
+        let matchDayString = viewModel.userProfile.matchDay.lowercased()
+        let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        
+        let start = Date.today().previous(enumDayOfWeek!)
+        let end = Date.today().next(enumDayOfWeek!)
         
         db.collection("matchRecords")
             .whereField("userProfileId", isEqualTo: viewModel.userProfile.id)
@@ -331,10 +332,11 @@ struct HomeView: View {
     
     private func getCardGroups(completed: @escaping(_ userCardGroup: SwipedCardGroupsModel) -> Void){
         // get your cardGroup for this week as well as 20 other random cardGroups
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 6, to: start)!
+        let matchDayString = viewModel.userProfile.matchDay.lowercased()
+        let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        
+        let start = Date.today().previous(enumDayOfWeek!)
+        let end = Date.today().next(enumDayOfWeek!)
         
         getUserCardGroup(start:start, end: end){(userGroup) -> Void in
             if (userGroup.id != "") {

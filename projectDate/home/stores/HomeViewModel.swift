@@ -203,10 +203,11 @@ class HomeViewModel: ObservableObject {
     
     //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 6, to: start)!
+        let matchDayString = self.userProfile.matchDay.lowercased()
+        let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        
+        let start = Date.today().previous(enumDayOfWeek!)
+        let end = Date.today().next(enumDayOfWeek!)
         
         // if dirty clean up
         self.swipedRecords.removeAll()
@@ -314,6 +315,8 @@ class HomeViewModel: ObservableObject {
     }
     
     public func updateUserProfile(updatedProfile: ProfileModel, completed: @escaping(_ profileId: String) -> Void){
+        assert(updatedProfile.matchDay != "Pick MatchDay", "Need to pick a matchDay! \(updatedProfile.matchDay)")
+        
         let docData: [String: Any] = [
             "fullName": updatedProfile.fullName,
             "location": updatedProfile.location,
@@ -348,15 +351,17 @@ class HomeViewModel: ObservableObject {
     }
     
     public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let start = calendar.date(from: components)!
-        let end = calendar.date(byAdding: .day, value: 6, to: start)!
+
+        let matchDayString = self.userProfile.matchDay.lowercased()
+        let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        
+        let start = Date.today().previous(enumDayOfWeek!)
+        let end = Date.today().next(enumDayOfWeek!)
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd-YY"
         let startDateString = dateFormatter.string(from: start)
         let endDateString = dateFormatter.string(from: end)
-      //  let fallsBetween = (start...end).contains(Date())
         
         var cardIds: [String] = []
         var answers: [String] = []
