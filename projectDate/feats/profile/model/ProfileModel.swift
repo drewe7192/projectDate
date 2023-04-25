@@ -14,6 +14,7 @@ struct ProfileModel: Codable, Identifiable  {
     var gender: String
     var matchDay: String
     var messageThreadIds: [String]
+    var speedDateIds: [String]
 //    var image: String
 //    var userId: String
 }

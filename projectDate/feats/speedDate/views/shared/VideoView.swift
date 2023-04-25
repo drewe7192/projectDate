@@ -31,6 +31,7 @@ struct VideoView: UIViewRepresentable {
         
         let videoView = HMSVideoView()
         videoView.setVideoTrack(track)
+        videoView.backgroundColor = UIColor.black
         videoView.videoContentMode = .scaleAspectFill
         return videoView
     }

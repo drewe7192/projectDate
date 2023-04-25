@@ -27,16 +27,16 @@ enum MockService {
             location: "Tampa, Fl",
             gender: "Male",
             matchDay: "Mondays",
-            messageThreadIds: []
-//            image: "animeGirl"
+            messageThreadIds: [],
+            speedDateIds: []
         )
     }
     
     static var profileInfoSampleData: ProfileInfoModel {
         ProfileInfoModel(
-        aboutMe: "fdsafdsf",
-        interests: "fdsfsdfsd",
-        height: "6"
+            aboutMe: "fdsafdsf",
+            interests: "fdsfsdfsd",
+            height: "6"
         )
     }
     
@@ -48,8 +48,8 @@ enum MockService {
                 location: "Tampa, Fl",
                 gender: "Male",
                 matchDay: "Wednesdays",
-                messageThreadIds: []
-//                image: "animeGirl"
+                messageThreadIds: [],
+                speedDateIds: []
             ),
             ProfileModel(
                 id: "John",
@@ -57,8 +57,8 @@ enum MockService {
                 location: "Tampa, Fl",
                 gender: "Male",
                 matchDay: "Wednesdays",
-                messageThreadIds: []
-//                image: "animeGirl"
+                messageThreadIds: [],
+                speedDateIds: []
             ),
             ProfileModel(
                 id: "John",
@@ -66,8 +66,8 @@ enum MockService {
                 location: "Tampa, Fl",
                 gender: "Male",
                 matchDay: "Wednesdays",
-                messageThreadIds: []
-//                image: "animeGirl"
+                messageThreadIds: [],
+                speedDateIds: []
             ),
             ProfileModel(
                 id: "John",
@@ -75,8 +75,8 @@ enum MockService {
                 location: "Tampa, Fl",
                 gender: "Male",
                 matchDay: "Wednesdays",
-                messageThreadIds: []
-//                image: "animeGirl"
+                messageThreadIds: [],
+                speedDateIds: []
             )
         ]
     }
@@ -115,159 +115,152 @@ enum MockService {
                 categoryType: "value",
                 profileType: "Friend"
             ),
-//            CardModel(
-//                id: "4",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            ),
-//            CardModel(
-//                id: "5",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            ),
-//            CardModel(
-//                id: "6",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            ),
-//            CardModel(
-//                id: "7",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            ),
-//            CardModel(
-//                id: "8",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            ),
-//            CardModel(
-//                id: "9",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            ),
-//            CardModel(
-//                id: "10",
-//                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
-//                choices: ["fadsfdsf", "fdasfsdfsd"],
-//                category: "value",
-//                profileType: "Friend"
-//            )
+            //            CardModel(
+            //                id: "4",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            ),
+            //            CardModel(
+            //                id: "5",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            ),
+            //            CardModel(
+            //                id: "6",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            ),
+            //            CardModel(
+            //                id: "7",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            ),
+            //            CardModel(
+            //                id: "8",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            ),
+            //            CardModel(
+            //                id: "9",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            ),
+            //            CardModel(
+            //                id: "10",
+            //                question: "what if someone wanted to sleep over? Are you a sleepOVer type of person blkah nted to sleep over? Are you a sleepOVer type of person blkah",
+            //                choices: ["fadsfdsf", "fdasfsdfsd"],
+            //                category: "value",
+            //                profileType: "Friend"
+            //            )
             
         ]
     }
     
     static var eventsSampleData: [EventModel] {
         [
-           EventModel(
-            id: "0",
-            title: "Event title 1",
-            location: "Tampa, Fl",
-            description: "fdsfdsfdsafsdfsd",
-            participants: ["fadsfdsfds"],
-            eventDate: Date()
-           )
-//           EventModel(
-//            id: 1,
-//            title: "Event title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
-//            location: "Tampa, Fl",
-//            creationDate: Date(),
-//            description: "fdsfdsfdsafsdfsd nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1 nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
-//            participants: profilesSampleData,
-//            eventDate: Date()
-//           ),
-//           EventModel(
-//            id: 2,
-//            title: "Drew title 1",
-//            location: "Tampa, Fl",
-//            creationDate: Date(),
-//            description: "fdsfdsfdsafsdfsd",
-//            participants: profilesSampleData,
-//            eventDate: Date()
-//           ),
-//           EventModel(
-//            id: 3,
-//            title: "Drew drew 1",
-//            location: "Tampa, Fl",
-//            creationDate: Date(),
-//            description: "fdsfdsfdsafsdfsd",
-//            participants: profilesSampleData,
-//            eventDate: Date()
-//           )
+            EventModel(
+                id: "0",
+                title: "Event title 1",
+                location: "Tampa, Fl",
+                description: "fdsfdsfdsafsdfsd",
+                participants: ["fadsfdsfds"],
+                eventDate: Date()
+            )
+            //           EventModel(
+            //            id: 1,
+            //            title: "Event title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
+            //            location: "Tampa, Fl",
+            //            creationDate: Date(),
+            //            description: "fdsfdsfdsafsdfsd nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1 nt title 1 Event title 1 Event title 1 Event title 1 ent title 1 Event title 1 Event title 1",
+            //            participants: profilesSampleData,
+            //            eventDate: Date()
+            //           ),
+            //           EventModel(
+            //            id: 2,
+            //            title: "Drew title 1",
+            //            location: "Tampa, Fl",
+            //            creationDate: Date(),
+            //            description: "fdsfdsfdsafsdfsd",
+            //            participants: profilesSampleData,
+            //            eventDate: Date()
+            //           ),
+            //           EventModel(
+            //            id: 3,
+            //            title: "Drew drew 1",
+            //            location: "Tampa, Fl",
+            //            creationDate: Date(),
+            //            description: "fdsfdsfdsafsdfsd",
+            //            participants: profilesSampleData,
+            //            eventDate: Date()
+            //           )
         ]
     }
     
-    static var sdSampleData: speedDateModel {
-        speedDateModel(
-            firstName: "Drew",
-            lastName: "Drew",
-            time: 4743843,
-            userRoleType: "host",
-            roomNumber: "638d9e07aee54625da64dfe2",
-            profiles: profilesSampleData
+    static var sdSampleData: SpeedDateModel {
+        SpeedDateModel(
+            id: "",
+            roomId: "",
+            matchProfileIds: [],
+            eventDate: Date(),
+            createdDate: Date()
         )
     }
     
-    static var sdsSampleData: [speedDateModel] {
+    static var sdsSampleData: [SpeedDateModel] {
         [
-            speedDateModel(
-                firstName: "Drew",
-                lastName: "Drew",
-                time: 172805,
-                userRoleType: "host",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
+            SpeedDateModel(
+                id: "",
+                roomId: "",
+                matchProfileIds: [],
+                eventDate: Date(),
+                createdDate: Date()
             ),
-            speedDateModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
+            SpeedDateModel(
+                id: "",
+                roomId: "",
+                matchProfileIds: [],
+                eventDate: Date(),
+                createdDate: Date()
             ),
-            speedDateModel(
-                firstName: "w",
-                lastName: "w",
-                time: 5059448,
-                userRoleType: "host",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
+            SpeedDateModel(
+                id: "",
+                roomId: "",
+                matchProfileIds: [],
+                eventDate: Date(),
+                createdDate: Date()
             ),
-            speedDateModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
+            SpeedDateModel(
+                id: "",
+                roomId: "",
+                matchProfileIds: [],
+                eventDate: Date(),
+                createdDate: Date()
             ),
-            speedDateModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
+            SpeedDateModel(
+                id: "",
+                roomId: "",
+                matchProfileIds: [],
+                eventDate: Date(),
+                createdDate: Date()
             ),
-            speedDateModel(
-                firstName: "D",
-                lastName: "ew",
-                time: 384585,
-                userRoleType: "guest",
-                roomNumber: "638d9e07aee54625da64dfe2",
-                profiles: profilesSampleData
+            SpeedDateModel(
+                id: "",
+                roomId: "",
+                matchProfileIds: [],
+                eventDate: Date(),
+                createdDate: Date()
             )
         ]
     }

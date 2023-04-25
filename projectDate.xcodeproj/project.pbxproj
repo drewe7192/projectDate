@@ -31,7 +31,7 @@
 		7731738728CE2F6500B8885B /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738628CE2F6500B8885B /* FacebookLogin */; };
 		7731738928CE2F6500B8885B /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738828CE2F6500B8885B /* FacebookShare */; };
 		77433FD029DBDAB400D62F31 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FCF29DBDAB400D62F31 /* TokenProvider.swift */; };
-		77433FD229DBDB0400D62F31 /* speedDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD129DBDB0400D62F31 /* speedDateModel.swift */; };
+		77433FD229DBDB0400D62F31 /* SpeedDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */; };
 		77433FD529DBDB3800D62F31 /* FaceTimeVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */; };
 		77433FD729DBDB6F00D62F31 /* SpeedDateHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD629DBDB6F00D62F31 /* SpeedDateHomeView.swift */; };
 		77433FD929DBDB9A00D62F31 /* ScheduleSpeedDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD829DBDB9A00D62F31 /* ScheduleSpeedDateView.swift */; };
@@ -137,7 +137,7 @@
 		7731737E28CCE50100B8885B /* GoogleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuth.swift; sourceTree = "<group>"; };
 		7731738128CDBE4200B8885B /* FacebookAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAuth.swift; sourceTree = "<group>"; };
 		77433FCF29DBDAB400D62F31 /* TokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
-		77433FD129DBDB0400D62F31 /* speedDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = speedDateModel.swift; sourceTree = "<group>"; };
+		77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateModel.swift; sourceTree = "<group>"; };
 		77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTimeVIew.swift; sourceTree = "<group>"; };
 		77433FD629DBDB6F00D62F31 /* SpeedDateHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateHomeView.swift; sourceTree = "<group>"; };
 		77433FD829DBDB9A00D62F31 /* ScheduleSpeedDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleSpeedDateView.swift; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 		77433FCE29DBDA6100D62F31 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				77433FD129DBDB0400D62F31 /* speedDateModel.swift */,
+				77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */,
 				774AB94629DBE0C000380091 /* speedDateViewModel.swift */,
 			);
 			path = models;
@@ -978,7 +978,7 @@
 				771AE4222979B44F00F3A6A1 /* CardsModel.swift in Sources */,
 				77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */,
 				776D47112962010000754DE5 /* ProfileInfoModel.swift in Sources */,
-				77433FD229DBDB0400D62F31 /* speedDateModel.swift in Sources */,
+				77433FD229DBDB0400D62F31 /* SpeedDateModel.swift in Sources */,
 				771AE4182979173A00F3A6A1 /* EventInfoView.swift in Sources */,
 				77A1C7C6297C423B004C8FA6 /* EventViewModel.swift in Sources */,
 				776D470F2961FD9000754DE5 /* ProfileViewModel.swift in Sources */,
@@ -1376,7 +1376,7 @@
 			repositoryURL = "https://github.com/100mslive/100ms-ios-sdk";
 			requirement = {
 				kind = exactVersion;
-				version = 0.5.1;
+				version = 0.9.1;
 			};
 		};
 		77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {

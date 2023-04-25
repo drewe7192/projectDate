@@ -139,6 +139,6 @@ struct CardsView: View {
 
 struct CardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CardsView(updateData: .constant(false), gotSwipedRecords: .constant(false), viewModel: HomeViewModel())
+        CardsView(updateData: .constant(true), gotSwipedRecords: .constant(true), viewModel: HomeViewModel())
     }
 }

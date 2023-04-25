@@ -24,12 +24,13 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [])
+    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [])
     @Published var profileImage: UIImage = UIImage()
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
     @Published var lastDoc: DocumentSnapshot!
     @Published var successfullMatchSnapshots: [MatchRecordModel] = []
+    @Published var speedDates: [SpeedDateModel] = []
     
     @Published var increm: Int = 0
     
@@ -177,7 +178,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [])
                         }
                     }
                     completed(self.userProfile.id)
@@ -204,7 +205,9 @@ class HomeViewModel: ObservableObject {
     //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
         let matchDayString = self.userProfile.matchDay.lowercased()
+        
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        //let enumDayOfWeek = Date.Weekday(rawValue: "monday")
         
         let start = Date.today().previous(enumDayOfWeek!)
         let end = Date.today().next(enumDayOfWeek!)
@@ -407,6 +410,35 @@ class HomeViewModel: ObservableObject {
                     }
                 }
             }
+        }
+    }
+    
+    public func getSpeedDate(speedDateIds: [String], completed: @escaping(_ speedDates: [SpeedDateModel]) -> Void){
+        var foo = self.userProfile.speedDateIds
+        if !speedDateIds.isEmpty {
+            let firstSpeedDate = speedDateIds.first!
+            
+            db.collection("speedDates")
+                .whereField("id", isEqualTo: firstSpeedDate)
+                .addSnapshotListener{ (querySnapshot, error) in
+                 guard let documents = querySnapshot?.documents
+                 else {
+                     print("No documents")
+                     completed([])
+                     return
+                 }
+
+                self.speedDates = documents.compactMap {document -> SpeedDateModel? in
+                     do {
+                         return try document.data(as: SpeedDateModel.self)
+                     } catch {
+                         print("Error decoding document into SpeedDates: \(error)")
+                         completed([])
+                         return nil
+                     }
+                 }
+                    completed(self.speedDates)
+             }
         }
     }
     

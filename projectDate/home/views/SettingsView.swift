@@ -23,7 +23,7 @@ struct SettingsView: View {
     @State private var showSaveButton = false
     @State private var editInfo = false
     @State private var showMenu: Bool = false
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
     
     let storage = Storage.storage()
     

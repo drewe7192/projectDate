@@ -114,20 +114,27 @@ struct FacetimeView: View {
     @State var isLeaveRoom = false
     
     var body: some View {
-        
         Group {
             if videoSDK.isJoined {
-                List {
-                    ForEach(videoSDK.tracks, id: \.self) { track in
+               // List {
+                ForEach(videoSDK.tracks, id: \.self) { track in
+                    VStack{
                         VideoView(track: track)
                             .frame(height: 300)
+                        
+                                    videoOptions()
+                                        .padding(.bottom, 10)
+                    }
+                     
                     }
                     .onChange(of: isLeaveRoom) { _ in
-                        videoSDK.tracks.remove(at: 1)
+                        if videoSDK.tracks.indices.contains(1) {
+                            videoSDK.tracks.remove(at: 1)
+                        }
                       //  videoSDK.leaveRoom()
                     }
                     .task(delayLeave)
-                }
+              //  }
             }
             else if isJoining {
                 ProgressView()
@@ -145,7 +152,51 @@ struct FacetimeView: View {
                     }
             }
         }
+        
+        
     }
+    private func videoOptions() -> some View {
+        HStack(spacing: 20) {
+            Spacer()
+            Button{
+                videoSDK.muteCamera()
+            } label: {
+                Image(systemName: videoSDK.videoIsShowing ? "video.fill" : "video.slash.fill")
+                    .frame(width: 60, height: 60, alignment: .center)
+                    .background(.white)
+                    .foregroundColor(.black)
+                    .clipShape(Circle())
+                
+            }
+            
+            Button{
+                videoSDK.leaveRoom()
+            } label: {
+                Image(systemName: "phone.down.fill")
+                    .frame(width: 60, height: 60, alignment: .center)
+                    .background(.red)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                
+            }
+            
+            Button{
+                videoSDK.muteMic()
+            } label: {
+                Image(systemName: videoSDK.isMuted ? "mic.slash.fill" : "mic.fill")
+                    .frame(width: 60, height: 60, alignment: .center)
+                    .background(.white)
+                    .foregroundColor(.black)
+                    .clipShape(Circle())
+                
+            }
+            
+            
+            Spacer()
+        }
+        
+    }
+    
     
     @Sendable private func delayLeave() async {
         try? await Task.sleep(nanoseconds: 7_500_000_000)

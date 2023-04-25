@@ -8,7 +8,7 @@
 import Foundation
 
 class speedDateViewModel: ObservableObject {
-    @Published var sd: speedDateModel = MockService.sdSampleData
+    @Published var sd: SpeedDateModel = MockService.sdSampleData
     
     init(forPreview: Bool = false){
         if forPreview {

@@ -17,7 +17,7 @@ import UIKit
 struct MatchView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var viewModel = HomeViewModel()
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [])
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userProfileImage: UIImage = UIImage()
     
@@ -192,7 +192,7 @@ struct MatchView: View {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            var profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [])
+                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [])
                             
                             self.matchProfiles.append(profile)
                         }

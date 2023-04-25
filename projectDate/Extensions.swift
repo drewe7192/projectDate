@@ -246,8 +246,8 @@ extension Date {
          thursday = "thursday",
          friday = "friday",
          saturday = "saturday",
-         sunday = "sunday"
-      
+         sunday = "sunday",
+        other = "pick matchday"
   }
 
   enum SearchDirection {

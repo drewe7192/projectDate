@@ -12,34 +12,49 @@ struct CountdownTimerView: View {
     @State var timeRemaining = 0
     
     var geoReader: GeometryProxy
-    @State var isStartNow = false
+    @Binding var isStartNow: Bool
+    let speedDates: [SpeedDateModel]
+    
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-          
-          
                 VStack{
-                    Text(
-                        //just the display
-                        (isStartNow ? "Start Now!": "") +
-                        (isStartNow ? "" : displayCountdown()))
-                    //main logic for countdown
-                    .onReceive(timer) { _ in
-                        if timeRemaining > 0 {
-                            timeRemaining -= 1
-                        } else if timeRemaining == 0 {
-                            isStartNow = true
-                        }
+                    if speedDates.isEmpty {
+                        Text("Swipe for SpeedDates")
+                        //normal styling for button
+                        .multilineTextAlignment(.center)
+                        .font(.title.bold())
+                        .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+                        .background(Color.mainGrey)
+                        .foregroundColor(Color.iceBreakrrrBlue)
+                        .cornerRadius(geoReader.size.width * 0.05)
+                        .shadow(radius: 10, x: 3, y: 10)
+                        .opacity(isStartNow ? 1 : 0.3)
                     }
-                    //normal styling for button
-                    .multilineTextAlignment(.center)
-                    .font(.title.bold())
-                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
-                    .background(Color.mainGrey)
-                    .foregroundColor(Color.iceBreakrrrBlue)
-                    .cornerRadius(geoReader.size.width * 0.05)
-                    .shadow(radius: 10, x: 3, y: 10)
-                    .opacity(0.3)
+                    else{
+                        Text(
+                            //just the display
+                            (isStartNow ? "Start Now!": "") +
+                            (isStartNow ? "" : displayCountdown()))
+                        //main logic for countdown
+                        .onReceive(timer) { _ in
+                            if timeRemaining > 0 {
+                                timeRemaining -= 1
+                            } else if timeRemaining == 0 {
+                                isStartNow = true
+                            }
+                        }
+                        //normal styling for button
+                        .multilineTextAlignment(.center)
+                        .font(.title.bold())
+                        .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+                        .background(Color.mainGrey)
+                        .foregroundColor(Color.iceBreakrrrBlue)
+                        .cornerRadius(geoReader.size.width * 0.05)
+                        .shadow(radius: 10, x: 3, y: 10)
+                        .opacity(isStartNow ? 1 : 0.3)
+                    }
+                    
                 }
     
     
@@ -67,7 +82,7 @@ struct CountdownTimerView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                CountdownTimerView(timeRemaining: 80400, geoReader: geo )
+                CountdownTimerView(timeRemaining: Int(Date.today().next(.monday).timeIntervalSince(Date.today())), geoReader: geo, isStartNow: .constant(false), speedDates: [])
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }

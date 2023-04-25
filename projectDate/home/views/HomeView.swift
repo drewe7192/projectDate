@@ -16,7 +16,7 @@ import FirebaseStorage
 import UIKit
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject public var viewModel = HomeViewModel()
     @ObservedObject private var messageViewModel = MessageViewModel()
     
     @EnvironmentObject var viewRouter: ViewRouter
@@ -41,6 +41,9 @@ struct HomeView: View {
     @State private var showingInstructionsPopover: Bool = false
     @State private var showingBasicInfoPopover: Bool = false
     @State private var showMenu: Bool = false
+    @State private var isStartNow: Bool = false
+    @State private var placeInLine: Int = 0
+    @State private var timeLeft: Int = 0
     @State private var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
         userCardGroup: SwipedCardGroupModel(
@@ -65,6 +68,18 @@ struct HomeView: View {
                     VStack{
                         cardsAndSpeeDateSection(for: geoReader)
                             .padding(.top,10)
+                        
+//                        Button(action: {
+//                            addspeedDate()
+//                        }) {
+//                            Image("googleLogo")
+//                                .resizable()
+//                                .frame(width: 35, height: 35)
+//                        }
+//                        .frame(width: 120, height: 50)
+//                        .background(.white)
+//                        .cornerRadius(15)
+//                        .shadow(radius: 5)
                     }
                     .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
                     .disabled(self.showMenu ? true : false)
@@ -86,6 +101,15 @@ struct HomeView: View {
                     getProfileAndRecords() {(getProfileId) -> Void in
                         if getProfileId != "" {
                             getMatchData()
+                            viewModel.getSpeedDate(speedDateIds: viewModel.userProfile.speedDateIds) {(speedDates) -> Void in
+                                if !speedDates.isEmpty {
+                                    setPlaceInLine(){(placeIn) -> Void in
+                                        if placeIn != 0 {
+                                            timeLeft(inLine: placeIn)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -150,7 +174,6 @@ struct HomeView: View {
                         }
                         completed(profileId)
                     }
-                    
                 } else {
                     viewModel.createUserProfile() {(createdUserProfileId) -> Void in
                         if createdUserProfileId != "" {
@@ -285,9 +308,16 @@ struct HomeView: View {
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white)
                     .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                NavigationLink(destination: SpeedDateHomeView(displayType: "Host") , label: {
-                    CountdownTimerView(timeRemaining: 80400, geoReader: geoReader)
-                }).disabled(true)
+                
+                
+                NavigationLink(destination: SpeedDateHomeView(viewModel: viewModel, placeInLine: self.placeInLine, timeLeft: self.timeLeft) , label: {
+                    CountdownTimerView(
+                        timeRemaining: !viewModel.speedDates.isEmpty ?  Int(viewModel.speedDates.first!.eventDate.timeIntervalSince(Date.today())): 0,
+                        geoReader: geoReader,
+                        isStartNow: $isStartNow,
+                        speedDates: viewModel.speedDates
+                    )
+                }).disabled(isStartNow == true ? false: true)
                 
             }
             .padding(.top,geoReader.size.height * 0.05)
@@ -502,6 +532,80 @@ struct HomeView: View {
             }
             .position(x: geo.size.height * 0.09, y: geo.size.width * 1.2)
         }
+    }
+    
+//    private func addspeedDate() {
+//            let docRefs = db.collection("speedDates")
+//
+//            let id = UUID().uuidString;
+//            docRefs.document(id).setData([
+//                "id": id,
+//                "roomId": "",
+//                "matchProfileIds":["EF7C8A72-87C1-4FD5-ABFE-D458C0D86E90","653EB-C44D-4C3F-888F-45B9A6B08B","D5B6-C4D-43F-88F-45B9A6BE4"],
+//                "eventDate": Timestamp(date: Date()),
+//                "createdDate": Timestamp(date: Date())
+//            ])
+//    }
+    
+    private func timeLeft(inLine: Int){
+        //orginal date host scheduled
+        let eventDate = viewModel.speedDates.first!.eventDate
+        let calendar = Calendar.current
+        
+        //every match gets a 10 minute window to join videoRoom
+        let tenMinsLater = calendar.date(byAdding: .minute, value: 10, to: eventDate)
+        let twentyMinsLater = calendar.date(byAdding: .minute, value: 20, to: eventDate)
+        let thirtyMinsLater = calendar.date(byAdding: .minute, value: 30, to: eventDate)
+        
+        //compares the times to the current date and time(if negative then time has passsed current time)
+        let peer1Date = tenMinsLater!.timeIntervalSinceNow
+        let peer2Date = twentyMinsLater!.timeIntervalSinceNow
+        let peer3Date = thirtyMinsLater!.timeIntervalSinceNow
+        
+      
+        //based on where matches are in line, if there window to join has passed we disable the button
+        switch inLine{
+        case 1:
+            do {
+                let peer1 = Int(peer1Date)
+                if peer1Date.sign != .minus {
+                    self.timeLeft = peer1
+                } else {
+                    self.timeLeft = 0
+                    //self.disabled = true
+                }
+            }
+        case 2:
+            do {
+                let peer2 = Int(peer2Date)
+                if peer2Date.sign != .minus {
+                    self.timeLeft = peer2
+                } else {
+                    self.timeLeft = 0
+                    //self.disabled = true
+                }
+            }
+        case 3:
+            do {
+                let peer3 = Int(peer3Date)
+                if peer3Date.sign != .minus {
+                    self.timeLeft = peer3
+                } else {
+                    self.timeLeft = 0
+                    //self.disabled = true
+                }
+            }
+        default:
+            break
+        }
+    }
+    
+    private func setPlaceInLine(completed: @escaping(_ placeIn: Int) -> Void) {
+        let placeInLine = viewModel.speedDates.first?.matchProfileIds.firstIndex(of: viewModel.userProfile.id) ?? 0
+        
+        // remove 0 based index
+        self.placeInLine = placeInLine.advanced(by: 1)
+        completed(self.placeInLine)
     }
 } 
 

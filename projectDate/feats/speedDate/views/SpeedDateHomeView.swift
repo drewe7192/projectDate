@@ -8,18 +8,22 @@
 import SwiftUI
 
 struct SpeedDateHomeView: View {
-    let displayType: String
-    @StateObject var viewModel = speedDateViewModel()
+    @State private var isStartNow: Bool = false
+    
+    let viewModel: HomeViewModel
+    let placeInLine: Int
+    let timeLeft: Int
     
     var body: some View {
         GeometryReader{geoReader in
             ZStack{
                 Color.mainBlack
                     .ignoresSafeArea()
-                if(displayType == "Host"){
+                // role is Host if userProfileId isnt in the array of matchingProfilesId
+                if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
                     VStack{
                         headerSection(for: geoReader)
-                         Divider()
+                        Divider()
                             .background(.white)
                         
                         Text("Your dates")
@@ -28,32 +32,56 @@ struct SpeedDateHomeView: View {
                             .foregroundColor(.white)
                             .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
                         ImageGridView()
-                   
                         
-    //                    Spacer()
-    //                        .frame(height: geoReader.size.height * 0.02)
                         
-    //                  participantsSection(for: geoReader)
-    //
-    //
-    //
-    //                  middleSection(for: geoReader)
-    //
-    //
-    //
+                        //                    Spacer()
+                        //                        .frame(height: geoReader.size.height * 0.02)
+                        
+                        //                  participantsSection(for: geoReader)
+                        //
+                        //
+                        //
+                        //                  middleSection(for: geoReader)
+                        //
+                        //
+                        //
                         Text("Till First Date:")
                             .bold()
                             .multilineTextAlignment(.center)
                             .foregroundColor(.white)
                             .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                      buttonSection(for: geoReader)
+                        buttonSection(for: geoReader)
                         
-                  
+                        
                     }
-                } else if(displayType == "Guest") {
-                    
+                    // roleType is guest if userProfile.Id is in matchingProfiles id
+                } else if(viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)) {
+                    VStack{
+                        headerSection(for: geoReader)
+                        Divider()
+                            .background(.white)
+                        
+                        Text("Your place in line")
+                            .bold()
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                        
+                        Text("\(self.placeInLine)")
+                            .bold()
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white)
+                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                        
+                        buttonSection(for: geoReader)
+                    }
+                    .onAppear{
+                     
+                        
+                      
+                    }
                 }
-          
+                
             }
             .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
         }
@@ -109,7 +137,6 @@ struct SpeedDateHomeView: View {
                 .foregroundColor(.gray)
                 .cornerRadius(geoReader.size.width * 0.15)
                 .shadow(radius: geoReader.size.width * 0.05)
-        
         }
     }
     
@@ -117,26 +144,13 @@ struct SpeedDateHomeView: View {
         VStack{
             //button
             NavigationLink(destination: FacetimeView(), label: {
-                CountdownTimerView(timeRemaining: 1000, geoReader: geoReader)
+                CountdownTimerView(timeRemaining: timeLeft,
+                                   geoReader: geoReader,
+                                   isStartNow: $isStartNow,
+                                   speedDates: viewModel.speedDates
+                )
                 
-            })
-        }
-    }
-    
-    private var info: some View {
-        VStack{
-            Text("Lorem Ipsum is simply dummy text")
-                .multilineTextAlignment(.center)
-                .padding(.top,20)
-            
-            
-            Text("Dont forget to")
-                .multilineTextAlignment(.center)
-                .padding(.top,20)
-            
-            Text("Have Fun!")
-                .fontWeight(.bold)
-                .font(.system(size: 40))
+            }).disabled(isStartNow == true ? false: true)
         }
     }
 }
@@ -145,7 +159,7 @@ struct SpeedDateHomeView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                SpeedDateHomeView(displayType: "Host")
+                SpeedDateHomeView(viewModel: HomeViewModel(), placeInLine: 0, timeLeft: 9)
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }
