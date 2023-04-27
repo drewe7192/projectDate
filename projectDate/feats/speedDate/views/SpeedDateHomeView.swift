@@ -8,78 +8,82 @@
 import SwiftUI
 
 struct SpeedDateHomeView: View {
-    @State private var isStartNow: Bool = false
-    
     let viewModel: HomeViewModel
     let placeInLine: Int
     let timeLeft: Int
+    @Binding var isStartVideoNow: Bool
+    @Binding var isTimeEnded: Bool
     
     var body: some View {
         GeometryReader{geoReader in
             ZStack{
                 Color.mainBlack
                     .ignoresSafeArea()
-                // role is Host if userProfileId isnt in the array of matchingProfilesId
-                if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
-                    VStack{
-                        headerSection(for: geoReader)
-                        Divider()
-                            .background(.white)
-                        
-                        Text("Your dates")
-                            .bold()
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                        ImageGridView()
-                        
-                        
-                        //                    Spacer()
-                        //                        .frame(height: geoReader.size.height * 0.02)
-                        
-                        //                  participantsSection(for: geoReader)
-                        //
-                        //
-                        //
-                        //                  middleSection(for: geoReader)
-                        //
-                        //
-                        //
-                        Text("Till First Date:")
-                            .bold()
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                        buttonSection(for: geoReader)
-                        
+                
+                if !viewModel.speedDates.isEmpty {
+                    // role is Host if userProfileId isnt in the array of matchingProfilesId
+                    if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
+                        VStack{
+                            headerSection(for: geoReader)
+                            Divider()
+                                .background(.white)
+                            
+                            Text("Your dates")
+                                .bold()
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                            ImageGridView()
+                            
+                            
+                            //                    Spacer()
+                            //                        .frame(height: geoReader.size.height * 0.02)
+                            
+                            //                  participantsSection(for: geoReader)
+                            //
+                            //
+                            //
+                            //                  middleSection(for: geoReader)
+                            //
+                            //
+                            //
+                            Text("Till First Date:")
+                                .bold()
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                            buttonSection(for: geoReader)
+                            
+                            
+                        }
+                        // roleType is guest if userProfile.Id is in matchingProfiles id
+                    } else if(viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)) {
+                        VStack{
+                            headerSection(for: geoReader)
+                            Divider()
+                                .background(.white)
+                            
+                            Text("Your place in line")
+                                .bold()
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                            
+                            Text("\(self.placeInLine)")
+                                .bold()
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.white)
+                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                            
+                            buttonSection(for: geoReader)
+                        }
                         
                     }
-                    // roleType is guest if userProfile.Id is in matchingProfiles id
-                } else if(viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)) {
-                    VStack{
-                        headerSection(for: geoReader)
-                        Divider()
-                            .background(.white)
-                        
-                        Text("Your place in line")
-                            .bold()
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                        
-                        Text("\(self.placeInLine)")
-                            .bold()
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.white)
-                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                        
-                        buttonSection(for: geoReader)
-                    }
-                    .onAppear{
-                     
-                        
-                      
-                    }
+                }
+                else {
+                    Text("NO SPEED DATES")
+                        .font(.system(size: 50))
+                        .foregroundColor(Color.iceBreakrrrBlue)
                 }
                 
             }
@@ -146,11 +150,11 @@ struct SpeedDateHomeView: View {
             NavigationLink(destination: FacetimeView(), label: {
                 CountdownTimerView(timeRemaining: timeLeft,
                                    geoReader: geoReader,
-                                   isStartNow: $isStartNow,
+                                   isStartNow: $isStartVideoNow,
+                                   isTimeEnded: $isTimeEnded,
                                    speedDates: viewModel.speedDates
                 )
-                
-            }).disabled(isStartNow == true ? false: true)
+            }).disabled(isStartVideoNow == true ? false: true)
         }
     }
 }
@@ -159,7 +163,7 @@ struct SpeedDateHomeView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                SpeedDateHomeView(viewModel: HomeViewModel(), placeInLine: 0, timeLeft: 9)
+                SpeedDateHomeView(viewModel: HomeViewModel(), placeInLine: 0, timeLeft: 9, isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }

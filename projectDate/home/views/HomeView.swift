@@ -40,10 +40,13 @@ struct HomeView: View {
     
     @State private var showingInstructionsPopover: Bool = false
     @State private var showingBasicInfoPopover: Bool = false
-    @State private var showMenu: Bool = false
-    @State private var isStartNow: Bool = false
+    @State private var showHamburgerMenu: Bool = false
+    @State private var isStartSpeedDateNow: Bool = false
+    @State private var isStartVideoNow: Bool = false
+    @State private var isTimeEnded: Bool = false
     @State private var placeInLine: Int = 0
     @State private var timeLeft: Int = 0
+    @State private var isPeerButtonDisabled: Bool = false
     @State private var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
         userCardGroup: SwipedCardGroupModel(
@@ -68,7 +71,7 @@ struct HomeView: View {
                     VStack{
                         cardsAndSpeeDateSection(for: geoReader)
                             .padding(.top,10)
-                        
+   //keep for now
 //                        Button(action: {
 //                            addspeedDate()
 //                        }) {
@@ -81,10 +84,11 @@ struct HomeView: View {
 //                        .cornerRadius(15)
 //                        .shadow(radius: 5)
                     }
-                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
-                    .disabled(self.showMenu ? true : false)
+                    .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
+                    .disabled(self.showHamburgerMenu ? true : false)
                     
-                    if self.showMenu {
+                    //Display hamburgerMenu
+                    if self.showHamburgerMenu {
                         MenuView()
                             .frame(width: geoReader.size.width/2)
                             .padding(.trailing,geoReader.size.width * 0.5)
@@ -98,31 +102,10 @@ struct HomeView: View {
                     )
                 }
                 .onAppear {
-                    getProfileAndRecords() {(getProfileId) -> Void in
-                        if getProfileId != "" {
-                            getMatchData()
-                            viewModel.getSpeedDate(speedDateIds: viewModel.userProfile.speedDateIds) {(speedDates) -> Void in
-                                if !speedDates.isEmpty {
-                                    setPlaceInLine(){(placeIn) -> Void in
-                                        if placeIn != 0 {
-                                            timeLeft(inLine: placeIn)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                  getAllData()
                 }
-                // QUESTION: make a cardGroup for every week or for every 20 cards??
                 .onChange(of: updateData) { _ in
-                    //make a cardGroup out of all the cards user swiped this week
-                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
-                        if !swipedRecords.isEmpty {
-                            viewModel.saveSwipedCardGroup(swipedRecords: swipedRecords)
-                            //not using this func right now but will in the future
-                            viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
-                        }
-                    }
+                    saveCards()
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
@@ -131,6 +114,34 @@ struct HomeView: View {
                     headerSection(for: geoReader)
                         .padding(.leading, geoReader.size.width * 0.25)
                 ))
+            }
+        }
+    }
+    
+    private func getAllData() {
+        getProfileAndRecords() {(getProfileId) -> Void in
+            if getProfileId != "" {
+                getMatchData()
+                viewModel.getSpeedDate(speedDateIds: viewModel.userProfile.speedDateIds) {(speedDates) -> Void in
+                    if !speedDates.isEmpty {
+                        setPlaceInLine(){(placeIn) -> Void in
+                            if placeIn != 0 {
+                                timeLeft(inLine: placeIn)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func saveCards(){
+        //make a cardGroup out of all the cards user swiped this week
+        viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+            if !swipedRecords.isEmpty {
+                viewModel.saveSwipedCardGroup(swipedRecords: swipedRecords)
+                //not using this func right now but will in the future
+                viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
             }
         }
     }
@@ -159,6 +170,7 @@ struct HomeView: View {
             }
         }
     }
+    
     private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
         //inital check to make sure we're not always getting data if we already have data
         if viewModel.userProfile.id == "" {
@@ -206,7 +218,7 @@ struct HomeView: View {
             HStack{
                 Button(action: {
                     withAnimation{
-                        self.showMenu.toggle()
+                        self.showHamburgerMenu.toggle()
                     }
                 }) {
                     ZStack{
@@ -309,15 +321,18 @@ struct HomeView: View {
                     .foregroundColor(.white)
                     .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
                 
-                
-                NavigationLink(destination: SpeedDateHomeView(viewModel: viewModel, placeInLine: self.placeInLine, timeLeft: self.timeLeft) , label: {
-                    CountdownTimerView(
-                        timeRemaining: !viewModel.speedDates.isEmpty ?  Int(viewModel.speedDates.first!.eventDate.timeIntervalSince(Date.today())): 0,
-                        geoReader: geoReader,
-                        isStartNow: $isStartNow,
-                        speedDates: viewModel.speedDates
-                    )
-                }).disabled(isStartNow == true ? false: true)
+                if !viewModel.speedDates.isEmpty {
+                    NavigationLink(destination: SpeedDateHomeView(viewModel: viewModel, placeInLine: self.placeInLine, timeLeft: self.timeLeft, isStartVideoNow: $isStartVideoNow, isTimeEnded: $isTimeEnded) , label: {
+                        CountdownTimerView( timeRemaining: !viewModel.speedDates.isEmpty &&
+                                            (viewModel.speedDates.first!.eventDate.timeIntervalSinceNow.sign != .minus)  ? Int(viewModel.speedDates.first!.eventDate.timeIntervalSinceNow): timeLeft(inLine: self.placeInLine),
+                            geoReader: geoReader,
+                            isStartNow: $isStartSpeedDateNow,
+                            isTimeEnded: $isTimeEnded,
+                            speedDates: viewModel.speedDates
+                        )
+                    }).disabled(isStartSpeedDateNow == true ? false: true)
+                }
+              
                 
             }
             .padding(.top,geoReader.size.height * 0.05)
@@ -423,6 +438,7 @@ struct HomeView: View {
                 }
             }
     }
+    
     private func findMatches(cardGroups: SwipedCardGroupsModel, completed: @escaping(_ successFullMatches: [MatchRecordModel]) -> Void){
         let user = cardGroups.userCardGroup
         let others = cardGroups.otherCardGroups.filter{$0.profileId != user.profileId}
@@ -534,20 +550,7 @@ struct HomeView: View {
         }
     }
     
-//    private func addspeedDate() {
-//            let docRefs = db.collection("speedDates")
-//
-//            let id = UUID().uuidString;
-//            docRefs.document(id).setData([
-//                "id": id,
-//                "roomId": "",
-//                "matchProfileIds":["EF7C8A72-87C1-4FD5-ABFE-D458C0D86E90","653EB-C44D-4C3F-888F-45B9A6B08B","D5B6-C4D-43F-88F-45B9A6BE4"],
-//                "eventDate": Timestamp(date: Date()),
-//                "createdDate": Timestamp(date: Date())
-//            ])
-//    }
-    
-    private func timeLeft(inLine: Int){
+    private func timeLeft(inLine: Int) -> Int{
         //orginal date host scheduled
         let eventDate = viewModel.speedDates.first!.eventDate
         let calendar = Calendar.current
@@ -556,57 +559,110 @@ struct HomeView: View {
         let tenMinsLater = calendar.date(byAdding: .minute, value: 10, to: eventDate)
         let twentyMinsLater = calendar.date(byAdding: .minute, value: 20, to: eventDate)
         let thirtyMinsLater = calendar.date(byAdding: .minute, value: 30, to: eventDate)
+        let fourtyMinsLater = calendar.date(byAdding: .minute, value: 40, to: eventDate)
+        let fourtyFiveMinsLater = calendar.date(byAdding: .minute, value: 45, to: eventDate)
         
         //compares the times to the current date and time(if negative then time has passsed current time)
-        let peer1Date = tenMinsLater!.timeIntervalSinceNow
-        let peer2Date = twentyMinsLater!.timeIntervalSinceNow
-        let peer3Date = thirtyMinsLater!.timeIntervalSinceNow
+        let peer1StartDate = tenMinsLater!.timeIntervalSinceNow
+        let peer1EndDate = twentyMinsLater!.timeIntervalSinceNow
         
-      
+        let peer2StartDate = twentyMinsLater!.timeIntervalSinceNow
+        let peer2EndDate = twentyMinsLater!.timeIntervalSinceNow
+        
+        let peer3StartDate = thirtyMinsLater!.timeIntervalSinceNow
+        let peer3EndDate = fourtyMinsLater!.timeIntervalSinceNow
+        
+        let EndDate = fourtyFiveMinsLater!.timeIntervalSinceNow
+        
         //based on where matches are in line, if there window to join has passed we disable the button
         switch inLine{
         case 1:
             do {
-                let peer1 = Int(peer1Date)
-                if peer1Date.sign != .minus {
-                    self.timeLeft = peer1
+                let peerStart1 = Int(peer1StartDate)
+                
+                if peer1StartDate.sign != .minus {
+                    self.timeLeft = peerStart1
+                    return 0
+                } else if peer1EndDate.sign != .minus {
+                    self.timeLeft = 0
+                    return 0
+                    
                 } else {
                     self.timeLeft = 0
-                    //self.disabled = true
+                    self.isTimeEnded = true
+                    return 0
                 }
             }
         case 2:
             do {
-                let peer2 = Int(peer2Date)
-                if peer2Date.sign != .minus {
-                    self.timeLeft = peer2
+                let peerStart2 = Int(peer2StartDate)
+                
+                if peer2StartDate.sign != .minus {
+                    self.timeLeft = peerStart2
+                    return 0
+                }  else if peer2EndDate.sign != .minus {
+                    self.timeLeft = 0
+                    return 0
+                    
                 } else {
                     self.timeLeft = 0
-                    //self.disabled = true
+                    self.isTimeEnded = true
+                    return 0
                 }
             }
         case 3:
             do {
-                let peer3 = Int(peer3Date)
-                if peer3Date.sign != .minus {
-                    self.timeLeft = peer3
+                let peerStart3 = Int(peer3StartDate)
+                
+                if peer3StartDate.sign != .minus {
+                    self.timeLeft = peerStart3
+                    return 0
+                } else if peer3EndDate.sign != .minus {
+                    self.timeLeft = 0
+                    return 0
                 } else {
                     self.timeLeft = 0
-                    //self.disabled = true
+                    self.isTimeEnded = true
+                    return 0
+                }
+            }
+        case 5:
+            do {
+                if EndDate.sign == .minus {
+                    self.timeLeft = 0
+                    self.isStartSpeedDateNow = false
+                    viewModel.speedDates.remove(at: 0)
+                    return 0
                 }
             }
         default:
             break
+            
         }
+        
+        return 0
     }
     
     private func setPlaceInLine(completed: @escaping(_ placeIn: Int) -> Void) {
-        let placeInLine = viewModel.speedDates.first?.matchProfileIds.firstIndex(of: viewModel.userProfile.id) ?? 0
+        let placeInLine = viewModel.speedDates.first!.matchProfileIds.firstIndex(of: viewModel.userProfile.id) ?? 4
         
         // remove 0 based index
         self.placeInLine = placeInLine.advanced(by: 1)
         completed(self.placeInLine)
     }
+    
+    //    private func addspeedDate() {
+    //            let docRefs = db.collection("speedDates")
+    //
+    //            let id = UUID().uuidString;
+    //            docRefs.document(id).setData([
+    //                "id": id,
+    //                "roomId": "",
+    //                "matchProfileIds":["EF7C8A72-87C1-4FD5-ABFE-D458C0D86E90","653EB-C44D-4C3F-888F-45B9A6B08B","D5B6-C4D-43F-88F-45B9A6BE4"],
+    //                "eventDate": Timestamp(date: Date()),
+    //                "createdDate": Timestamp(date: Date())
+    //            ])
+    //    }
 } 
 
 struct HomeView_Previews: PreviewProvider {

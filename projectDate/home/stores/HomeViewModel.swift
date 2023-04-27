@@ -20,7 +20,6 @@ class HomeViewModel: ObservableObject {
     @Published var cards: [CardModel] = []
     @Published var allCards: [CardModel] = []
     @Published var cardsSwipedToday: [String] = [""]
-    //@Published var cardsNotSwiped: [CardModel] = []
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
@@ -32,8 +31,6 @@ class HomeViewModel: ObservableObject {
     @Published var successfullMatchSnapshots: [MatchRecordModel] = []
     @Published var speedDates: [SpeedDateModel] = []
     
-    @Published var increm: Int = 0
-    
     let db = Firestore.firestore()
     let storage = Storage.storage()
     
@@ -41,12 +38,11 @@ class HomeViewModel: ObservableObject {
         self.clearData()
     }
     
+    //this clear the cache documents from your db
     public func clearData(){
-        //this clear the cache documents from your db
         let settings2 = FirestoreSettings()
         settings2.isPersistenceEnabled = false
         db.settings = settings2
-        
     }
         
 //    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
@@ -202,11 +198,12 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    //NEED TO UPDATE THIS TO A WEEK! BUT AFTER TESTING
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
         let matchDayString = self.userProfile.matchDay.lowercased()
         
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        
+        //PREVENTS HOMEVIEW() PREVIEW CRASH
         //let enumDayOfWeek = Date.Weekday(rawValue: "monday")
         
         let start = Date.today().previous(enumDayOfWeek!)
@@ -240,53 +237,6 @@ class HomeViewModel: ObservableObject {
                     completed(self.swipedRecords)
                 }
             }
-    }
-    
-    // not using this func right now but we're definitely gonna need this for future features
-    public func getSwipedCardsFromSwipedRecords(swipedRecords: [SwipedRecordModel]) {
-        //using this func because swipedRecords could include cards user hasnt answered & possible duplicates
-        var cardIds = getUniqueSwipedCardRecords(swipedRecords: swipedRecords)
-        var batches: [Any] = []
-        
-        //sanity check: making swipedCards clean if dirty
-        self.swipedCards.removeAll()
-        
-        // workaround for the Firebase Query "IN" Limit of 10
-        while(!cardIds.isEmpty){
-            //splice Array: get first 10 and remove the same 10 from array
-            let batch = Array(cardIds.prefix(10))
-            let count = cardIds.count
-            if count < 10{
-                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
-            } else{
-                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
-            }
-            
-            //Batch queue to call db for every batch
-            batches.append(
-                db.collection("cards")
-                //here's the issue: batch has a limit of 10
-                // condition because your getting this data for the Profiler which shows how many cards you've swiped
-                    .whereField("id", in: batch)
-                    .getDocuments() { (querySnapshot, err) in
-                        if let err = err {
-                            print("Error getting documents: \(err)")
-                        } else {
-                            for document in querySnapshot!.documents {
-                                let data = document.data()
-                                
-                                if !data.isEmpty{
-                                    let swipedCards = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
-                                    
-                                    self.swipedCards.append(swipedCards)
-                                }
-                            }
-                            //another sanity check if dirty.. not sure if we need this
-                            self.swipedCards.removeAll()
-                        }
-                    }
-            )
-        }
     }
     
     public func createUserProfile(completed: @escaping(_ createdUserProfileId: String) -> Void){
@@ -414,7 +364,6 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getSpeedDate(speedDateIds: [String], completed: @escaping(_ speedDates: [SpeedDateModel]) -> Void){
-        var foo = self.userProfile.speedDateIds
         if !speedDateIds.isEmpty {
             let firstSpeedDate = speedDateIds.first!
             
@@ -442,10 +391,51 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    public func updateCount() {
-        self.increm += 1
-       
+    // not using this func right now but we're definitely gonna need this for future features
+    public func getSwipedCardsFromSwipedRecords(swipedRecords: [SwipedRecordModel]) {
+        //using this func because swipedRecords could include cards user hasnt answered & possible duplicates
+        var cardIds = getUniqueSwipedCardRecords(swipedRecords: swipedRecords)
+        var batches: [Any] = []
+        
+        //sanity check: making swipedCards clean if dirty
+        self.swipedCards.removeAll()
+        
+        // workaround for the Firebase Query "IN" Limit of 10
+        while(!cardIds.isEmpty){
+            //splice Array: get first 10 and remove the same 10 from array
+            let batch = Array(cardIds.prefix(10))
+            let count = cardIds.count
+            if count < 10{
+                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: count - 1)))
+            } else{
+                cardIds.removeSubrange(ClosedRange(uncheckedBounds: (lower: 0, upper: 9)))
+            }
+            
+            //Batch queue to call db for every batch
+            batches.append(
+                db.collection("cards")
+                //here's the issue: batch has a limit of 10
+                // condition because your getting this data for the Profiler which shows how many cards you've swiped
+                    .whereField("id", in: batch)
+                    .getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                                let data = document.data()
+                                
+                                if !data.isEmpty{
+                                    let swipedCards = CardModel(id: data["id"] as? String ?? "", question: data["question"] as? String ?? "", choices: data["choices"] as? [String] ?? [""], categoryType: data["categoryType"] as? String ?? "", profileType: data["profileType"] as? String ?? "")
+                                    
+                                    self.swipedCards.append(swipedCards)
+                                }
+                            }
+                            //another sanity check if dirty.. not sure if we need this
+                            self.swipedCards.removeAll()
+                        }
+                    }
+            )
+        }
     }
-
 }
 

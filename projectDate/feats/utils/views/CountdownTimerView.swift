@@ -13,58 +13,68 @@ struct CountdownTimerView: View {
     
     var geoReader: GeometryProxy
     @Binding var isStartNow: Bool
+    @Binding var isTimeEnded: Bool
     let speedDates: [SpeedDateModel]
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-                VStack{
-                    if speedDates.isEmpty {
-                        Text("Swipe for SpeedDates")
-                        //normal styling for button
-                        .multilineTextAlignment(.center)
-                        .font(.title.bold())
-                        .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
-                        .background(Color.mainGrey)
-                        .foregroundColor(Color.iceBreakrrrBlue)
-                        .cornerRadius(geoReader.size.width * 0.05)
-                        .shadow(radius: 10, x: 3, y: 10)
-                        .opacity(isStartNow ? 1 : 0.3)
+        VStack{
+            if speedDates.isEmpty {
+                Text("Swipe for SpeedDates")
+                //normal styling for button
+                    .multilineTextAlignment(.center)
+                    .font(.title.bold())
+                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+                    .background(Color.mainGrey)
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .cornerRadius(geoReader.size.width * 0.05)
+                    .shadow(radius: 10, x: 3, y: 10)
+                    .opacity(0.3)
+            }
+            else if isTimeEnded {
+                Text("Missed your window!")
+                //normal styling for button
+                    .multilineTextAlignment(.center)
+                    .font(.title.bold())
+                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+                    .background(Color.mainGrey)
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .cornerRadius(geoReader.size.width * 0.05)
+                    .shadow(radius: 10, x: 3, y: 10)
+                    .opacity(0.3)
+                
+            } else{
+                Text(
+                    //just the display
+                    (isStartNow ? "Start Now!": "") +
+                    (isStartNow ? "" : displayCountdown()))
+                //main logic for countdown
+                .onReceive(timer) { _ in
+                    if timeRemaining > 0 {
+                        timeRemaining -= 1
+                    } else if timeRemaining == 0 {
+                        isStartNow = true
                     }
-                    else{
-                        Text(
-                            //just the display
-                            (isStartNow ? "Start Now!": "") +
-                            (isStartNow ? "" : displayCountdown()))
-                        //main logic for countdown
-                        .onReceive(timer) { _ in
-                            if timeRemaining > 0 {
-                                timeRemaining -= 1
-                            } else if timeRemaining == 0 {
-                                isStartNow = true
-                            }
-                        }
-                        //normal styling for button
-                        .multilineTextAlignment(.center)
-                        .font(.title.bold())
-                        .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
-                        .background(Color.mainGrey)
-                        .foregroundColor(Color.iceBreakrrrBlue)
-                        .cornerRadius(geoReader.size.width * 0.05)
-                        .shadow(radius: 10, x: 3, y: 10)
-                        .opacity(isStartNow ? 1 : 0.3)
-                    }
-                    
                 }
-    
-    
+                //normal styling for button
+                .multilineTextAlignment(.center)
+                .font(.title.bold())
+                .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+                .background(Color.mainGrey)
+                .foregroundColor(Color.iceBreakrrrBlue)
+                .cornerRadius(geoReader.size.width * 0.05)
+                .shadow(radius: 10, x: 3, y: 10)
+                .opacity(isStartNow ? 1 : 0.3)
+            }
+        }
     }
     
-    func secondsToHoursMinutesSeconds(_ seconds: Int) -> (Int, Int, Int) {
+    private func secondsToHoursMinutesSeconds(_ seconds: Int) -> (Int, Int, Int) {
         return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
     
-    func displayCountdown() -> (String){
+    private func displayCountdown() -> (String){
         var hours = secondsToHoursMinutesSeconds(timeRemaining).0
         var displayHours = "\(secondsToHoursMinutesSeconds(timeRemaining).0)" + "hrs "
         var displayMinutes = "\(secondsToHoursMinutesSeconds(timeRemaining).1)" + "mins "
@@ -82,7 +92,7 @@ struct CountdownTimerView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                CountdownTimerView(timeRemaining: Int(Date.today().next(.monday).timeIntervalSince(Date.today())), geoReader: geo, isStartNow: .constant(false), speedDates: [])
+                CountdownTimerView(timeRemaining: Int(Date.today().next(.monday).timeIntervalSince(Date.today())), geoReader: geo, isStartNow: .constant(false), isTimeEnded: .constant(false), speedDates: [])
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }
