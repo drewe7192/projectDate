@@ -321,9 +321,10 @@ struct HomeView: View {
                     .foregroundColor(.white)
                     .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
                 
-                if !viewModel.speedDates.isEmpty {
+          
                     NavigationLink(destination: SpeedDateHomeView(viewModel: viewModel, placeInLine: self.placeInLine, timeLeft: self.timeLeft, isStartVideoNow: $isStartVideoNow, isTimeEnded: $isTimeEnded) , label: {
                         CountdownTimerView( timeRemaining: !viewModel.speedDates.isEmpty &&
+                                            //negative when eventDate passed current time and date
                                             (viewModel.speedDates.first!.eventDate.timeIntervalSinceNow.sign != .minus)  ? Int(viewModel.speedDates.first!.eventDate.timeIntervalSinceNow): timeLeft(inLine: self.placeInLine),
                             geoReader: geoReader,
                             isStartNow: $isStartSpeedDateNow,
@@ -331,7 +332,7 @@ struct HomeView: View {
                             speedDates: viewModel.speedDates
                         )
                     }).disabled(isStartSpeedDateNow == true ? false: true)
-                }
+                
               
                 
             }
@@ -552,94 +553,98 @@ struct HomeView: View {
     
     private func timeLeft(inLine: Int) -> Int{
         //orginal date host scheduled
-        let eventDate = viewModel.speedDates.first!.eventDate
-        let calendar = Calendar.current
         
-        //every match gets a 10 minute window to join videoRoom
-        let tenMinsLater = calendar.date(byAdding: .minute, value: 10, to: eventDate)
-        let twentyMinsLater = calendar.date(byAdding: .minute, value: 20, to: eventDate)
-        let thirtyMinsLater = calendar.date(byAdding: .minute, value: 30, to: eventDate)
-        let fourtyMinsLater = calendar.date(byAdding: .minute, value: 40, to: eventDate)
-        let fourtyFiveMinsLater = calendar.date(byAdding: .minute, value: 45, to: eventDate)
-        
-        //compares the times to the current date and time(if negative then time has passsed current time)
-        let peer1StartDate = tenMinsLater!.timeIntervalSinceNow
-        let peer1EndDate = twentyMinsLater!.timeIntervalSinceNow
-        
-        let peer2StartDate = twentyMinsLater!.timeIntervalSinceNow
-        let peer2EndDate = twentyMinsLater!.timeIntervalSinceNow
-        
-        let peer3StartDate = thirtyMinsLater!.timeIntervalSinceNow
-        let peer3EndDate = fourtyMinsLater!.timeIntervalSinceNow
-        
-        let EndDate = fourtyFiveMinsLater!.timeIntervalSinceNow
-        
-        //based on where matches are in line, if there window to join has passed we disable the button
-        switch inLine{
-        case 1:
-            do {
-                let peerStart1 = Int(peer1StartDate)
-                
-                if peer1StartDate.sign != .minus {
-                    self.timeLeft = peerStart1
-                    return 0
-                } else if peer1EndDate.sign != .minus {
-                    self.timeLeft = 0
-                    return 0
+        if !viewModel.speedDates.isEmpty {
+            let eventDate = viewModel.speedDates.first!.eventDate
+            let calendar = Calendar.current
+            
+            //every match gets a 10 minute window to join videoRoom
+            let tenMinsLater = calendar.date(byAdding: .minute, value: 10, to: eventDate)
+            let twentyMinsLater = calendar.date(byAdding: .minute, value: 20, to: eventDate)
+            let thirtyMinsLater = calendar.date(byAdding: .minute, value: 30, to: eventDate)
+            let fourtyMinsLater = calendar.date(byAdding: .minute, value: 40, to: eventDate)
+            let fourtyFiveMinsLater = calendar.date(byAdding: .minute, value: 45, to: eventDate)
+            
+            //compares the times to the current date and time(if negative then time has passsed current time)
+            let peer1StartDate = tenMinsLater!.timeIntervalSinceNow
+            let peer1EndDate = twentyMinsLater!.timeIntervalSinceNow
+            
+            let peer2StartDate = twentyMinsLater!.timeIntervalSinceNow
+            let peer2EndDate = twentyMinsLater!.timeIntervalSinceNow
+            
+            let peer3StartDate = thirtyMinsLater!.timeIntervalSinceNow
+            let peer3EndDate = fourtyMinsLater!.timeIntervalSinceNow
+            
+            let EndDate = fourtyFiveMinsLater!.timeIntervalSinceNow
+            
+            //based on where matches are in line, if there window to join has passed we disable the button
+            switch inLine{
+            case 1:
+                do {
+                    let peerStart1 = Int(peer1StartDate)
                     
-                } else {
-                    self.timeLeft = 0
-                    self.isTimeEnded = true
-                    return 0
+                    if peer1StartDate.sign != .minus {
+                        self.timeLeft = peerStart1
+                        return 0
+                    } else if peer1EndDate.sign != .minus {
+                        self.timeLeft = 0
+                        return 0
+                        
+                    } else {
+                        self.timeLeft = 0
+                        self.isTimeEnded = true
+                        return 0
+                    }
                 }
-            }
-        case 2:
-            do {
-                let peerStart2 = Int(peer2StartDate)
-                
-                if peer2StartDate.sign != .minus {
-                    self.timeLeft = peerStart2
-                    return 0
-                }  else if peer2EndDate.sign != .minus {
-                    self.timeLeft = 0
-                    return 0
+            case 2:
+                do {
+                    let peerStart2 = Int(peer2StartDate)
                     
-                } else {
-                    self.timeLeft = 0
-                    self.isTimeEnded = true
-                    return 0
+                    if peer2StartDate.sign != .minus {
+                        self.timeLeft = peerStart2
+                        return 0
+                    }  else if peer2EndDate.sign != .minus {
+                        self.timeLeft = 0
+                        return 0
+                        
+                    } else {
+                        self.timeLeft = 0
+                        self.isTimeEnded = true
+                        return 0
+                    }
                 }
-            }
-        case 3:
-            do {
-                let peerStart3 = Int(peer3StartDate)
+            case 3:
+                do {
+                    let peerStart3 = Int(peer3StartDate)
+                    
+                    if peer3StartDate.sign != .minus {
+                        self.timeLeft = peerStart3
+                        return 0
+                    } else if peer3EndDate.sign != .minus {
+                        self.timeLeft = 0
+                        return 0
+                    } else {
+                        self.timeLeft = 0
+                        self.isTimeEnded = true
+                        return 0
+                    }
+                }
+            case 5:
+                do {
+                    if EndDate.sign == .minus {
+                        self.timeLeft = 0
+                        self.isStartSpeedDateNow = false
+                        viewModel.speedDates.remove(at: 0)
+                        return 0
+                    }
+                }
+            default:
+                break
                 
-                if peer3StartDate.sign != .minus {
-                    self.timeLeft = peerStart3
-                    return 0
-                } else if peer3EndDate.sign != .minus {
-                    self.timeLeft = 0
-                    return 0
-                } else {
-                    self.timeLeft = 0
-                    self.isTimeEnded = true
-                    return 0
-                }
             }
-        case 5:
-            do {
-                if EndDate.sign == .minus {
-                    self.timeLeft = 0
-                    self.isStartSpeedDateNow = false
-                    viewModel.speedDates.remove(at: 0)
-                    return 0
-                }
-            }
-        default:
-            break
             
         }
-        
+       
         return 0
     }
     
