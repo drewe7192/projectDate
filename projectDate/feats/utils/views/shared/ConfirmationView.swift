@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ConfirmationView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    let confirmationText: String
     
     var body: some View {
         GeometryReader{ geoReader in
@@ -23,18 +24,15 @@ struct ConfirmationView: View {
                         .resizable()
                         .frame(width: 300, height: 300)
                     
-                    Text("New card Created!")
+                    Text("\(confirmationText)")
                         .bold()
                         .font(.system(size: geoReader.size.height * 0.04))
-                        .foregroundColor(.white)
-                    
-                    Text("Looks like you had a great idea.")
                         .foregroundColor(.white)
                     
                     Button(action: {
                         viewRouter.currentPage = .homePage
                     }) {
-                       Text("Return to Home")
+                       Text("Return Home")
                             .bold()
                             .frame(width: 300, height: 70)
                             .background(.green)
@@ -45,14 +43,11 @@ struct ConfirmationView: View {
                 }
             }.position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
         }
-       
-      
-       
     }
 }
 
 struct ConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
-        ConfirmationView()
+        ConfirmationView(confirmationText: "SpeedDate Created")
     }
 }

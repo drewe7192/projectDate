@@ -30,6 +30,20 @@ class HomeViewModel: ObservableObject {
     @Published var lastDoc: DocumentSnapshot!
     @Published var successfullMatchSnapshots: [MatchRecordModel] = []
     @Published var speedDates: [SpeedDateModel] = []
+    @Published var matchRecords: [MatchRecordModel] = []
+    @Published var matchProfiles: [ProfileModel] = []
+    @Published var matchProfileImages: [UIImage] = [UIImage(),UIImage(),UIImage()]
+    @Published var rolesForRoom = []
+    @Published var roomId: String = ""
+    @Published var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
+        id: "" ,
+        userCardGroup: SwipedCardGroupModel(
+            id: "",
+            profileId: "",
+            cardIds: [],
+            answers: []),
+        otherCardGroups: []
+    )
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -44,55 +58,55 @@ class HomeViewModel: ObservableObject {
         settings2.isPersistenceEnabled = false
         db.settings = settings2
     }
-        
-//    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
-//
-//
-//        let calendar = Calendar.current
-//        let components = calendar.dateComponents([.year, .month, .day], from: Date())
-//
-//        //still gotta change these to a week!
-//        let start = calendar.date(from: components)!
-//        let end = calendar.date(byAdding: .day, value: 1, to: start)!
-//
-//        db.collection("swipedCards")
-//            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
-//            .whereField("swipedDate", isGreaterThan: start)
-//            .whereField("swipedDate", isLessThan: end)
-//            .addSnapshotListener {(querySnapshot, error) in
-//                guard let documents = querySnapshot?.documents
-//                else{
-//                    print("No documents")
-//                    return
-//                }
-//                self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
-//            }
-//        completed(true)
-//    }
-
+    
+    //    public func getAllData(completed: @escaping (_ success: Bool) -> Void){
+    //
+    //
+    //        let calendar = Calendar.current
+    //        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+    //
+    //        //still gotta change these to a week!
+    //        let start = calendar.date(from: components)!
+    //        let end = calendar.date(byAdding: .day, value: 1, to: start)!
+    //
+    //        db.collection("swipedCards")
+    //            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
+    //            .whereField("swipedDate", isGreaterThan: start)
+    //            .whereField("swipedDate", isLessThan: end)
+    //            .addSnapshotListener {(querySnapshot, error) in
+    //                guard let documents = querySnapshot?.documents
+    //                else{
+    //                    print("No documents")
+    //                    return
+    //                }
+    //                self.cardsSwipedToday = documents.map { $0["cardId"]! as! String }
+    //            }
+    //        completed(true)
+    //    }
     
     
-//    public func saveSwipedCard(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
-//        let docData: [String: Any] = [
-//            "cardId": card.id,
-//            "answer": cardChoices(choices: card.choices, answer: answer),
-//            "id": UUID().uuidString,
-//            "swipedDate": Timestamp(date: Date()),
-//            "userId": Auth.auth().currentUser?.uid as Any
-//        ]
-//
-//        let docRef = db.collection("swipedCards").document()
-//
-//        docRef.setData(docData) {error in
-//            if let error = error {
-//                print("Error writing document: \(error)")
-//                completed(false)
-//            }else {
-//                print("Document successfully written!")
-//                completed(true)
-//            }
-//        }
-//    }
+    
+    //    public func saveSwipedCard(card: CardModel, answer: String, completed: @escaping (_ success: Bool) -> Void){
+    //        let docData: [String: Any] = [
+    //            "cardId": card.id,
+    //            "answer": cardChoices(choices: card.choices, answer: answer),
+    //            "id": UUID().uuidString,
+    //            "swipedDate": Timestamp(date: Date()),
+    //            "userId": Auth.auth().currentUser?.uid as Any
+    //        ]
+    //
+    //        let docRef = db.collection("swipedCards").document()
+    //
+    //        docRef.setData(docData) {error in
+    //            if let error = error {
+    //                print("Error writing document: \(error)")
+    //                completed(false)
+    //            }else {
+    //                print("Document successfully written!")
+    //                completed(true)
+    //            }
+    //        }
+    //    }
     
     public func createNewCard(id: String, question: String, choices: [String], categoryType: String, profileType: String , profileId: String, completed: @escaping (_ success: Bool) -> Void){
         let docData: [String: Any] = [
@@ -118,49 +132,49 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-//    private func removeTimeStamp(fromDate: Date) -> Date {
-//        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: fromDate)) else {
-//            fatalError("Failed to strip time from Date object")
-//        }
-//        return date
-//    }
+    //    private func removeTimeStamp(fromDate: Date) -> Date {
+    //        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: fromDate)) else {
+    //            fatalError("Failed to strip time from Date object")
+    //        }
+    //        return date
+    //    }
     
-//    private func cardChoices(choices: [String], answer: String) -> String{
-//        let choiceIndex = choices.firstIndex(where: { $0 == answer})
-//        var choice = ""
-//        
-//        switch choiceIndex {
-//        case 0:
-//            choice = "A"
-//        case 1:
-//            choice = "B"
-//        case 2:
-//            choice = "C"
-//        default:
-//            break
-//        }
-//        return choice;
-//    }
+    //    private func cardChoices(choices: [String], answer: String) -> String{
+    //        let choiceIndex = choices.firstIndex(where: { $0 == answer})
+    //        var choice = ""
+    //
+    //        switch choiceIndex {
+    //        case 0:
+    //            choice = "A"
+    //        case 1:
+    //            choice = "B"
+    //        case 2:
+    //            choice = "C"
+    //        default:
+    //            break
+    //        }
+    //        return choice;
+    //    }
     
-//    public func uploadStorageFile(image: UIImage){
-//        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
-//        let data = image.jpegData(compressionQuality: 0.2)
-//        
-//        let metadata = StorageMetadata()
-//        metadata.contentType = "image/jpg"
-//        
-//        if let data = data {
-//            storageRef.putData(data, metadata: metadata) { (metadata, error) in
-//                if let error = error {
-//                    print("Error while uploading file: ", error)
-//                }
-//                
-//                if let metadata = metadata {
-//                    print("Metadata: ", metadata)
-//                }
-//            }
-//        }
-//    }
+    //    public func uploadStorageFile(image: UIImage){
+    //        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+    //        let data = image.jpegData(compressionQuality: 0.2)
+    //
+    //        let metadata = StorageMetadata()
+    //        metadata.contentType = "image/jpg"
+    //
+    //        if let data = data {
+    //            storageRef.putData(data, metadata: metadata) { (metadata, error) in
+    //                if let error = error {
+    //                    print("Error while uploading file: ", error)
+    //                }
+    //
+    //                if let metadata = metadata {
+    //                    print("Metadata: ", metadata)
+    //                }
+    //            }
+    //        }
+    //    }
     
     public func getUserProfile(completed: @escaping (_ profileId: String) -> Void){
         db.collection("profiles")
@@ -199,7 +213,9 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
-        let matchDayString = self.userProfile.matchDay.lowercased()
+        let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+        
+        let matchDayString = matchDay.lowercased()
         
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
@@ -214,9 +230,9 @@ class HomeViewModel: ObservableObject {
         var query: Query!
         
         //pagination: get first n cards or get the next n cards
-            query = db.collection("swipedRecords")
+        query = db.collection("swipedRecords")
         
-            query
+        query
             .whereField("profileId", isEqualTo: self.userProfile.id)
             .whereField("swipedDate", isGreaterThan: start)
             .whereField("swipedDate", isLessThan: end)
@@ -304,8 +320,8 @@ class HomeViewModel: ObservableObject {
     }
     
     public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
-
-        let matchDayString = self.userProfile.matchDay.lowercased()
+        var matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+        let matchDayString = matchDay.lowercased()
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
         let start = Date.today().previous(enumDayOfWeek!)
@@ -346,7 +362,7 @@ class HomeViewModel: ObservableObject {
                     } else {
                         print("Document successfully created swipedCardGroups!")
                     }
-            }
+                }
             } else {
                 let docData: [String: Any] = [
                     "cardIds": cardIds,
@@ -370,25 +386,162 @@ class HomeViewModel: ObservableObject {
             db.collection("speedDates")
                 .whereField("id", isEqualTo: firstSpeedDate)
                 .addSnapshotListener{ (querySnapshot, error) in
-                 guard let documents = querySnapshot?.documents
-                 else {
-                     print("No documents")
-                     completed([])
-                     return
-                 }
-
-                self.speedDates = documents.compactMap {document -> SpeedDateModel? in
-                     do {
-                         return try document.data(as: SpeedDateModel.self)
-                     } catch {
-                         print("Error decoding document into SpeedDates: \(error)")
-                         completed([])
-                         return nil
-                     }
-                 }
-                    completed(self.speedDates)
-             }
+                    //                 guard let documents = querySnapshot?.documents
+                    //                 else {
+                    //                     print("No documents")
+                    //                     completed([])
+                    //                     return
+                    //                 }
+                    //
+                    //                self.speedDates = documents.compactMap {document -> SpeedDateModel? in
+                    //                     do {
+                    //                         return try document.data(as: SpeedDateModel.self)
+                    //                     } catch {
+                    //                         print("Error decoding document into SpeedDates: \(error)")
+                    //                         completed([])
+                    //                         return nil
+                    //                     }
+                    //                 }
+                    
+                    if let error {
+                        print("Error getting documents from speedDates: \(error)")
+                        completed([])
+                    } else {
+                        for document in querySnapshot!.documents {
+                            let data = document.data()
+                            
+                            if !data.isEmpty{
+                                let timeStampEvent = data["eventDate"] as? Timestamp
+                                let eventDate = timeStampEvent?.dateValue()
+                                
+                                let timeStampCreated = data["createdDate"] as? Timestamp
+                                let createdDate = timeStampCreated?.dateValue()
+                                
+                                
+                                let speedDate = SpeedDateModel(
+                                    id: data["id"] as? String ?? "",
+                                    roomId: data["roomId"] as? String ?? "",
+                                    matchProfileIds: data["matchProfileIds"] as? [String] ?? [],
+                                    eventDate: eventDate ?? Date(),
+                                    createdDate: createdDate ?? Date()
+                                )
+                                
+                                self.speedDates.append(speedDate)
+                            }
+                        }
+                        completed(self.speedDates)
+                    }
+                }
         }
+    }
+    
+    public func saveMatchRecords(matches: [MatchRecordModel]){
+        for (match) in matches {
+            let id = UUID().uuidString
+            
+            let docData: [String: Any] = [
+                "id": id,
+                "userProfileId": match.userProfileId,
+                "matchProfileId": match.matchProfileId,
+                "isNew": true,
+                "cardIds": match.cardIds,
+                "answers": match.answers,
+                "createdDate": Timestamp(date: Date())
+            ]
+            
+            let docRef = db.collection("matchRecords").document(id)
+            
+            docRef.setData(docData) {error in
+                if let error = error{
+                    print("Error creating new matchRecord: \(error)")
+                } else {
+                    print("Document successfully created Match record!")
+                }
+            }
+        }
+    }
+    
+    public func getOtherCardGroups(start: Date, end: Date, completed: @escaping(_ otherGroups: [SwipedCardGroupModel]) -> Void){
+        db.collection("swipedCardGroups")
+            .whereField("createdDate", isGreaterThan: start)
+            .whereField("createdDate", isLessThan: end)
+            .limit(to: 20)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents for swipedCardGroups part 2: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        if !data.isEmpty{
+                            let cardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
+                            
+                            self.swipedCardGroups.otherCardGroups.append(cardGroup)
+                            //                            swipedCardFoo.otherCardGroups.append(cardGroup)
+                        }
+                    }
+                    completed(self.swipedCardGroups.otherCardGroups)
+                }
+            }
+    }
+    
+    public func getUserCardGroup(start: Date, end: Date, completed: @escaping(_ userGroup: SwipedCardGroupModel) -> Void){
+        db.collection("swipedCardGroups")
+            .whereField("profileId", isEqualTo: self.userProfile.id)
+            .whereField("createdDate", isGreaterThan: start)
+            .whereField("createdDate", isLessThan: end)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents for swipedCardGroups: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        if !data.isEmpty{
+                            self.swipedCardGroups.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
+                            //                            swipedCardFoo.userCardGroup = SwipedCardGroupModel(id: data["id"] as? String ?? "", profileId: data["profileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [""], answers: data["answers"] as? [String] ?? [""])
+                            
+                            completed(self.swipedCardGroups.userCardGroup)
+                        }
+                    }
+                }
+            }
+    }
+    
+    public func getMatchRecordsForThisWeek(completed: @escaping(_ matches: [MatchRecordModel]) -> Void) {
+        //SWITCH TO PREVENT PREVIEW CRASHING
+       // let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+        let matchDay = "Sunday"
+        
+        if self.userProfile.matchDay != "Pick MatchDay" {
+            let matchDayString = matchDay.lowercased()
+            let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+            
+            let start = Date.today().previous(enumDayOfWeek!)
+            let end = Date.today().next(enumDayOfWeek!)
+            
+            db.collection("matchRecords")
+                .whereField("userProfileId", isEqualTo: self.userProfile.id)
+                .whereField("createdDate", isGreaterThan: start)
+                .whereField("createdDate", isLessThan: end)
+                .whereField("isNew", isEqualTo: false)
+                .getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents from matchRecords: \(err)")
+                        completed([])
+                    } else {
+                        for document in querySnapshot!.documents {
+                            let data = document.data()
+                            
+                            if !data.isEmpty{
+                                let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [], answers: data["answers"] as? [String] ?? [], isNew: data["isNew"] as? Bool ?? false)
+                                self.matchRecords.append(matchRecord)
+                            }
+                        }
+                        completed(self.matchRecords)
+                    }
+                }
+        }
+        
     }
     
     // not using this func right now but we're definitely gonna need this for future features
@@ -437,5 +590,93 @@ class HomeViewModel: ObservableObject {
             )
         }
     }
+    
+    public func updateMatchRecords(matchRecords: [MatchRecordModel]){
+        for (randomMatch) in matchRecords {
+            
+            let docData: [String: Any] = [
+                "isNew": false
+            ]
+            
+            let docRef = db.collection("matchRecords").document(randomMatch.id)
+            
+            docRef.updateData(docData) {error in
+                if let error = error{
+                    print("Error creating new card: \(error)")
+                } else {
+                    print("Document successfully created Match record!")
+                }
+            }
+            
+        }
+    }
+    
+    public func getProfiles(matchRecords: [MatchRecordModel], completed: @escaping(_ matchProfiles: [ProfileModel]) -> Void ){
+        var matchIds: [String] = []
+        
+        for matchRecord in matchRecords {
+            matchIds.append(matchRecord.matchProfileId)
+        }
+        
+        db.collection("profiles")
+            .whereField("id", in: matchIds)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    completed([])
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        if !data.isEmpty{
+                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [])
+                            
+                            self.matchProfiles.append(profile)
+                        }
+                    }
+                    completed(self.matchProfiles)
+                }
+            }
+    }
+    
+    public func getMatchStorageFiles(matchProfiles: [ProfileModel]) {
+        for profile in matchProfiles {
+            let imageRef = storage.reference().child("\(String(describing: profile.id))"+"/images/image.jpg")
+            
+            // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+            imageRef.getData(maxSize: Int64(1 * 1024 * 1024)) { data, error in
+                if let error = error {
+                    // Uh-oh, an error occurred!
+                    print("Error getting file: ", error)
+                } else {
+                    let image = UIImage(data: data!)
+                    self.matchProfileImages.append(image!)
+                }
+            }
+        }
+    }
+    
+    public func saveSpeedDate(eventDate: Date) {
+        let id = UUID().uuidString
+        
+        let docData: [String: Any] = [
+            "id": id,
+            "roomId": self.roomId,
+            "matchProfileIds": [matchProfiles[0].id,matchProfiles[1].id,matchProfiles[2].id],
+            "eventDate": Timestamp(date: eventDate),
+            "createdDate": Timestamp(date: Date())
+        ]
+        
+        let docRef = db.collection("speedDates").document(id)
+        
+        docRef.setData(docData) {error in
+            if let error = error{
+                print("Error creating new matchRecord: \(error)")
+            } else {
+                print("Document successfully created Match record!")
+            }
+        }
+    }
+    
 }
 

@@ -35,4 +35,5 @@ enum Route {
     case failedPage
     case matchPage
     case scheduleSpeedDatePage
+    case speedDateConfirmationPage
 }

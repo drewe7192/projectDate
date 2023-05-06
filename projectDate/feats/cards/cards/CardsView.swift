@@ -133,7 +133,6 @@ struct CardsView: View {
                         }
                     }
             )
-        
     }
 }
 

@@ -7,14 +7,25 @@
 
 import SwiftUI
 
-struct ScheduleSpeedDateView: View {
-    @State private var date = Date()
+// helps with decoding a json array
+public struct Throwable<T: Decodable>: Decodable {
+    public let result: Result<T,Error>
     
+    public init(from decoder: Decoder) throws {
+        let catching = { try T(from: decoder) }
+        result = Result(catching: catching)
+    }
+}
+
+struct ScheduleSpeedDateView: View {
+    @EnvironmentObject var viewRouter: ViewRouter
+    @StateObject var viewModel = HomeViewModel()
+    
+    @State private var date = Date()
     var body: some View {
         ZStack{
-            Color.mainBlack
+            Color.iceBreakrrrBlue
                 .ignoresSafeArea()
-            
             VStack{
                 Text("Pick a date for SpeedDate!")
                     .foregroundColor(.white)
@@ -25,11 +36,11 @@ struct ScheduleSpeedDateView: View {
                     selection: $date,
                     in: Date().addingTimeInterval(200000)...
                 )
-                    .scaleEffect(1.5)
-                    .labelsHidden()
+                .scaleEffect(1.5)
+                .labelsHidden()
                 VStack{
                     Button(action: {
-                      
+                        createSpeedDate()
                     }) {
                         Text("Schedule SpeedDate!")
                             .bold()
@@ -43,6 +54,101 @@ struct ScheduleSpeedDateView: View {
                     }
                 }
                 .padding(.top,50)
+            }
+        }
+    }
+    
+    private func createRoom(completed: @escaping (_ roomId: String) -> Void) {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/createRoom") else { fatalError("Missing URL") }
+        
+        let json: [String: Any]  = [
+            "name": "new-room-1662723668",
+            "description": "This is a sample description for the room",
+            "template_id": "638d9d1b2b58471af0e13f08",
+            "region": "us"
+        ]
+
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = jsonData
+        urlRequest.setValue("\(String(describing: jsonData?.count))", forHTTPHeaderField: "Content-Length")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed("")
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        //let decodedUsers = try JSONDecoder().decode(Response.self, from: data)
+                        let roomId = String(data:data, encoding: .utf8)
+                        viewModel.roomId = roomId!
+                        completed(viewModel.roomId)
+                    } catch let error {
+                        completed("")
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    private func getRoomCodes(completed: @escaping (_ roomCodes: [Any]) -> Void) {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(viewModel.roomId)") else { fatalError("Missing URL") }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed([])
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let decodedRoles = try JSONDecoder().decode(RolesModel.self, from: data)
+                        decodedRoles.roles.forEach{
+                            viewModel.rolesForRoom.append($0)
+                          //  print($0)
+                        }
+                        completed(viewModel.rolesForRoom)
+                    } catch let error {
+                        completed([])
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    private func createSpeedDate() {
+        createRoom(){ (roomId) -> Void in
+            if roomId != "" {
+                getRoomCodes(){ (roomCodes) -> Void in
+                    if !roomCodes.isEmpty {
+                        viewModel.saveSpeedDate(eventDate: self.date)
+                        viewRouter.currentPage = .speedDateConfirmationPage
+                        
+                    }
+                }
             }
         }
     }

@@ -16,16 +16,24 @@ class VideoSDK: ObservableObject {
     @Published var isMuted = false
     @Published var videoIsShowing = true
     
-    func joinRoom() {
-        
-        hmsSDK.getAuthTokenByRoomCode("mhb-ehw-kmz") { token, error in
-            if let token = token {
-                let config = HMSConfig(userName: "Join Doe", authToken: token)
-                self.hmsSDK.join(config: config, delegate: self)
+    func joinRoom(viewModel: HomeViewModel ) {
+        //guest
+        if viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id) {
+            hmsSDK.getAuthTokenByRoomCode("cer-erl-txy") { token, error in
+                if let token = token {
+                    let config = HMSConfig(userName: "Join Doe", authToken: token)
+                    self.hmsSDK.join(config: config, delegate: self)
+                }
             }
-            
+        } else{
+            //host
+            hmsSDK.getAuthTokenByRoomCode("mhb-ehw-kmz") { token, error in
+                if let token = token {
+                    let config = HMSConfig(userName: "Join Doe", authToken: token)
+                    self.hmsSDK.join(config: config, delegate: self)
+                }
+            }
         }
-       
     }
     
     func leaveRoom(){
@@ -45,8 +53,6 @@ class VideoSDK: ObservableObject {
         } else {
             self.hmsSDK.localPeer?.localVideoTrack()?.setMute(true)
         }
-       
-        
     }
 }
 

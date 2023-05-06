@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MotherView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @StateObject var viewModel = HomeViewModel()
     
     //Change the menuBar color to white
     init() {
@@ -45,13 +44,15 @@ struct MotherView: View {
             case .signInPage:
                 SignInView()
             case .confirmationPage:
-                ConfirmationView()
+                ConfirmationView(confirmationText: "New card Created")
             case .failedPage:
                 FailedView()
             case .matchPage:
                 MatchView()
             case .scheduleSpeedDatePage:
                 ScheduleSpeedDateView()
+            case .speedDateConfirmationPage:
+                ConfirmationView(confirmationText: "SpeedDate created!")
             }
         }
     }

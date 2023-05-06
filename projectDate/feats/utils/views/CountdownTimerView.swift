@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CountdownTimerView: View {
     @StateObject var viewModel = speedDateViewModel()
-    @State var timeRemaining = 0
+    @Binding var timeRemaining: Int
     
     var geoReader: GeometryProxy
     @Binding var isStartNow: Bool
@@ -92,7 +92,7 @@ struct CountdownTimerView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                CountdownTimerView(timeRemaining: Int(Date.today().next(.monday).timeIntervalSince(Date.today())), geoReader: geo, isStartNow: .constant(false), isTimeEnded: .constant(false), speedDates: [])
+                CountdownTimerView(timeRemaining: .constant(0), geoReader: geo, isStartNow: .constant(false), isTimeEnded: .constant(false), speedDates: [])
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }

@@ -110,6 +110,8 @@
 		77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D531289912AD0088554F /* PreviewProfileView.swift */; };
 		77C3D536289912B10088554F /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D535289912B10088554F /* UserProfileView.swift */; };
 		77C3D53A289912B60088554F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D539289912B60088554F /* SettingsView.swift */; };
+		77D36B7A2A065D2B00F8FD9F /* RolesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D36B792A065D2B00F8FD9F /* RolesModel.swift */; };
+		77D36B7C2A065D3A00F8FD9F /* RoleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D36B7B2A065D3A00F8FD9F /* RoleModel.swift */; };
 		77DCADA829B9D69D00641558 /* MatchRecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADA729B9D69D00641558 /* MatchRecordModel.swift */; };
 		77DCADAA29B9E62300641558 /* SwipedCardGroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADA929B9E62300641558 /* SwipedCardGroupModel.swift */; };
 		77DCADAC29B9E9CE00641558 /* SwipedCardGroupsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADAB29B9E9CE00641558 /* SwipedCardGroupsModel.swift */; };
@@ -217,6 +219,8 @@
 		77C3D531289912AD0088554F /* PreviewProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewProfileView.swift; sourceTree = "<group>"; };
 		77C3D535289912B10088554F /* UserProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		77C3D539289912B60088554F /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		77D36B792A065D2B00F8FD9F /* RolesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RolesModel.swift; sourceTree = "<group>"; };
+		77D36B7B2A065D3A00F8FD9F /* RoleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoleModel.swift; sourceTree = "<group>"; };
 		77DCADA729B9D69D00641558 /* MatchRecordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRecordModel.swift; sourceTree = "<group>"; };
 		77DCADA929B9E62300641558 /* SwipedCardGroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipedCardGroupModel.swift; sourceTree = "<group>"; };
 		77DCADAB29B9E9CE00641558 /* SwipedCardGroupsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipedCardGroupsModel.swift; sourceTree = "<group>"; };
@@ -393,6 +397,8 @@
 			children = (
 				77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */,
 				774AB94629DBE0C000380091 /* speedDateViewModel.swift */,
+				77D36B792A065D2B00F8FD9F /* RolesModel.swift */,
+				77D36B7B2A065D3A00F8FD9F /* RoleModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -810,6 +816,7 @@
 				77C3D4F9289910CE0088554F /* Frameworks */,
 				774FB7C929EC35A6000B382C /* Setup Firebase Environment GoogleService-Info.plist */,
 				77C3D4FA289910CE0088554F /* Resources */,
+				770E60DB29FB9961005DDE79 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -967,6 +974,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		770E60DB29FB9961005DDE79 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
 		774FB7C929EC35A6000B382C /* Setup Firebase Environment GoogleService-Info.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1025,6 +1051,7 @@
 				77619ED0295DC8AE00B1BF1F /* MockService.swift in Sources */,
 				77433FD729DBDB6F00D62F31 /* SpeedDateHomeView.swift in Sources */,
 				77DCADAA29B9E62300641558 /* SwipedCardGroupModel.swift in Sources */,
+				77D36B7A2A065D2B00F8FD9F /* RolesModel.swift in Sources */,
 				775E062C28C51B6F0082C27E /* SignInView.swift in Sources */,
 				77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */,
 				779985DA298EC07D00D3FD74 /* CreateCardsView.swift in Sources */,
@@ -1064,6 +1091,7 @@
 				776E903429BC868B00C14F8A /* BasicInfoPopoverView.swift in Sources */,
 				77A1C7C4297C4094004C8FA6 /* EventModel.swift in Sources */,
 				7753CE0C29D6A4A000536968 /* MessageCardView.swift in Sources */,
+				77D36B7C2A065D3A00F8FD9F /* RoleModel.swift in Sources */,
 				77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */,
 				774AB94729DBE0C000380091 /* speedDateViewModel.swift in Sources */,
 				77433FD929DBDB9A00D62F31 /* ScheduleSpeedDateView.swift in Sources */,
@@ -1136,7 +1164,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

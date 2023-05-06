@@ -10,7 +10,7 @@ import SwiftUI
 struct SpeedDateHomeView: View {
     let viewModel: HomeViewModel
     let placeInLine: Int
-    let timeLeft: Int
+    @Binding var timeRemainingSpeedDateHomeView: Int
     @Binding var isStartVideoNow: Bool
     @Binding var isTimeEnded: Bool
     
@@ -35,18 +35,6 @@ struct SpeedDateHomeView: View {
                                 .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
                             ImageGridView()
                             
-                            
-                            //                    Spacer()
-                            //                        .frame(height: geoReader.size.height * 0.02)
-                            
-                            //                  participantsSection(for: geoReader)
-                            //
-                            //
-                            //
-                            //                  middleSection(for: geoReader)
-                            //
-                            //
-                            //
                             Text("Till First Date:")
                                 .bold()
                                 .multilineTextAlignment(.center)
@@ -138,6 +126,7 @@ struct SpeedDateHomeView: View {
             Text("")
                 .frame(width: geoReader.size.width * 0.95, height: geoReader.size.width, alignment: .bottom)
                 .background(.white)
+                .background(.white)
                 .foregroundColor(.gray)
                 .cornerRadius(geoReader.size.width * 0.15)
                 .shadow(radius: geoReader.size.width * 0.05)
@@ -147,8 +136,8 @@ struct SpeedDateHomeView: View {
     private func buttonSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             //button
-            NavigationLink(destination: FacetimeView(), label: {
-                CountdownTimerView(timeRemaining: timeLeft,
+            NavigationLink(destination: FacetimeView(homeViewModel: viewModel), label: {
+                CountdownTimerView(timeRemaining: $timeRemainingSpeedDateHomeView,
                                    geoReader: geoReader,
                                    isStartNow: $isStartVideoNow,
                                    isTimeEnded: $isTimeEnded,
@@ -163,7 +152,7 @@ struct SpeedDateHomeView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                SpeedDateHomeView(viewModel: HomeViewModel(), placeInLine: 0, timeLeft: 9, isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
+                SpeedDateHomeView(viewModel: HomeViewModel(), placeInLine: 0, timeRemainingSpeedDateHomeView: .constant(9), isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }
