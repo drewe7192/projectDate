@@ -14,72 +14,117 @@ struct SpeedDateHomeView: View {
     @Binding var isStartVideoNow: Bool
     @Binding var isTimeEnded: Bool
     
+    @State private var showHamburgerMenu: Bool = false
+    
     var body: some View {
-        GeometryReader{geoReader in
-            ZStack{
-                Color.mainBlack
-                    .ignoresSafeArea()
-                
-                if !viewModel.speedDates.isEmpty {
-                    // role is Host if userProfileId isnt in the array of matchingProfilesId
-                    if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
-                        VStack{
-                            headerSection(for: geoReader)
-                            Divider()
-                                .background(.white)
-                            
-                            Text("Your dates")
-                                .bold()
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                            ImageGridView()
-                            
-                            Text("Till First Date:")
-                                .bold()
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                            buttonSection(for: geoReader)
-                            
-                            
-                        }
-                        // roleType is guest if userProfile.Id is in matchingProfiles id
-                    } else if(viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)) {
-                        VStack{
-                            headerSection(for: geoReader)
-                            Divider()
-                                .background(.white)
-                            
-                            Text("Your place in line")
-                                .bold()
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                            
-                            Text("\(self.placeInLine)")
-                                .bold()
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.white)
-                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                            
-                            buttonSection(for: geoReader)
-                        }
+            GeometryReader{ geoReader in
+                ZStack{
+                    Color.mainBlack
+                        .ignoresSafeArea()
+                    
+                    if !viewModel.speedDates.isEmpty {
+                        // role is Host if userProfileId isnt in the array of matchingProfilesId
                         
+                        if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
+                            VStack{
+                                Text("SpeedDate")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: geoReader.size.height * 0.06))
+                                    .padding(.trailing,geoReader.size.width * 0.3)
+                                    .padding(.top,geoReader.size.width * 0.1)
+                                
+                                eventDateSection(for: geoReader)
+                                
+                                Spacer()
+                                    .frame(height: 120)
+                                  
+    //                            Text("Your dates")
+    //                                .bold()
+    //                                .multilineTextAlignment(.center)
+    //                                .foregroundColor(.white)
+    //                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                              //  ImageGridView()
+                                
+//                                Text("Till First Date:")
+//                                    .bold()
+//                                    .multilineTextAlignment(.center)
+//                                    .foregroundColor(.white)
+//                                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                                buttonSection(for: geoReader)
+                                
+                                
+                            }
+//                            .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
+//                            .disabled(self.showHamburgerMenu ? true : false)
+//
+//                            //Display hamburgerMenu
+//                            if self.showHamburgerMenu {
+//                                MenuView()
+//                                    .frame(width: geoReader.size.width/2)
+//                                    .padding(.trailing,geoReader.size.width * 0.5)
+//                            }
+                            
+                            // roleType is guest if userProfile.Id is in matchingProfiles id
+                            
+                        } else if(viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)) {
+                            VStack{
+                                Text("SpeedDate")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: geoReader.size.height * 0.06))
+                                    .padding(.trailing,geoReader.size.width * 0.3)
+                                    .padding(.top,geoReader.size.width * 0.1)
+                                
+                                eventDateSection(for: geoReader)
+                                VStack{
+                                    Text("Your place in line")
+                                        .bold()
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(.white)
+                                        .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                                    
+                                    Text("\(self.placeInLine)")
+                                        .bold()
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(.white)
+                                        .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+                                }
+                                .padding(.top)
+                           
+                                Spacer()
+                                    .frame(height: 120)
+                                
+                                buttonSection(for: geoReader)
+                            }
+//                            .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
+//                            .disabled(self.showHamburgerMenu ? true : false)
+//
+//                            //Display hamburgerMenu
+//                            if self.showHamburgerMenu {
+//                                MenuView()
+//                                    .frame(width: geoReader.size.width/2)
+//                                    .padding(.trailing,geoReader.size.width * 0.5)
+//                            }
+//
+                        }
                     }
+                    else {
+                        Text("NO SPEED DATES")
+                            .font(.system(size: 50))
+                            .foregroundColor(Color.iceBreakrrrBlue)
+                    }
+                    
                 }
-                else {
-                    Text("NO SPEED DATES")
-                        .font(.system(size: 50))
-                        .foregroundColor(Color.iceBreakrrrBlue)
-                }
-                
+                .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
+//                .navigationBarItems(leading: (
+//                    headerSection(for: geoReader)
+//                        .padding(.leading, geoReader.size.width * 0.25)
+//                ))
             }
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
-        }
+
+       
     }
     
-    private func headerSection(for geoReader: GeometryProxy) -> some View {
+    private func eventDateSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             HStack{
                 Image(systemName: "calendar.badge.clock")
@@ -87,11 +132,8 @@ struct SpeedDateHomeView: View {
                     .frame(width: geoReader.size.width * 0.15 ,height: geoReader.size.height * 0.06)
                     .foregroundColor(.white)
                 VStack{
-                    Text("Tuesday, May 18th")
+                    Text("\(viewModel.speedDates.first!.eventDate.formatted())")
                         .bold()
-                        .foregroundColor(.white)
-                    
-                    Text("10:00 - 12:00")
                         .foregroundColor(.white)
                 }
             }
@@ -144,6 +186,107 @@ struct SpeedDateHomeView: View {
                                    speedDates: viewModel.speedDates
                 )
             }).disabled(isStartVideoNow == true ? false: true)
+        }
+    }
+    
+    private func headerSection(for geoReader: GeometryProxy) -> some View {
+        ZStack{
+            HStack{
+                Text("iceBreakrrr")
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
+                    .bold()
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.03)
+                
+                Image("logo")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .background(Color.mainBlack)
+                    .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
+            }
+            
+            HStack{
+                Button(action: {
+                    withAnimation{
+                        self.showHamburgerMenu.toggle()
+                    }
+                }) {
+                    ZStack{
+                        Text("")
+                            .frame(width: 40, height: 40)
+                            .background(Color.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Rectangle())
+                            .cornerRadius(10)
+                        
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .resizable()
+                            .frame(width: 20, height: 10)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fill)
+                    }
+                }
+                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
+                
+                Spacer()
+                    .frame(width: geoReader.size.width * 0.55)
+                
+                NavigationLink(destination: NotificationsView(), label: {
+                    ZStack{
+                        Text("")
+                            .cornerRadius(20)
+                            .frame(width: 40, height: 40)
+                            .background(Color.black.opacity(0.2))
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                        
+                        Image(systemName: "bell")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                            .aspectRatio(contentMode: .fill)
+                    }
+                })
+                
+                NavigationLink(destination: SettingsView()) {
+                    if(!viewModel.profileImage.size.width.isZero){
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            Image(uiImage: viewModel.profileImage)
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 30, height: 30)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                        }
+                    } else {
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 20, height: 20)
+                                .background(Color.black.opacity(0.2))
+                                .foregroundColor(.white)
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -29,36 +29,41 @@ struct ImageGridView: View {
     
     var body: some View {
         GeometryReader{ geoReader in
-            VStack{
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(items2, id: \.self){item in
-                            
-                            AsyncImage(url: URL(string: item)) { phase in
-                                switch phase{
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .frame(width: 100, height: 100)
-                                        .clipShape(Circle())
-                                        .shadow(radius: 5, x: 5, y: 5)
-                                default:
-                                    Image(systemName: "photo")
+            ZStack{
+                Color.mainBlack
+                    .ignoresSafeArea()
+                
+                VStack{
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 10) {
+                            ForEach(items2, id: \.self){item in
+                                AsyncImage(url: URL(string: item)) { phase in
+                                    switch phase{
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .clipShape(Circle())
+                                            .shadow(radius: 5, x: 5, y: 5)
+                                    default:
+                                        Image(systemName: "photo")
+                                    }
                                 }
+                                //Drag and Drop...
+                                .onDrag({
+                                    self.draggedItem = item
+                                    //Sending ID for sample....
+                                    return NSItemProvider(contentsOf: URL(string: "\(item)")!)!
+                                })
+                                .onDrop(of: [.url], delegate: DropViewDelegate(item: item, items: $items2, draggedItem: $draggedItem))
                             }
-                            //Drag and Drop...
-                            .onDrag({
-                                self.draggedItem = item
-                                //Sending ID for sample....
-                                return NSItemProvider(contentsOf: URL(string: "\(item)")!)!
-                            })
-                            .onDrop(of: [.url], delegate: DropViewDelegate(item: item, items: $items2, draggedItem: $draggedItem))
                         }
+                        .frame(height: 200)
+                        .aspectRatio(1, contentMode: .fit)
                     }
-                    .frame(height: 200)
-                    .aspectRatio(1, contentMode: .fit)
                 }
             }
+         
         }
  
     

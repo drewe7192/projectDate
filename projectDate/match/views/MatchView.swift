@@ -17,7 +17,7 @@ import UIKit
 struct MatchView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var viewModel = HomeViewModel()
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
+    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [], fcmTokens: [])
     @State private var matchRecords: [MatchRecordModel] = []
     @State private var userProfileImage: UIImage = UIImage()
     

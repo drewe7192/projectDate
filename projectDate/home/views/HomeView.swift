@@ -12,6 +12,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseFunctions
+import FirebaseMessaging
 import UIKit
 
 struct HomeView: View {
@@ -91,6 +92,7 @@ struct HomeView: View {
     private func getAllData() {
         getProfileAndRecords() {(getProfileId) -> Void in
             if getProfileId != "" {
+                viewModel.saveMessageToken()
                 getMatchData()
                 viewModel.getSpeedDate(speedDateIds: viewModel.userProfile.speedDateIds) {(speedDates) -> Void in
                     if !speedDates.isEmpty {
@@ -305,12 +307,16 @@ struct HomeView: View {
     
     private func getCardGroups(completed: @escaping(_ userCardGroup: SwipedCardGroupsModel) -> Void){
         // get your cardGroup for this week as well as 20 other random cardGroups
-        var matchDay = viewModel.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : viewModel.userProfile.matchDay
+        let matchDay = viewModel.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : viewModel.userProfile.matchDay
+        
+        //SWITCH TO PREVENT PREVIEW CRASHING
+        //let matchDay = "Monday"
+        
         let matchDayString = matchDay.lowercased()
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
-        
-        let start = Date.today().previous(enumDayOfWeek!)
-        let end = Date.today().next(enumDayOfWeek!)
+
+        let start = Date.today().previous(enumDayOfWeek!).previous(enumDayOfWeek ?? .sunday)
+        let end = Date.today()
         
         viewModel.getUserCardGroup(start:start, end: end){(userGroup) -> Void in
             if userGroup.id != "" {

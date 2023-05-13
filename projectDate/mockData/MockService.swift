@@ -28,7 +28,8 @@ enum MockService {
             gender: "Male",
             matchDay: "Mondays",
             messageThreadIds: [],
-            speedDateIds: []
+            speedDateIds: [],
+            fcmTokens: []
         )
     }
     
@@ -49,7 +50,8 @@ enum MockService {
                 gender: "Male",
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
-                speedDateIds: []
+                speedDateIds: [],
+                fcmTokens: []
             ),
             ProfileModel(
                 id: "John",
@@ -58,7 +60,8 @@ enum MockService {
                 gender: "Male",
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
-                speedDateIds: []
+                speedDateIds: [],
+                fcmTokens: []
             ),
             ProfileModel(
                 id: "John",
@@ -67,7 +70,8 @@ enum MockService {
                 gender: "Male",
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
-                speedDateIds: []
+                speedDateIds: [],
+                fcmTokens: []
             ),
             ProfileModel(
                 id: "John",
@@ -76,7 +80,8 @@ enum MockService {
                 gender: "Male",
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
-                speedDateIds: []
+                speedDateIds: [],
+                fcmTokens: []
             )
         ]
     }
@@ -214,7 +219,8 @@ enum MockService {
             roomId: "",
             matchProfileIds: [],
             eventDate: Date(),
-            createdDate: Date()
+            createdDate: Date(),
+            isActive: false
         )
     }
     
@@ -225,42 +231,48 @@ enum MockService {
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
-                createdDate: Date()
+                createdDate: Date(),
+                isActive: false
             ),
             SpeedDateModel(
                 id: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
-                createdDate: Date()
+                createdDate: Date(),
+                isActive: false
             ),
             SpeedDateModel(
                 id: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
-                createdDate: Date()
+                createdDate: Date(),
+                isActive: false
             ),
             SpeedDateModel(
                 id: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
-                createdDate: Date()
+                createdDate: Date(),
+                isActive: false
             ),
             SpeedDateModel(
                 id: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
-                createdDate: Date()
+                createdDate: Date(),
+                isActive: false
             ),
             SpeedDateModel(
                 id: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
-                createdDate: Date()
+                createdDate: Date(),
+                isActive: false
             )
         ]
     }

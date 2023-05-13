@@ -46,14 +46,12 @@ struct EmailPasswordLoginView: View{
             }
             .disabled(!email.isEmpty && !password.isEmpty && (displayConfirmPassword ? !confirmPassword.isEmpty : true ) ? false : true)
         }
-        
     }
     
-   private func signInUser(userEmail: String, userPassword: String){
+    private func signInUser(userEmail: String, userPassword: String){
         LogInItems(isSignInPage: true).isLoading = true
         
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            
             guard error ==  nil else{
                 LogInItems(isSignInPage: true).isLoading  = false
                 signInErrorMessage = error!.localizedDescription
@@ -75,7 +73,6 @@ struct EmailPasswordLoginView: View{
         LogInItems(isSignInPage: true).isLoading = true
         
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            
             guard error == nil else{
                 LogInItems(isSignInPage: true).isLoading = false
                 signInErrorMessage = error!.localizedDescription

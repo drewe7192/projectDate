@@ -12,10 +12,10 @@ import GoogleSignIn
 import FacebookLogin
 
 struct LogInItems: View {
-    @State var toggleButtons = false
-    @State var signInErrorMessage = ""
-    @State var email = ""
-    @State var password =  ""
+    @State var toggleButtons: Bool = false
+    @State var signInErrorMessage: String = ""
+    @State var email: String = ""
+    @State var password: String =  ""
     @State var isLoading: Bool = false
     @State var showAlert: Bool = false
     
@@ -76,6 +76,11 @@ struct LogInItems: View {
                 .background(Color.mainGrey)
                 .cornerRadius(15)
                 .shadow(radius: 5)
+            }
+            if(isSignInPage) {
+                signUpLinkSection
+            } else {
+                signInLinkSection
             }
         }
     

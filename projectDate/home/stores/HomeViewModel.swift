@@ -14,6 +14,7 @@ import FirebaseAuth
 import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
+import FirebaseMessaging
 
 class HomeViewModel: ObservableObject {
     @Published var createCards: [CardModel] = MockService.cardObjectSampleData.cards
@@ -23,16 +24,16 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [])
+    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [])
     @Published var profileImage: UIImage = UIImage()
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
     @Published var lastDoc: DocumentSnapshot!
     @Published var successfullMatchSnapshots: [MatchRecordModel] = []
-    @Published var speedDates: [SpeedDateModel] = []
+    @Published var speedDates: [SpeedDateModel] = [SpeedDateModel(id: "fds", roomId: "fdsf", matchProfileIds: ["vfsdfds"], eventDate: Date(), createdDate: Date(), isActive: false)]
     @Published var matchRecords: [MatchRecordModel] = []
     @Published var matchProfiles: [ProfileModel] = []
-    @Published var matchProfileImages: [UIImage] = [UIImage(),UIImage(),UIImage()]
+    @Published var matchProfileImages: [UIImage] = []
     @Published var rolesForRoom = []
     @Published var roomId: String = ""
     @Published var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
@@ -171,7 +172,7 @@ class HomeViewModel: ObservableObject {
     //
     //                if let metadata = metadata {
     //                    print("Metadata: ", metadata)
-    //                }
+    //                
     //            }
     //        }
     //    }
@@ -188,7 +189,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [])
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [])
                         }
                     }
                     completed(self.userProfile.id)
@@ -215,15 +216,15 @@ class HomeViewModel: ObservableObject {
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
         let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
-        let matchDayString = matchDay.lowercased()
+        //PREVENTS HOMEVIEW() PREVIEW CRASH
+        //let matchDay = "Monday"
         
+        let matchDayString = matchDay.lowercased()
+
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
-        //PREVENTS HOMEVIEW() PREVIEW CRASH
-        //let enumDayOfWeek = Date.Weekday(rawValue: "monday")
-        
-        let start = Date.today().previous(enumDayOfWeek!)
-        let end = Date.today().next(enumDayOfWeek!)
+        let start = Date.today().previous(enumDayOfWeek ?? .sunday)
+        let end = Date.today().next(enumDayOfWeek ?? .sunday)
         
         // if dirty clean up
         self.swipedRecords.removeAll()
@@ -320,12 +321,16 @@ class HomeViewModel: ObservableObject {
     }
     
     public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
-        var matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+        let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+        
+        //PREVENTS HOMEVIEW() PREVIEW CRASH
+       // let matchDay = "Monday"
+        
         let matchDayString = matchDay.lowercased()
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
-        let start = Date.today().previous(enumDayOfWeek!)
-        let end = Date.today().next(enumDayOfWeek!)
+        let start = Date.today().previous(enumDayOfWeek ?? .sunday)
+        let end = Date.today().next(enumDayOfWeek ?? .sunday)
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd-YY"
@@ -386,23 +391,6 @@ class HomeViewModel: ObservableObject {
             db.collection("speedDates")
                 .whereField("id", isEqualTo: firstSpeedDate)
                 .addSnapshotListener{ (querySnapshot, error) in
-                    //                 guard let documents = querySnapshot?.documents
-                    //                 else {
-                    //                     print("No documents")
-                    //                     completed([])
-                    //                     return
-                    //                 }
-                    //
-                    //                self.speedDates = documents.compactMap {document -> SpeedDateModel? in
-                    //                     do {
-                    //                         return try document.data(as: SpeedDateModel.self)
-                    //                     } catch {
-                    //                         print("Error decoding document into SpeedDates: \(error)")
-                    //                         completed([])
-                    //                         return nil
-                    //                     }
-                    //                 }
-                    
                     if let error {
                         print("Error getting documents from speedDates: \(error)")
                         completed([])
@@ -423,7 +411,8 @@ class HomeViewModel: ObservableObject {
                                     roomId: data["roomId"] as? String ?? "",
                                     matchProfileIds: data["matchProfileIds"] as? [String] ?? [],
                                     eventDate: eventDate ?? Date(),
-                                    createdDate: createdDate ?? Date()
+                                    createdDate: createdDate ?? Date(),
+                                    isActive: data["isActive"] as? Bool ?? false
                                 )
                                 
                                 self.speedDates.append(speedDate)
@@ -508,22 +497,23 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getMatchRecordsForThisWeek(completed: @escaping(_ matches: [MatchRecordModel]) -> Void) {
-        //SWITCH TO PREVENT PREVIEW CRASHING
-       // let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
-        let matchDay = "Sunday"
+       
+        let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
-        if self.userProfile.matchDay != "Pick MatchDay" {
+        //SWITCH TO PREVENT PREVIEW CRASHING
+        //let matchDay = "Monday"
+      
             let matchDayString = matchDay.lowercased()
             let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
             
-            let start = Date.today().previous(enumDayOfWeek!)
-            let end = Date.today().next(enumDayOfWeek!)
+            let start = Date.today().previous(enumDayOfWeek ?? .sunday)
+            let end = Date.today().next(enumDayOfWeek ?? .sunday)
             
             db.collection("matchRecords")
                 .whereField("userProfileId", isEqualTo: self.userProfile.id)
                 .whereField("createdDate", isGreaterThan: start)
                 .whereField("createdDate", isLessThan: end)
-                .whereField("isNew", isEqualTo: false)
+                .whereField("isNew", isEqualTo: true)
                 .getDocuments() { (querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents from matchRecords: \(err)")
@@ -540,8 +530,6 @@ class HomeViewModel: ObservableObject {
                         completed(self.matchRecords)
                     }
                 }
-        }
-        
     }
     
     // not using this func right now but we're definitely gonna need this for future features
@@ -629,7 +617,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [])
+                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [])
                             
                             self.matchProfiles.append(profile)
                         }
@@ -662,6 +650,7 @@ class HomeViewModel: ObservableObject {
         let docData: [String: Any] = [
             "id": id,
             "roomId": self.roomId,
+            "hostProfileId": userProfile.id,
             "matchProfileIds": [matchProfiles[0].id,matchProfiles[1].id,matchProfiles[2].id],
             "eventDate": Timestamp(date: eventDate),
             "createdDate": Timestamp(date: Date())
@@ -671,9 +660,71 @@ class HomeViewModel: ObservableObject {
         
         docRef.setData(docData) {error in
             if let error = error{
-                print("Error creating new matchRecord: \(error)")
+                print("Error creating new speedDate: \(error)")
             } else {
-                print("Document successfully created Match record!")
+                print("Document successfully created new speedDate record!")
+            }
+        }
+    
+        //updating profiles with new speedDateId
+        let updateSpeedDateIds: [String: Any] = [
+            "speedDateIds": FieldValue.arrayUnion([id])
+        ]
+
+        let hostProfileRef = db.collection("profiles").document(userProfile.id)
+        let matchProfileRef_1 = db.collection("profiles").document(matchProfiles[0].id)
+        let matchProfileRef_2 = db.collection("profiles").document(matchProfiles[1].id)
+        let matchProfileRef_3 = db.collection("profiles").document(matchProfiles[2].id)
+
+        hostProfileRef.updateData(updateSpeedDateIds) {error in
+            if let error = error{
+                print("Error updating speedDateId: \(error)")
+            } else {
+                print("speedDateId successfully saved hostProfile!")
+            }
+        }
+        
+        matchProfileRef_1.updateData(updateSpeedDateIds) {error in
+            if let error = error{
+                print("Error updating speedDateId: \(error)")
+            } else {
+                print("speedDateId successfully saved matchProfile_1!")
+            }
+        }
+        
+        matchProfileRef_2.updateData(updateSpeedDateIds) {error in
+            if let error = error{
+                print("Error updating speedDateId: \(error)")
+            } else {
+                print("speedDateId successfully saved matchProfile_2!")
+            }
+        }
+        
+        matchProfileRef_3.updateData(updateSpeedDateIds) {error in
+            if let error = error{
+                print("Error updating speedDateId: \(error)")
+            } else {
+                print("speedDateId successfully saved matchProfile_3!")
+            }
+        }
+        
+        
+    }
+    
+    public func saveMessageToken() {
+       let token = Messaging.messaging().fcmToken
+        
+        let docData: [String: Any] = [
+            "fcmTokens": FieldValue.arrayUnion([token!])
+        ]
+
+        let docRef = db.collection("profiles").document(userProfile.id)
+
+        docRef.updateData(docData) {error in
+            if let error = error{
+                print("Error creating new card: \(error)")
+            } else {
+                print("Document successfully saved fcmToken!")
             }
         }
     }

@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
-import Firebase
+import FirebaseCore
 import FirebaseAnalytics
 import FirebaseMessaging
 import GoogleSignIn
 import FacebookCore
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseFirestoreSwift
+
 //FirebaseMessaging might already be importing this
 //import UserNotifications
 
@@ -93,6 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 }
 
 extension AppDelegate: MessagingDelegate {
+    
     //prints the device token
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken:[String: String] = ["token": fcmToken ?? ""]

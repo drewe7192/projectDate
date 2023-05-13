@@ -14,8 +14,4 @@ struct UserModel: Identifiable {
     var email: String
     var location: String
     var userProfile: ProfileModel
-    
-    var fullName: String {
-        lastName + ", " + firstName
-    }
 }

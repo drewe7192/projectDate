@@ -117,6 +117,19 @@
 		77DCADAC29B9E9CE00641558 /* SwipedCardGroupsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADAB29B9E9CE00641558 /* SwipedCardGroupsModel.swift */; };
 		77DCADAE29BA3E1900641558 /* CardGroupSnapshotModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADAD29BA3E1900641558 /* CardGroupSnapshotModel.swift */; };
 		77DCADB129BA751000641558 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADB029BA751000641558 /* MatchView.swift */; };
+		77ED3F0A2A0F83BA00C26C33 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE42A2979DE3500F3A6A1 /* HomeViewModel.swift */; };
+		77ED3F0B2A0F869A00C26C33 /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C1297C3B1C004C8FA6 /* CardModel.swift */; };
+		77ED3F0C2A0F86B200C26C33 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB247A295DC3AB008F5469 /* ProfileModel.swift */; };
+		77ED3F0D2A0F86BD00C26C33 /* SwipedCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A5F8A2998CA65004EA498 /* SwipedCardModel.swift */; };
+		77ED3F0E2A0F86C600C26C33 /* MatchRecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADA729B9D69D00641558 /* MatchRecordModel.swift */; };
+		77ED3F0F2A0F86CC00C26C33 /* SpeedDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */; };
+		77ED3F102A0F871E00C26C33 /* SwipedCardGroupsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADAB29B9E9CE00641558 /* SwipedCardGroupsModel.swift */; };
+		77ED3F112A0F872B00C26C33 /* MockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77619ECF295DC8AE00B1BF1F /* MockService.swift */; };
+		77ED3F122A0F875A00C26C33 /* SwipedCardGroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADA929B9E62300641558 /* SwipedCardGroupModel.swift */; };
+		77ED3F132A0F879A00C26C33 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C3297C4094004C8FA6 /* EventModel.swift */; };
+		77ED3F142A0F87AB00C26C33 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D4708295F359100754DE5 /* UserModel.swift */; };
+		77ED3F152A0F87C200C26C33 /* ProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47102962010000754DE5 /* ProfileInfoModel.swift */; };
+		77ED3F162A0F87CB00C26C33 /* CardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4212979B44F00F3A6A1 /* CardsModel.swift */; };
 		77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB23BE292B5E62008F5469 /* ProfileView.swift */; };
 		77FB23C2292B6227008F5469 /* ProfileInfoOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB23C1292B6227008F5469 /* ProfileInfoOverlay.swift */; };
 		77FB2461294DA8D2008F5469 /* SearchInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB2460294DA8D2008F5469 /* SearchInput.swift */; };
@@ -1103,6 +1116,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				77C3D511289910CF0088554F /* projectDateTests.swift in Sources */,
+				77ED3F0D2A0F86BD00C26C33 /* SwipedCardModel.swift in Sources */,
+				77ED3F112A0F872B00C26C33 /* MockService.swift in Sources */,
+				77ED3F0F2A0F86CC00C26C33 /* SpeedDateModel.swift in Sources */,
+				77ED3F0E2A0F86C600C26C33 /* MatchRecordModel.swift in Sources */,
+				77ED3F162A0F87CB00C26C33 /* CardsModel.swift in Sources */,
+				77ED3F0A2A0F83BA00C26C33 /* HomeViewModel.swift in Sources */,
+				77ED3F102A0F871E00C26C33 /* SwipedCardGroupsModel.swift in Sources */,
+				77ED3F132A0F879A00C26C33 /* EventModel.swift in Sources */,
+				77ED3F0B2A0F869A00C26C33 /* CardModel.swift in Sources */,
+				77ED3F0C2A0F86B200C26C33 /* ProfileModel.swift in Sources */,
+				77ED3F152A0F87C200C26C33 /* ProfileInfoModel.swift in Sources */,
+				77ED3F142A0F87AB00C26C33 /* UserModel.swift in Sources */,
+				77ED3F122A0F875A00C26C33 /* SwipedCardGroupModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1335,7 +1361,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KZJW6NG9PY;
+				DEVELOPMENT_TEAM = D2P5JTGM3J;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;

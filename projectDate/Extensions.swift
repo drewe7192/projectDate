@@ -59,24 +59,11 @@ extension Array where Element == CardModel {
         // what does this have to do with width? 
         geometry.size.width - cardOffset(cardId: cardId)
     }
-    
-    func unique<T:Hashable>(by: ((Element) -> (T)))  -> [Element] {
-        var set = Set<T>() //the unique list kept in a Set for fast retrieval
-        var arrayOrdered = [Element]() //keeping the unique list of elements but ordered
-        for value in self {
-            if !set.contains(by(value)) {
-                set.insert(by(value))
-                arrayOrdered.append(value)
-            }
-        }
-
-        return arrayOrdered
-    }
 }
 
-extension Array where Element == SwipedRecordModel {
+extension Array {
     
-    func unique<T:Hashable>(by: ((Element) -> (T)))  -> [Element] {
+    public func unique<T:Hashable>(by: ((Element) -> (T)))  -> [Element] {
         var set = Set<T>() //the unique list kept in a Set for fast retrieval
         var arrayOrdered = [Element]() //keeping the unique list of elements but ordered
         for value in self {
@@ -183,17 +170,17 @@ extension FacetimeView {
 
 extension Date {
 
-  static func today() -> Date {
+  public static func today() -> Date {
       return Date()
   }
 
-  func next(_ weekday: Weekday, considerToday: Bool = false) -> Date {
+ public func next(_ weekday: Weekday, considerToday: Bool = false) -> Date {
     return get(.next,
                weekday,
                considerToday: considerToday)
   }
 
-  func previous(_ weekday: Weekday, considerToday: Bool = false) -> Date {
+ public func previous(_ weekday: Weekday, considerToday: Bool = false) -> Date {
     return get(.previous,
                weekday,
                considerToday: considerToday)
@@ -207,7 +194,6 @@ extension Date {
 
     let weekdaysName = getWeekDaysInEnglish().map { $0.lowercased() }
 
-    
     assert(weekdaysName.contains(dayName), "weekday symbol should be in form \(weekdaysName)")
 
     let searchWeekdayIndex = weekdaysName.firstIndex(of: dayName)! + 1
@@ -239,15 +225,14 @@ extension Date {
     return calendar.weekdaySymbols
   }
 
-  enum Weekday: String {
+  public enum Weekday: String {
     case monday = "monday",
          tuesday = "tuesday",
          wednesday = "wednesday",
          thursday = "thursday",
          friday = "friday",
          saturday = "saturday",
-         sunday = "sunday",
-        other = "pick matchday"
+         sunday = "sunday"
   }
 
   enum SearchDirection {

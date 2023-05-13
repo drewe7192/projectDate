@@ -38,6 +38,7 @@ struct ScheduleSpeedDateView: View {
                 )
                 .scaleEffect(1.5)
                 .labelsHidden()
+                
                 VStack{
                     Button(action: {
                         createSpeedDate()

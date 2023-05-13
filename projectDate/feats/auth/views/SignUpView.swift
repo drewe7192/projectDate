@@ -80,6 +80,7 @@ struct SignUpView: View {
     private func footerSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             LogInItems(isSignInPage: false)
+            
         }
         .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.35)
     }

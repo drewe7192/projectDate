@@ -13,4 +13,5 @@ struct SpeedDateModel: Identifiable, Codable, Hashable{
     var matchProfileIds: [String]
     var eventDate: Date
     var createdDate: Date
+    var isActive: Bool
 }

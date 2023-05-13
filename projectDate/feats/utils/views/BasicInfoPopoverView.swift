@@ -22,6 +22,8 @@ struct BasicInfoPopoverView: View {
     @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]
     @State private var showImageSheet: Bool = false
     @State private var editInfo: Bool = false
+    @State private var alertCompleteForm: Bool = false
+    
     
     let storage = Storage.storage()
     
@@ -37,7 +39,14 @@ struct BasicInfoPopoverView: View {
                     instructionsPopover(for: geoReader)
                 }
             }
+            .interactiveDismissDisabled(true)
             .position(x: geoReader.frame(in: .local).midX, y:geoReader.frame(in: .local).midY)
+            .alert(isPresented: $alertCompleteForm){
+                Alert(
+                    title: Text("Profile not complete"),
+                    message: Text("Please complete all inputs")
+                )
+            }
         }
     }
     
@@ -69,18 +78,25 @@ struct BasicInfoPopoverView: View {
     }
     
     private func saveAllInfo(){
-        if(editInfo == false){
+        let isFormComplete =  profileImage.size.height != 0  &&
+        userProfile.fullName != "" &&
+        userProfile.gender != "Pick Gender" &&
+        userProfile.matchDay != "Pick MatchDay"
+        
+        if(editInfo && isFormComplete){
             viewModel.updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
                 if profileId != "" {
                     SettingsView().uploadStorageFile(image: profileImage, profileId: profileId)
                     showingInstructionsPopover.toggle()
                 }
             }
+        } else if (editInfo && isFormComplete == false) {
+            self.alertCompleteForm = true
         }
     }
     
     private func uploadStorageFile(image: UIImage){
-        let storageRef = storage.reference().child("\(String(describing: Auth.auth().currentUser?.uid))"+"/images/image.jpg")
+        let storageRef = storage.reference().child("\(String(describing: userProfile.id))"+"/images/image.jpg")
         
         let data = image.jpegData(compressionQuality: 0.2)
         
@@ -154,7 +170,7 @@ struct BasicInfoPopoverView: View {
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
-             
+                
                 HStack{
                     Image(systemName: "snowflake.circle")
                         .resizable()
@@ -202,6 +218,18 @@ struct BasicInfoPopoverView: View {
             Spacer()
                 .frame(height: geoReader.size.width * 0.05)
             
+            HStack{
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
+                    .foregroundColor(profileImage.size.height != 0 ? .green : .mainGrey)
+                
+                Text("Add Image")
+                    .foregroundColor(.white)
+                    .font(.system(size: 20))
+            }
+            
+            
             imageSection(for: geoReader)
             
             Spacer()
@@ -229,11 +257,20 @@ struct BasicInfoPopoverView: View {
     }
     
     private func nameSection(for geoReader: GeometryProxy) -> some View{
-        HStack{
-            Text("Name")
-                .foregroundColor(.white)
-                .font(.system(size: geoReader.size.width * 0.07))
-                .padding(.trailing, geoReader.size.width * 0.15)
+        VStack{
+            HStack{
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
+                    .foregroundColor(userProfile.fullName != "" ? .green : .mainGrey)
+                
+                Text("Name")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.width * 0.05))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
             
             
             if(editInfo){
@@ -258,6 +295,20 @@ struct BasicInfoPopoverView: View {
     
     private func pickerSections(for geoReader: GeometryProxy) -> some View{
         VStack{
+            HStack{
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
+                    .foregroundColor(userProfile.gender != "Pick Gender" ? .green : .mainGrey)
+                
+                Text("Gender")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.width * 0.05))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
+            
             Menu {
                 Picker(selection: $userProfile.gender) {
                     ForEach(genderChoices, id: \.self) { choice in
@@ -274,11 +325,27 @@ struct BasicInfoPopoverView: View {
             .accentColor(.white)
             .disabled(editInfo == false)
             
+            HStack{
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
+                    .foregroundColor(userProfile.matchDay != "Pick MatchDay" ? .green : .mainGrey)
+                
+                Text("MatchDay")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.width * 0.05))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
+            
+            
+            
             Menu {
                 Picker(selection: $userProfile.matchDay) {
                     ForEach(matchDayChoices, id: \.self) { matchDay in
                         Text("\(matchDay)")
-                           // .tag(matchDay)
+                        // .tag(matchDay)
                             .font(.system(size: geoReader.size.height * 0.01))
                     }
                 } label: {}
@@ -295,17 +362,15 @@ struct BasicInfoPopoverView: View {
             }
             .accentColor(.white)
             .disabled(editInfo == false)
-            
-            Text("(pick day to get matches)")
-                .foregroundColor(.iceBreakrrrBlue)
         }
     }
     
     private func basicInfoButton(for geoReader: GeometryProxy) -> some View{
         VStack{
             Button(action: {
-                editInfo.toggle()
                 saveAllInfo()
+                editInfo.toggle()
+           
             }) {
                 Text(editInfo ? "Save" : "Edit Profile")
                     .bold()
@@ -322,6 +387,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: " Pick Day", messageThreadIds: [], speedDateIds: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
     }
 }

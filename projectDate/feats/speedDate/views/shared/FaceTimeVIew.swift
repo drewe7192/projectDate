@@ -21,68 +21,84 @@ struct FacetimeView: View {
     
     @State private var timeRemaining = 100
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
     let homeViewModel: HomeViewModel
     
     var body: some View {
-        Group {
-            if videoSDK.isJoined {
-                // List {
-                ForEach(videoSDK.tracks, id: \.self) { track in
-                    VStack{
-                        //                        VideoView(track: track)
-                        //                            .frame(height: 300)
-                        ZStack{
-                            VideoView(track: friendTrack)
-                            VideoView(track: localTrack)
-                                .frame(width: 150, height: 250, alignment: .center)
-                                .padding()
-                            
-                            //Timer
-                            Text("Time: \(timeRemaining)")
-                                .font(.largeTitle)
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 5)
-                                .background(.black.opacity(0.75))
-                                .clipShape(Capsule())
-                            
-                            videoOptions()
-                                .padding(.bottom, 10)
+        GeometryReader { geoReader in
+            VStack{
+                Group {
+                    if videoSDK.isJoined {
+                        ForEach(Array(videoSDK.tracks.enumerated()), id: \.offset) {index, track in
+                            VStack{
+                                ZStack{
+                                    VStack{
+                                        VideoView(track: track)
+                                            .frame(height: 300)
+                
+                                        videoOptions()
+                                            .padding(.bottom, 10)
+                                    }
+                                 
+                                    
+                                    VStack{
+                                        //Timer
+                                        Text("Time")
+                                            .font(.title2)
+                                        
+                                        Text("\(timeRemaining / 60) : \(timeRemaining % 60)")
+                                            .font(.largeTitle)
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 20)
+                                            .padding(.vertical, 5)
+                                            .background(.black.opacity(0.75))
+                                            .clipShape(Capsule())
+                                    }
+                                    .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.65)
+                                }
+                            }
                         }
-                       
+                        .onChange(of: isLeaveRoom) { _ in
+                        }
+                        //.task(delayLeave)
+                        //  }
+                        .onReceive(timer) { time in
+                            if videoSDK.tracks.indices.contains(1) {
+                                if timeRemaining > 0 {
+                                    timeRemaining -= 1
+                                } else if timeRemaining == 0 {
+                                    if videoSDK.tracks.indices.contains(1) {
+                                        videoSDK.tracks.remove(at: 1)
+                                        timeRemaining = 100
+                                    }
+                                    //videoSDK.leaveRoom()
+                                }
+                            }
+                           
+                        }
                     }
-                }
-                .onChange(of: isLeaveRoom) { _ in
-                    //                        if videoSDK.tracks.indices.contains(1) {
-                    //                            videoSDK.tracks.remove(at: 1)
-                    //                        }
-                    //  videoSDK.leaveRoom()
-                }
-                //.task(delayLeave)
-                //  }
-                .onReceive(timer) { time in
-                    if timeRemaining > 0 {
-                        timeRemaining -= 1
+                    else if isJoining {
+                        ProgressView()
+                    }
+                    else {
+                        Text("Join")
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                            .padding(.vertical, 5)
+                            .background(Color.blue)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .onAppear() {
+                                listen()
+                                videoSDK.joinRoom(viewModel: homeViewModel)
+                                isJoining.toggle()
+                            }
                     }
                 }
             }
-            else if isJoining {
-                ProgressView()
-            }
-            else {
-                Text("Join")
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-                    .padding(.vertical, 5)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .onAppear() {
-                        videoSDK.joinRoom(viewModel: homeViewModel)
-                        isJoining.toggle()
-                    }
-            }
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
+            
+            
         }
+        
     }
     private func videoOptions() -> some View {
         HStack(spacing: 20) {
@@ -91,39 +107,33 @@ struct FacetimeView: View {
                 videoSDK.muteCamera()
             } label: {
                 Image(systemName: videoSDK.videoIsShowing ? "video.fill" : "video.slash.fill")
-                    .frame(width: 60, height: 60, alignment: .center)
+                    .frame(width: 40, height: 40, alignment: .center)
                     .background(.white)
                     .foregroundColor(.black)
                     .clipShape(Circle())
-                
             }
             
             Button{
                 videoSDK.leaveRoom()
             } label: {
                 Image(systemName: "phone.down.fill")
-                    .frame(width: 60, height: 60, alignment: .center)
+                    .frame(width: 40, height: 40, alignment: .center)
                     .background(.red)
                     .foregroundColor(.white)
                     .clipShape(Circle())
-                
             }
             
             Button{
                 videoSDK.muteMic()
             } label: {
                 Image(systemName: videoSDK.isMuted ? "mic.slash.fill" : "mic.fill")
-                    .frame(width: 60, height: 60, alignment: .center)
+                    .frame(width: 40, height: 40, alignment: .center)
                     .background(.white)
                     .foregroundColor(.black)
                     .clipShape(Circle())
-                
             }
-            
-            
             Spacer()
         }
-        
     }
     
     private func listen() {
@@ -143,5 +153,9 @@ struct FacetimeView: View {
     @Sendable private func delayLeave() async {
         try? await Task.sleep(nanoseconds: 7_500_000_000)
         isLeaveRoom = true
+    }
+    
+    func secondsToHoursMinutesSeconds(_ seconds: Int) -> (Int, Int, Int) {
+        return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
 }

@@ -15,7 +15,7 @@ struct SettingsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var viewModel = HomeViewModel()
     
-    @State var isLoggedOut = false
+    @State public var isLoggedOut = false
     @State private var image = UIImage()
     @State private var name = ""
     @State private var location = ""
@@ -23,7 +23,9 @@ struct SettingsView: View {
     @State private var showSaveButton = false
     @State private var editInfo = false
     @State private var showMenu: Bool = false
-    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
+//    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
+    @State private var genderChoices: [String] = ["Female","Male"]
+    @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]
     
     let storage = Storage.storage()
     
@@ -43,8 +45,15 @@ struct SettingsView: View {
                             imageSection(for: geoReader)
                                 .padding(geoReader.size.height * 0.03)
                             
-                            infoSection(for: geoReader)
-                                .padding(geoReader.size.height * 0.02)
+                        Spacer()
+                            .frame(height: geoReader.size.width * 0.07)
+                        
+                        nameSection(for: geoReader)
+                        
+                        Spacer()
+                            .frame(height: geoReader.size.height * 0.02)
+                        
+                        pickerSections(for: geoReader)
                             
                             buttonsSection(for: geoReader)
                     }
@@ -109,66 +118,66 @@ struct SettingsView: View {
         }
     }
     
-    private func infoSection(for geoReader: GeometryProxy) -> some View {
-        VStack{
-            Text("Basic Info")
-                .foregroundColor(Color.white)
-                .font(.system(size: geoReader.size.height * 0.04))
-                .padding(.trailing, geoReader.size.width * 0.55)
-                .padding(.bottom, geoReader.size.height * 0.03)
-            
-            VStack{
-                HStack{
-                    VStack(alignment: .leading){
-                        Text("Name")
-                            .foregroundColor(Color.white)
-                            .bold()
-                            .font(.system(size: geoReader.size.height * 0.025))
-                        
-                        Spacer()
-                            .frame(height: 20)
-                        
-                        Text("Location")
-                            .foregroundColor(Color.white)
-                            .bold()
-                            .font(.system(size: geoReader.size.height * 0.025))
-                    }
-                
-                    Spacer()
-                        .frame(width: 200)
-                    
-                    VStack{
-                        if(editInfo){
-                            TextField("name", text: $name)
-                                .frame(width: 100,height: 35)
-                                .background(Color.mainGrey)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }else {
-                            Text(name == "" ? "\(self.userProfile.fullName)" : "\(name)")
-                                .foregroundColor(Color.white)
-                                .font(.system(size: geoReader.size.height * 0.025))
-                        }
-                        
-                        Spacer()
-                            .frame(height: 20)
-                        
-                        if(editInfo){
-                            TextField("location", text: $location)
-                                .frame(width: 100,height: 35)
-                                .background(Color.mainGrey)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }else {
-                            Text(location == "" ? "\(self.userProfile.location)" : "\(location)")
-                                .foregroundColor(Color.white)
-                                .font(.system(size: geoReader.size.height * 0.025))
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    private func infoSection(for geoReader: GeometryProxy) -> some View {
+//            VStack{
+//                HStack{
+//                    VStack(alignment: .leading){
+//                        Text("Name")
+//                            .foregroundColor(Color.white)
+//                            .bold()
+//                            .font(.system(size: geoReader.size.height * 0.025))
+//
+//                        Spacer()
+//                            .frame(height: 20)
+//
+//                        Text("Gender")
+//                            .foregroundColor(Color.white)
+//                            .bold()
+//                            .font(.system(size: geoReader.size.height * 0.025))
+//
+//                        Spacer()
+//                            .frame(height: 20)
+//
+//                        Text("MatchDay")
+//                            .foregroundColor(Color.white)
+//                            .bold()
+//                            .font(.system(size: geoReader.size.height * 0.025))
+//                    }
+//
+//                    Spacer()
+//                        .frame(width: 200)
+//
+//                    VStack{
+//                        if(editInfo){
+//                            TextField("name", text: $name)
+//                                .frame(width: 100,height: 35)
+//                                .background(Color.mainGrey)
+//                                .foregroundColor(.white)
+//                                .cornerRadius(10)
+//                        }else {
+//                            Text(name == "" ? "\(self.userProfile.fullName)" : "\(name)")
+//                                .foregroundColor(Color.white)
+//                                .font(.system(size: geoReader.size.height * 0.025))
+//                        }
+//
+//                        Spacer()
+//                            .frame(height: 20)
+//
+//                        if(editInfo){
+//                            TextField("location", text: $location)
+//                                .frame(width: 100,height: 35)
+//                                .background(Color.mainGrey)
+//                                .foregroundColor(.white)
+//                                .cornerRadius(10)
+//                        }else {
+//                            Text(location == "" ? "\(self.userProfile.location)" : "\(location)")
+//                                .foregroundColor(Color.white)
+//                                .font(.system(size: geoReader.size.height * 0.025))
+//                        }
+//                    }
+//                }
+//            }
+//    }
     
     private func buttonsSection(for geoReader: GeometryProxy) -> some View {
         VStack{
@@ -212,7 +221,7 @@ struct SettingsView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            uploadStorageFile(image: viewModel.profileImage, profileId: self.userProfile.id)
+            uploadStorageFile(image: viewModel.profileImage, profileId: viewModel.userProfile.id)
         }
     }
     
@@ -347,6 +356,93 @@ struct SettingsView: View {
             }
         }
        
+    }
+    
+    private func nameSection(for geoReader: GeometryProxy) -> some View{
+        VStack{
+                
+                Text("Name")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.width * 0.05))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
+            if(editInfo){
+                TextField("", text: $viewModel.userProfile.fullName)
+                    .foregroundColor(.black)
+                    .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
+                    .padding()
+                    .background(.white)
+                    .opacity(0.5)
+                    .cornerRadius(geoReader.size.width * 0.03)
+                    .textInputAutocapitalization(.never)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 1)
+                    )
+            }else {
+                Text(viewModel.userProfile.fullName == "" ? "Enter Name" : viewModel.userProfile.fullName)
+                    .foregroundColor(Color.gray)
+                    .font(.system(size: geoReader.size.height * 0.025))
+            }
+        }
+    }
+    
+    private func pickerSections(for geoReader: GeometryProxy) -> some View{
+        VStack{
+                Text("Gender")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.width * 0.05))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
+            
+            Menu {
+                Picker(selection: $viewModel.userProfile.gender) {
+                    ForEach(genderChoices, id: \.self) { choice in
+                        Text("\(choice)")
+                            .tag(choice)
+                            .font(.system(size: geoReader.size.height * 0.04))
+                    }
+                } label: {}
+            } label: {
+                Text("\(viewModel.userProfile.gender)")
+                    .font(.system(size: geoReader.size.height * 0.04))
+            }
+            .padding(.bottom,geoReader.size.height * 0.02)
+            .accentColor(.white)
+            .disabled(editInfo == false)
+                
+                Text("MatchDay")
+                    .foregroundColor(.white)
+                    .font(.system(size: geoReader.size.width * 0.05))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
+            
+            
+            
+            Menu {
+                Picker(selection: $viewModel.userProfile.matchDay) {
+                    ForEach(matchDayChoices, id: \.self) { matchDay in
+                        Text("\(matchDay)")
+                        // .tag(matchDay)
+                            .font(.system(size: geoReader.size.height * 0.01))
+                    }
+                } label: {}
+            } label: {
+                HStack{
+                    Image(systemName: "snowflake.circle")
+                        .resizable()
+                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+                        .foregroundColor(editInfo ? .white : .mainGrey)
+                    
+                    Text("\(viewModel.userProfile.matchDay)")
+                        .font(.system(size: geoReader.size.height * 0.04))
+                }
+            }
+            .accentColor(.white)
+            .disabled(editInfo == false)
+        }
     }
 }
 
