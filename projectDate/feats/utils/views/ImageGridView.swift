@@ -63,18 +63,9 @@ struct ImageGridView: View {
                     }
                 }
             }
-         
         }
- 
-    
     }
 }
-
-
-
-
-
-
 
 struct ImageGridView_Previews: PreviewProvider {
     static var previews: some View {

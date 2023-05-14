@@ -12,5 +12,5 @@ struct SwipedCardGroupModel: Identifiable {
     var profileId: String
     var cardIds: [String]
     var answers: [String]
-  //var createdDate: Date
+    var gender: String
 }

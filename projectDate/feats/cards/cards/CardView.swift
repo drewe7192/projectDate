@@ -32,7 +32,7 @@ struct CardView: View {
     private var threshold: CGFloat = 0.1
     
     enum LikeDislike: Int {
-        case like, dislike, none
+        case like, dislike, noAnswer,none
     }
     @State var swipeStatus: LikeDislike = .none
     
@@ -50,18 +50,66 @@ struct CardView: View {
             VStack{
                 ZStack{
                     Rectangle()
-                        .foregroundColor(colorSwitch())
+                        .foregroundColor(Color.mainGrey)
                         .cornerRadius(40)
                         .frame(width: geoReader.size.width * 0.9,
                                height: geoReader.size.height * 0.65)
                     
                     title(for: geoReader)
                     question(for: geoReader)
-                    answer(for: geoReader)
+                    categoryDisplay(for: geoReader)
+                    
+                    
+                    if self.swipeStatus == .dislike {
+                        Text("ANSWER LATER")
+                            .font(.title3)
+                            .bold()
+                            .padding()
+                            .cornerRadius(10)
+                            .foregroundColor(Color.red)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.red, lineWidth: 5.0)
+                            )
+                            .padding(.leading, 205)
+                            .rotationEffect(Angle.degrees(45))
+                    }
+                    
+                    if self.swipeStatus == .like {
+                        Text("SUBMIT ANSWER")
+                            .font(.title3)
+                            .bold()
+                            .padding()
+                            .cornerRadius(10)
+                            .foregroundColor(Color.green)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.green, lineWidth: 5.0)
+                            )
+                            .padding(.trailing, 245)
+                            .rotationEffect(Angle.degrees(45))
+                    }
+                    
+                    if self.swipeStatus == .noAnswer {
+                        Text("Please answer question")
+                            .font(.title3)
+                            .bold()
+                            .frame(width: 100, height: 100)
+                            .padding()
+                            .cornerRadius(10)
+                            .foregroundColor(Color.orange)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.orange, lineWidth: 5.0)
+                            )
+                            .padding(.trailing, 145)
+                            .rotationEffect(Angle.degrees(45))
+                        
+                    }
                 }
             }
             .padding()
-            .background(colorSwitch())
+            .background(Color.mainGrey)
             .cornerRadius(40)
             .shadow(radius: 5)
             .animation(.spring())
@@ -86,8 +134,11 @@ struct CardView: View {
                         }
                     }
                     .onEnded {_ in
+                        if (selectedChoice == "Your Match's Answer") && (self.swipeStatus == .like) {
+                            self.swipeStatus = .noAnswer
+                        }
                         // cant swipe right(.like) if question hasnt been answered
-                        if (self.swipeStatus == .like) && (selectedChoice != "Your Match's Answer") {
+                        else if (self.swipeStatus == .like) && (selectedChoice != "Your Match's Answer") {
                             onRemove(self.card)
 
                             // after each swipe save the card data
@@ -103,7 +154,7 @@ struct CardView: View {
                             }
                         } else if (self.swipeStatus == .dislike) {
                             onRemove(self.card)
-                   
+                            
                             saveSwipedRecords(card: self.card, answer: "") { (success) in
                                 if success{
                                     //last card in set is always index 0
@@ -156,16 +207,16 @@ struct CardView: View {
         }
     }
     
-    private func answer(for geoReader: GeometryProxy) -> some View {
+    private func categoryDisplay(for geoReader: GeometryProxy) -> some View {
         ZStack{
             Text("")
                 .bold()
                 .frame(width: geoReader.size.width * 0.24, height: geoReader.size.height * 0.05)
-                .background(.white)
+                .background(colorSwitch())
                 .cornerRadius(20)
             
             Text("\(card.categoryType)")
-                .foregroundColor(colorSwitch())
+                .foregroundColor(Color.black)
                 .bold()
                 .font(.system(size: 16))
         }
@@ -220,10 +271,10 @@ struct CardView: View {
         switch card.categoryType {
         case "values":
             cardColor = Color.iceBreakrrrPink
-        case "littleThings":
+        case "little things":
             cardColor = Color.iceBreakrrrBlue
         case "personality":
-            cardColor = Color.mainGrey
+            cardColor = Color.orange
         case "dealBreaker":
             cardColor = Color.red
         default:

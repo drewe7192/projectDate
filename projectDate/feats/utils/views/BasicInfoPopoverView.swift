@@ -157,7 +157,7 @@ struct BasicInfoPopoverView: View {
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
                 
-                Text("Swipe at least 20 cards to get a match")
+                Text("Swipe at least 10 cards to get a match")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
@@ -337,9 +337,6 @@ struct BasicInfoPopoverView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading)
-            
-            
-            
             
             Menu {
                 Picker(selection: $userProfile.matchDay) {

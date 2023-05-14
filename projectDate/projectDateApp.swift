@@ -15,9 +15,6 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseFirestoreSwift
 
-//FirebaseMessaging might already be importing this
-//import UserNotifications
-
 @main
 struct projectDateApp: App {
     //Linking App Delegate to your App
@@ -76,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             print("Message ID: \(messageID)")
         }
         
-        print(userInfo)
+        //print(userInfo)
         
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -97,11 +94,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 }
 
 extension AppDelegate: MessagingDelegate {
-    
     //prints the device token
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken:[String: String] = ["token": fcmToken ?? ""]
-        print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
+       // print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
     }
 }
 
@@ -141,7 +137,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             print("Message ID from userNotificationCenter didReceive: \(messageID)")
         }
         
-        print(userInfo)
+      //  print(userInfo)
         
         completionHandler()
     }

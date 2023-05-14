@@ -39,7 +39,6 @@ struct FacetimeView: View {
                                             .padding(.bottom, 10)
                                     }
                                  
-                                    
                                     VStack{
                                         //Timer
                                         Text("Time")

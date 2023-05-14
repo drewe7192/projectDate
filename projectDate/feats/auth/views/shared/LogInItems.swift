@@ -82,9 +82,7 @@ struct LogInItems: View {
             } else {
                 signInLinkSection
             }
-        }
-    
-        
+        }  
     }
     
     public var thirdPartyButtons: some View {

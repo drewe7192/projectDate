@@ -48,7 +48,6 @@ extension DragGesture.Value {
 }
 
 extension Array where Element == CardModel {
-    
     func cardOffset(cardId: Int) -> CGFloat {
         // done really get this logic
         CGFloat(count - 1 - cardId) * 8
@@ -62,7 +61,6 @@ extension Array where Element == CardModel {
 }
 
 extension Array {
-    
     public func unique<T:Hashable>(by: ((Element) -> (T)))  -> [Element] {
         var set = Set<T>() //the unique list kept in a Set for fast retrieval
         var arrayOrdered = [Element]() //keeping the unique list of elements but ordered
@@ -83,7 +81,6 @@ extension Color {
     static let iceBreakrrrBlue = Color("IceBreakrrrBlue")
     static let iceBreakrrrPink = Color("IceBreakrrrPink")
 }
-
 
 extension String {
     //havent use this but maybe in the future
@@ -111,7 +108,6 @@ extension UIImage {
 
 extension FacetimeView {
     class VideoViewModel: ObservableObject, HMSUpdateListener{
-
         @Published var addVideoView: ((_ videoView: HMSVideoTrack) -> ())?
         @Published var removeVideoView: ((_ videoView: HMSVideoTrack) -> ())?
 
@@ -167,9 +163,7 @@ extension FacetimeView {
     }
 }
 
-
 extension Date {
-
   public static func today() -> Date {
       return Date()
   }

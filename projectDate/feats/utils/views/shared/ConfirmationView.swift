@@ -18,8 +18,6 @@ struct ConfirmationView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 20){
-              
-                    
                     Image("confirmationCheck")
                         .resizable()
                         .frame(width: 300, height: 300)

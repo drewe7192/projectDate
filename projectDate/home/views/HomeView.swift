@@ -129,19 +129,24 @@ struct HomeView: View {
         let weekday = format.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
         if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty) {
-            viewModel.getMatchRecordsForThisWeek() {(alreadySeenMatchRecords) -> Void in
+            viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
                 // If theres no matchRecords for this week run match logic and find matches
-                if alreadySeenMatchRecords.isEmpty {
+                if matchRecordsPreviousWeek.isEmpty {
                     getCardGroups() {(userCardGroup) -> Void in
                         if !userCardGroup.userCardGroup.id.isEmpty {
                             findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
                                 if !successFullMatches.isEmpty {
-                                    viewModel.saveMatchRecords(matches: successFullMatches)
-                                    viewRouter.currentPage = .matchPage
+                                    viewModel.saveMatchRecord(matches: successFullMatches)
+                                    //delaying routing to make sure matchRecords save
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                        viewRouter.currentPage = .matchPage
+                                    }
                                 }
                             }
                         }
                     }
+                } else if matchRecordsPreviousWeek.contains(where: { mrec in mrec.isNew == true}) {
+                    viewRouter.currentPage = .matchPage
                 }
             }
         }
@@ -315,6 +320,7 @@ struct HomeView: View {
         let matchDayString = matchDay.lowercased()
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
 
+        
         let start = Date.today().previous(enumDayOfWeek!).previous(enumDayOfWeek ?? .sunday)
         let end = Date.today()
         
@@ -331,6 +337,7 @@ struct HomeView: View {
     
     private func findMatches(cardGroups: SwipedCardGroupsModel, completed: @escaping(_ successFullMatches: [MatchRecordModel]) -> Void){
         let user = cardGroups.userCardGroup
+        // your filter this twice once in the db call. Okay I guess
         let others = cardGroups.otherCardGroups.filter{$0.profileId != user.profileId}
         var successMatchSnapshots: [CardGroupSnapShotModel] = []
         
@@ -362,6 +369,7 @@ struct HomeView: View {
             if(!successMatchSnapshots.isEmpty){
                 let crossRef = Dictionary(grouping: successMatchSnapshots, by: \.profileId)
                 let maximum = crossRef.max{a, b in a.value.count > b.value.count}
+                
                 if(maximum != nil){
                     let bestProfileId = maximum!.key
                     successMatchSnapshots.removeAll(where: { $0.profileId == bestProfileId} )
@@ -370,24 +378,46 @@ struct HomeView: View {
                 let crossRef2 = Dictionary(grouping: successMatchSnapshots, by: \.profileId)
                 let maximum2 = crossRef2.max{a, b in a.value.count > b.value.count}
                 
-                if(maximum != nil && maximum2 != nil){
-                    var cardsIds: [String] = []
-                    var answers: [String] = []
-                    maximum!.value.forEach({cardsIds.append($0.cardId)})
-                    maximum!.value.forEach({answers.append($0.answer)})
-                    
-                    let firstMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum!.key, cardIds: cardsIds, answers: answers, isNew: true)
-                    
-                    var cardsIds2: [String] = []
-                    var answers2: [String] = []
-                    maximum2!.value.forEach({cardsIds2.append($0.cardId)})
-                    maximum2!.value.forEach({answers2.append($0.answer)})
-                    
-                    let secondMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum2!.key, cardIds: cardsIds2, answers: answers2, isNew: true)
-                    
-                    viewModel.successfullMatchSnapshots.append(firstMatch)
-                    viewModel.successfullMatchSnapshots.append(secondMatch)
+                if(maximum2 != nil){
+                    let bestProfileId2 = maximum2!.key
+                    successMatchSnapshots.removeAll(where: { $0.profileId == bestProfileId2} )
                 }
+                
+                let crossRef3 = Dictionary(grouping: successMatchSnapshots, by: \.profileId)
+                let maximum3 = crossRef3.max{a, b in a.value.count > b.value.count}
+                    
+                    if maximum != nil {
+                        var cardsIds: [String] = []
+                        var answers: [String] = []
+                        maximum!.value.forEach({cardsIds.append($0.cardId)})
+                        maximum!.value.forEach({answers.append($0.answer)})
+                        
+                        let firstMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum!.key, cardIds: cardsIds, answers: answers, isNew: true)
+                        
+                        viewModel.successfullMatchSnapshots.append(firstMatch)
+                    }
+                 
+                    if maximum2 != nil {
+                        var cardsIds2: [String] = []
+                        var answers2: [String] = []
+                        maximum2!.value.forEach({cardsIds2.append($0.cardId)})
+                        maximum2!.value.forEach({answers2.append($0.answer)})
+                        
+                        let secondMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum2!.key, cardIds: cardsIds2, answers: answers2, isNew: true)
+                        
+                        viewModel.successfullMatchSnapshots.append(secondMatch)
+                    }
+        
+                    if maximum3 != nil {
+                        var cardsIds3: [String] = []
+                        var answers3: [String] = []
+                        maximum3!.value.forEach({cardsIds3.append($0.cardId)})
+                        maximum3!.value.forEach({answers3.append($0.answer)})
+                        
+                        let thirdMatch = MatchRecordModel(id: UUID().uuidString, userProfileId: user.profileId, matchProfileId: maximum3!.key, cardIds: cardsIds3, answers: answers3, isNew: true)
+                        
+                        viewModel.successfullMatchSnapshots.append(thirdMatch)
+                    }
             }
             completed(viewModel.successfullMatchSnapshots)
         }

@@ -37,35 +37,11 @@ struct SpeedDateHomeView: View {
                                 
                                 Spacer()
                                     .frame(height: 120)
-                                  
-    //                            Text("Your dates")
-    //                                .bold()
-    //                                .multilineTextAlignment(.center)
-    //                                .foregroundColor(.white)
-    //                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-                              //  ImageGridView()
-                                
-//                                Text("Till First Date:")
-//                                    .bold()
-//                                    .multilineTextAlignment(.center)
-//                                    .foregroundColor(.white)
-//                                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
+
                                 buttonSection(for: geoReader)
-                                
-                                
                             }
-//                            .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
-//                            .disabled(self.showHamburgerMenu ? true : false)
-//
-//                            //Display hamburgerMenu
-//                            if self.showHamburgerMenu {
-//                                MenuView()
-//                                    .frame(width: geoReader.size.width/2)
-//                                    .padding(.trailing,geoReader.size.width * 0.5)
-//                            }
                             
                             // roleType is guest if userProfile.Id is in matchingProfiles id
-                            
                         } else if(viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)) {
                             VStack{
                                 Text("SpeedDate")
@@ -95,16 +71,6 @@ struct SpeedDateHomeView: View {
                                 
                                 buttonSection(for: geoReader)
                             }
-//                            .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
-//                            .disabled(self.showHamburgerMenu ? true : false)
-//
-//                            //Display hamburgerMenu
-//                            if self.showHamburgerMenu {
-//                                MenuView()
-//                                    .frame(width: geoReader.size.width/2)
-//                                    .padding(.trailing,geoReader.size.width * 0.5)
-//                            }
-//
                         }
                     }
                     else {
@@ -112,16 +78,9 @@ struct SpeedDateHomeView: View {
                             .font(.system(size: 50))
                             .foregroundColor(Color.iceBreakrrrBlue)
                     }
-                    
                 }
                 .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
-//                .navigationBarItems(leading: (
-//                    headerSection(for: geoReader)
-//                        .padding(.leading, geoReader.size.width * 0.25)
-//                ))
             }
-
-       
     }
     
     private func eventDateSection(for geoReader: GeometryProxy) -> some View {

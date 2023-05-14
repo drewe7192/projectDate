@@ -36,12 +36,6 @@ struct MessageHomeView: View {
                         .ignoresSafeArea()
                     
                     VStack(spacing: 1 ){
-//                        ForEach(viewModel.messageThreads){ messageThread in
-//                            NavigationLink(destination: MessageView(messageIds: messageThread.messageIds)) {
-//                                messageCardView(for: geoReader)
-//                            }
-//                        }
-                        
                         Text("DISABLED UNTIL YOU MEET MATCHES VIA SPEEDDATING")
                             .bold()
                             .foregroundColor(.gray)
@@ -158,7 +152,6 @@ struct MessageHomeView: View {
                     }
                 })
                
-
                 NavigationLink(destination: SettingsView()) {
                     if(!homeViewModel.profileImage.size.width.isZero){
                         ZStack{
@@ -197,18 +190,8 @@ struct MessageHomeView: View {
                         }
                     }
                 }
-                
-                // Dating/Friend Toggle button
-                // adding this back in future versions
-                
-                //            Toggle(isOn: $showFriendDisplay, label: {
-                //
-                //            })
-                //            .padding(geoReader.size.width * 0.02)
-                //            .toggleStyle(SwitchToggleStyle(tint: .white))
             }
         }
-       
     }
     
     private func getUserProfile(completed: @escaping (_ profileId: String) -> Void){

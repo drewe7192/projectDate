@@ -95,19 +95,19 @@ struct CardsView: View {
             //pagination: get first n cards or get the next n cards
             if !isUpdating {
                 if !batch.isEmpty {
-                    query = db.collection("cards").limit(to: 20)
+                    query = db.collection("cards").limit(to: 10)
                         .whereField("id", notIn: batch)
                 } else {
-                    query = db.collection("cards").limit(to: 20)
+                    query = db.collection("cards").limit(to: 10)
                 }
               
             } else {
                 if (self.lastDoc != nil) {
                     if !batch.isEmpty {
-                        query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 20)
+                        query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 10)
                             .whereField("id", notIn: batch)
                     } else {
-                        query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 20)
+                        query = db.collection("cards").start(afterDocument: self.lastDoc).limit(to: 10)
                     }
                    
                 }

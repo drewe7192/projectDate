@@ -118,67 +118,6 @@ struct SettingsView: View {
         }
     }
     
-//    private func infoSection(for geoReader: GeometryProxy) -> some View {
-//            VStack{
-//                HStack{
-//                    VStack(alignment: .leading){
-//                        Text("Name")
-//                            .foregroundColor(Color.white)
-//                            .bold()
-//                            .font(.system(size: geoReader.size.height * 0.025))
-//
-//                        Spacer()
-//                            .frame(height: 20)
-//
-//                        Text("Gender")
-//                            .foregroundColor(Color.white)
-//                            .bold()
-//                            .font(.system(size: geoReader.size.height * 0.025))
-//
-//                        Spacer()
-//                            .frame(height: 20)
-//
-//                        Text("MatchDay")
-//                            .foregroundColor(Color.white)
-//                            .bold()
-//                            .font(.system(size: geoReader.size.height * 0.025))
-//                    }
-//
-//                    Spacer()
-//                        .frame(width: 200)
-//
-//                    VStack{
-//                        if(editInfo){
-//                            TextField("name", text: $name)
-//                                .frame(width: 100,height: 35)
-//                                .background(Color.mainGrey)
-//                                .foregroundColor(.white)
-//                                .cornerRadius(10)
-//                        }else {
-//                            Text(name == "" ? "\(self.userProfile.fullName)" : "\(name)")
-//                                .foregroundColor(Color.white)
-//                                .font(.system(size: geoReader.size.height * 0.025))
-//                        }
-//
-//                        Spacer()
-//                            .frame(height: 20)
-//
-//                        if(editInfo){
-//                            TextField("location", text: $location)
-//                                .frame(width: 100,height: 35)
-//                                .background(Color.mainGrey)
-//                                .foregroundColor(.white)
-//                                .cornerRadius(10)
-//                        }else {
-//                            Text(location == "" ? "\(self.userProfile.location)" : "\(location)")
-//                                .foregroundColor(Color.white)
-//                                .font(.system(size: geoReader.size.height * 0.025))
-//                        }
-//                    }
-//                }
-//            }
-//    }
-    
     private func buttonsSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             Button(action: {
@@ -209,8 +148,6 @@ struct SettingsView: View {
     private func signOutUser(){
         let firebaseAuth = Auth.auth()
         do{
-            //Google sign out.. dont think I need this
-            //            GIDSignIn.sharedInstance.signOut()
             try firebaseAuth.signOut()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
@@ -344,23 +281,12 @@ struct SettingsView: View {
                         }
                     }
                 }
-                
-                // Dating/Friend Toggle button
-                // adding this back in future versions
-                
-                //            Toggle(isOn: $showFriendDisplay, label: {
-                //
-                //            })
-                //            .padding(geoReader.size.width * 0.02)
-                //            .toggleStyle(SwitchToggleStyle(tint: .white))
             }
         }
-       
     }
     
     private func nameSection(for geoReader: GeometryProxy) -> some View{
         VStack{
-                
                 Text("Name")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.width * 0.05))
@@ -417,9 +343,6 @@ struct SettingsView: View {
                     .font(.system(size: geoReader.size.width * 0.05))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading)
-            
-            
-            
             
             Menu {
                 Picker(selection: $viewModel.userProfile.matchDay) {

@@ -41,21 +41,7 @@ struct SearchInput: View {
                     .onTapGesture {
                         self.isEditing = true
                     }
-                
-//                if isEditing {
-//                    Button(action: {
-//                        self.isEditing = false
-//                        self.searchText = ""
-//                        
-//                    }) {
-//                        Text("Cancel")
-//                    }
-//                    .padding(.trailing, 10)
-//                    .transition(.move(edge: .trailing))
-//                    .animation(.default)
-//                }
             }
-//            .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
         }
     
     }
