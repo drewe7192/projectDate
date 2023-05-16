@@ -30,12 +30,13 @@ class HomeViewModel: ObservableObject {
     @Published var swipedCards: [CardModel] = []
     @Published var lastDoc: DocumentSnapshot!
     @Published var successfullMatchSnapshots: [MatchRecordModel] = []
-    @Published var speedDates: [SpeedDateModel] = [SpeedDateModel(id: "fds", roomId: "fdsf", matchProfileIds: ["vfsdfds"], eventDate: Date(), createdDate: Date(), isActive: false)]
+    @Published var speedDates: [SpeedDateModel] = []
     @Published var matchRecords: [MatchRecordModel] = []
     @Published var matchProfiles: [ProfileModel] = []
     @Published var matchProfileImages: [UIImage] = []
     @Published var rolesForRoom = []
-    @Published var roomId: String = ""
+   // @Published var roomId: String = ""
+    @Published var newSpeedDate: SpeedDateModel = SpeedDateModel(id: "", hostRoomCode: "", guestRoomCode: "", roomId: "", matchProfileIds: [], eventDate: Date(), createdDate: Date(), isActive: false)
     @Published var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
         userCardGroup: SwipedCardGroupModel(
@@ -317,6 +318,8 @@ class HomeViewModel: ObservableObject {
                                 
                                 let speedDate = SpeedDateModel(
                                     id: data["id"] as? String ?? "",
+                                    hostRoomCode: data["hostRoomCode"] as? String ?? "",
+                                    guestRoomCode: data["guestRoomCode"] as? String ?? "",
                                     roomId: data["roomId"] as? String ?? "",
                                     matchProfileIds: data["matchProfileIds"] as? [String] ?? [],
                                     eventDate: eventDate ?? Date(),
@@ -333,7 +336,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    public func saveMatchRecord(matches: [MatchRecordModel]){
+    public func saveMatchRecords(matches: [MatchRecordModel]){
         for (match) in matches {
             let id = UUID().uuidString
             
@@ -557,16 +560,18 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    public func saveSpeedDate(eventDate: Date) {
+    public func saveSpeedDate() {
         let id = UUID().uuidString
         
         let docData: [String: Any] = [
             "id": id,
-            "roomId": self.roomId,
+            "roomId": self.newSpeedDate.roomId,
             "hostProfileId": userProfile.id,
             "matchProfileIds": [matchProfiles[0].id,matchProfiles[1].id,matchProfiles[2].id],
-            "eventDate": Timestamp(date: eventDate),
-            "createdDate": Timestamp(date: Date())
+            "eventDate": Timestamp(date: self.newSpeedDate.eventDate),
+            "createdDate": Timestamp(date: Date()),
+            "hostRoomCode" : self.newSpeedDate.hostRoomCode,
+            "guestRoomCode" : self.newSpeedDate.guestRoomCode
         ]
         
         let docRef = db.collection("speedDates").document(id)
@@ -639,6 +644,24 @@ class HomeViewModel: ObservableObject {
             } else {
                 print("Document successfully saved fcmToken!")
             }
+        }
+    }
+    
+    public func removeSpeedDate() {
+        if !self.userProfile.speedDateIds.isEmpty{
+            let removeSpeedDateId: [String: Any] = [
+                "speedDateIds": FieldValue.arrayRemove([self.userProfile.speedDateIds.first!])
+            ]
+            
+            db.collection("profiles").document(self.userProfile.id)
+                .updateData(removeSpeedDateId) {error in
+                if let error = error{
+                    print("Error removing speedDateId: \(error)")
+                } else {
+                    print("speedDateId successfully removed!")
+                }
+            }
+        
         }
     }
     

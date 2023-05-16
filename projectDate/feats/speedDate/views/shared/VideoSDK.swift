@@ -19,7 +19,7 @@ class VideoSDK: ObservableObject {
     func joinRoom(viewModel: HomeViewModel ) {
         //guest
         if viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id) {
-            hmsSDK.getAuthTokenByRoomCode("cer-erl-txy") { token, error in
+            hmsSDK.getAuthTokenByRoomCode(viewModel.speedDates.first!.guestRoomCode) { token, error in
                 if let token = token {
                     let config = HMSConfig(userName: "Join Doe", authToken: token)
                     self.hmsSDK.join(config: config, delegate: self)
@@ -27,7 +27,7 @@ class VideoSDK: ObservableObject {
             }
         } else{
             //host
-            hmsSDK.getAuthTokenByRoomCode("mhb-ehw-kmz") { token, error in
+            hmsSDK.getAuthTokenByRoomCode(viewModel.speedDates.first!.hostRoomCode) { token, error in
                 if let token = token {
                     let config = HMSConfig(userName: "Join Doe", authToken: token)
                     self.hmsSDK.join(config: config, delegate: self)

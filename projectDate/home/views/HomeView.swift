@@ -136,7 +136,7 @@ struct HomeView: View {
                         if !userCardGroup.userCardGroup.id.isEmpty {
                             findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
                                 if !successFullMatches.isEmpty {
-                                    viewModel.saveMatchRecord(matches: successFullMatches)
+                                    viewModel.saveMatchRecords(matches: successFullMatches)
                                     //delaying routing to make sure matchRecords save
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                                         viewRouter.currentPage = .matchPage
@@ -526,7 +526,7 @@ struct HomeView: View {
                         self.timeRemainingSpeedDateHomeView = 0
                         self.isStartSpeedDateNow = false
                         self.isTimeEnded = true
-                        //viewModel.speedDates.remove(at: 0)
+                        viewModel.removeSpeedDate()
                         return 0
                     }
                 }

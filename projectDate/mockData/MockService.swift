@@ -216,6 +216,8 @@ enum MockService {
     static var sdSampleData: SpeedDateModel {
         SpeedDateModel(
             id: "",
+            hostRoomCode: "",
+            guestRoomCode: "",
             roomId: "",
             matchProfileIds: [],
             eventDate: Date(),
@@ -228,6 +230,8 @@ enum MockService {
         [
             SpeedDateModel(
                 id: "",
+                hostRoomCode: "",
+                guestRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -236,6 +240,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
+                hostRoomCode: "",
+                guestRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -244,6 +250,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
+                hostRoomCode: "",
+                guestRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -252,6 +260,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
+                hostRoomCode: "",
+                guestRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -260,6 +270,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
+                hostRoomCode: "",
+                guestRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -268,6 +280,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
+                hostRoomCode: "",
+                guestRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),

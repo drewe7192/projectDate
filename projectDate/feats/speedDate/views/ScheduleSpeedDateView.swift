@@ -21,7 +21,8 @@ struct ScheduleSpeedDateView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var viewModel = HomeViewModel()
     
-    @State private var date = Date()
+   // @State private var date = Date()
+    
     var body: some View {
         ZStack{
             Color.iceBreakrrrBlue
@@ -33,7 +34,7 @@ struct ScheduleSpeedDateView: View {
                 
                 DatePicker(
                     "",
-                    selection: $date,
+                    selection: $viewModel.newSpeedDate.eventDate,
                     in: Date().addingTimeInterval(200000)...
                 )
                 .scaleEffect(1.5)
@@ -51,7 +52,7 @@ struct ScheduleSpeedDateView: View {
                             .font(.system(size: 20))
                             .cornerRadius(20)
                             .shadow(radius: 8, x: 10, y:10)
-                            .opacity(self.date != Date() ? 1 : 0.5)
+                            .opacity(viewModel.newSpeedDate.eventDate != Date() ? 1 : 0.5)
                     }
                 }
                 .padding(.top,50)
@@ -63,7 +64,7 @@ struct ScheduleSpeedDateView: View {
         guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/createRoom") else { fatalError("Missing URL") }
         
         let json: [String: Any]  = [
-            "name": "new-room-1662723668",
+            "name": "room_\(UUID().uuidString)",
             "description": "This is a sample description for the room",
             "template_id": "638d9d1b2b58471af0e13f08",
             "region": "us"
@@ -92,8 +93,8 @@ struct ScheduleSpeedDateView: View {
                     do {
                         //let decodedUsers = try JSONDecoder().decode(Response.self, from: data)
                         let roomId = String(data:data, encoding: .utf8)
-                        viewModel.roomId = roomId!
-                        completed(viewModel.roomId)
+                        viewModel.newSpeedDate.roomId = roomId!
+                        completed(viewModel.newSpeedDate.roomId)
                     } catch let error {
                         completed("")
                         print("Error decoding: ", error)
@@ -105,7 +106,7 @@ struct ScheduleSpeedDateView: View {
     }
     
     private func getRoomCodes(completed: @escaping (_ roomCodes: [Any]) -> Void) {
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(viewModel.roomId)") else { fatalError("Missing URL") }
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(viewModel.newSpeedDate.roomId)") else { fatalError("Missing URL") }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
@@ -125,10 +126,14 @@ struct ScheduleSpeedDateView: View {
                 DispatchQueue.main.async {
                     do {
                         let decodedRoles = try JSONDecoder().decode(RolesModel.self, from: data)
-                        decodedRoles.roles.forEach{
-                            viewModel.rolesForRoom.append($0)
-                          //  print($0)
+                        decodedRoles.roles.forEach{ x in
+                            viewModel.rolesForRoom.append(x.role)
+                
+                            //print("this is the role")
+                           // print(x)
                         }
+                        viewModel.newSpeedDate.hostRoomCode = viewModel.rolesForRoom[0] as! String
+                        viewModel.newSpeedDate.guestRoomCode = viewModel.rolesForRoom[1] as! String
                         completed(viewModel.rolesForRoom)
                     } catch let error {
                         completed([])
@@ -145,9 +150,8 @@ struct ScheduleSpeedDateView: View {
             if roomId != "" {
                 getRoomCodes(){ (roomCodes) -> Void in
                     if !roomCodes.isEmpty {
-                        viewModel.saveSpeedDate(eventDate: self.date)
+                        viewModel.saveSpeedDate()
                         viewRouter.currentPage = .speedDateConfirmationPage
-                        
                     }
                 }
             }
