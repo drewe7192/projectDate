@@ -46,34 +46,28 @@ struct HomeView: View {
     @State private var hasPeerJoined = false
     @State private var showCards = false
     @State private var emptyRooms: [RoomModel] = []
-    @State private var timeRemainingg = 10
-    
+    @State private var timeRemainingg = 6
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    let functions = Functions.functions()
     
     var body: some View {
         NavigationView{
-            GeometryReader{geoReader in
+            GeometryReader{ geoReader in
                 ZStack{
                     ZStack{
                         FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined)
                         headerSection(for: geoReader)
-                                             .padding(.leading, geoReader.size.width * 0.25)
-                      
+                            .padding(.leading, geoReader.size.width * 0.25)
                         
                         if !hasPeerJoined {
                             animatedThingy(for: geoReader)
                         }
                         
-            
-                        if self.showCards {
-                            cardsAndSpeeDateSection(for: geoReader)
-                                .padding(.top,10)
-                                .animation(.default)
-                        } 
+                        cardsAndSpeeDateSection(for: geoReader)
+                            .padding(.top,10)
+                            .animation(Animation.easeInOut(duration: 0.2))
+                        
                     }
                     .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
                     .disabled(self.showHamburgerMenu ? true : false)
@@ -96,31 +90,14 @@ struct HomeView: View {
                 .onAppear {
                     getAllData()
                     getAvailableRoom()
-                  
-                       
-                    
-                    
+                    displayCards()
                 }
-//                .onReceive(timer) { time in
-//                    if timeRemainingg > 0 {
-//                        timeRemainingg -= 1
-//                    } else if timeRemainingg == 0 {
-//                        if self.showCards == false {
-//                            self.showCards = true
-//                        }
-//
-//                    }
-//                }
                 .onChange(of: updateData) { _ in
                     saveCards()
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
-//                .navigationBarItems(leading: (
-//                    headerSection(for: geoReader)
-//                        .padding(.leading, geoReader.size.width * 0.25)
-//                ))
             }
         }
     }
@@ -132,22 +109,34 @@ struct HomeView: View {
                 getMatchData()
                 viewModel.getSpeedDate(speedDateIds: viewModel.userProfile.speedDateIds) {(speedDates) -> Void in
                     if !speedDates.isEmpty {
-                        setPlaceInLine(){(placeIn) -> Void in
-                            if placeIn != 0 {
-                                setTimeRemaining(){(timeRemaining) -> Void in
-                                    if timeRemaining != 0 {
-                                        timeLeft(inLine: placeIn)
-                                    }
-                                }
-                                
-                            }
-                        }
+                    setLineAndTime()
                     }
                 }
             }
         }
     }
     
+    private func getAvailableRoom(){
+        viewModel.getActiveSessions() {(activeSessions) -> Void in
+            if !activeSessions.data.isEmpty {
+                findRoom(activeSessions: activeSessions)
+            } else {
+                viewModel.getAllRooms() { (allRooms) -> Void in
+                    if !allRooms.data.isEmpty {
+                        viewModel.currentSpeedDate.roomId = allRooms.data.first!.id
+                        retrieveCodes()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func displayCards() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            // fires off getAllCards() in CardView
+            gotSwipedRecords.toggle()
+        }
+    }
     
     private func saveCards(){
         //make a cardGroup out of all the cards user swiped this week
@@ -159,13 +148,42 @@ struct HomeView: View {
             }
         }
     }
+   
+    private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
+        //inital check to make sure we're not always getting data if we already have data
+        if viewModel.userProfile.id == "" {
+            viewModel.getUserProfile(){(profileId) -> Void in
+                if profileId != "" {
+                    //get profileImage
+                    viewModel.getStorageFile(profileId: profileId)
+                    // getting these records to display new cards user hasn't seen yet
+                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
+                        // fires off getAllCards() in CardView
+                        //gotSwipedRecords.toggle()
+                        if !swipedRecords.isEmpty {
+                            viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
+                        }
+                        completed(profileId)
+                    }
+                } else {
+                    viewModel.createUserProfile() {(createdUserProfileId) -> Void in
+                        if createdUserProfileId != "" {
+                            showingBasicInfoPopover.toggle()
+                        }
+                        completed(createdUserProfileId)
+                    }
+                }
+            }
+        }
+    }
     
     private func getMatchData(){
         let format = DateFormatter()
         //The -1 is added at the end because Calendar.current.component(.weekday, from: Date()) returns values from 1-7 but weekdaySymbols expects array indices
         let weekday = format.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
-        if(weekday == viewModel.userProfile.matchDay && viewModel.successfullMatchSnapshots.isEmpty) {
+        //SpeedDate Sundays!
+        if(weekday == "Sunday") {
             viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
                 // If theres no matchRecords for this week run match logic and find matches
                 if matchRecordsPreviousWeek.isEmpty {
@@ -189,233 +207,11 @@ struct HomeView: View {
         }
     }
     
-    private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
-        //inital check to make sure we're not always getting data if we already have data
-        if viewModel.userProfile.id == "" {
-            viewModel.getUserProfile(){(profileId) -> Void in
-                if profileId != "" {
-                    //get profileImage
-                    viewModel.getStorageFile(profileId: profileId)
-                    // getting these records to display new cards user hasn't seen yet
-                    viewModel.getSwipedRecordsThisWeek() {(swipedRecords) -> Void in
-                        // fires off getAllCards() in CardView
-                        gotSwipedRecords.toggle()
-                        if !swipedRecords.isEmpty {
-                            viewModel.getSwipedCardsFromSwipedRecords(swipedRecords: swipedRecords)
-                        }
-                        completed(profileId)
-                    }
-                } else {
-                    viewModel.createUserProfile() {(createdUserProfileId) -> Void in
-                        if createdUserProfileId != "" {
-                            // fires off getAllCards() in CardView
-                            gotSwipedRecords.toggle()
-                            showingBasicInfoPopover.toggle()
-                        }
-                        completed(createdUserProfileId)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func headerSection(for geoReader: GeometryProxy) -> some View {
-        ZStack{
-            
-            HStack{
-                HStack{
-                    Image("logo")
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                    //.background(Color.mainBlack)
-                       // .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
-                    
-                    Text("iceBreakrrr")
-                        .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
-                        .bold()
-                        .foregroundColor(Color.iceBreakrrrBlue)
-                       // .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.03)
-                }
-                
-                HStack{
-                   // .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
-    //
-    //                Spacer()
-    //                    .frame(width: geoReader.size.width * 0.55)
-
-                    NavigationLink(destination: NotificationsView(), label: {
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(Color.black.opacity(0.6))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-
-                            Image(systemName: "bell")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fill)
-                        }
-                        //.position(y: geoReader.size.height * 0.03)
-                    })
-
-                    NavigationLink(destination: SettingsView()) {
-                        if(!viewModel.profileImage.size.width.isZero){
-                            ZStack{
-                                Text("")
-                                    .cornerRadius(20)
-                                    .frame(width: 40, height: 40)
-                                    .background(.black.opacity(0.2))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-
-                                Image(uiImage: viewModel.profileImage)
-                                    .resizable()
-                                    .cornerRadius(20)
-                                    .frame(width: 30, height: 30)
-                                    .background(.black.opacity(0.2))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                            }
-                        } else {
-                            ZStack{
-                                Text("")
-                                    .cornerRadius(20)
-                                    .frame(width: 40, height: 40)
-                                    .background(.black.opacity(0.6))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-
-                                Image(systemName: "person.circle")
-                                    .resizable()
-                                    .cornerRadius(20)
-                                    .frame(width: 20, height: 20)
-                                    .background(Color.black.opacity(0.6))
-                                    .foregroundColor(.white)
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                            }
-                        }
-                    }
-                }
-            }
-            .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.08)
-            
-            Button(action: {
-                withAnimation{
-                    self.showHamburgerMenu.toggle()
-                }
-            }) {
-                ZStack{
-                    Text("")
-                        .frame(width: 35, height: 35)
-                     .background(Color.black.opacity(0.6))
-                        .aspectRatio(contentMode: .fill)
-                        .clipShape(Rectangle())
-                        .cornerRadius(10)
-
-                    Image(systemName: "line.3.horizontal.decrease")
-                        .resizable()
-                        .frame(width: 20, height: 10)
-                        .foregroundColor(.white)
-                        .aspectRatio(contentMode: .fill)
-                }
-            }
-            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
-        }
-    }
-    
-    private func animatedThingy(for geoReader: GeometryProxy) -> some View {
-        
-        VStack{
-            VStack{
-                    Text("Searching for")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                        .opacity(textOpacityChanged ? 1 : 0.1)
-                        .animation(Animation.linear(duration: 1).repeatForever())
-                    
-                    Text("SpeedDate")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                        .opacity(textOpacityChanged ? 1 : 0.1)
-                        .animation(Animation.linear(duration: 1).repeatForever())
-                
-               
-//
-//                Text("...")
-//                    .font(.system(size: 30))
-//                    .foregroundColor(.white)
-//                    .opacity(textOpacityChanged ? 1 : 0.1)
-//                    .animation(Animation.linear(duration: 1).repeatForever())
-            }
-            
-//            Spacer()
-//                .frame(height: 4)
-           
-            
-            ZStack {
-                Circle()
-                    .frame(width: 125, height: 125)
-                    .foregroundColor(circleColorChanged ? Color(.systemGray5) : .iceBreakrrrBlue)
-                    .animation(Animation.linear(duration: 1).repeatForever())
-                
-                Image(systemName: "heart.fill")
-                    .foregroundColor(heartColorChanged ? .iceBreakrrrBlue : .white)
-                    .font(.system(size: 75))
-                    .scaleEffect(heartSizeChanged ? 1.0 : 0.5)
-                    .animation(Animation.linear(duration: 1).repeatForever())
-            }
-            .onAppear {
-                self.circleColorChanged.toggle()
-                self.heartColorChanged.toggle()
-                self.heartSizeChanged.toggle()
-                self.textOpacityChanged.toggle()
-            }
-        }
-       
-    }
-    
-    private func cardsAndSpeeDateSection(for geoReader: GeometryProxy) -> some View {
-        ZStack{
-            CardsView(updateData: $updateData, gotSwipedRecords: $gotSwipedRecords, viewModel: viewModel)
-                .position(x: geoReader.frame(in: .local).midX, y:  geoReader.size.height * 0.7)
-           // plusButton()
-            
-//            VStack{
-//                Text("Upcoming SpeedDate:")
-//                    .bold()
-//                    .multilineTextAlignment(.center)
-//                    .foregroundColor(.white)
-//                    .font(.custom("Superclarendon", size: geoReader.size.height * 0.030))
-//
-//                //CountDownButton
-//                NavigationLink(destination: SpeedDateHomeView(viewModel: viewModel, placeInLine: self.placeInLine, timeRemainingSpeedDateHomeView: $timeRemainingSpeedDateHomeView, isStartVideoNow: $isStartVideoNow, isTimeEnded: $isTimeEnded) , label: {
-//                    CountdownTimerView( timeRemaining: $timeRemainingHomeView,
-//                                        geoReader: geoReader,
-//                                        isStartNow: $isStartSpeedDateNow,
-//                                        isTimeEnded: $isTimeEnded,
-//                                        speedDates: viewModel.speedDates
-//                    )
-//                }).disabled(isStartSpeedDateNow == true ? false: true)
-//            }
-//            .padding(.top,geoReader.size.height * 0.05)
-//            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.85)
-        }
-    }
-    
     private func getCardGroups(completed: @escaping(_ userCardGroup: SwipedCardGroupsModel) -> Void){
         // get your cardGroup for this week as well as 20 other random cardGroups
-        let matchDay = viewModel.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : viewModel.userProfile.matchDay
-        
-        //SWITCH TO PREVENT PREVIEW CRASHING
-        //let matchDay = "Monday"
-        
+        let matchDay = "Sunday"
         let matchDayString = matchDay.lowercased()
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
-        
         
         let start = Date.today().previous(enumDayOfWeek!).previous(enumDayOfWeek ?? .sunday)
         let end = Date.today()
@@ -516,6 +312,162 @@ struct HomeView: View {
                 }
             }
             completed(viewModel.successfullMatchSnapshots)
+        }
+    }
+    
+    private func setLineAndTime(){
+        setPlaceInLine(){(placeIn) -> Void in
+            if placeIn != 0 {
+                setTimeRemaining(){(timeRemaining) -> Void in
+                    if timeRemaining != 0 {
+                        timeLeft(inLine: placeIn)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func headerSection(for geoReader: GeometryProxy) -> some View {
+        ZStack{
+            HStack{
+                HStack{
+                    Image("logo")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    
+                    Text("iceBreakrrr")
+                        .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
+                        .bold()
+                        .foregroundColor(Color.iceBreakrrrBlue)
+                }
+                
+                HStack{
+                    NavigationLink(destination: NotificationsView(), label: {
+                        ZStack{
+                            Text("")
+                                .cornerRadius(20)
+                                .frame(width: 40, height: 40)
+                                .background(Color.black.opacity(0.6))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            Image(systemName: "bell")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.white)
+                                .aspectRatio(contentMode: .fill)
+                        }
+                    })
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        if(!viewModel.profileImage.size.width.isZero){
+                            ZStack{
+                                Text("")
+                                    .cornerRadius(20)
+                                    .frame(width: 40, height: 40)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Image(uiImage: viewModel.profileImage)
+                                    .resizable()
+                                    .cornerRadius(20)
+                                    .frame(width: 30, height: 30)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
+                        } else {
+                            ZStack{
+                                Text("")
+                                    .cornerRadius(20)
+                                    .frame(width: 40, height: 40)
+                                    .background(.black.opacity(0.6))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Image(systemName: "person.circle")
+                                    .resizable()
+                                    .cornerRadius(20)
+                                    .frame(width: 20, height: 20)
+                                    .background(Color.black.opacity(0.6))
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
+                        }
+                    }
+                }
+            }
+            .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.08)
+            
+            Button(action: {
+                withAnimation{
+                    self.showHamburgerMenu.toggle()
+                }
+            }) {
+                ZStack{
+                    Text("")
+                        .frame(width: 35, height: 35)
+                        .background(Color.black.opacity(0.6))
+                        .aspectRatio(contentMode: .fill)
+                        .clipShape(Rectangle())
+                        .cornerRadius(10)
+                    
+                    Image(systemName: "line.3.horizontal.decrease")
+                        .resizable()
+                        .frame(width: 20, height: 10)
+                        .foregroundColor(.white)
+                        .aspectRatio(contentMode: .fill)
+                }
+            }
+            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
+        }
+    }
+    
+    private func animatedThingy(for geoReader: GeometryProxy) -> some View {
+        VStack{
+            VStack{
+                Text("Searching for")
+                    .font(.system(size: 30))
+                    .foregroundColor(.white)
+                    .opacity(textOpacityChanged ? 1 : 0.1)
+                    .animation(Animation.linear(duration: 1).repeatForever())
+                
+                Text("SpeedDate")
+                    .font(.system(size: 30))
+                    .foregroundColor(.white)
+                    .opacity(textOpacityChanged ? 1 : 0.1)
+                    .animation(Animation.linear(duration: 1).repeatForever())
+            }
+
+            ZStack {
+                Circle()
+                    .frame(width: 125, height: 125)
+                    .foregroundColor(circleColorChanged ? Color(.systemGray5) : .iceBreakrrrBlue)
+                    .animation(Animation.linear(duration: 1).repeatForever())
+                
+                Image(systemName: "heart.fill")
+                    .foregroundColor(heartColorChanged ? .iceBreakrrrBlue : .white)
+                    .font(.system(size: 75))
+                    .scaleEffect(heartSizeChanged ? 1.0 : 0.5)
+                    .animation(Animation.linear(duration: 1).repeatForever())
+            }
+            .onAppear {
+                self.circleColorChanged.toggle()
+                self.heartColorChanged.toggle()
+                self.heartSizeChanged.toggle()
+                self.textOpacityChanged.toggle()
+            }
+        }
+        
+    }
+    
+    private func cardsAndSpeeDateSection(for geoReader: GeometryProxy) -> some View {
+        ZStack{
+            CardsView(updateData: $updateData, gotSwipedRecords: $gotSwipedRecords, viewModel: viewModel)
+                .position(x: geoReader.frame(in: .local).midX, y:  geoReader.size.height * 0.7)
+            // plusButton()
         }
     }
     
@@ -657,23 +609,7 @@ struct HomeView: View {
         completed(-1)
     }
     
-    private func getAvailableRoom(){
-        getActiveSessions() {(activeSessions) -> Void in
-            if !activeSessions.data.isEmpty {
-                findRoom(activeSessions: activeSessions)
-            } else {
-                getAllRooms() { (allRooms) -> Void in
-                    if !allRooms.data.isEmpty {
-                        viewModel.currentSpeedDate.roomId = allRooms.data.first!.id
-                        retrieveCodes()
-                        
-                    }
-                }
-            }
-        }
-    }
-    
-    private func findRoom(activeSessions: Response ){
+    private func findRoom(activeSessions: GetActiveSessionsResponseModel ){
         filterRooms(activeSessions: activeSessions.data) {(openRoom) -> Void in
             if (openRoom != "") && (openRoom != "Gender is null") {
                 retrieveCodes()
@@ -681,7 +617,7 @@ struct HomeView: View {
                 //Alert gender is null
             } else {
                 /// need to filter out the active sessionss
-                getAllRooms() { (allRooms) -> Void in
+                viewModel.getAllRooms() { (allRooms) -> Void in
                     if !allRooms.data.isEmpty {
                         allRooms.data.forEach{ room in
                             activeSessions.data.forEach{ actSesh in
@@ -695,7 +631,7 @@ struct HomeView: View {
                             retrieveCodes()
                         }
                     } else {
-                        createRoom(){ (roomId) -> Void in
+                        viewModel.createRoom(){ (roomId) -> Void in
                             if roomId != "" {
                                 retrieveCodes()
                             }
@@ -707,7 +643,7 @@ struct HomeView: View {
     }
     
     private func retrieveCodes(){
-        getRoomCodes(){ (roomCodes) -> Void in
+        viewModel.getRoomCodes(){ (roomCodes) -> Void in
             if !roomCodes.data.isEmpty {
                 roomCodes.data.forEach{ x in
                     if x.role == "male"{
@@ -717,13 +653,9 @@ struct HomeView: View {
                     }
                 }
                 launchJoinRoom.toggle()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    showCards.toggle()
-                        
-                }
             }
             else {
-                createRoomCodes() {(newRoomCodes) -> Void in
+                viewModel.createRoomCodes() {(newRoomCodes) -> Void in
                     if !newRoomCodes.data.isEmpty {
                         newRoomCodes.data.forEach{ x in
                             if x.role == "male"{
@@ -733,45 +665,10 @@ struct HomeView: View {
                             }
                         }
                         launchJoinRoom.toggle()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            showCards.toggle()
-                        }
                     }
                 }
             }
         }
-    }
-    
-    private func getActiveSessions(completed: @escaping(_ activeSessions: Response) -> Void){
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getActiveSessions") else { fatalError("Missing URL") }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
-                print("Request error: ", error)
-                completed(Response(data: []))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else { return }
-            
-            if response.statusCode == 200 {
-                guard let data = data else { return }
-                DispatchQueue.main.async {
-                    do {
-                        let actSessions = try JSONDecoder().decode(Response.self, from: data)
-                        completed(actSessions)
-                    } catch let error {
-                        print("Error decoding: ", error)
-                        completed(Response(data: []))
-                    }
-                }
-            }
-        }
-        dataTask.resume()
     }
     
     private func filterRooms(activeSessions: [ActiveSessionModel] ,completed: @escaping(_ openRoom: String) -> Void){
@@ -791,173 +688,6 @@ struct HomeView: View {
         }
         completed("")
     }
-    
-    private func createRoom(completed: @escaping (_ roomId: String) -> Void) {
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/createRoom") else { fatalError("Missing URL") }
-        
-        let json: [String: Any]  = [
-            "name": "room_\(UUID().uuidString)",
-            "description": "This is a sample description for the room",
-            "template_id": "638d9d1b2b58471af0e13f08",
-            "region": "us"
-        ]
-        
-        let jsonData = try? JSONSerialization.data(withJSONObject: json)
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = jsonData
-        urlRequest.setValue("\(String(describing: jsonData?.count))", forHTTPHeaderField: "Content-Length")
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
-                print("Request error: ", error)
-                completed("")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else { return }
-            
-            if response.statusCode == 200 {
-                guard let data = data else { return }
-                DispatchQueue.main.async {
-                    do {
-                        //let decodedUsers = try JSONDecoder().decode(Response.self, from: data)
-                        let roomId = String(data:data, encoding: .utf8)
-                        viewModel.currentSpeedDate.roomId = roomId!
-                        completed(viewModel.currentSpeedDate.roomId)
-                    } catch let error {
-                        completed("")
-                        print("Error decoding: ", error)
-                    }
-                }
-            }
-        }
-        dataTask.resume()
-    }
-    
-    private func getRoomCodes(completed: @escaping (_ roomCodes: RolesModel) -> Void) {
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(viewModel.currentSpeedDate.roomId)") else { fatalError("Missing URL") }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
-                print("Request error: ", error)
-                completed(RolesModel(data: []))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else { return }
-            
-            if response.statusCode == 200 {
-                guard let data = data else { return }
-                DispatchQueue.main.async {
-                    do {
-                        let decodedRoles = try JSONDecoder().decode(RolesModel.self, from: data)
-                        completed(decodedRoles)
-                    } catch let error {
-                        completed(RolesModel(data: []))
-                        print("Error decoding: ", error)
-                    }
-                }
-            }
-        }
-        dataTask.resume()
-    }
-    
-    private func createRoomCodes(completed: @escaping (_ newRoomCodes: RolesModel) -> Void) {
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/createRoomCodes?room_id=\(viewModel.currentSpeedDate.roomId)") else { fatalError("Missing URL") }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
-                print("Request error: ", error)
-                completed(RolesModel(data: []))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else { return }
-            
-            if response.statusCode == 200 {
-                guard let data = data else { return }
-                DispatchQueue.main.async {
-                    do {
-                        let newRoles = try JSONDecoder().decode(RolesModel.self, from: data)
-                        completed(newRoles)
-                    } catch let error {
-                        completed(RolesModel(data: []))
-                        print("Error decoding: ", error)
-                    }
-                }
-            }
-        }
-        dataTask.resume()
-    }
-    
-    private func getAllRooms(completed: @escaping(_ allRooms: getAllRoomsResponse) -> Void){
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getAllRooms") else { fatalError("Missing URL") }
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
-                print("Request error: ", error)
-                completed(getAllRoomsResponse(data: []))
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else { return }
-            
-            if response.statusCode == 200 {
-                guard let data = data else { return }
-                DispatchQueue.main.async {
-                    do {
-                        let rooms = try JSONDecoder().decode(getAllRoomsResponse.self, from: data)
-                        completed(rooms)
-                    } catch let error {
-                        print("Error decoding: ", error)
-                        completed(getAllRoomsResponse(data: []))
-                    }
-                }
-            }
-        }
-        dataTask.resume()
-    }
-}
-
-
-struct Response: Codable{
-    var data: [ActiveSessionModel]
-}
-
-struct ActiveSessionModel: Codable{
-    var id: String
-    var room_id: String
-    var active: Bool
-    var peers: [String:PeerModel]
-}
-
-struct PeerModel: Codable{
-    var id: String
-    var name: String
-    var role: String
-}
-
-struct getAllRoomsResponse: Codable{
-    var data: [RoomModel]
-}
-
-struct RoomModel: Codable{
-    var id: String
 }
 
 struct HomeView_Previews: PreviewProvider {

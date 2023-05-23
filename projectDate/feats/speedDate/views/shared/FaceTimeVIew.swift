@@ -54,7 +54,6 @@ struct FacetimeView: View {
                                                     .position(x: tapped3 ?  geoReader.size.width * 0.8 : geoReader.frame(in: .local).midX,
                                                               y: tapped3 ?  geoReader.size.height * 0.3 : geoReader.frame(in: .local).midY )
                                                     .animation(.default)
-                                                    .cornerRadius(20)
                                                 
                                                 videoOptions(for: geoReader)
                                                     .padding(.bottom, 10)

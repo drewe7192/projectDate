@@ -35,7 +35,7 @@ class HomeViewModel: ObservableObject {
     @Published var matchProfiles: [ProfileModel] = []
     @Published var matchProfileImages: [UIImage] = []
     @Published var rolesForRoom = []
-   // @Published var roomId: String = ""
+    // @Published var roomId: String = ""
     @Published var newSpeedDate: SpeedDateModel = SpeedDateModel(id: "", maleRoomCode: "", femaleRoomCode: "", roomId: "", matchProfileIds: [], eventDate: Date(), createdDate: Date(), isActive: false)
     @Published var currentSpeedDate: SpeedDateModel = SpeedDateModel(id: "", maleRoomCode: "", femaleRoomCode: "", roomId: "", matchProfileIds: [], eventDate: Date(), createdDate: Date(), isActive: false)
     @Published var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
@@ -131,7 +131,7 @@ class HomeViewModel: ObservableObject {
         //let matchDay = "Monday"
         
         let matchDayString = matchDay.lowercased()
-
+        
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
         let start = Date.today().previous(enumDayOfWeek ?? .sunday)
@@ -237,7 +237,7 @@ class HomeViewModel: ObservableObject {
         let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
         //PREVENTS HOMEVIEW() PREVIEW CRASH
-       // let matchDay = "Monday"
+        // let matchDay = "Monday"
         
         let matchDayString = matchDay.lowercased()
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
@@ -416,39 +416,39 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getMatchRecordsForPreviousWeek(completed: @escaping(_ matchRecordsPreviousWeek: [MatchRecordModel]) -> Void) {
-       
+        
         let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
         //SWITCH TO PREVENT PREVIEW CRASHING
         //let matchDay = "Monday"
-      
-            let matchDayString = matchDay.lowercased()
-            let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
-            
-            let start = Date.today().previous(enumDayOfWeek ?? .sunday).previous(enumDayOfWeek ?? .sunday)
-            let end = Date.today().previous(enumDayOfWeek ?? .sunday)
-            
-            db.collection("matchRecords")
-                .whereField("userProfileId", isEqualTo: self.userProfile.id)
-                .whereField("createdDate", isGreaterThan: start)
-                .whereField("createdDate", isLessThan: end)
-               // .whereField("isNew", isEqualTo: true)
-                .getDocuments() { (querySnapshot, err) in
-                    if let err = err {
-                        print("Error getting documents from matchRecords: \(err)")
-                        completed([])
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let data = document.data()
-                            
-                            if !data.isEmpty{
-                                let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [], answers: data["answers"] as? [String] ?? [], isNew: data["isNew"] as? Bool ?? false)
-                                self.matchRecords.append(matchRecord)
-                            }
+        
+        let matchDayString = matchDay.lowercased()
+        let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
+        
+        let start = Date.today().previous(enumDayOfWeek ?? .sunday).previous(enumDayOfWeek ?? .sunday)
+        let end = Date.today().previous(enumDayOfWeek ?? .sunday)
+        
+        db.collection("matchRecords")
+            .whereField("userProfileId", isEqualTo: self.userProfile.id)
+            .whereField("createdDate", isGreaterThan: start)
+            .whereField("createdDate", isLessThan: end)
+        // .whereField("isNew", isEqualTo: true)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents from matchRecords: \(err)")
+                    completed([])
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        if !data.isEmpty{
+                            let matchRecord = MatchRecordModel(id: data["id"] as? String ?? "", userProfileId: data["userProfileId"] as? String ?? "", matchProfileId: data["matchProfileId"] as? String ?? "", cardIds: data["cardIds"] as? [String] ?? [], answers: data["answers"] as? [String] ?? [], isNew: data["isNew"] as? Bool ?? false)
+                            self.matchRecords.append(matchRecord)
                         }
-                        completed(self.matchRecords)
                     }
+                    completed(self.matchRecords)
                 }
+            }
     }
     
     // not using this func right now but we're definitely gonna need this for future features
@@ -586,17 +586,17 @@ class HomeViewModel: ObservableObject {
                 print("Document successfully created new speedDate record!")
             }
         }
-    
+        
         //updating profiles with new speedDateId
         let updateSpeedDateIds: [String: Any] = [
             "speedDateIds": FieldValue.arrayUnion([id])
         ]
-
+        
         let hostProfileRef = db.collection("profiles").document(userProfile.id)
         let matchProfileRef_1 = db.collection("profiles").document(matchProfiles[0].id)
         let matchProfileRef_2 = db.collection("profiles").document(matchProfiles[1].id)
         let matchProfileRef_3 = db.collection("profiles").document(matchProfiles[2].id)
-
+        
         hostProfileRef.updateData(updateSpeedDateIds) {error in
             if let error = error{
                 print("Error updating speedDateId: \(error)")
@@ -633,14 +633,14 @@ class HomeViewModel: ObservableObject {
     }
     
     public func saveMessageToken() {
-       let token = Messaging.messaging().fcmToken
+        let token = Messaging.messaging().fcmToken
         
         let docData: [String: Any] = [
             "fcmTokens": FieldValue.arrayUnion([token!])
         ]
-
+        
         let docRef = db.collection("profiles").document(userProfile.id)
-
+        
         docRef.updateData(docData) {error in
             if let error = error{
                 print("Error creating new card: \(error)")
@@ -658,15 +658,184 @@ class HomeViewModel: ObservableObject {
             
             db.collection("profiles").document(self.userProfile.id)
                 .updateData(removeSpeedDateId) {error in
-                if let error = error{
-                    print("Error removing speedDateId: \(error)")
-                } else {
-                    print("speedDateId successfully removed!")
+                    if let error = error{
+                        print("Error removing speedDateId: \(error)")
+                    } else {
+                        print("speedDateId successfully removed!")
+                    }
                 }
-            }
-        
+            
         }
     }
     
+    public func getAllRooms(completed: @escaping(_ allRooms: GetAllRoomsResponseModel) -> Void){
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getAllRooms") else { fatalError("Missing URL") }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed(GetAllRoomsResponseModel(data: []))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let rooms = try JSONDecoder().decode(GetAllRoomsResponseModel.self, from: data)
+                        completed(rooms)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                        completed(GetAllRoomsResponseModel(data: []))
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    public func createRoomCodes(completed: @escaping (_ newRoomCodes: RolesModel) -> Void) {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/createRoomCodes?room_id=\(self.currentSpeedDate.roomId)") else { fatalError("Missing URL") }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed(RolesModel(data: []))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let newRoles = try JSONDecoder().decode(RolesModel.self, from: data)
+                        completed(newRoles)
+                    } catch let error {
+                        completed(RolesModel(data: []))
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    public func getRoomCodes(completed: @escaping (_ roomCodes: RolesModel) -> Void) {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(self.currentSpeedDate.roomId)") else { fatalError("Missing URL") }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed(RolesModel(data: []))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let decodedRoles = try JSONDecoder().decode(RolesModel.self, from: data)
+                        completed(decodedRoles)
+                    } catch let error {
+                        completed(RolesModel(data: []))
+                        print("Error decoding: ", error)
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    public func createRoom(completed: @escaping (_ roomId: String) -> Void) {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/createRoom") else { fatalError("Missing URL") }
+        
+        let json: [String: Any]  = [
+            "name": "room_\(UUID().uuidString)",
+            "description": "This is a sample description for the room",
+            "template_id": "638d9d1b2b58471af0e13f08",
+            "region": "us"
+        ]
+        
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = jsonData
+        urlRequest.setValue("\(String(describing: jsonData?.count))", forHTTPHeaderField: "Content-Length")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed("")
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                        let roomId = String(data:data, encoding: .utf8)
+                        self.currentSpeedDate.roomId = roomId!
+                        completed(self.currentSpeedDate.roomId)
+              
+                }
+            } else {
+                completed("status Code not 200")
+            }
+        }
+        dataTask.resume()
+    }
+    
+    public func getActiveSessions(completed: @escaping(_ activeSessions: GetActiveSessionsResponseModel) -> Void){
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getActiveSessions") else { fatalError("Missing URL") }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                completed(GetActiveSessionsResponseModel(data: []))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let actSessions = try JSONDecoder().decode(GetActiveSessionsResponseModel.self, from: data)
+                        completed(actSessions)
+                    } catch let error {
+                        print("Error decoding: ", error)
+                        completed(GetActiveSessionsResponseModel(data: []))
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
 }
 

@@ -110,6 +110,10 @@
 		77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D531289912AD0088554F /* PreviewProfileView.swift */; };
 		77C3D536289912B10088554F /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D535289912B10088554F /* UserProfileView.swift */; };
 		77C3D53A289912B60088554F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D539289912B60088554F /* SettingsView.swift */; };
+		77C62B112A1D49780002D361 /* GetAllRoomsResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C62B102A1D49780002D361 /* GetAllRoomsResponseModel.swift */; };
+		77C62B132A1D49A50002D361 /* RoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C62B122A1D49A50002D361 /* RoomModel.swift */; };
+		77C62B152A1D4C600002D361 /* GetActiveSessionsResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C62B142A1D4C600002D361 /* GetActiveSessionsResponseModel.swift */; };
+		77C62B172A1D4D010002D361 /* PeerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C62B162A1D4D010002D361 /* PeerModel.swift */; };
 		77D36B7A2A065D2B00F8FD9F /* RolesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D36B792A065D2B00F8FD9F /* RolesModel.swift */; };
 		77D36B7C2A065D3A00F8FD9F /* RoleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D36B7B2A065D3A00F8FD9F /* RoleModel.swift */; };
 		77DCADA829B9D69D00641558 /* MatchRecordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADA729B9D69D00641558 /* MatchRecordModel.swift */; };
@@ -232,6 +236,10 @@
 		77C3D531289912AD0088554F /* PreviewProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewProfileView.swift; sourceTree = "<group>"; };
 		77C3D535289912B10088554F /* UserProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		77C3D539289912B60088554F /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		77C62B102A1D49780002D361 /* GetAllRoomsResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllRoomsResponseModel.swift; sourceTree = "<group>"; };
+		77C62B122A1D49A50002D361 /* RoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomModel.swift; sourceTree = "<group>"; };
+		77C62B142A1D4C600002D361 /* GetActiveSessionsResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetActiveSessionsResponseModel.swift; sourceTree = "<group>"; };
+		77C62B162A1D4D010002D361 /* PeerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerModel.swift; sourceTree = "<group>"; };
 		77D36B792A065D2B00F8FD9F /* RolesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RolesModel.swift; sourceTree = "<group>"; };
 		77D36B7B2A065D3A00F8FD9F /* RoleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoleModel.swift; sourceTree = "<group>"; };
 		77DCADA729B9D69D00641558 /* MatchRecordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRecordModel.swift; sourceTree = "<group>"; };
@@ -412,6 +420,10 @@
 				774AB94629DBE0C000380091 /* speedDateViewModel.swift */,
 				77D36B792A065D2B00F8FD9F /* RolesModel.swift */,
 				77D36B7B2A065D3A00F8FD9F /* RoleModel.swift */,
+				77C62B102A1D49780002D361 /* GetAllRoomsResponseModel.swift */,
+				77C62B122A1D49A50002D361 /* RoomModel.swift */,
+				77C62B142A1D4C600002D361 /* GetActiveSessionsResponseModel.swift */,
+				77C62B162A1D4D010002D361 /* PeerModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -1035,6 +1047,8 @@
 				771AE40F296ACE7700F3A6A1 /* ImageDetailView.swift in Sources */,
 				7753CE0729D6A47200536968 /* MessageView.swift in Sources */,
 				77FB23C2292B6227008F5469 /* ProfileInfoOverlay.swift in Sources */,
+				77C62B152A1D4C600002D361 /* GetActiveSessionsResponseModel.swift in Sources */,
+				77C62B112A1D49780002D361 /* GetAllRoomsResponseModel.swift in Sources */,
 				770CF55329C6E1EA00AA90AE /* EmailPasswordLoginView.swift in Sources */,
 				775E062928C51B140082C27E /* ViewRouter.swift in Sources */,
 				777C2CD1298A373A00CD3CCE /* CreateCardView.swift in Sources */,
@@ -1045,6 +1059,7 @@
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */,
 				77A0F9BB2986CEA1009CD1E0 /* LogInItems.swift in Sources */,
+				77C62B172A1D4D010002D361 /* PeerModel.swift in Sources */,
 				77BA2C7929DBF62600AC1C1C /* DropViewDelegate.swift in Sources */,
 				77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */,
 				775E062E28C51B850082C27E /* SignUpView.swift in Sources */,
@@ -1105,6 +1120,7 @@
 				77A1C7C4297C4094004C8FA6 /* EventModel.swift in Sources */,
 				7753CE0C29D6A4A000536968 /* MessageCardView.swift in Sources */,
 				77D36B7C2A065D3A00F8FD9F /* RoleModel.swift in Sources */,
+				77C62B132A1D49A50002D361 /* RoomModel.swift in Sources */,
 				77A1C7C2297C3B1C004C8FA6 /* CardModel.swift in Sources */,
 				774AB94729DBE0C000380091 /* speedDateViewModel.swift in Sources */,
 				77433FD929DBDB9A00D62F31 /* ScheduleSpeedDateView.swift in Sources */,
