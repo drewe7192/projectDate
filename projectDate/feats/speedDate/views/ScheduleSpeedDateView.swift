@@ -109,7 +109,7 @@ struct ScheduleSpeedDateView: View {
         guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(viewModel.newSpeedDate.roomId)") else { fatalError("Missing URL") }
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
+        urlRequest.httpMethod = "GET"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
@@ -126,14 +126,14 @@ struct ScheduleSpeedDateView: View {
                 DispatchQueue.main.async {
                     do {
                         let decodedRoles = try JSONDecoder().decode(RolesModel.self, from: data)
-                        decodedRoles.roles.forEach{ x in
-                            viewModel.rolesForRoom.append(x.role)
-                
-                            //print("this is the role")
-                           // print(x)
-                        }
-                        viewModel.newSpeedDate.hostRoomCode = viewModel.rolesForRoom[0] as! String
-                        viewModel.newSpeedDate.guestRoomCode = viewModel.rolesForRoom[1] as! String
+//                        decodedRoles.roles.forEach{ x in
+//                            viewModel.rolesForRoom.append(x.role)
+//
+//                            //print("this is the role")
+//                           // print(x)
+//                        }
+                        viewModel.newSpeedDate.maleRoomCode = viewModel.rolesForRoom[0] as! String
+                        viewModel.newSpeedDate.femaleRoomCode = viewModel.rolesForRoom[1] as! String
                         completed(viewModel.rolesForRoom)
                     } catch let error {
                         completed([])

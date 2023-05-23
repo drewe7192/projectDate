@@ -17,19 +17,19 @@ class VideoSDK: ObservableObject {
     @Published var videoIsShowing = true
     
     func joinRoom(viewModel: HomeViewModel ) {
-        //guest
-        if viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id) {
-            hmsSDK.getAuthTokenByRoomCode(viewModel.speedDates.first!.guestRoomCode) { token, error in
+        //male
+        if viewModel.userProfile.gender.lowercased() == "male" {
+            hmsSDK.getAuthTokenByRoomCode(viewModel.currentSpeedDate.maleRoomCode) { token, error in
                 if let token = token {
-                    let config = HMSConfig(userName: "Join Doe", authToken: token)
+                    let config = HMSConfig(userName: viewModel.userProfile.fullName, authToken: token)
                     self.hmsSDK.join(config: config, delegate: self)
                 }
             }
-        } else{
-            //host
-            hmsSDK.getAuthTokenByRoomCode(viewModel.speedDates.first!.hostRoomCode) { token, error in
+        } else if viewModel.userProfile.gender.lowercased() == "female" {
+            //female
+            hmsSDK.getAuthTokenByRoomCode(viewModel.currentSpeedDate.femaleRoomCode) { token, error in
                 if let token = token {
-                    let config = HMSConfig(userName: "Join Doe", authToken: token)
+                    let config = HMSConfig(userName: viewModel.userProfile.fullName, authToken: token)
                     self.hmsSDK.join(config: config, delegate: self)
                 }
             }
@@ -43,7 +43,6 @@ class VideoSDK: ObservableObject {
     func muteMic(){
         self.isMuted.toggle()
         self.hmsSDK.localPeer?.localAudioTrack()?.setMute(isMuted)
-        
     }
     
     func muteCamera(){

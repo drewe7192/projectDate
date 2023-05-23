@@ -17,12 +17,16 @@ struct FacetimeView: View {
     @State var isLeaveRoom = false
     @State var localTrack = HMSVideoTrack()
     @State var friendTrack = HMSVideoTrack()
-    // this may be a problem, your building this once in here and another timne in VideoSDK
-    //var hmsSDK = HMSSDK.build()
+    @State private var timeRemaining = 130
+    @State private var tapped: Bool = false
+    @State private var tapped2: Bool = false
+    @State private var tapped3: Bool = false
+    //@State private var tapped4: Bool = false
     
-    @State private var timeRemaining = 200
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     let homeViewModel: HomeViewModel
+    @Binding var launchJoinRoom: Bool
+    @Binding var hasPeerJoined: Bool
     
     var body: some View {
         GeometryReader { geoReader in
@@ -30,14 +34,33 @@ struct FacetimeView: View {
                 Group {
                     if videoSDK.isJoined {
                         ZStack{
+                            //Videos
                             VStack{
                                 ForEach(Array(videoSDK.tracks.enumerated()), id: \.offset) {index, track in
                                     VStack{
-                                        VideoView(track: track)
-                                            .frame(height: 300)
+                                        ZStack{
+                                            if index == 1 {
+                                                VideoView(track: track)
+                                                    .frame(height: geoReader.size.height)
+                                                    .onAppear{
+                                                        //remove loading animated thingy
+                                                        hasPeerJoined.toggle()
+                                                    }
+                                            }
+                                            
+                                            if index == 0 {
+                                                VideoView(track: track)
+                                                    .frame(width: tapped3 ? geoReader.size.width * 0.3 : geoReader.size.width, height:  tapped3 ? geoReader.size.height * 0.25 : geoReader.size.height)
+                                                    .position(x: tapped3 ?  geoReader.size.width * 0.8 : geoReader.frame(in: .local).midX,
+                                                              y: tapped3 ?  geoReader.size.height * 0.3 : geoReader.frame(in: .local).midY )
+                                                    .animation(.default)
+                                                    .cornerRadius(20)
+                                                
+                                                videoOptions(for: geoReader)
+                                                    .padding(.bottom, 10)
+                                            }
+                                        }
                                         
-                                        videoOptions()
-                                            .padding(.bottom, 10)
                                     }
                                 }
                                 .onReceive(timer) { time in
@@ -50,25 +73,23 @@ struct FacetimeView: View {
                                                     timeRemaining = 100
                                                 }
                                             }
-                                            //videoSDK.leaveRoom()
                                         }
                                     }
                                 }
                             }
                             
-                            VStack{
-                                //Timer
-                                Text("Time")
-                                    .font(.title2)
-                                
-                                Text("\(timeRemaining / 60) : \(timeRemaining % 60)")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 20)
-                                    .background(.black.opacity(0.75))
-                                    .clipShape(Capsule())
+                            //SpeedDate Timer
+                            if hasPeerJoined {
+                                VStack{
+                                    Text("\(timeRemaining / 60):\(timeRemaining % 60)")
+                                        .font(.custom("Superclarendon", size: 60))
+                                        .foregroundColor(.iceBreakrrrBlue)
+                                        .padding(.horizontal, 20)
+                                        .clipShape(Capsule())
+                                }
+                                .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.50)
                             }
-                            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.65)
+                           
                         }
                     }
                     else if isJoining {
@@ -81,7 +102,7 @@ struct FacetimeView: View {
                             .padding(.vertical, 5)
                             .background(Color.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .onAppear() {
+                            .onChange(of: launchJoinRoom) { newValue in
                                 listen()
                                 videoSDK.joinRoom(viewModel: homeViewModel)
                                 isJoining.toggle()
@@ -92,40 +113,89 @@ struct FacetimeView: View {
             .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
         }
     }
-    private func videoOptions() -> some View {
+    private func videoOptions(for geoReader: GeometryProxy) -> some View {
         HStack(spacing: 20) {
             Spacer()
-            //            Button{
-            //                videoSDK.muteCamera()
-            //            } label: {
-            //                Image(systemName: videoSDK.videoIsShowing ? "video.fill" : "video.slash.fill")
-            //                    .frame(width: 40, height: 40, alignment: .center)
-            //                    .background(.white)
-            //                    .foregroundColor(.black)
-            //                    .clipShape(Circle())
-            //            }
-            //
-            //            Button{
-            //                videoSDK.leaveRoom()
-            //            } label: {
-            //                Image(systemName: "phone.down.fill")
-            //                    .frame(width: 40, height: 40, alignment: .center)
-            //                    .background(.red)
-            //                    .foregroundColor(.white)
-            //                    .clipShape(Circle())
-            //            }
             
-            Button{
-                videoSDK.muteMic()
-            } label: {
-                Image(systemName: videoSDK.isMuted ? "mic.slash.fill" : "mic.fill")
-                    .frame(width: 40, height: 40, alignment: .center)
-                    .background(.white)
-                    .foregroundColor(.black)
-                    .clipShape(Circle())
+            VStack{
+                Text("Reconnect")
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.system(size: 15))
+                
+                ZStack {
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 80, height: 80)
+                        .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
+                    Image(systemName: "app.connected.to.app.below.fill")
+                        .foregroundColor(.black)
+                        .font(.system(size: 30, weight: .semibold))
+                    
+                }
+                .scaleEffect(tapped ? 0.95 : 1)
+                .onTapGesture {
+                    tapped.toggle()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        tapped = false
+                    }
+                }
             }
+            
+            
+            VStack{
+                Text("Extend Time")
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.system(size: 15))
+                
+                ZStack {
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 80, height: 80)
+                        .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
+                    Image(systemName: "timer")
+                        .foregroundColor(.black)
+                        .font(.system(size: 30, weight: .semibold))
+                    
+                }
+                .scaleEffect(tapped2 ? 0.95 : 1)
+                .onTapGesture {
+                    tapped2.toggle()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        tapped2 = false
+                    }
+                }
+            }
+            
+            VStack{
+                Text("Dislike")
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.system(size: 15))
+                
+                ZStack {
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 80, height: 80)
+                        .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
+                    Image(systemName: "hand.thumbsdown")
+                        .foregroundColor(.black)
+                        .font(.system(size: 30, weight: .semibold))
+                    
+                }
+                .scaleEffect(tapped3 ? 0.95 : 1)
+                .onTapGesture {
+                    tapped3.toggle()
+                    
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+//                        tapped3 = false
+//                    }
+                }
+            }
+            
             Spacer()
         }
+        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.9)
     }
     
     private func listen() {
@@ -147,7 +217,7 @@ struct FacetimeView: View {
     }
     
     private func removePeers(completed: @escaping (_ peersRemoved: String) -> Void){
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/removePeers?room_Id=\(homeViewModel.speedDates.first!.roomId)") else {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/removePeers?room_id=\(homeViewModel.speedDates.first!.roomId)") else {
             fatalError("Missing URL") }
         
         let json: [String: Any] = [
@@ -176,8 +246,6 @@ struct FacetimeView: View {
                 DispatchQueue.main.async {
                     do {
                         let message = String(data:data, encoding: .utf8)
-                        print("This is the message")
-                        print(message)
                     } catch let error {
                         completed("")
                         print("Error decoding: ", error)

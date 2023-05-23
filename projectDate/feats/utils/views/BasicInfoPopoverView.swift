@@ -308,7 +308,6 @@ struct BasicInfoPopoverView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading)
             
-            
             Menu {
                 Picker(selection: $userProfile.gender) {
                     ForEach(genderChoices, id: \.self) { choice in
@@ -324,6 +323,39 @@ struct BasicInfoPopoverView: View {
             .padding(.bottom,geoReader.size.height * 0.02)
             .accentColor(.white)
             .disabled(editInfo == false)
+            
+            
+            
+            //PREFERRED GENDER INPUT FUTURE FEATURE
+//            HStack{
+//                Image(systemName: "checkmark.circle")
+//                    .resizable()
+//                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
+//                    .foregroundColor(userProfile.preferredGender != "Pick Gender" ? .green : .mainGrey)
+//
+//                Text("Your match's gender")
+//                    .foregroundColor(.white)
+//                    .font(.system(size: geoReader.size.width * 0.05))
+//            }
+//            .frame(maxWidth: .infinity, alignment: .leading)
+//            .padding(.leading)
+//
+//            Menu {
+//                Picker(selection: $userProfile.preferredGender) {
+//                    ForEach(genderChoices, id: \.self) { choice in
+//                        Text("\(choice)")
+//                            .tag(choice)
+//                            .font(.system(size: geoReader.size.height * 0.04))
+//                    }
+//                } label: {}
+//            } label: {
+//                Text("\(userProfile.preferredGender)")
+//                    .font(.system(size: geoReader.size.height * 0.04))
+//            }
+//            .padding(.bottom,geoReader.size.height * 0.02)
+//            .accentColor(.white)
+//            .disabled(editInfo == false)
+            
             
             HStack{
                 Image(systemName: "checkmark.circle")
@@ -384,6 +416,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [])), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
     }
 }

@@ -9,8 +9,8 @@ import Foundation
 
 struct SpeedDateModel: Identifiable, Codable, Hashable{
     var id: String
-    var hostRoomCode: String
-    var guestRoomCode: String
+    var maleRoomCode: String
+    var femaleRoomCode: String
     var roomId: String
     var matchProfileIds: [String]
     var eventDate: Date

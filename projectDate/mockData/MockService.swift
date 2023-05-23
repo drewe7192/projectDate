@@ -29,7 +29,8 @@ enum MockService {
             matchDay: "Mondays",
             messageThreadIds: [],
             speedDateIds: [],
-            fcmTokens: []
+            fcmTokens: [],
+            preferredGender: ""
         )
     }
     
@@ -51,7 +52,8 @@ enum MockService {
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
-                fcmTokens: []
+                fcmTokens: [],
+                preferredGender: ""
             ),
             ProfileModel(
                 id: "John",
@@ -61,7 +63,8 @@ enum MockService {
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
-                fcmTokens: []
+                fcmTokens: [],
+                preferredGender: ""
             ),
             ProfileModel(
                 id: "John",
@@ -71,7 +74,8 @@ enum MockService {
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
-                fcmTokens: []
+                fcmTokens: [],
+                preferredGender: ""
             ),
             ProfileModel(
                 id: "John",
@@ -81,7 +85,8 @@ enum MockService {
                 matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
-                fcmTokens: []
+                fcmTokens: [],
+                preferredGender: ""
             )
         ]
     }
@@ -216,8 +221,8 @@ enum MockService {
     static var sdSampleData: SpeedDateModel {
         SpeedDateModel(
             id: "",
-            hostRoomCode: "",
-            guestRoomCode: "",
+            maleRoomCode: "",
+            femaleRoomCode: "",
             roomId: "",
             matchProfileIds: [],
             eventDate: Date(),
@@ -230,8 +235,8 @@ enum MockService {
         [
             SpeedDateModel(
                 id: "",
-                hostRoomCode: "",
-                guestRoomCode: "",
+                maleRoomCode: "",
+                femaleRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -240,8 +245,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
-                hostRoomCode: "",
-                guestRoomCode: "",
+                maleRoomCode: "",
+                femaleRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -250,8 +255,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
-                hostRoomCode: "",
-                guestRoomCode: "",
+                maleRoomCode: "",
+                femaleRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -260,8 +265,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
-                hostRoomCode: "",
-                guestRoomCode: "",
+                maleRoomCode: "",
+                femaleRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -270,8 +275,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
-                hostRoomCode: "",
-                guestRoomCode: "",
+                maleRoomCode: "",
+                femaleRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),
@@ -280,8 +285,8 @@ enum MockService {
             ),
             SpeedDateModel(
                 id: "",
-                hostRoomCode: "",
-                guestRoomCode: "",
+                maleRoomCode: "",
+                femaleRoomCode: "",
                 roomId: "",
                 matchProfileIds: [],
                 eventDate: Date(),

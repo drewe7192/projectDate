@@ -24,7 +24,7 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [])
+    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender")
     @Published var profileImage: UIImage = UIImage()
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
@@ -36,7 +36,8 @@ class HomeViewModel: ObservableObject {
     @Published var matchProfileImages: [UIImage] = []
     @Published var rolesForRoom = []
    // @Published var roomId: String = ""
-    @Published var newSpeedDate: SpeedDateModel = SpeedDateModel(id: "", hostRoomCode: "", guestRoomCode: "", roomId: "", matchProfileIds: [], eventDate: Date(), createdDate: Date(), isActive: false)
+    @Published var newSpeedDate: SpeedDateModel = SpeedDateModel(id: "", maleRoomCode: "", femaleRoomCode: "", roomId: "", matchProfileIds: [], eventDate: Date(), createdDate: Date(), isActive: false)
+    @Published var currentSpeedDate: SpeedDateModel = SpeedDateModel(id: "", maleRoomCode: "", femaleRoomCode: "", roomId: "", matchProfileIds: [], eventDate: Date(), createdDate: Date(), isActive: false)
     @Published var swipedCardGroups: SwipedCardGroupsModel = SwipedCardGroupsModel(
         id: "" ,
         userCardGroup: SwipedCardGroupModel(
@@ -99,7 +100,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [])
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "")
                         }
                     }
                     completed(self.userProfile.id)
@@ -176,7 +177,8 @@ class HomeViewModel: ObservableObject {
             "gender": "",
             "userId": Auth.auth().currentUser?.uid as Any,
             "matchDay": "",
-            "messageThreadIds": []
+            "messageThreadIds": [],
+            "preferredGender": ""
         ]
         
         let docRef = db.collection("profiles").document(id)
@@ -202,7 +204,8 @@ class HomeViewModel: ObservableObject {
             "location": updatedProfile.location,
             "gender": updatedProfile.gender,
             "userId": Auth.auth().currentUser?.uid as Any,
-            "matchDay": updatedProfile.matchDay
+            "matchDay": updatedProfile.matchDay,
+            "preferredGender": updatedProfile.preferredGender
         ]
         
         let docRef = db.collection("profiles").document(updatedProfile.id)
@@ -318,8 +321,8 @@ class HomeViewModel: ObservableObject {
                                 
                                 let speedDate = SpeedDateModel(
                                     id: data["id"] as? String ?? "",
-                                    hostRoomCode: data["hostRoomCode"] as? String ?? "",
-                                    guestRoomCode: data["guestRoomCode"] as? String ?? "",
+                                    maleRoomCode: data["maleRoomCode"] as? String ?? "",
+                                    femaleRoomCode: data["femaleRoomCode"] as? String ?? "",
                                     roomId: data["roomId"] as? String ?? "",
                                     matchProfileIds: data["matchProfileIds"] as? [String] ?? [],
                                     eventDate: eventDate ?? Date(),
@@ -533,7 +536,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [])
+                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "")
                             
                             self.matchProfiles.append(profile)
                         }
@@ -570,8 +573,8 @@ class HomeViewModel: ObservableObject {
             "matchProfileIds": [matchProfiles[0].id,matchProfiles[1].id,matchProfiles[2].id],
             "eventDate": Timestamp(date: self.newSpeedDate.eventDate),
             "createdDate": Timestamp(date: Date()),
-            "hostRoomCode" : self.newSpeedDate.hostRoomCode,
-            "guestRoomCode" : self.newSpeedDate.guestRoomCode
+            "maleRoomCode" : self.newSpeedDate.maleRoomCode,
+            "femaleRoomCode" : self.newSpeedDate.femaleRoomCode
         ]
         
         let docRef = db.collection("speedDates").document(id)

@@ -244,19 +244,19 @@ extension Date {
   }
 }
 
-extension RolesModel {
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        let throwables = try values.decode([Throwable<RoleModel>].self, forKey: .roles)
-        roles = throwables.compactMap { try? $0.result.get() }
-        
-        throwables.forEach {
-            switch $0.result {
-            case .success(let role):
-                roles.append(role)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-}
+//extension RolesModel {
+//    init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        let throwables = try values.decode([Throwable<RoleModel>].self, forKey: .roles)
+//        roles = throwables.compactMap { try? $0.result.get() }
+//
+//        throwables.forEach {
+//            switch $0.result {
+//            case .success(let role):
+//                roles.append(role)
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
+//}

@@ -8,9 +8,5 @@
 import Foundation
 
 struct RolesModel: Decodable {
-    var roles: [RoleModel] = []
-    
-    enum CodingKeys: String, CodingKey {
-        case roles
-    }
+    var data: [RoleModel]
 }
