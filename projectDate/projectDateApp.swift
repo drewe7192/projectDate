@@ -14,31 +14,48 @@ import FacebookCore
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseFirestoreSwift
+import BackgroundTasks
 
+@available(iOS 16.0, *)
 @main
 struct projectDateApp: App {
+    
+    init(){
+        FirebaseApp.configure()
+    }
     //Linking App Delegate to your App
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var viewRouter = ViewRouter()
+    @Environment(\.scenePhase) private var phase
     
     var body: some Scene {
         WindowGroup {
             MotherView().environmentObject(viewRouter)
         }
+        .onChange(of: phase) { newPhase in
+            switch newPhase {
+            case .background: scheduleAppRefresh()
+            default: break
+            }
+        }
+        .backgroundTask(.appRefresh("com.dotzero.checkForPeer")) {
+            someBackgroundTask()
+        }
     }
 }
 
 class AppDelegate: UIResponder, UIApplicationDelegate{
+    
     let gcmMessageIDKey = "gcm.message_id"
     
     //Executed once the app finished launching
-   public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchingOptions:
-                     [UIApplication.LaunchOptionsKey : Any]?) -> Bool{
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchingOptions:
+                            [UIApplication.LaunchOptionsKey : Any]?) -> Bool{
         
         //Initializing Firebase
-        FirebaseApp.configure()
+       // FirebaseApp.configure()
         
-       //Implement the messaging delegate protocol
+        //Implement the messaging delegate protocol
         Messaging.messaging().delegate = self
         
         if #available(iOS 10.0, *) {
@@ -55,19 +72,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             application.registerUserNotificationSettings(settings)
         }
         application.registerForRemoteNotifications()
-       
-       //Facebook auth
-       FacebookCore.ApplicationDelegate.shared.application(
-           application,
-           didFinishLaunchingWithOptions: launchingOptions
-       )
-
+        
+        //Facebook auth
+        FacebookCore.ApplicationDelegate.shared.application(
+            application,
+            didFinishLaunchingWithOptions: launchingOptions
+        )
+        
         return true
     }
     
     //Listens to remote notifications and will alert the app when a new push notification comes in
-   public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                            fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
@@ -80,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     
     //Facebook and Google Auth stuff
     public func application(_ application: UIApplication, open url: URL,
-                     options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
+                            options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
         
         //more Facebook Auth
         FacebookCore.ApplicationDelegate.shared.application(
@@ -97,7 +114,7 @@ extension AppDelegate: MessagingDelegate {
     //prints the device token
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let deviceToken:[String: String] = ["token": fcmToken ?? ""]
-       // print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
+        // print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
     }
 }
 
@@ -137,8 +154,23 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             print("Message ID from userNotificationCenter didReceive: \(messageID)")
         }
         
-      //  print(userInfo)
+        //  print(userInfo)
         
         completionHandler()
     }
 }
+
+func someBackgroundTask() {
+    @StateObject var viewModel = HomeViewModel()
+
+    viewModel.getUserProfileForBackground() {(profile) -> Void in
+        if !profile.fcmTokens.isEmpty {
+            viewModel.checkForPeer(toks: profile.fcmTokens)
+        }
+    }
+}
+
+public func scheduleAppRefresh(){
+    someBackgroundTask()
+}
+

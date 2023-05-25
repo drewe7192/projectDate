@@ -797,7 +797,6 @@ class HomeViewModel: ObservableObject {
                         let roomId = String(data:data, encoding: .utf8)
                         self.currentSpeedDate.roomId = roomId!
                         completed(self.currentSpeedDate.roomId)
-              
                 }
             } else {
                 completed("status Code not 200")
@@ -831,6 +830,56 @@ class HomeViewModel: ObservableObject {
                     } catch let error {
                         print("Error decoding: ", error)
                         completed(GetActiveSessionsResponseModel(data: []))
+                    }
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    public func getUserProfileForBackground(completed: @escaping (_ profileId: ProfileModel) -> Void){
+        db.collection("profiles")
+            .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    completed(ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender"))
+                } else {
+                    for document in querySnapshot!.documents {
+                        //                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        if !data.isEmpty{
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "")
+                        }
+                    }
+                    completed(self.userProfile)
+                }
+            }
+    }
+    
+    public func checkForPeer(toks: [String]) {
+        let mainTok = toks.first!
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/checkForPeer?fcmToken=\(mainTok)") else { fatalError("Missing URL") }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                print("Request error: ", error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            if response.statusCode == 200 {
+                guard let data = data else { return }
+                DispatchQueue.main.async {
+                    do {
+                        let result = String(data:data, encoding: .utf8)
+                    } catch let error {
+                        print("Error decoding: ", error)
                     }
                 }
             }

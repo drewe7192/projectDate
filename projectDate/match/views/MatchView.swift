@@ -29,7 +29,7 @@ struct MatchView: View {
                     .ignoresSafeArea()
                 
                 VStack{
-                    Text("MATCHDAY!")
+                    Text("SpeedDate Sunday!")
                         .foregroundColor(.white)
                         .bold()
                         .font(.custom("Chalkduster", size: geoReader.size.height * 0.05))

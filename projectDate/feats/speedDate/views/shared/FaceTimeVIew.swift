@@ -17,11 +17,11 @@ struct FacetimeView: View {
     @State var isLeaveRoom = false
     @State var localTrack = HMSVideoTrack()
     @State var friendTrack = HMSVideoTrack()
-    @State private var timeRemaining = 130
+    @State private var timeRemaining = 60
     @State private var tapped: Bool = false
     @State private var tapped2: Bool = false
     @State private var tapped3: Bool = false
-    //@State private var tapped4: Bool = false
+    @State private var isDirty: Bool = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     let homeViewModel: HomeViewModel
@@ -59,7 +59,6 @@ struct FacetimeView: View {
                                                     .padding(.bottom, 10)
                                             }
                                         }
-                                        
                                     }
                                 }
                                 .onReceive(timer) { time in
@@ -75,6 +74,13 @@ struct FacetimeView: View {
                                         }
                                     }
                                 }
+                                .onChange(of: tapped2) {_ in
+                                    if self.timeRemaining < 120 && !isDirty {
+                                        self.timeRemaining += 120
+                                        self.isDirty = true
+                                    }
+                                   
+                                }
                             }
                             
                             //SpeedDate Timer
@@ -88,19 +94,14 @@ struct FacetimeView: View {
                                 }
                                 .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.50)
                             }
-                           
+                            
                         }
                     }
                     else if isJoining {
                         ProgressView()
                     }
                     else {
-                        Text("Join")
-                            .foregroundColor(.white)
-                            .padding(.horizontal)
-                            .padding(.vertical, 5)
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                        Text("")
                             .onChange(of: launchJoinRoom) { newValue in
                                 listen()
                                 videoSDK.joinRoom(viewModel: homeViewModel)
@@ -123,8 +124,8 @@ struct FacetimeView: View {
                 
                 ZStack {
                     Circle()
-                        .fill(.white)
-                        .frame(width: 80, height: 80)
+                        .fill(tapped ? Color.iceBreakrrrBlue : .white)
+                        .frame(width: 60, height: 60)
                         .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
                     Image(systemName: "app.connected.to.app.below.fill")
                         .foregroundColor(.black)
@@ -135,9 +136,9 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped.toggle()
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        tapped = false
-                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+//                        tapped = false
+//                    }
                 }
             }
             
@@ -149,8 +150,8 @@ struct FacetimeView: View {
                 
                 ZStack {
                     Circle()
-                        .fill(.white)
-                        .frame(width: 80, height: 80)
+                        .fill(tapped2 ? Color.iceBreakrrrBlue : .white)
+                        .frame(width: 60, height: 60)
                         .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
                     Image(systemName: "timer")
                         .foregroundColor(.black)
@@ -161,9 +162,9 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped2.toggle()
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        tapped2 = false
-                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+//                        tapped2 = false
+//                    }
                 }
             }
             
@@ -174,8 +175,8 @@ struct FacetimeView: View {
                 
                 ZStack {
                     Circle()
-                        .fill(.white)
-                        .frame(width: 80, height: 80)
+                        .fill(tapped3 ? .red : .white)
+                        .frame(width: 60, height: 60)
                         .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
                     Image(systemName: "hand.thumbsdown")
                         .foregroundColor(.black)
@@ -186,9 +187,9 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped3.toggle()
                     
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-//                        tapped3 = false
-//                    }
+                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    //                        tapped3 = false
+                    //                    }
                 }
             }
             

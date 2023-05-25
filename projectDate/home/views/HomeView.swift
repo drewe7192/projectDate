@@ -46,7 +46,6 @@ struct HomeView: View {
     @State private var hasPeerJoined = false
     @State private var showCards = false
     @State private var emptyRooms: [RoomModel] = []
-    @State private var timeRemainingg = 6
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -101,6 +100,7 @@ struct HomeView: View {
             }
         }
     }
+
     
     private func getAllData() {
         getProfileAndRecords() {(getProfileId) -> Void in
