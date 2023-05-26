@@ -17,4 +17,5 @@ struct ProfileModel: Codable, Identifiable  {
     var speedDateIds: [String]
     var fcmTokens: [String]
     var preferredGender: String
+    var currentRoomId: String
 }

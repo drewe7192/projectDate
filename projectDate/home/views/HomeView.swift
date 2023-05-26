@@ -19,6 +19,7 @@ struct HomeView: View {
     @StateObject public var viewModel = HomeViewModel()
     @ObservedObject private var messageViewModel = MessageViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
+    @Environment(\.scenePhase) private var scenePhase
     
     @State private var showCardCreatedAlert: Bool = false
     @State private var profileText: String = ""
@@ -46,6 +47,7 @@ struct HomeView: View {
     @State private var hasPeerJoined = false
     @State private var showCards = false
     @State private var emptyRooms: [RoomModel] = []
+    @State private var displayCardsTime: Int = 120
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -94,13 +96,17 @@ struct HomeView: View {
                 .onChange(of: updateData) { _ in
                     saveCards()
                 }
+                .onChange(of: scenePhase) { phase in
+                    if phase == .active {
+                        displayCardsTime += 120
+                    }
+                }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
             }
         }
     }
-
     
     private func getAllData() {
         getProfileAndRecords() {(getProfileId) -> Void in
@@ -109,7 +115,7 @@ struct HomeView: View {
                 getMatchData()
                 viewModel.getSpeedDate(speedDateIds: viewModel.userProfile.speedDateIds) {(speedDates) -> Void in
                     if !speedDates.isEmpty {
-                    setLineAndTime()
+                        setLineAndTime()
                     }
                 }
             }
@@ -132,9 +138,11 @@ struct HomeView: View {
     }
     
     private func displayCards() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(self.displayCardsTime)) {
             // fires off getAllCards() in CardView
-            gotSwipedRecords.toggle()
+            if !hasPeerJoined {
+                gotSwipedRecords = true
+            }
         }
     }
     
@@ -148,7 +156,7 @@ struct HomeView: View {
             }
         }
     }
-   
+    
     private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
         //inital check to make sure we're not always getting data if we already have data
         if viewModel.userProfile.id == "" {
@@ -440,7 +448,7 @@ struct HomeView: View {
                     .opacity(textOpacityChanged ? 1 : 0.1)
                     .animation(Animation.linear(duration: 1).repeatForever())
             }
-
+            
             ZStack {
                 Circle()
                     .frame(width: 125, height: 125)

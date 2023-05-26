@@ -30,7 +30,8 @@ enum MockService {
             messageThreadIds: [],
             speedDateIds: [],
             fcmTokens: [],
-            preferredGender: ""
+            preferredGender: "",
+            currentRoomId: ""
         )
     }
     
@@ -53,7 +54,8 @@ enum MockService {
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
-                preferredGender: ""
+                preferredGender: "",
+                currentRoomId: ""
             ),
             ProfileModel(
                 id: "John",
@@ -64,7 +66,8 @@ enum MockService {
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
-                preferredGender: ""
+                preferredGender: "",
+                currentRoomId: ""
             ),
             ProfileModel(
                 id: "John",
@@ -75,7 +78,8 @@ enum MockService {
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
-                preferredGender: ""
+                preferredGender: "",
+                currentRoomId: ""
             ),
             ProfileModel(
                 id: "John",
@@ -86,7 +90,8 @@ enum MockService {
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
-                preferredGender: ""
+                preferredGender: "",
+                currentRoomId: ""
             )
         ]
     }

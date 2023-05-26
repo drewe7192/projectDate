@@ -50,9 +50,9 @@ struct FacetimeView: View {
                                             
                                             if index == 0 {
                                                 VideoView(track: track)
-                                                    .frame(width: tapped3 ? geoReader.size.width * 0.3 : geoReader.size.width, height:  tapped3 ? geoReader.size.height * 0.25 : geoReader.size.height)
-                                                    .position(x: tapped3 ?  geoReader.size.width * 0.8 : geoReader.frame(in: .local).midX,
-                                                              y: tapped3 ?  geoReader.size.height * 0.3 : geoReader.frame(in: .local).midY )
+                                                    .frame(width: hasPeerJoined ? geoReader.size.width * 0.3 : geoReader.size.width, height:  hasPeerJoined ? geoReader.size.height * 0.25 : geoReader.size.height)
+                                                    .position(x: hasPeerJoined ?  geoReader.size.width * 0.8 : geoReader.frame(in: .local).midX,
+                                                              y: hasPeerJoined ?  geoReader.size.height * 0.3 : geoReader.frame(in: .local).midY )
                                                     .animation(.default)
                                                 
                                                 videoOptions(for: geoReader)
@@ -79,7 +79,7 @@ struct FacetimeView: View {
                                         self.timeRemaining += 120
                                         self.isDirty = true
                                     }
-                                   
+                                    
                                 }
                             }
                             
@@ -127,6 +127,7 @@ struct FacetimeView: View {
                         .fill(tapped ? Color.iceBreakrrrBlue : .white)
                         .frame(width: 60, height: 60)
                         .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
+                        .opacity(hasPeerJoined ? 1 : 0.5)
                     Image(systemName: "app.connected.to.app.below.fill")
                         .foregroundColor(.black)
                         .font(.system(size: 30, weight: .semibold))
@@ -136,12 +137,12 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped.toggle()
                     
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
 //                        tapped = false
 //                    }
                 }
+                .disabled(hasPeerJoined ? false: true)
             }
-            
             
             VStack{
                 Text("Extend Time")
@@ -153,6 +154,7 @@ struct FacetimeView: View {
                         .fill(tapped2 ? Color.iceBreakrrrBlue : .white)
                         .frame(width: 60, height: 60)
                         .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
+                        .opacity(hasPeerJoined ? 1 : 0.5)
                     Image(systemName: "timer")
                         .foregroundColor(.black)
                         .font(.system(size: 30, weight: .semibold))
@@ -162,10 +164,11 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped2.toggle()
                     
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
 //                        tapped2 = false
 //                    }
                 }
+                .disabled(hasPeerJoined ? false: true)
             }
             
             VStack{
@@ -178,6 +181,7 @@ struct FacetimeView: View {
                         .fill(tapped3 ? .red : .white)
                         .frame(width: 60, height: 60)
                         .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
+                        .opacity(hasPeerJoined ? 1 : 0.5)
                     Image(systemName: "hand.thumbsdown")
                         .foregroundColor(.black)
                         .font(.system(size: 30, weight: .semibold))
@@ -187,10 +191,11 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped3.toggle()
                     
-                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    //                        tapped3 = false
-                    //                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+//                        tapped3 = false
+//                    }
                 }
+                .disabled(hasPeerJoined ? false: true)
             }
             
             Spacer()

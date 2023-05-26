@@ -140,6 +140,6 @@ struct CreateCardsView: View {
 
 struct CreateCardsView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCardsView(showCardCreatedAlert: .constant(true), userProfile: ProfileModel(id: "fj8fsnfuh439", fullName: "dotZe30", location: "Tampa,Fl", gender: "Male", matchDay: "Mondays", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: ""))
+        CreateCardsView(showCardCreatedAlert: .constant(true), userProfile: ProfileModel(id: "fj8fsnfuh439", fullName: "dotZe30", location: "Tampa,Fl", gender: "Male", matchDay: "Mondays", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "", currentRoomId: ""))
     }
 }

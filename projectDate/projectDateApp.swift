@@ -21,6 +21,7 @@ import BackgroundTasks
 struct projectDateApp: App {
     
     init(){
+        //Initializing Firebase
         FirebaseApp.configure()
     }
     //Linking App Delegate to your App
@@ -34,12 +35,9 @@ struct projectDateApp: App {
         }
         .onChange(of: phase) { newPhase in
             switch newPhase {
-            case .background: scheduleAppRefresh()
+            case .background: runBackgroundTasks()
             default: break
             }
-        }
-        .backgroundTask(.appRefresh("com.dotzero.checkForPeer")) {
-            someBackgroundTask()
         }
     }
 }
@@ -51,9 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     //Executed once the app finished launching
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchingOptions:
                             [UIApplication.LaunchOptionsKey : Any]?) -> Bool{
-        
-        //Initializing Firebase
-       // FirebaseApp.configure()
         
         //Implement the messaging delegate protocol
         Messaging.messaging().delegate = self
@@ -155,22 +150,22 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         }
         
         //  print(userInfo)
-        
         completionHandler()
     }
 }
 
-func someBackgroundTask() {
+func notifyPeerInRoom() {
     @StateObject var viewModel = HomeViewModel()
-
+    
+// calling the viewModel will return a purple error about StateObject
     viewModel.getUserProfileForBackground() {(profile) -> Void in
         if !profile.fcmTokens.isEmpty {
-            viewModel.checkForPeer(toks: profile.fcmTokens)
+            viewModel.checkForPeer(userProfileBackground: profile)
         }
     }
 }
 
-public func scheduleAppRefresh(){
-    someBackgroundTask()
+public func runBackgroundTasks(){
+    notifyPeerInRoom()
 }
 

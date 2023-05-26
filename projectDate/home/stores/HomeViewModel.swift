@@ -24,7 +24,7 @@ class HomeViewModel: ObservableObject {
     @Published var valuesCount: [CardModel] = []
     @Published var littleThingsCount: [CardModel] = []
     @Published var personalityCount: [CardModel] = []
-    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender")
+    @Published var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender",currentRoomId: "")
     @Published var profileImage: UIImage = UIImage()
     @Published var swipedRecords: [SwipedRecordModel] = []
     @Published var swipedCards: [CardModel] = []
@@ -100,7 +100,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "")
+                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "",currentRoomId: data["currentRoomId"] as? String ?? "")
                         }
                     }
                     completed(self.userProfile.id)
@@ -536,7 +536,7 @@ class HomeViewModel: ObservableObject {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "")
+                            let profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "", currentRoomId: data["currentRoomId"] as? String ?? "")
                             
                             self.matchProfiles.append(profile)
                         }
@@ -733,6 +733,22 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getRoomCodes(completed: @escaping (_ roomCodes: RolesModel) -> Void) {
+        
+        let docData: [String: Any] = [
+            "currentRoomId": self.currentSpeedDate.roomId,
+        ]
+        
+        let docRef = db.collection("profiles").document(self.userProfile.id)
+        
+        docRef.updateData(docData) {error in
+            if let error = error{
+                print("Error updating userProfile: \(error)")
+            } else {
+                print("successfully updated userProfile!")
+            }
+        }
+        
+        
         guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/getRoomCodes?room_id=\(self.currentSpeedDate.roomId)") else { fatalError("Missing URL") }
         
         var urlRequest = URLRequest(url: url)
@@ -837,29 +853,32 @@ class HomeViewModel: ObservableObject {
         dataTask.resume()
     }
     
-    public func getUserProfileForBackground(completed: @escaping (_ profileId: ProfileModel) -> Void){
+    public func getUserProfileForBackground(completed: @escaping (_ profile: ProfileModel) -> Void){
+        var profile = ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender", currentRoomId: "")
+
         db.collection("profiles")
             .whereField("userId", isEqualTo: Auth.auth().currentUser?.uid as Any)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
-                    completed(ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender"))
+                    completed(ProfileModel(id: "", fullName: "", location: "", gender: "Pick Gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick Gender", currentRoomId: ""))
                 } else {
                     for document in querySnapshot!.documents {
                         //                        print("\(document.documentID) => \(document.data())")
                         let data = document.data()
                         if !data.isEmpty{
-                            self.userProfile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "")
+                            profile = ProfileModel(id: data["id"] as? String ?? "", fullName: data["fullName"] as? String ?? "", location: data["location"] as? String ?? "", gender: data["gender"] as? String ?? "", matchDay: data["matchDay"] as? String ?? "", messageThreadIds: data["messageThreadIds"] as? [String] ?? [], speedDateIds: data["speedDateIds"] as? [String] ?? [], fcmTokens: data["fcmTokens"] as? [String] ?? [], preferredGender: data["preferredGender"] as? String ?? "", currentRoomId: data["currentRoomId"] as? String ?? "")
                         }
                     }
-                    completed(self.userProfile)
+                    completed(profile)
                 }
             }
     }
     
-    public func checkForPeer(toks: [String]) {
-        let mainTok = toks.first!
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/checkForPeer?fcmToken=\(mainTok)") else { fatalError("Missing URL") }
+    public func checkForPeer(userProfileBackground: ProfileModel) {
+        let mainTok = userProfileBackground.fcmTokens.first!
+        let currRoomId = userProfileBackground.currentRoomId
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/checkForPeer?fcmToken=\(mainTok)&currentRoomId=\(currRoomId)") else { fatalError("Missing URL") }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
