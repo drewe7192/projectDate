@@ -120,44 +120,51 @@ struct BasicInfoPopoverView: View {
         VStack(spacing: geoReader.size.height * 0.01){
             
             Group {
-                Text("Welcome to IceBreakrrr!")
+                Text("Lets Break the Ice!")
                     .foregroundColor(Color.iceBreakrrrBlue)
-                    .font(.custom("Chalkduster", size: geoReader.size.height * 0.045))
+                    .font(.custom("Chalkduster", size: geoReader.size.height * 0.035))
                     .multilineTextAlignment(.center)
                 
-                Text("Yupp: this is another dating app..")
+                Text("With the Local SpeedDating app")
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
-                    .font(.system(size: geoReader.size.height * 0.025))
+                    .font(.system(size: geoReader.size.height * 0.028))
                     .padding(.bottom,5)
-                
-                Text("But this focuses more on matching values & personalities")
-                    .foregroundColor(.white)
+
+                Text("IceBreakrrr")
+                    .foregroundColor(.iceBreakrrrBlue)
+                    .font(.custom("Chalkduster", size: geoReader.size.height * 0.030))
                     .multilineTextAlignment(.center)
-                    .font(.system(size: geoReader.size.height * 0.025))
+                  
                 
                 Spacer()
                     .frame(height: geoReader.size.height * 0.04)
                 
-                Text("Here's how it works:")
+                Text("Our cool features:")
                     .foregroundColor(Color.iceBreakrrrBlue)
-                    .font(.custom("Chalkduster",size: geoReader.size.height * 0.04))
+                    .font(.custom("Chalkduster",size: geoReader.size.height * 0.035))
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
                 
-                Text("Answer questions on each card based on how you would like your perfect match to answer")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.height * 0.025))
+                Text("Live SpeedDating:")
+                    .foregroundColor(.iceBreakrrrBlue)
+                    .font(.system(size: geoReader.size.height * 0.028))
                     .multilineTextAlignment(.center)
                     .padding(2)
-                
-                Text("Submit card by swiping right, skip card by swiping left")
+
+                Text("join a chatRoom immediately and start SpeedDating")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
                 
-                Text("Swipe at least 10 cards to get a match")
+                Text("SpeedDate Sundays:")
+                    .foregroundColor(.iceBreakrrrBlue)
+                    .font(.system(size: geoReader.size.height * 0.028))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
+                
+                Text("every Sunday schedule speedDates with your matches!")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
@@ -165,29 +172,41 @@ struct BasicInfoPopoverView: View {
             }
             
             Group{
-                Text("Create your own cards via plus button")
+                Text("Swipe Cards for better matches:")
+                    .foregroundColor(.iceBreakrrrBlue)
+                    .font(.system(size: geoReader.size.height * 0.028))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
+                
+                Text("swipe cards while waiting for live speedDate to get unique speedDates")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.025))
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
                 
-                HStack{
-                    Image(systemName: "snowflake.circle")
-                        .resizable()
-                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
-                        .foregroundColor(.white)
-                    
-                    Text(": Pick a day once a week to get matches")
-                        .foregroundColor(.white)
-                        .font(.system(size: geoReader.size.height * 0.025))
-                        .multilineTextAlignment(.center)
-                }
-                .padding(5)
+//                HStack{
+//                    Image(systemName: "snowflake.circle")
+//                        .resizable()
+//                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+//                        .foregroundColor(.white)
+//
+//                    Text(": Pick a day once a week to get matches")
+//                        .foregroundColor(.white)
+//                        .font(.system(size: geoReader.size.height * 0.025))
+//                        .multilineTextAlignment(.center)
+//                }
+//                .padding(5)
+//
+//                Text("Meet via speed-dating video chats!")
+//                    .foregroundColor(.white)
+//                    .font(.system(size: geoReader.size.height * 0.025))
+//                    .multilineTextAlignment(.center)
                 
-                Text("Meet via speed-dating video chats!")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.height * 0.025))
+                Text(" & more features on the way!")
+                    .foregroundColor(Color.iceBreakrrrBlue)
+                    .font(.custom("Chalkduster",size: geoReader.size.height * 0.035))
                     .multilineTextAlignment(.center)
+                    .padding(.bottom,1)
             }
             
             Spacer()
@@ -416,6 +435,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender", currentRoomId: "")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender", currentRoomId: "")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true))
     }
 }
