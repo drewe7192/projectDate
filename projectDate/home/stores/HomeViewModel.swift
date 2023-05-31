@@ -125,12 +125,12 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getSwipedRecordsThisWeek(completed: @escaping (_ swipedRecords: [SwipedRecordModel]) -> Void) {
-        let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+       // let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
         //PREVENTS HOMEVIEW() PREVIEW CRASH
         //let matchDay = "Monday"
         
-        let matchDayString = matchDay.lowercased()
+        let matchDayString = "sunday"
         
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
@@ -234,12 +234,12 @@ class HomeViewModel: ObservableObject {
     }
     
     public func saveSwipedCardGroup(swipedRecords: [SwipedRecordModel]){
-        let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+        //let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
         //PREVENTS HOMEVIEW() PREVIEW CRASH
         // let matchDay = "Monday"
         
-        let matchDayString = matchDay.lowercased()
+        let matchDayString = "sunday"
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
         let start = Date.today().previous(enumDayOfWeek ?? .sunday)
@@ -339,7 +339,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    public func saveMatchRecords(matches: [MatchRecordModel]){
+    public func saveMatchRecords(matches: [MatchRecordModel], isNew: Bool){
         for (match) in matches {
             let id = UUID().uuidString
             
@@ -347,10 +347,10 @@ class HomeViewModel: ObservableObject {
                 "id": id,
                 "userProfileId": match.userProfileId,
                 "matchProfileId": match.matchProfileId,
-                "isNew": true,
+                "isNew": isNew,
                 "cardIds": match.cardIds,
                 "answers": match.answers,
-                "createdDate": Timestamp(date: Date())
+                "createdDate": match.matchProfileId != "" ? Timestamp(date: Date()) : Timestamp(date: Date.today().previous(.saturday))
             ]
             
             let docRef = db.collection("matchRecords").document(id)
@@ -366,7 +366,7 @@ class HomeViewModel: ObservableObject {
     }
     
     public func getOtherCardGroups(start: Date, end: Date, completed: @escaping(_ otherGroups: [SwipedCardGroupModel]) -> Void){
-        var preferredGender = self.userProfile.gender == "Male" ? "Female" : "Male"
+        let preferredGender = self.userProfile.gender == "Male" ? "Female" : "Male"
         
         db.collection("swipedCardGroups")
             .whereField("createdDate", isGreaterThan: start)
@@ -413,16 +413,17 @@ class HomeViewModel: ObservableObject {
                     }
                 }
             }
+                completed(SwipedCardGroupModel(id: "", profileId: "", cardIds: [], answers: [], gender: ""))
     }
     
     public func getMatchRecordsForPreviousWeek(completed: @escaping(_ matchRecordsPreviousWeek: [MatchRecordModel]) -> Void) {
         
-        let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
+       // let matchDay = self.userProfile.matchDay == "Pick MatchDay" ? "Sunday" : self.userProfile.matchDay
         
         //SWITCH TO PREVENT PREVIEW CRASHING
         //let matchDay = "Monday"
         
-        let matchDayString = matchDay.lowercased()
+        let matchDayString = "sunday"
         let enumDayOfWeek = Date.Weekday(rawValue: matchDayString)
         
         let start = Date.today().previous(enumDayOfWeek ?? .sunday).previous(enumDayOfWeek ?? .sunday)

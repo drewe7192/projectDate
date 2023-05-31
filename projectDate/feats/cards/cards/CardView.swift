@@ -59,8 +59,7 @@ struct CardView: View {
                     question(for: geoReader)
                     categoryDisplay(for: geoReader)
                     
-                    
-                    if self.swipeStatus == .dislike {
+                    if self.translation.width < -10 {
                         Text("ANSWER LATER")
                             .font(.title3)
                             .bold()
@@ -75,7 +74,7 @@ struct CardView: View {
                             .rotationEffect(Angle.degrees(45))
                     }
                     
-                    if self.swipeStatus == .like {
+                    if self.translation.width > 10 {
                         Text("SUBMIT ANSWER")
                             .font(.title3)
                             .bold()
@@ -140,7 +139,7 @@ struct CardView: View {
                         // cant swipe right(.like) if question hasnt been answered
                         else if (self.swipeStatus == .like) && (selectedChoice != "Your Match's Answer") {
                             onRemove(self.card)
-
+                            
                             // after each swipe save the card data
                             saveSwipedRecords(card: self.card, answer: selectedChoice){ (success) in
                                 if success{
@@ -160,7 +159,7 @@ struct CardView: View {
                                     //last card in set is always index 0
                                     if(index == 0){
                                         // fires off the ".onChange" in the HomeView and CardsView
-                             
+                                        
                                         updateData.toggle()
                                     }
                                     self.selectedChoice = "Your Match's Answer"
@@ -172,7 +171,7 @@ struct CardView: View {
             )
         }
     }
- 
+    
     private func title(for geoReader: GeometryProxy) -> some View {
         VStack{
             Text("How would your perfect match answer this question:")
@@ -234,7 +233,7 @@ struct CardView: View {
             "profileId": userProfile.id,
         ]
         
-   
+        
         let docRef = db.collection("swipedRecords").document(id)
         
         docRef.setData(docData) {error in

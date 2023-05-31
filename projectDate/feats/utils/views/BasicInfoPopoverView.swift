@@ -24,7 +24,6 @@ struct BasicInfoPopoverView: View {
     @State private var editInfo: Bool = false
     @State private var alertCompleteForm: Bool = false
     
-    
     let storage = Storage.storage()
     
     var body: some View {

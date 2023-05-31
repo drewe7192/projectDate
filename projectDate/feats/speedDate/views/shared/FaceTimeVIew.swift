@@ -22,6 +22,7 @@ struct FacetimeView: View {
     @State private var tapped2: Bool = false
     @State private var tapped3: Bool = false
     @State private var isDirty: Bool = false
+    @State private var isRemovePeersDirty: Bool = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     let homeViewModel: HomeViewModel
@@ -30,87 +31,75 @@ struct FacetimeView: View {
     
     var body: some View {
         GeometryReader { geoReader in
-            VStack{
-                Group {
-                    if videoSDK.isJoined {
+            if videoSDK.isJoined {
+                ZStack{
+                    ForEach(Array(videoSDK.tracks.enumerated().reversed()), id: \.offset) {index, track in
                         ZStack{
-                            //Videos
-                            VStack{
-                                ForEach(Array(videoSDK.tracks.enumerated()), id: \.offset) {index, track in
-                                    VStack{
-                                        ZStack{
-                                            if index == 1 {
-                                                VideoView(track: track)
-                                                    .frame(height: geoReader.size.height)
-                                                    .onAppear{
-                                                        //remove loading animated thingy
-                                                        hasPeerJoined.toggle()
-                                                    }
-                                            }
-                                            
-                                            if index == 0 {
-                                                VideoView(track: track)
-                                                    .frame(width: hasPeerJoined ? geoReader.size.width * 0.3 : geoReader.size.width, height:  hasPeerJoined ? geoReader.size.height * 0.25 : geoReader.size.height)
-                                                    .position(x: hasPeerJoined ?  geoReader.size.width * 0.8 : geoReader.frame(in: .local).midX,
-                                                              y: hasPeerJoined ?  geoReader.size.height * 0.3 : geoReader.frame(in: .local).midY )
-                                                    .animation(.default)
-                                                
-                                                videoOptions(for: geoReader)
-                                                    .padding(.bottom, 10)
-                                            }
-                                        }
-                                    }
-                                }
-                                .onReceive(timer) { time in
-                                    if videoSDK.tracks.indices.contains(1) {
-                                        if timeRemaining > 0 {
-                                            timeRemaining -= 1
-                                        } else if timeRemaining == 0 {
-                                            removePeers() { (peersRemoved) -> Void in
-                                                if peersRemoved != "" {
-                                                    timeRemaining = 100
-                                                }
+                            VideoView(track: track)
+                                .frame(width: index == 0 ?
+                                       videoSDK.tracks.count == 2 ? geoReader.size.width * 0.3 : geoReader.size.width :
+                                        geoReader.size.width,
+                                       height: index == 0 ?
+                                       videoSDK.tracks.count == 2 ? geoReader.size.height * 0.3 : geoReader.size.height :
+                                        geoReader.size.height)
+                                .position(x: index == 0 ?
+                                          videoSDK.tracks.count == 2 ? geoReader.size.width * 0.75 : geoReader.frame(in: .local).midX :
+                                            geoReader.frame(in: .local).midX,
+                                          y: index == 0 ?
+                                          videoSDK.tracks.count == 2 ? geoReader.size.height * 0.3 :  geoReader.frame(in: .local).midY :
+                                            geoReader.frame(in: .local).midY)
+                            
+                            if index == 0 && videoSDK.tracks.count == 2 {
+                                videoOptions(for: geoReader)
+                            }
+                        }
+                        .onReceive(timer) { time in
+                            if videoSDK.tracks.count == 2 {
+                                hasPeerJoined = true
+                                if timeRemaining > 0 {
+                                    timeRemaining -= 1
+                                } else if timeRemaining == 0 {
+                                        removePeers() { (peersRemoved) -> Void in
+                                            if peersRemoved != "" {
+                                                timeRemaining = 100
+                                               // isRemovePeersDirty = true
                                             }
                                         }
-                                    }
-                                }
-                                .onChange(of: tapped2) {_ in
-                                    if self.timeRemaining < 120 && !isDirty {
-                                        self.timeRemaining += 120
-                                        self.isDirty = true
-                                    }
-                                    
                                 }
                             }
-                            
-                            //SpeedDate Timer
-                            if hasPeerJoined {
-                                VStack{
-                                    Text("\(timeRemaining / 60):\(timeRemaining % 60)")
-                                        .font(.custom("Superclarendon", size: 60))
-                                        .foregroundColor(.iceBreakrrrBlue)
-                                        .padding(.horizontal, 20)
-                                        .clipShape(Capsule())
-                                }
-                                .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.50)
+                        }
+                        .onChange(of: tapped2) {_ in
+                            if self.timeRemaining < 120 && !isDirty {
+                                self.timeRemaining += 120
+                                self.isDirty = true
                             }
                             
                         }
                     }
-                    else if isJoining {
-                        ProgressView()
-                    }
-                    else {
-                        Text("")
-                            .onChange(of: launchJoinRoom) { newValue in
-                                listen()
-                                videoSDK.joinRoom(viewModel: homeViewModel)
-                                isJoining.toggle()
-                            }
+                    
+                    //SpeedDate Timer
+                    if hasPeerJoined {
+                        VStack{
+                            Text("\(timeRemaining / 60):\(timeRemaining % 60)\(timeRemaining % 60 == 0 ? "0" : "" )")
+                                .font(.custom("Superclarendon", size: geoReader.size.height * 0.08))
+                                .foregroundColor(.iceBreakrrrBlue)
+                                .padding(.horizontal, 20)
+                                .clipShape(Capsule())
+                        }
                     }
                 }
             }
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
+            else if isJoining {
+                ProgressView()
+            }
+            else {
+                Text("")
+                    .onChange(of: launchJoinRoom) { newValue in
+                        listen()
+                        videoSDK.joinRoom(viewModel: homeViewModel)
+                        isJoining.toggle()
+                    }
+            }
         }
     }
     private func videoOptions(for geoReader: GeometryProxy) -> some View {
@@ -137,9 +126,9 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped.toggle()
                     
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-//                        tapped = false
-//                    }
+                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+                    //                        tapped = false
+                    //                    }
                 }
                 .disabled(hasPeerJoined ? false: true)
             }
@@ -164,9 +153,9 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped2.toggle()
                     
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-//                        tapped2 = false
-//                    }
+                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+                    //                        tapped2 = false
+                    //                    }
                 }
                 .disabled(hasPeerJoined ? false: true)
             }
@@ -191,9 +180,9 @@ struct FacetimeView: View {
                 .onTapGesture {
                     tapped3.toggle()
                     
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-//                        tapped3 = false
-//                    }
+                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+                    //                        tapped3 = false
+                    //                    }
                 }
                 .disabled(hasPeerJoined ? false: true)
             }
@@ -222,7 +211,7 @@ struct FacetimeView: View {
     }
     
     private func removePeers(completed: @escaping (_ peersRemoved: String) -> Void){
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/removePeers?room_id=\(homeViewModel.speedDates.first!.roomId)") else {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/removePeers?room_id=\(homeViewModel.currentSpeedDate.roomId)") else {
             fatalError("Missing URL") }
         
         let json: [String: Any] = [
@@ -251,6 +240,7 @@ struct FacetimeView: View {
                 DispatchQueue.main.async {
                     do {
                         let message = String(data:data, encoding: .utf8)
+                        print(message!)
                     } catch let error {
                         completed("")
                         print("Error decoding: ", error)

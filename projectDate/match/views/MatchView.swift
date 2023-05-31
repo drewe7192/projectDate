@@ -19,6 +19,7 @@ struct MatchView: View {
     @StateObject var viewModel = HomeViewModel()
     
     @State private var userProfileImage: UIImage = UIImage()
+    @State private var isNoMatches: Bool = false
     
     let storage = Storage.storage()
     
@@ -29,11 +30,26 @@ struct MatchView: View {
                     .ignoresSafeArea()
                 
                 VStack{
-                    Text("SpeedDate Sunday!")
-                        .foregroundColor(.white)
-                        .bold()
-                        .font(.custom("Chalkduster", size: geoReader.size.height * 0.05))
-                        .multilineTextAlignment(.center)
+                    if !self.isNoMatches {
+                        Text("SpeedDate Sunday!")
+                            .foregroundColor(.white)
+                            .bold()
+                            .font(.custom("Chalkduster", size: geoReader.size.height * 0.05))
+                            .multilineTextAlignment(.center)
+                    } else {
+                        Text("SpeedDate Sunday!")
+                            .foregroundColor(.white)
+                            .bold()
+                            .font(.custom("Chalkduster", size: geoReader.size.height * 0.05))
+                            .multilineTextAlignment(.center)
+                        
+                        Text("but no matches yet..")
+                            .foregroundColor(.white)
+                            .bold()
+                            .font(.custom("Chalkduster", size: geoReader.size.height * 0.03))
+                            .multilineTextAlignment(.center)
+                    }
+                    
                     
                     
                     Image(uiImage: viewModel.profileImage)
@@ -47,51 +63,76 @@ struct MatchView: View {
                     Spacer()
                         .frame(height: 50)
                     
-                    HStack{
-                        if !viewModel.matchProfileImages.isEmpty {
-                            ForEach(viewModel.matchProfileImages, id: \.self){ profileImage in
-                                Image(uiImage: profileImage)
-                                    .resizable()
-                                    .cornerRadius(50)
-                                    .frame(width: 100, height: 100)
-                                    .background(Color.black.opacity(0.2))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
+                    if !self.isNoMatches {
+                        HStack{
+                            if !viewModel.matchProfileImages.isEmpty {
+                                ForEach(viewModel.matchProfileImages, id: \.self){ profileImage in
+                                    Image(uiImage: profileImage)
+                                        .resizable()
+                                        .cornerRadius(50)
+                                        .frame(width: 100, height: 100)
+                                        .background(Color.black.opacity(0.2))
+                                        .aspectRatio(contentMode: .fill)
+                                        .clipShape(Circle())
+                                }
                             }
                         }
-                    }
-                    
-                    Spacer()
-                        .frame(height: 50)
-                    
-                    Button(action: {
-                        viewModel.updateMatchRecords(matchRecords: viewModel.matchRecords)
-                        viewRouter.currentPage = .scheduleSpeedDatePage
-                    }) {
-                        Text("Schedule SpeedDates")
+                        
+                        Spacer()
+                            .frame(height: 50)
+                        
+                        Button(action: {
+                            viewModel.updateMatchRecords(matchRecords: viewModel.matchRecords)
+                            viewRouter.currentPage = .scheduleSpeedDatePage
+                        }) {
+                            Text("Schedule SpeedDates")
+                                .bold()
+                                .frame(width: 300, height: 70)
+                                .background(Color.mainGrey)
+                                .foregroundColor(.iceBreakrrrBlue)
+                                .font(.system(size: 24))
+                                .cornerRadius(20)
+                                .shadow(radius: 8, x: 10, y:10)
+                        }
+                    } else {
+                        Text("swipe at least 5 cards a week to schedule Speed Dates")
+                            .foregroundColor(.white)
                             .bold()
-                            .frame(width: 300, height: 70)
-                            .background(Color.mainGrey)
-                            .foregroundColor(.iceBreakrrrBlue)
-                            .font(.system(size: 24))
-                            .cornerRadius(20)
-                            .shadow(radius: 8, x: 10, y:10)
+                            .font(.custom("Chalkduster", size: geoReader.size.height * 0.03))
+                            .multilineTextAlignment(.center)
+                        
+                        Button(action: {
+                            // make empty record so user doesnt keep on routing to this screen
+                            viewModel.saveMatchRecords(matches: [MatchRecordModel(id: "", userProfileId: viewModel.userProfile.id, matchProfileId: "", cardIds: [], answers: [], isNew: false)], isNew: false)
+                            viewRouter.currentPage = .homePage
+                        }) {
+                            Text("Go Home")
+                                .bold()
+                                .frame(width: 300, height: 70)
+                                .background(Color.mainGrey)
+                                .foregroundColor(.iceBreakrrrBlue)
+                                .font(.system(size: 24))
+                                .cornerRadius(20)
+                                .shadow(radius: 8, x: 10, y:10)
+                        }
                     }
                 }
                 .onAppear{
-                        viewModel.getUserProfile(){(profileId) -> Void in
-                            if profileId != "" {
-                                viewModel.getStorageFile(profileId: profileId)
-                                viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
-                                    if !matchRecordsPreviousWeek.isEmpty {
-                                        viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
-                                            if !matchProfiles.isEmpty{
-                                                viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
-                                            }
+                    viewModel.getUserProfile(){(profileId) -> Void in
+                        if profileId != "" {
+                            viewModel.getStorageFile(profileId: profileId)
+                            viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
+                                if !matchRecordsPreviousWeek.isEmpty {
+                                    viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
+                                        if !matchProfiles.isEmpty{
+                                            viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
                                         }
                                     }
+                                } else {
+                                    self.isNoMatches.toggle()
                                 }
                             }
+                        }
                     }
                 }
             }

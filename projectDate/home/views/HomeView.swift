@@ -45,9 +45,9 @@ struct HomeView: View {
     @State private var textOpacityChanged = false
     @State private var launchJoinRoom = false
     @State private var hasPeerJoined = false
-    @State private var showCards = false
+    @State private var showCardAlert = false
     @State private var emptyRooms: [RoomModel] = []
-    @State private var displayCardsTime: Int = 120
+    @State private var displayCardsTime: Int = 60
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -57,21 +57,23 @@ struct HomeView: View {
             GeometryReader{ geoReader in
                 ZStack{
                     ZStack{
-                        FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined)
+                        ZStack{
+                            FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined)
+                            
+                            if !hasPeerJoined {
+                                loadingIcon(for: geoReader)
+                            }
+                            
+                            cardsAndSpeeDateSection(for: geoReader)
+                                .padding(.top,10)
+                                .animation(Animation.easeInOut(duration: 0.2))
+                        }
+                        .disabled(self.showHamburgerMenu ? true : false)
+                    
                         headerSection(for: geoReader)
                             .padding(.leading, geoReader.size.width * 0.25)
-                        
-                        if !hasPeerJoined {
-                            animatedThingy(for: geoReader)
-                        }
-                        
-                        cardsAndSpeeDateSection(for: geoReader)
-                            .padding(.top,10)
-                            .animation(Animation.easeInOut(duration: 0.2))
-                        
                     }
                     .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
-                    .disabled(self.showHamburgerMenu ? true : false)
                     
                     //Display hamburgerMenu
                     if self.showHamburgerMenu {
@@ -88,6 +90,16 @@ struct HomeView: View {
                         message: Text("You'll get a notification if someone matches your perfered answer!")
                     )
                 }
+                .alert(isPresented: $showCardAlert){
+                    Alert(
+                        title: Text("Show cards?"),
+                        message: Text("While you're waiting for a speedDate swipe some cards! Swiping only 5 cards will give you some matches for SpeedDate Sundays. With these matches you can schedule seedDates for a convenient time"),
+                        primaryButton: .default(Text("Lets swipe!")) {
+                            gotSwipedRecords = true
+                        },
+                        secondaryButton: .cancel(Text("Continue waiting for Speed Date"))
+                    )
+                }
                 .onAppear {
                     getAllData()
                     getAvailableRoom()
@@ -100,6 +112,9 @@ struct HomeView: View {
                     if phase == .active {
                         displayCardsTime += 120
                     }
+                }
+                .onChange(of: self.hasPeerJoined) { _ in
+                    gotSwipedRecords = false
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
@@ -141,7 +156,7 @@ struct HomeView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(self.displayCardsTime)) {
             // fires off getAllCards() in CardView
             if !hasPeerJoined {
-                gotSwipedRecords = true
+                self.showCardAlert = true
             }
         }
     }
@@ -196,16 +211,18 @@ struct HomeView: View {
                 // If theres no matchRecords for this week run match logic and find matches
                 if matchRecordsPreviousWeek.isEmpty {
                     getCardGroups() {(userCardGroup) -> Void in
-                        if !userCardGroup.userCardGroup.id.isEmpty {
+                        if userCardGroup.userCardGroup.id != "" {
                             findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
                                 if !successFullMatches.isEmpty {
-                                    viewModel.saveMatchRecords(matches: successFullMatches)
+                                    viewModel.saveMatchRecords(matches: successFullMatches, isNew: true)
                                     //delaying routing to make sure matchRecords save
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                                         viewRouter.currentPage = .matchPage
                                     }
                                 }
                             }
+                        } else {
+                                viewRouter.currentPage = .matchPage
                         }
                     }
                 } else if matchRecordsPreviousWeek.contains(where: { mrec in mrec.isNew == true}) {
@@ -231,6 +248,8 @@ struct HomeView: View {
                         completed(viewModel.swipedCardGroups)
                     }
                 }
+            } else {
+                completed(SwipedCardGroupsModel(id: "", userCardGroup: SwipedCardGroupModel(id: "", profileId: "", cardIds: [], answers: [], gender: ""), otherCardGroups: []))
             }
         }
     }
@@ -433,7 +452,7 @@ struct HomeView: View {
         }
     }
     
-    private func animatedThingy(for geoReader: GeometryProxy) -> some View {
+    private func loadingIcon(for geoReader: GeometryProxy) -> some View {
         VStack{
             VStack{
                 Text("Searching for")
@@ -451,7 +470,7 @@ struct HomeView: View {
             
             ZStack {
                 Circle()
-                    .frame(width: 125, height: 125)
+                    .frame(width: geoReader.size.width * 0.3, height: geoReader.size.height * 0.3)
                     .foregroundColor(circleColorChanged ? Color(.systemGray5) : .iceBreakrrrBlue)
                     .animation(Animation.linear(duration: 1).repeatForever())
                 
@@ -468,7 +487,6 @@ struct HomeView: View {
                 self.textOpacityChanged.toggle()
             }
         }
-        
     }
     
     private func cardsAndSpeeDateSection(for geoReader: GeometryProxy) -> some View {

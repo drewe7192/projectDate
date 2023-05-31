@@ -158,7 +158,12 @@ struct SettingsView: View {
     
     private func saveAllInfo(){
         if(editInfo == false){
-            uploadStorageFile(image: viewModel.profileImage, profileId: viewModel.userProfile.id)
+            viewModel.updateUserProfile(updatedProfile: viewModel.userProfile) { (profileId) -> Void in
+                if profileId != "" {
+                    uploadStorageFile(image: viewModel.profileImage, profileId: viewModel.userProfile.id)
+                }
+            }
+          
         }
     }
     
@@ -286,7 +291,7 @@ struct SettingsView: View {
     }
     
     private func nameSection(for geoReader: GeometryProxy) -> some View{
-        VStack{
+        HStack{
                 Text("Name")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.width * 0.05))
@@ -309,12 +314,13 @@ struct SettingsView: View {
                 Text(viewModel.userProfile.fullName == "" ? "Enter Name" : viewModel.userProfile.fullName)
                     .foregroundColor(Color.gray)
                     .font(.system(size: geoReader.size.height * 0.025))
+                    .padding(.trailing,geoReader.size.height * 0.1)
             }
         }
     }
     
     private func pickerSections(for geoReader: GeometryProxy) -> some View{
-        VStack{
+        HStack{
                 Text("Gender")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.width * 0.05))
@@ -335,34 +341,7 @@ struct SettingsView: View {
                     .font(.system(size: geoReader.size.height * 0.04))
             }
             .padding(.bottom,geoReader.size.height * 0.02)
-            .accentColor(.white)
-            .disabled(editInfo == false)
-                
-                Text("MatchDay")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.width * 0.05))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading)
-            
-            Menu {
-                Picker(selection: $viewModel.userProfile.matchDay) {
-                    ForEach(matchDayChoices, id: \.self) { matchDay in
-                        Text("\(matchDay)")
-                        // .tag(matchDay)
-                            .font(.system(size: geoReader.size.height * 0.01))
-                    }
-                } label: {}
-            } label: {
-                HStack{
-                    Image(systemName: "snowflake.circle")
-                        .resizable()
-                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
-                        .foregroundColor(editInfo ? .white : .mainGrey)
-                    
-                    Text("\(viewModel.userProfile.matchDay)")
-                        .font(.system(size: geoReader.size.height * 0.04))
-                }
-            }
+            .padding(.trailing,geoReader.size.height * 0.1)
             .accentColor(.white)
             .disabled(editInfo == false)
         }

@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct GetAllRoomsResponseModel: Codable{
     var data: [RoomModel]
 }
