@@ -48,6 +48,7 @@ struct HomeView: View {
     @State private var showCardAlert = false
     @State private var emptyRooms: [RoomModel] = []
     @State private var displayCardsTime: Int = 60
+    @State private var lookForRoom: Bool = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -58,7 +59,7 @@ struct HomeView: View {
                 ZStack{
                     ZStack{
                         ZStack{
-                            FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined)
+                            FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined, lookForRoom: $lookForRoom)
                             
                             if !hasPeerJoined {
                                 loadingIcon(for: geoReader)
@@ -115,6 +116,10 @@ struct HomeView: View {
                 }
                 .onChange(of: self.hasPeerJoined) { _ in
                     gotSwipedRecords = false
+                }
+                .onChange(of: self.lookForRoom) { _ in
+                    getAvailableRoom()
+                    //displayCards()
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)

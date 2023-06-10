@@ -55,6 +55,7 @@
 		7731738528CE2F6500B8885B /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738428CE2F6500B8885B /* FacebookCore */; };
 		7731738728CE2F6500B8885B /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738628CE2F6500B8885B /* FacebookLogin */; };
 		7731738928CE2F6500B8885B /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738828CE2F6500B8885B /* FacebookShare */; };
+		7736DD742A2B15B8002AD58B /* TextShimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7736DD732A2B15B8002AD58B /* TextShimmer.swift */; };
 		77433FD029DBDAB400D62F31 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FCF29DBDAB400D62F31 /* TokenProvider.swift */; };
 		77433FD229DBDB0400D62F31 /* SpeedDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */; };
 		77433FD529DBDB3800D62F31 /* FaceTimeVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */; };
@@ -178,6 +179,7 @@
 		771EA00E28A045EC007EBC40 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		7731737E28CCE50100B8885B /* GoogleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuth.swift; sourceTree = "<group>"; };
 		7731738128CDBE4200B8885B /* FacebookAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookAuth.swift; sourceTree = "<group>"; };
+		7736DD732A2B15B8002AD58B /* TextShimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextShimmer.swift; sourceTree = "<group>"; };
 		77433FCF29DBDAB400D62F31 /* TokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
 		77433FD129DBDB0400D62F31 /* SpeedDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedDateModel.swift; sourceTree = "<group>"; };
 		77433FD429DBDB3800D62F31 /* FaceTimeVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTimeVIew.swift; sourceTree = "<group>"; };
@@ -816,6 +818,7 @@
 				77115F95299EF2EC00705811 /* ConfirmationView.swift */,
 				77FB2460294DA8D2008F5469 /* SearchInput.swift */,
 				7753927629A2316F00AA2B74 /* FailedView.swift */,
+				7736DD732A2B15B8002AD58B /* TextShimmer.swift */,
 			);
 			path = shared;
 			sourceTree = "<group>";
@@ -1059,6 +1062,7 @@
 				77C3D53A289912B60088554F /* SettingsView.swift in Sources */,
 				77C3D532289912AD0088554F /* PreviewProfileView.swift in Sources */,
 				77A0F9BB2986CEA1009CD1E0 /* LogInItems.swift in Sources */,
+				7736DD742A2B15B8002AD58B /* TextShimmer.swift in Sources */,
 				77C62B172A1D4D010002D361 /* PeerModel.swift in Sources */,
 				77BA2C7929DBF62600AC1C1C /* DropViewDelegate.swift in Sources */,
 				77FB246529539DB5008F5469 /* ImageSlider.swift in Sources */,

@@ -28,6 +28,7 @@ struct FacetimeView: View {
     let homeViewModel: HomeViewModel
     @Binding var launchJoinRoom: Bool
     @Binding var hasPeerJoined: Bool
+    @Binding var lookForRoom: Bool
     
     var body: some View {
         GeometryReader { geoReader in
@@ -59,9 +60,10 @@ struct FacetimeView: View {
                                 if timeRemaining > 0 {
                                     timeRemaining -= 1
                                 } else if timeRemaining == 0 {
-                                        removePeers() { (peersRemoved) -> Void in
+                                    endActiveRoom() { (peersRemoved) -> Void in
                                             if peersRemoved != "" {
-                                                timeRemaining = 100
+                                                lookForRoom = true
+                                                //timeRemaining = 100
                                                // isRemovePeersDirty = true
                                             }
                                         }
@@ -210,12 +212,13 @@ struct FacetimeView: View {
         return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
     
-    private func removePeers(completed: @escaping (_ peersRemoved: String) -> Void){
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/removePeers?room_id=\(homeViewModel.currentSpeedDate.roomId)") else {
+    private func endActiveRoom(completed: @escaping (_ peersRemoved: String) -> Void){
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/endActiveRoom?room_id=\(homeViewModel.currentSpeedDate.roomId)") else {
             fatalError("Missing URL") }
         
         let json: [String: Any] = [
-            "role": "guest"
+            "reason": "SpeedDate has ended",
+            "lock": "false"
         ]
         
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
@@ -241,12 +244,14 @@ struct FacetimeView: View {
                     do {
                         let message = String(data:data, encoding: .utf8)
                         print(message!)
+                        completed(message!)
                     } catch let error {
                         completed("")
                         print("Error decoding: ", error)
                     }
                 }
             }
+            completed("")
         }
         dataTask.resume()
     }
