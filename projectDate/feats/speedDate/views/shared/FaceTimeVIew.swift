@@ -218,7 +218,7 @@ struct FacetimeView: View {
         
         let json: [String: Any] = [
             "reason": "SpeedDate has ended",
-            "lock": "false"
+            "lock": false
         ]
         
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
