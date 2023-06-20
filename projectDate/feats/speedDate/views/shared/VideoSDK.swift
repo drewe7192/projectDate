@@ -24,6 +24,7 @@ class VideoSDK: ObservableObject {
                     let config = HMSConfig(userName: viewModel.userProfile.fullName, authToken: token)
                     self.hmsSDK.join(config: config, delegate: self)
                 }
+                print(error)
             }
         } else if viewModel.userProfile.gender.lowercased() == "female" {
             //female
@@ -57,7 +58,7 @@ class VideoSDK: ObservableObject {
 
 extension VideoSDK: HMSUpdateListener {
     func on(join room: HMSRoom) {
-        isJoined = true
+        isJoined.toggle()
     }
     
     func on(room: HMSRoom, update: HMSRoomUpdate) {

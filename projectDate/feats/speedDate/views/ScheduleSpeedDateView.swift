@@ -126,12 +126,7 @@ struct ScheduleSpeedDateView: View {
                 DispatchQueue.main.async {
                     do {
                         let decodedRoles = try JSONDecoder().decode(RolesModel.self, from: data)
-//                        decodedRoles.roles.forEach{ x in
-//                            viewModel.rolesForRoom.append(x.role)
-//
-//                            //print("this is the role")
-//                           // print(x)
-//                        }
+
                         viewModel.newSpeedDate.maleRoomCode = viewModel.rolesForRoom[0] as! String
                         viewModel.newSpeedDate.femaleRoomCode = viewModel.rolesForRoom[1] as! String
                         completed(viewModel.rolesForRoom)

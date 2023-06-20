@@ -117,10 +117,6 @@ struct HomeView: View {
                 .onChange(of: self.hasPeerJoined) { _ in
                     gotSwipedRecords = false
                 }
-                .onChange(of: self.lookForRoom) { _ in
-                    getAvailableRoom()
-                    //displayCards()
-                }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
@@ -149,7 +145,8 @@ struct HomeView: View {
             } else {
                 viewModel.getAllRooms() { (allRooms) -> Void in
                     if !allRooms.data.isEmpty {
-                        viewModel.currentSpeedDate.roomId = allRooms.data.first!.id
+                        var newRoom = allRooms.data.first(where: {$0.id != viewModel.currentSpeedDate.roomId})?.id
+                        viewModel.currentSpeedDate.roomId = newRoom ?? ""
                         retrieveCodes()
                     }
                 }
@@ -658,7 +655,9 @@ struct HomeView: View {
                             }
                         }
                         if !emptyRooms.isEmpty {
-                            viewModel.currentSpeedDate.roomId = emptyRooms.first!.id
+                            var newRoom = emptyRooms.first(where: {$0.id != viewModel.currentSpeedDate.roomId})?.id
+                            viewModel.currentSpeedDate.roomId = newRoom ?? ""
+                            
                             retrieveCodes()
                         }
                     } else {
@@ -683,7 +682,7 @@ struct HomeView: View {
                         viewModel.currentSpeedDate.femaleRoomCode = x.code
                     }
                 }
-                launchJoinRoom.toggle()
+                launchJoinRoom = true
             }
             else {
                 viewModel.createRoomCodes() {(newRoomCodes) -> Void in
@@ -695,7 +694,7 @@ struct HomeView: View {
                                 viewModel.currentSpeedDate.femaleRoomCode = x.code
                             }
                         }
-                        launchJoinRoom.toggle()
+                        launchJoinRoom = true
                     }
                 }
             }

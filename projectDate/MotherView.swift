@@ -53,6 +53,8 @@ struct MotherView: View {
                 ScheduleSpeedDateView()
             case .speedDateConfirmationPage:
                 ConfirmationView(confirmationText: "SpeedDate created!")
+            case .speedDateEndedPage:
+                SpeedDateEndedPage()
             }
         }
     }

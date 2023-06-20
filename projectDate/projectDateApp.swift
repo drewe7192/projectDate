@@ -126,7 +126,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             print("Message ID: \(messageID)")
         }
         
-        print(userInfo)
+        //print(userInfo)
         
         // Change this to your preferred presentation option
         completionHandler([[.banner, .badge, .sound]])

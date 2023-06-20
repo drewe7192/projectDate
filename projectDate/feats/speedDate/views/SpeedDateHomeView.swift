@@ -24,7 +24,6 @@ struct SpeedDateHomeView: View {
                     
                     if !viewModel.speedDates.isEmpty {
                         // role is Host if userProfileId isnt in the array of matchingProfilesId
-                        
                         if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
                             VStack{
                                 Text("SpeedDate")

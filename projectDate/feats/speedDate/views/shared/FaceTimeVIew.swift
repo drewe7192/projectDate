@@ -60,11 +60,9 @@ struct FacetimeView: View {
                                 if timeRemaining > 0 {
                                     timeRemaining -= 1
                                 } else if timeRemaining == 0 {
-                                    endActiveRoom() { (peersRemoved) -> Void in
+                                    endActiveRoom() {(peersRemoved) -> Void in
                                             if peersRemoved != "" {
-                                                lookForRoom = true
-                                                //timeRemaining = 100
-                                               // isRemovePeersDirty = true
+                                                viewRouter.currentPage = .speedDateEndedPage
                                             }
                                         }
                                 }
@@ -97,7 +95,7 @@ struct FacetimeView: View {
             else {
                 Text("")
                     .onChange(of: launchJoinRoom) { newValue in
-                        listen()
+                        //listen()
                         videoSDK.joinRoom(viewModel: homeViewModel)
                         isJoining.toggle()
                     }
@@ -243,8 +241,7 @@ struct FacetimeView: View {
                 DispatchQueue.main.async {
                     do {
                         let message = String(data:data, encoding: .utf8)
-                        print(message!)
-                        completed(message!)
+                        completed("session deactivated")
                     } catch let error {
                         completed("")
                         print("Error decoding: ", error)
