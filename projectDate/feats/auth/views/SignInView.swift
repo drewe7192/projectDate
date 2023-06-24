@@ -53,7 +53,7 @@ struct SignInView: View {
                     .bold()
                     .foregroundColor(Color.iceBreakrrrBlue)
                 
-                Text("Less messaging, more speed-dating")
+                Text("Break the Ice")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.02))
                     .multilineTextAlignment(.center)

@@ -36,7 +36,7 @@ struct MessageHomeView: View {
                         .ignoresSafeArea()
                     
                     VStack(spacing: 1 ){
-                        Text("DISABLED UNTIL YOU MEET MATCHES VIA SPEEDDATING")
+                        Text("DISABLED UNTIL YOU MEET a Friend")
                             .bold()
                             .foregroundColor(.gray)
                             .opacity(0.5)

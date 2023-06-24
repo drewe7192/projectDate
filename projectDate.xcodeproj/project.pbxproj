@@ -1312,10 +1312,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IceBreakrrr;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "for dating";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSCameraUsageDescription = "for finding friends";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for dating";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for finding friends";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1353,10 +1353,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IceBreakrrr;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "for dating";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSCameraUsageDescription = "for finding friends";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for dating";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for finding friends";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

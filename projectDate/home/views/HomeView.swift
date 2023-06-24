@@ -91,20 +91,20 @@ struct HomeView: View {
                         message: Text("You'll get a notification if someone matches your perfered answer!")
                     )
                 }
-                .alert(isPresented: $showCardAlert){
-                    Alert(
-                        title: Text("Show cards?"),
-                        message: Text("While you're waiting for a speedDate swipe some cards! Swiping only 5 cards will give you some matches for SpeedDate Sundays. With these matches you can schedule seedDates for a convenient time"),
-                        primaryButton: .default(Text("Lets swipe!")) {
-                            gotSwipedRecords = true
-                        },
-                        secondaryButton: .cancel(Text("Continue waiting for Speed Date"))
-                    )
-                }
+//                .alert(isPresented: $showCardAlert){
+//                    Alert(
+//                        title: Text("Show cards?"),
+//                        message: Text("While you're waiting for a speedDate swipe some cards! Swiping only 5 cards will give you some matches for SpeedDate Sundays. With these matches you can schedule seedDates for a convenient time"),
+//                        primaryButton: .default(Text("Lets swipe!")) {
+//                            gotSwipedRecords = true
+//                        },
+//                        secondaryButton: .cancel(Text("Continue waiting for Speed Date"))
+//                    )
+//                }
                 .onAppear {
                     getAllData()
                     getAvailableRoom()
-                    displayCards()
+                    //displayCards()
                 }
                 .onChange(of: updateData) { _ in
                     saveCards()
@@ -457,17 +457,17 @@ struct HomeView: View {
     private func loadingIcon(for geoReader: GeometryProxy) -> some View {
         VStack{
             VStack{
-                Text("Searching for")
+                Text("Searching...")
                     .font(.system(size: 30))
                     .foregroundColor(.white)
                     .opacity(textOpacityChanged ? 1 : 0.1)
                     .animation(Animation.linear(duration: 1).repeatForever())
                 
-                Text("SpeedDate")
-                    .font(.system(size: 30))
-                    .foregroundColor(.white)
-                    .opacity(textOpacityChanged ? 1 : 0.1)
-                    .animation(Animation.linear(duration: 1).repeatForever())
+//                Text("SpeedDate")
+//                    .font(.system(size: 30))
+//                    .foregroundColor(.white)
+//                    .opacity(textOpacityChanged ? 1 : 0.1)
+//                    .animation(Animation.linear(duration: 1).repeatForever())
             }
             
             ZStack {
@@ -476,7 +476,7 @@ struct HomeView: View {
                     .foregroundColor(circleColorChanged ? Color(.systemGray5) : .iceBreakrrrBlue)
                     .animation(Animation.linear(duration: 1).repeatForever())
                 
-                Image(systemName: "heart.fill")
+                Image(systemName: "globe.europe.africa.fill")
                     .foregroundColor(heartColorChanged ? .iceBreakrrrBlue : .white)
                     .font(.system(size: 75))
                     .scaleEffect(heartSizeChanged ? 1.0 : 0.5)
