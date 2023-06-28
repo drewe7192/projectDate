@@ -65,17 +65,17 @@ struct LogInItems: View {
                 .cornerRadius(15)
                 .shadow(radius: 5)
                 
-                Button(action: {
-                    self.toggleButtons.toggle()
-                }) {
-                    Image("facebookLogo")
-                        .resizable()
-                        .frame(width: 35, height: 35)
-                }
-                .frame(width: 120, height: 50)
-                .background(Color.mainGrey)
-                .cornerRadius(15)
-                .shadow(radius: 5)
+//                Button(action: {
+//                    self.toggleButtons.toggle()
+//                }) {
+//                    Image("facebookLogo")
+//                        .resizable()
+//                        .frame(width: 35, height: 35)
+//                }
+//                .frame(width: 120, height: 50)
+//                .background(Color.mainGrey)
+//                .cornerRadius(15)
+//                .shadow(radius: 5)
             }
             if(isSignInPage) {
                 signUpLinkSection
@@ -97,10 +97,10 @@ struct LogInItems: View {
            
             GoogleAuth(showAlert: $showAlert)
             
-            FacebookLoginView(showAlert: $showAlert)
-                .frame(width: 350, height: 60)
-                .cornerRadius(20)
-                .shadow(radius: 5)
+//            FacebookLoginView(showAlert: $showAlert)
+//                .frame(width: 350, height: 60)
+//                .cornerRadius(20)
+//                .shadow(radius: 5)
             
             AppleAuth()
             

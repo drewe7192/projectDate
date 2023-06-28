@@ -26,6 +26,7 @@ struct SettingsView: View {
 //    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]
+    @State private var isDeletingAccount: Bool = false
     
     let storage = Storage.storage()
     
@@ -86,6 +87,12 @@ struct SettingsView: View {
                         headerSection(for: geoReader)
                             .padding(.leading, geoReader.size.width * 0.25)
                 ))
+                .alert(isPresented: $isDeletingAccount){
+                    Alert(
+                        title: Text("Error deleting account"),
+                        message: Text("This operation is sensitive and requires recent authentication. Log in again before retrying this request")
+                    )
+                }
             }
         }
     }
@@ -142,6 +149,17 @@ struct SettingsView: View {
                     .cornerRadius(geoReader.size.width * 0.04)
                     .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
             }
+            
+            Button(action: {
+                deleteUser()
+            }) {
+                Text("DELETE ACCOUNT")
+                    .foregroundColor(.red)
+                    .frame(width: geoReader.size.width * 0.7, height: geoReader.size.height * 0.06)
+                    .background(Color.mainGrey)
+                    .cornerRadius(geoReader.size.width * 0.04)
+                    .shadow(radius: geoReader.size.width * 0.02, x: geoReader.size.width * 0.04, y: geoReader.size.width * 0.04)
+            }
         }
     }
     
@@ -154,6 +172,21 @@ struct SettingsView: View {
         }
         viewRouter.currentPage = .signInPage
         isLoggedOut = true
+    }
+    
+    private func deleteUser(){
+        let user = Auth.auth().currentUser
+        user?.delete() { error in
+            if let error = error {
+                print("Error deleting account")
+                print(error)
+                isDeletingAccount.toggle()
+            } else {
+                viewRouter.currentPage = .signInPage
+                isLoggedOut = true
+            }
+        }
+       
     }
     
     private func saveAllInfo(){
@@ -205,47 +238,47 @@ struct SettingsView: View {
             }
             
             HStack{
-                Button(action: {
-                    withAnimation{
-                        self.showMenu.toggle()
-                    }
-                }) {
-                    ZStack{
-                        Text("")
-                            .frame(width: 40, height: 40)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Rectangle())
-                            .cornerRadius(10)
-
-                        Image(systemName: "line.3.horizontal.decrease")
-                            .resizable()
-                            .frame(width: 20, height: 10)
-                            .foregroundColor(.white)
-                            .aspectRatio(contentMode: .fill)
-                    }
-                }
-                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
+//                Button(action: {
+//                    withAnimation{
+//                        self.showMenu.toggle()
+//                    }
+//                }) {
+//                    ZStack{
+//                        Text("")
+//                            .frame(width: 40, height: 40)
+//                            .background(Color.black.opacity(0.2))
+//                            .aspectRatio(contentMode: .fill)
+//                            .clipShape(Rectangle())
+//                            .cornerRadius(10)
+//
+//                        Image(systemName: "line.3.horizontal.decrease")
+//                            .resizable()
+//                            .frame(width: 20, height: 10)
+//                            .foregroundColor(.white)
+//                            .aspectRatio(contentMode: .fill)
+//                    }
+//                }
+//                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
 
                 Spacer()
-                    .frame(width: geoReader.size.width * 0.55)
+                    .frame(width: geoReader.size.width * 0.6)
                 
-                NavigationLink(destination: NotificationsView(), label: {
-                    ZStack{
-                        Text("")
-                            .cornerRadius(20)
-                            .frame(width: 40, height: 40)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                        
-                        Image(systemName: "bell")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
-                            .aspectRatio(contentMode: .fill)
-                    }
-                })
+//                NavigationLink(destination: NotificationsView(), label: {
+//                    ZStack{
+//                        Text("")
+//                            .cornerRadius(20)
+//                            .frame(width: 40, height: 40)
+//                            .background(Color.black.opacity(0.2))
+//                            .aspectRatio(contentMode: .fill)
+//                            .clipShape(Circle())
+//
+//                        Image(systemName: "bell")
+//                            .resizable()
+//                            .frame(width: 20, height: 20)
+//                            .foregroundColor(.white)
+//                            .aspectRatio(contentMode: .fill)
+//                    }
+//                })
                
 
                 NavigationLink(destination: SettingsView()) {

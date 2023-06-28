@@ -15,6 +15,7 @@ struct BasicInfoPopoverView: View {
     @Binding var profileImage: UIImage
     @Binding var showingBasicInfoPopover: Bool
     @Binding var showingInstructionsPopover: Bool
+    @Binding var isSearchingForRoom: Bool
     
     @ObservedObject var viewModel = HomeViewModel()
     
@@ -79,8 +80,8 @@ struct BasicInfoPopoverView: View {
     private func saveAllInfo(){
         let isFormComplete =  profileImage.size.height != 0  &&
         userProfile.fullName != "" &&
-        userProfile.gender != "Pick Gender" &&
-        userProfile.matchDay != "Pick MatchDay"
+        userProfile.gender != "Pick Gender"
+        //userProfile.matchDay != "Pick MatchDay"
         
         if(editInfo && isFormComplete){
             viewModel.updateUserProfile(updatedProfile: userProfile) {(profileId) -> Void in
@@ -124,16 +125,16 @@ struct BasicInfoPopoverView: View {
                     .font(.custom("Chalkduster", size: geoReader.size.height * 0.035))
                     .multilineTextAlignment(.center)
                 
-                Text("With the Local SpeedDating app")
+                Text("With this connect/friend app")
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .font(.system(size: geoReader.size.height * 0.028))
                     .padding(.bottom,5)
 
-                Text("IceBreakrrr")
-                    .foregroundColor(.iceBreakrrrBlue)
-                    .font(.custom("Chalkduster", size: geoReader.size.height * 0.030))
-                    .multilineTextAlignment(.center)
+//                Text("IceBreakrrr")
+//                    .foregroundColor(.iceBreakrrrBlue)
+//                    .font(.custom("Chalkduster", size: geoReader.size.height * 0.030))
+//                    .multilineTextAlignment(.center)
                   
                 
                 Spacer()
@@ -145,74 +146,76 @@ struct BasicInfoPopoverView: View {
                     .multilineTextAlignment(.center)
                     .padding(.bottom,1)
                 
-                Text("Live SpeedDating:")
+                Text("Live Chat:")
                     .foregroundColor(.iceBreakrrrBlue)
                     .font(.system(size: geoReader.size.height * 0.028))
                     .multilineTextAlignment(.center)
                     .padding(2)
 
-                Text("join a chatRoom immediately and start SpeedDating")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.height * 0.025))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom,1)
-                
-                Text("SpeedDate Sundays:")
-                    .foregroundColor(.iceBreakrrrBlue)
-                    .font(.system(size: geoReader.size.height * 0.028))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom,1)
-                
-                Text("every Sunday schedule speedDates with your matches!")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.height * 0.025))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom,1)
-            }
-            
-            Group{
-                Text("Swipe Cards for better matches:")
-                    .foregroundColor(.iceBreakrrrBlue)
-                    .font(.system(size: geoReader.size.height * 0.028))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom,1)
-                
-                Text("swipe cards while waiting for live speedDate to get unique speedDates")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.height * 0.025))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom,1)
-                
-//                HStack{
-//                    Image(systemName: "snowflake.circle")
-//                        .resizable()
-//                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
-//                        .foregroundColor(.white)
-//
-//                    Text(": Pick a day once a week to get matches")
-//                        .foregroundColor(.white)
-//                        .font(.system(size: geoReader.size.height * 0.025))
-//                        .multilineTextAlignment(.center)
-//                }
-//                .padding(5)
-//
-//                Text("Meet via speed-dating video chats!")
+//                Text("join a chatRoom immediately and start SpeedDating")
 //                    .foregroundColor(.white)
 //                    .font(.system(size: geoReader.size.height * 0.025))
 //                    .multilineTextAlignment(.center)
-                
-                Text(" & more features on the way!")
-                    .foregroundColor(Color.iceBreakrrrBlue)
-                    .font(.custom("Chalkduster",size: geoReader.size.height * 0.035))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom,1)
+//                    .padding(.bottom,1)
+//
+//                Text("SpeedDate Sundays:")
+//                    .foregroundColor(.iceBreakrrrBlue)
+//                    .font(.system(size: geoReader.size.height * 0.028))
+//                    .multilineTextAlignment(.center)
+//                    .padding(.bottom,1)
+//
+//                Text("every Sunday schedule speedDates with your matches!")
+//                    .foregroundColor(.white)
+//                    .font(.system(size: geoReader.size.height * 0.025))
+//                    .multilineTextAlignment(.center)
+//                    .padding(.bottom,1)
             }
+            
+//            Group{
+//                Text("Swipe Cards for better matches:")
+//                    .foregroundColor(.iceBreakrrrBlue)
+//                    .font(.system(size: geoReader.size.height * 0.028))
+//                    .multilineTextAlignment(.center)
+//                    .padding(.bottom,1)
+//
+//                Text("swipe cards while waiting for live speedDate to get unique speedDates")
+//                    .foregroundColor(.white)
+//                    .font(.system(size: geoReader.size.height * 0.025))
+//                    .multilineTextAlignment(.center)
+//                    .padding(.bottom,1)
+//
+////                HStack{
+////                    Image(systemName: "snowflake.circle")
+////                        .resizable()
+////                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+////                        .foregroundColor(.white)
+////
+////                    Text(": Pick a day once a week to get matches")
+////                        .foregroundColor(.white)
+////                        .font(.system(size: geoReader.size.height * 0.025))
+////                        .multilineTextAlignment(.center)
+////                }
+////                .padding(5)
+////
+////                Text("Meet via speed-dating video chats!")
+////                    .foregroundColor(.white)
+////                    .font(.system(size: geoReader.size.height * 0.025))
+////                    .multilineTextAlignment(.center)
+//
+//                Text(" & more features on the way!")
+//                    .foregroundColor(Color.iceBreakrrrBlue)
+//                    .font(.custom("Chalkduster",size: geoReader.size.height * 0.035))
+//                    .multilineTextAlignment(.center)
+//                    .padding(.bottom,1)
+//            }
             
             Spacer()
                 .frame(height: geoReader.size.height * 0.03)
             
             Button(action: {
                 showingBasicInfoPopover.toggle()
+                isSearchingForRoom.toggle()
+                
             }) {
                 Text("Got it")
                     .bold()
@@ -375,40 +378,40 @@ struct BasicInfoPopoverView: View {
 //            .disabled(editInfo == false)
             
             
-            HStack{
-                Image(systemName: "checkmark.circle")
-                    .resizable()
-                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
-                    .foregroundColor(userProfile.matchDay != "Pick MatchDay" ? .green : .mainGrey)
-                
-                Text("MatchDay")
-                    .foregroundColor(.white)
-                    .font(.system(size: geoReader.size.width * 0.05))
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading)
-            
-            Menu {
-                Picker(selection: $userProfile.matchDay) {
-                    ForEach(matchDayChoices, id: \.self) { matchDay in
-                        Text("\(matchDay)")
-                        // .tag(matchDay)
-                            .font(.system(size: geoReader.size.height * 0.01))
-                    }
-                } label: {}
-            } label: {
-                HStack{
-                    Image(systemName: "snowflake.circle")
-                        .resizable()
-                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
-                        .foregroundColor(editInfo ? .white : .mainGrey)
-                    
-                    Text("\(userProfile.matchDay)")
-                        .font(.system(size: geoReader.size.height * 0.04))
-                }
-            }
-            .accentColor(.white)
-            .disabled(editInfo == false)
+//            HStack{
+//                Image(systemName: "checkmark.circle")
+//                    .resizable()
+//                    .frame(width: geoReader.size.width * 0.06, height: geoReader.size.height * 0.03)
+//                    .foregroundColor(userProfile.matchDay != "Pick MatchDay" ? .green : .mainGrey)
+//
+//                Text("MatchDay")
+//                    .foregroundColor(.white)
+//                    .font(.system(size: geoReader.size.width * 0.05))
+//            }
+//            .frame(maxWidth: .infinity, alignment: .leading)
+//            .padding(.leading)
+//
+//            Menu {
+//                Picker(selection: $userProfile.matchDay) {
+//                    ForEach(matchDayChoices, id: \.self) { matchDay in
+//                        Text("\(matchDay)")
+//                        // .tag(matchDay)
+//                            .font(.system(size: geoReader.size.height * 0.01))
+//                    }
+//                } label: {}
+//            } label: {
+//                HStack{
+//                    Image(systemName: "snowflake.circle")
+//                        .resizable()
+//                        .frame(width: geoReader.size.width * 0.08, height: geoReader.size.height * 0.04)
+//                        .foregroundColor(editInfo ? .white : .mainGrey)
+//
+//                    Text("\(userProfile.matchDay)")
+//                        .font(.system(size: geoReader.size.height * 0.04))
+//                }
+//            }
+//            .accentColor(.white)
+//            .disabled(editInfo == false)
         }
     }
     
@@ -434,6 +437,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender", currentRoomId: "")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", matchDay: "Pick MatchDay", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender", currentRoomId: "")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true), isSearchingForRoom: .constant(false))
     }
 }

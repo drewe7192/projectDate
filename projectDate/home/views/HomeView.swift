@@ -49,6 +49,7 @@ struct HomeView: View {
     @State private var emptyRooms: [RoomModel] = []
     @State private var displayCardsTime: Int = 60
     @State private var lookForRoom: Bool = false
+    @State private var isSearchingForRoom: Bool = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
@@ -76,12 +77,12 @@ struct HomeView: View {
                     }
                     .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
                     
-                    //Display hamburgerMenu
-                    if self.showHamburgerMenu {
-                        MenuView()
-                            .frame(width: geoReader.size.width/2)
-                            .padding(.trailing,geoReader.size.width * 0.5)
-                    }
+//                    //Display hamburgerMenu
+//                    if self.showHamburgerMenu {
+//                        MenuView()
+//                            .frame(width: geoReader.size.width/2)
+//                            .padding(.trailing,geoReader.size.width * 0.5)
+//                    }
                 }
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -103,7 +104,7 @@ struct HomeView: View {
 //                }
                 .onAppear {
                     getAllData()
-                    getAvailableRoom()
+                    
                     //displayCards()
                 }
                 .onChange(of: updateData) { _ in
@@ -117,8 +118,13 @@ struct HomeView: View {
                 .onChange(of: self.hasPeerJoined) { _ in
                     gotSwipedRecords = false
                 }
+                .onChange(of: self.isSearchingForRoom) { _ in
+                    if viewModel.userProfile.id != ""{
+                       getAvailableRoom()
+                    }
+                }
                 .popover(isPresented: $showingBasicInfoPopover) {
-                    BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
+                    BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover, isSearchingForRoom: $isSearchingForRoom)
                 }
             }
         }
@@ -134,6 +140,7 @@ struct HomeView: View {
                         setLineAndTime()
                     }
                 }
+                getAvailableRoom()
             }
         }
     }
@@ -371,23 +378,23 @@ struct HomeView: View {
                 }
                 
                 HStack{
-                    NavigationLink(destination: NotificationsView(), label: {
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(Color.black.opacity(0.6))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                            
-                            Image(systemName: "bell")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fill)
-                        }
-                    })
-                    
+//                    NavigationLink(destination: NotificationsView(), label: {
+//                        ZStack{
+//                            Text("")
+//                                .cornerRadius(20)
+//                                .frame(width: 40, height: 40)
+//                                .background(Color.black.opacity(0.6))
+//                                .aspectRatio(contentMode: .fill)
+//                                .clipShape(Circle())
+//
+//                            Image(systemName: "bell")
+//                                .resizable()
+//                                .frame(width: 20, height: 20)
+//                                .foregroundColor(.white)
+//                                .aspectRatio(contentMode: .fill)
+//                        }
+//                    })
+//
                     NavigationLink(destination: SettingsView()) {
                         if(!viewModel.profileImage.size.width.isZero){
                             ZStack{
@@ -430,27 +437,27 @@ struct HomeView: View {
             }
             .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.08)
             
-            Button(action: {
-                withAnimation{
-                    self.showHamburgerMenu.toggle()
-                }
-            }) {
-                ZStack{
-                    Text("")
-                        .frame(width: 35, height: 35)
-                        .background(Color.black.opacity(0.6))
-                        .aspectRatio(contentMode: .fill)
-                        .clipShape(Rectangle())
-                        .cornerRadius(10)
-                    
-                    Image(systemName: "line.3.horizontal.decrease")
-                        .resizable()
-                        .frame(width: 20, height: 10)
-                        .foregroundColor(.white)
-                        .aspectRatio(contentMode: .fill)
-                }
-            }
-            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
+//            Button(action: {
+//                withAnimation{
+//                    self.showHamburgerMenu.toggle()
+//                }
+//            }) {
+//                ZStack{
+//                    Text("")
+//                        .frame(width: 35, height: 35)
+//                        .background(Color.black.opacity(0.6))
+//                        .aspectRatio(contentMode: .fill)
+//                        .clipShape(Rectangle())
+//                        .cornerRadius(10)
+//
+//                    Image(systemName: "line.3.horizontal.decrease")
+//                        .resizable()
+//                        .frame(width: 20, height: 10)
+//                        .foregroundColor(.white)
+//                        .aspectRatio(contentMode: .fill)
+//                }
+//            }
+//            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
         }
     }
     

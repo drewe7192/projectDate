@@ -1313,9 +1313,9 @@
 				INFOPLIST_FILE = projectDate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IceBreakrrr;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
-				INFOPLIST_KEY_NSCameraUsageDescription = "for finding friends";
+				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for finding friends";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for videochatting with friends and others in the area. Data like your audio will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1354,9 +1354,9 @@
 				INFOPLIST_FILE = projectDate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = IceBreakrrr;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
-				INFOPLIST_KEY_NSCameraUsageDescription = "for finding friends";
+				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for finding friends";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for videochatting with friends and others in the area. Data like your audio will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -110,47 +110,47 @@ struct MessageHomeView: View {
             }
             
             HStack{
-                Button(action: {
-                    withAnimation{
-                        self.showMenu.toggle()
-                    }
-                }) {
-                    ZStack{
-                        Text("")
-                            .frame(width: 40, height: 40)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Rectangle())
-                            .cornerRadius(10)
-
-                        Image(systemName: "line.3.horizontal.decrease")
-                            .resizable()
-                            .frame(width: 20, height: 10)
-                            .foregroundColor(.white)
-                            .aspectRatio(contentMode: .fill)
-                    }
-                }
-                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
+//                Button(action: {
+//                    withAnimation{
+//                        self.showMenu.toggle()
+//                    }
+//                }) {
+//                    ZStack{
+//                        Text("")
+//                            .frame(width: 40, height: 40)
+//                            .background(Color.black.opacity(0.2))
+//                            .aspectRatio(contentMode: .fill)
+//                            .clipShape(Rectangle())
+//                            .cornerRadius(10)
+//
+//                        Image(systemName: "line.3.horizontal.decrease")
+//                            .resizable()
+//                            .frame(width: 20, height: 10)
+//                            .foregroundColor(.white)
+//                            .aspectRatio(contentMode: .fill)
+//                    }
+//                }
+//                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
 
                 Spacer()
                     .frame(width: geoReader.size.width * 0.55)
                 
-                NavigationLink(destination: NotificationsView(), label: {
-                    ZStack{
-                        Text("")
-                            .cornerRadius(20)
-                            .frame(width: 40, height: 40)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
-                        
-                        Image(systemName: "bell")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
-                            .aspectRatio(contentMode: .fill)
-                    }
-                })
+//                NavigationLink(destination: NotificationsView(), label: {
+//                    ZStack{
+//                        Text("")
+//                            .cornerRadius(20)
+//                            .frame(width: 40, height: 40)
+//                            .background(Color.black.opacity(0.2))
+//                            .aspectRatio(contentMode: .fill)
+//                            .clipShape(Circle())
+//
+//                        Image(systemName: "bell")
+//                            .resizable()
+//                            .frame(width: 20, height: 20)
+//                            .foregroundColor(.white)
+//                            .aspectRatio(contentMode: .fill)
+//                    }
+//                })
                
                 NavigationLink(destination: SettingsView()) {
                     if(!homeViewModel.profileImage.size.width.isZero){

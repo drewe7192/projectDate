@@ -24,14 +24,14 @@ struct MotherView: View {
                         .tabItem{
                             Label("Home", systemImage: "house")
                         }.tag(1)
-                    EventHomeView()
-                        .tabItem{
-                            Label("Events", systemImage: "calendar")
-                        }.tag(2)
-                    MessageHomeView()
-                        .tabItem{
-                            Label("Messenger", systemImage: "message")
-                        }.tag(3)
+//                    EventHomeView()
+//                        .tabItem{
+//                            Label("Events", systemImage: "calendar")
+//                        }.tag(2)
+//                    MessageHomeView()
+//                        .tabItem{
+//                            Label("Messenger", systemImage: "message")
+//                        }.tag(3)
                     SettingsView()
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")
