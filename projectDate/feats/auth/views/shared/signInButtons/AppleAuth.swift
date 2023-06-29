@@ -91,6 +91,7 @@ struct AppleAuth: View {
                                 return
                             }
                             print("signed in")
+                            
                             viewRouter.currentPage = .homePage
                         }
                     default:

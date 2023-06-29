@@ -50,39 +50,101 @@ struct HomeView: View {
     @State private var displayCardsTime: Int = 60
     @State private var lookForRoom: Bool = false
     @State private var isSearchingForRoom: Bool = false
+    @State private var startGettingAvailableRoom: Int = 20
+    @State private var subjectField: String = ""
+    @State private var connectBih: Bool = false
     
     let db = Firestore.firestore()
     let storage = Storage.storage()
+    // let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationView{
             GeometryReader{ geoReader in
                 ZStack{
                     ZStack{
+//                        Color.mainBlack
+//                            .ignoresSafeArea()
+//
+                        
                         ZStack{
                             FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined, lookForRoom: $lookForRoom)
                             
                             if !hasPeerJoined {
-                                loadingIcon(for: geoReader)
+//                                if startGettingAvailableRoom > 0 {
+//                                    VStack{
+//                                        Text("Start video and search")
+//                                        Text("\(startGettingAvailableRoom / 60):\(startGettingAvailableRoom % 60)\(startGettingAvailableRoom % 60 == 0 ? "0" : "" )")
+//                                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.06))
+//                                            .foregroundColor(.iceBreakrrrBlue)
+//                                            .padding(.horizontal, 20)
+//                                            .clipShape(Capsule())
+//                                    }
+//
+//                                } else{
+//                                    loadingIcon(for: geoReader)
+//                                }
+                                
+                                if !connectBih {
+                                    VStack{
+                                        Text("Subject of discussion")
+                                            .foregroundColor(.white)
+                                        
+                                        TextField("", text: $subjectField)
+                                            .foregroundColor(.iceBreakrrrBlue)
+                                            .frame(width: geoReader.size.width * 0.75, height: geoReader.size.height * 0.02)
+                                            .padding()
+                                            .cornerRadius(geoReader.size.width * 0.03)
+                                            .textInputAutocapitalization(.never)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                                            )
+                                        
+                                        Spacer().frame(height: 30)
+                                        
+                                        Button(action: {
+                                            getAvailableRoom()
+                                            connectBih.toggle()
+                                        }) {
+                                            Text("Connect to Friend")
+                                                .bold()
+                                                .frame(width: 300, height: 70)
+                                                .background(Color.mainGrey)
+                                                .foregroundColor(.iceBreakrrrBlue)
+                                                .font(.system(size: 20))
+                                                .cornerRadius(20)
+                                                .shadow(radius: 8, x: 10, y:10)
+                                                .opacity(subjectField != "" ? 1 : 0.5)
+                                                .disabled(subjectField != "" ? false: true)
+                                        }
+                                        
+                                    }
+                                } else {
+                                    loadingIcon(for: geoReader)
+                                }
+                              
+                                
                             }
+                            
+                            
                             
                             cardsAndSpeeDateSection(for: geoReader)
                                 .padding(.top,10)
                                 .animation(Animation.easeInOut(duration: 0.2))
                         }
                         .disabled(self.showHamburgerMenu ? true : false)
-                    
+                        
                         headerSection(for: geoReader)
                             .padding(.leading, geoReader.size.width * 0.25)
                     }
                     .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
                     
-//                    //Display hamburgerMenu
-//                    if self.showHamburgerMenu {
-//                        MenuView()
-//                            .frame(width: geoReader.size.width/2)
-//                            .padding(.trailing,geoReader.size.width * 0.5)
-//                    }
+                    //                    //Display hamburgerMenu
+                    //                    if self.showHamburgerMenu {
+                    //                        MenuView()
+                    //                            .frame(width: geoReader.size.width/2)
+                    //                            .padding(.trailing,geoReader.size.width * 0.5)
+                    //                    }
                 }
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -92,21 +154,27 @@ struct HomeView: View {
                         message: Text("You'll get a notification if someone matches your perfered answer!")
                     )
                 }
-//                .alert(isPresented: $showCardAlert){
-//                    Alert(
-//                        title: Text("Show cards?"),
-//                        message: Text("While you're waiting for a speedDate swipe some cards! Swiping only 5 cards will give you some matches for SpeedDate Sundays. With these matches you can schedule seedDates for a convenient time"),
-//                        primaryButton: .default(Text("Lets swipe!")) {
-//                            gotSwipedRecords = true
-//                        },
-//                        secondaryButton: .cancel(Text("Continue waiting for Speed Date"))
-//                    )
-//                }
+                //                .alert(isPresented: $showCardAlert){
+                //                    Alert(
+                //                        title: Text("Show cards?"),
+                //                        message: Text("While you're waiting for a speedDate swipe some cards! Swiping only 5 cards will give you some matches for SpeedDate Sundays. With these matches you can schedule seedDates for a convenient time"),
+                //                        primaryButton: .default(Text("Lets swipe!")) {
+                //                            gotSwipedRecords = true
+                //                        },
+                //                        secondaryButton: .cancel(Text("Continue waiting for Speed Date"))
+                //                    )
+                //                }
                 .onAppear {
                     getAllData()
-                    
                     //displayCards()
                 }
+                //                .onReceive(timer) { time in
+                //                    if startGettingAvailableRoom > 0 {
+                //                        startGettingAvailableRoom -= 1
+                //                    } else if startGettingAvailableRoom == 0 {
+                //                        getAvailableRoom()
+                //                    }
+                //                }
                 .onChange(of: updateData) { _ in
                     saveCards()
                 }
@@ -118,11 +186,11 @@ struct HomeView: View {
                 .onChange(of: self.hasPeerJoined) { _ in
                     gotSwipedRecords = false
                 }
-                .onChange(of: self.isSearchingForRoom) { _ in
-                    if viewModel.userProfile.id != ""{
-                       getAvailableRoom()
-                    }
-                }
+                //                .onChange(of: self.isSearchingForRoom) { _ in
+                //                    if viewModel.userProfile.id != ""{
+                //                       getAvailableRoom()
+                //                    }
+                //                }
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover, isSearchingForRoom: $isSearchingForRoom)
                 }
@@ -140,7 +208,6 @@ struct HomeView: View {
                         setLineAndTime()
                     }
                 }
-                getAvailableRoom()
             }
         }
     }
@@ -200,7 +267,14 @@ struct HomeView: View {
                 } else {
                     viewModel.createUserProfile() {(createdUserProfileId) -> Void in
                         if createdUserProfileId != "" {
-                            showingBasicInfoPopover.toggle()
+                            var user = Auth.auth().currentUser?.email ?? ""
+                            
+                            // for apple sign in
+                            if !user.contains("appleid") {
+                                showingBasicInfoPopover.toggle()
+                            }else {
+                                viewModel.userProfile.gender = "male"
+                            }
                         }
                         completed(createdUserProfileId)
                     }
@@ -231,7 +305,7 @@ struct HomeView: View {
                                 }
                             }
                         } else {
-                                viewRouter.currentPage = .matchPage
+                            viewRouter.currentPage = .matchPage
                         }
                     }
                 } else if matchRecordsPreviousWeek.contains(where: { mrec in mrec.isNew == true}) {
@@ -378,23 +452,23 @@ struct HomeView: View {
                 }
                 
                 HStack{
-//                    NavigationLink(destination: NotificationsView(), label: {
-//                        ZStack{
-//                            Text("")
-//                                .cornerRadius(20)
-//                                .frame(width: 40, height: 40)
-//                                .background(Color.black.opacity(0.6))
-//                                .aspectRatio(contentMode: .fill)
-//                                .clipShape(Circle())
-//
-//                            Image(systemName: "bell")
-//                                .resizable()
-//                                .frame(width: 20, height: 20)
-//                                .foregroundColor(.white)
-//                                .aspectRatio(contentMode: .fill)
-//                        }
-//                    })
-//
+                    //                    NavigationLink(destination: NotificationsView(), label: {
+                    //                        ZStack{
+                    //                            Text("")
+                    //                                .cornerRadius(20)
+                    //                                .frame(width: 40, height: 40)
+                    //                                .background(Color.black.opacity(0.6))
+                    //                                .aspectRatio(contentMode: .fill)
+                    //                                .clipShape(Circle())
+                    //
+                    //                            Image(systemName: "bell")
+                    //                                .resizable()
+                    //                                .frame(width: 20, height: 20)
+                    //                                .foregroundColor(.white)
+                    //                                .aspectRatio(contentMode: .fill)
+                    //                        }
+                    //                    })
+                    //
                     NavigationLink(destination: SettingsView()) {
                         if(!viewModel.profileImage.size.width.isZero){
                             ZStack{
@@ -437,55 +511,55 @@ struct HomeView: View {
             }
             .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.08)
             
-//            Button(action: {
-//                withAnimation{
-//                    self.showHamburgerMenu.toggle()
-//                }
-//            }) {
-//                ZStack{
-//                    Text("")
-//                        .frame(width: 35, height: 35)
-//                        .background(Color.black.opacity(0.6))
-//                        .aspectRatio(contentMode: .fill)
-//                        .clipShape(Rectangle())
-//                        .cornerRadius(10)
-//
-//                    Image(systemName: "line.3.horizontal.decrease")
-//                        .resizable()
-//                        .frame(width: 20, height: 10)
-//                        .foregroundColor(.white)
-//                        .aspectRatio(contentMode: .fill)
-//                }
-//            }
-//            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
+            //            Button(action: {
+            //                withAnimation{
+            //                    self.showHamburgerMenu.toggle()
+            //                }
+            //            }) {
+            //                ZStack{
+            //                    Text("")
+            //                        .frame(width: 35, height: 35)
+            //                        .background(Color.black.opacity(0.6))
+            //                        .aspectRatio(contentMode: .fill)
+            //                        .clipShape(Rectangle())
+            //                        .cornerRadius(10)
+            //
+            //                    Image(systemName: "line.3.horizontal.decrease")
+            //                        .resizable()
+            //                        .frame(width: 20, height: 10)
+            //                        .foregroundColor(.white)
+            //                        .aspectRatio(contentMode: .fill)
+            //                }
+            //            }
+            //            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
         }
     }
     
     private func loadingIcon(for geoReader: GeometryProxy) -> some View {
         VStack{
             VStack{
-                Text("Searching...")
+                Text("Searching for meet...")
                     .font(.system(size: 30))
                     .foregroundColor(.white)
                     .opacity(textOpacityChanged ? 1 : 0.1)
                     .animation(Animation.linear(duration: 1).repeatForever())
                 
-//                Text("SpeedDate")
-//                    .font(.system(size: 30))
-//                    .foregroundColor(.white)
-//                    .opacity(textOpacityChanged ? 1 : 0.1)
-//                    .animation(Animation.linear(duration: 1).repeatForever())
+                //                Text("SpeedDate")
+                //                    .font(.system(size: 30))
+                //                    .foregroundColor(.white)
+                //                    .opacity(textOpacityChanged ? 1 : 0.1)
+                //                    .animation(Animation.linear(duration: 1).repeatForever())
             }
             
             ZStack {
                 Circle()
-                    .frame(width: geoReader.size.width * 0.3, height: geoReader.size.height * 0.3)
+                    .frame(width: geoReader.size.width * 0.15, height: geoReader.size.height * 0.15)
                     .foregroundColor(circleColorChanged ? Color(.systemGray5) : .iceBreakrrrBlue)
                     .animation(Animation.linear(duration: 1).repeatForever())
                 
                 Image(systemName: "globe.europe.africa.fill")
                     .foregroundColor(heartColorChanged ? .iceBreakrrrBlue : .white)
-                    .font(.system(size: 75))
+                    .font(.system(size: 45))
                     .scaleEffect(heartSizeChanged ? 1.0 : 0.5)
                     .animation(Animation.linear(duration: 1).repeatForever())
             }

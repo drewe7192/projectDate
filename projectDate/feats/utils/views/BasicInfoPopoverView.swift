@@ -214,7 +214,7 @@ struct BasicInfoPopoverView: View {
             
             Button(action: {
                 showingBasicInfoPopover.toggle()
-                isSearchingForRoom.toggle()
+               // isSearchingForRoom.toggle()
                 
             }) {
                 Text("Got it")
