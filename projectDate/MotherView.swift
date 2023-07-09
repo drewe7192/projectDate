@@ -22,20 +22,24 @@ struct MotherView: View {
                 TabView {
                     HomeView()
                         .tabItem{
-                            Label("Home", systemImage: "house")
+                            Label("Live", systemImage: "livephoto")
                         }.tag(1)
-//                    EventHomeView()
-//                        .tabItem{
-//                            Label("Events", systemImage: "calendar")
-//                        }.tag(2)
-//                    MessageHomeView()
-//                        .tabItem{
-//                            Label("Messenger", systemImage: "message")
-//                        }.tag(3)
+                    EventHomeView()
+                        .tabItem{
+                            Label("Current", systemImage: "calendar")
+                        }.tag(2)
+                    MessageHomeView()
+                        .tabItem{
+                            Label("Connect", systemImage: "point.3.connected.trianglepath.dotted")
+                        }.tag(3)
+                    MessageHomeView()
+                        .tabItem{
+                            Label("Discover", systemImage: "globe")
+                        }.tag(4)
                     SettingsView()
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")
-                        }.tag(4)
+                        }.tag(5)
                 }
                 .frame(height: geoReader.size.height * 1.07)
                 

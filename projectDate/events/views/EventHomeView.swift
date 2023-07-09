@@ -37,7 +37,7 @@ struct EventHomeView: View {
                     .disabled(self.showMenu ? true : false)
                     
                     if self.showMenu {
-                        MenuView()
+                        MenuView(showHamburgerMenu: .constant(false))
                             .frame(width: geoReader.size.width/2)
                             .padding(.trailing,geoReader.size.width * 0.5)
                     }

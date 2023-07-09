@@ -63,88 +63,33 @@ struct HomeView: View {
             GeometryReader{ geoReader in
                 ZStack{
                     ZStack{
-//                        Color.mainBlack
-//                            .ignoresSafeArea()
-//
+                        Color.mainBlack
+                            .ignoresSafeArea()
+
                         
                         ZStack{
                             FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined, lookForRoom: $lookForRoom)
                             
                             if !hasPeerJoined {
-//                                if startGettingAvailableRoom > 0 {
-//                                    VStack{
-//                                        Text("Start video and search")
-//                                        Text("\(startGettingAvailableRoom / 60):\(startGettingAvailableRoom % 60)\(startGettingAvailableRoom % 60 == 0 ? "0" : "" )")
-//                                            .font(.custom("Superclarendon", size: geoReader.size.height * 0.06))
-//                                            .foregroundColor(.iceBreakrrrBlue)
-//                                            .padding(.horizontal, 20)
-//                                            .clipShape(Capsule())
-//                                    }
-//
-//                                } else{
-//                                    loadingIcon(for: geoReader)
-//                                }
-                                
-                                if !connectBih {
-                                    VStack{
-                                        Text("Subject of discussion")
-                                            .foregroundColor(.white)
-                                        
-                                        TextField("", text: $subjectField)
-                                            .foregroundColor(.iceBreakrrrBlue)
-                                            .frame(width: geoReader.size.width * 0.75, height: geoReader.size.height * 0.02)
-                                            .padding()
-                                            .cornerRadius(geoReader.size.width * 0.03)
-                                            .textInputAutocapitalization(.never)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                                            )
-                                        
-                                        Spacer().frame(height: 30)
-                                        
-                                        Button(action: {
-                                            getAvailableRoom()
-                                            connectBih.toggle()
-                                        }) {
-                                            Text("Connect to Friend")
-                                                .bold()
-                                                .frame(width: 300, height: 70)
-                                                .background(Color.mainGrey)
-                                                .foregroundColor(.iceBreakrrrBlue)
-                                                .font(.system(size: 20))
-                                                .cornerRadius(20)
-                                                .shadow(radius: 8, x: 10, y:10)
-                                                .opacity(subjectField != "" ? 1 : 0.5)
-                                                .disabled(subjectField != "" ? false: true)
-                                        }
-                                        
-                                    }
-                                } else {
                                     loadingIcon(for: geoReader)
-                                }
-                              
-                                
                             }
-                            
-                            
-                            
-                            cardsAndSpeeDateSection(for: geoReader)
-                                .padding(.top,10)
-                                .animation(Animation.easeInOut(duration: 0.2))
+//                            cardsAndSpeeDateSection(for: geoReader)
+//                                .padding(.top,10)
+//                                .animation(Animation.easeInOut(duration: 0.2))
                         }
                         .disabled(self.showHamburgerMenu ? true : false)
                         
                         headerSection(for: geoReader)
                             .padding(.leading, geoReader.size.width * 0.25)
                     }
-                    .offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
+                    //.offset(x: self.showHamburgerMenu ? geoReader.size.width/2 : 0)
                     
-                    //                    //Display hamburgerMenu
-                    //                    if self.showHamburgerMenu {
-                    //                        MenuView()
-                    //                            .frame(width: geoReader.size.width/2)
-                    //                            .padding(.trailing,geoReader.size.width * 0.5)
-                    //                    }
+                                        //Display hamburgerMenu
+                                        if self.showHamburgerMenu {
+                                            MenuView(showHamburgerMenu: self.$showHamburgerMenu)
+                                                .frame(width: geoReader.size.width/2)
+                                                .padding(.trailing,geoReader.size.width * 0.5)
+                                        }
                 }
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
@@ -289,30 +234,30 @@ struct HomeView: View {
         let weekday = format.weekdaySymbols[Calendar.current.component(.weekday, from: Date()) - 1]
         
         //SpeedDate Sundays!
-        if(weekday == "Sunday") {
-            viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
-                // If theres no matchRecords for this week run match logic and find matches
-                if matchRecordsPreviousWeek.isEmpty {
-                    getCardGroups() {(userCardGroup) -> Void in
-                        if userCardGroup.userCardGroup.id != "" {
-                            findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
-                                if !successFullMatches.isEmpty {
-                                    viewModel.saveMatchRecords(matches: successFullMatches, isNew: true)
-                                    //delaying routing to make sure matchRecords save
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                                        viewRouter.currentPage = .matchPage
-                                    }
-                                }
-                            }
-                        } else {
-                            viewRouter.currentPage = .matchPage
-                        }
-                    }
-                } else if matchRecordsPreviousWeek.contains(where: { mrec in mrec.isNew == true}) {
-                    viewRouter.currentPage = .matchPage
-                }
-            }
-        }
+//        if(weekday == "Sunday") {
+//            viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
+//                // If theres no matchRecords for this week run match logic and find matches
+//                if matchRecordsPreviousWeek.isEmpty {
+//                    getCardGroups() {(userCardGroup) -> Void in
+//                        if userCardGroup.userCardGroup.id != "" {
+//                            findMatches(cardGroups: userCardGroup) {(successFullMatches) -> Void in
+//                                if !successFullMatches.isEmpty {
+//                                    viewModel.saveMatchRecords(matches: successFullMatches, isNew: true)
+//                                    //delaying routing to make sure matchRecords save
+//                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+//                                        viewRouter.currentPage = .matchPage
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            viewRouter.currentPage = .matchPage
+//                        }
+//                    }
+//                } else if matchRecordsPreviousWeek.contains(where: { mrec in mrec.isNew == true}) {
+//                    viewRouter.currentPage = .matchPage
+//                }
+//            }
+//        }
     }
     
     private func getCardGroups(completed: @escaping(_ userCardGroup: SwipedCardGroupsModel) -> Void){
@@ -452,23 +397,23 @@ struct HomeView: View {
                 }
                 
                 HStack{
-                    //                    NavigationLink(destination: NotificationsView(), label: {
-                    //                        ZStack{
-                    //                            Text("")
-                    //                                .cornerRadius(20)
-                    //                                .frame(width: 40, height: 40)
-                    //                                .background(Color.black.opacity(0.6))
-                    //                                .aspectRatio(contentMode: .fill)
-                    //                                .clipShape(Circle())
-                    //
-                    //                            Image(systemName: "bell")
-                    //                                .resizable()
-                    //                                .frame(width: 20, height: 20)
-                    //                                .foregroundColor(.white)
-                    //                                .aspectRatio(contentMode: .fill)
-                    //                        }
-                    //                    })
-                    //
+//                                        NavigationLink(destination: NotificationsView(), label: {
+//                                            ZStack{
+//                                                Text("")
+//                                                    .cornerRadius(20)
+//                                                    .frame(width: 40, height: 40)
+//                                                    .background(Color.black.opacity(0.6))
+//                                                    .aspectRatio(contentMode: .fill)
+//                                                    .clipShape(Circle())
+//
+//                                                Image(systemName: "bell")
+//                                                    .resizable()
+//                                                    .frame(width: 20, height: 20)
+//                                                    .foregroundColor(.white)
+//                                                    .aspectRatio(contentMode: .fill)
+//                                            }
+//                                        })
+//
                     NavigationLink(destination: SettingsView()) {
                         if(!viewModel.profileImage.size.width.isZero){
                             ZStack{
@@ -511,27 +456,27 @@ struct HomeView: View {
             }
             .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.08)
             
-            //            Button(action: {
-            //                withAnimation{
-            //                    self.showHamburgerMenu.toggle()
-            //                }
-            //            }) {
-            //                ZStack{
-            //                    Text("")
-            //                        .frame(width: 35, height: 35)
-            //                        .background(Color.black.opacity(0.6))
-            //                        .aspectRatio(contentMode: .fill)
-            //                        .clipShape(Rectangle())
-            //                        .cornerRadius(10)
-            //
-            //                    Image(systemName: "line.3.horizontal.decrease")
-            //                        .resizable()
-            //                        .frame(width: 20, height: 10)
-            //                        .foregroundColor(.white)
-            //                        .aspectRatio(contentMode: .fill)
-            //                }
-            //            }
-            //            .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
+                        Button(action: {
+                            withAnimation{
+                                self.showHamburgerMenu.toggle()
+                            }
+                        }) {
+                            ZStack{
+                                Text("")
+                                    .frame(width: 35, height: 35)
+                                    .background(Color.black.opacity(0.6))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Rectangle())
+                                    .cornerRadius(10)
+            
+                                Image(systemName: "line.3.horizontal.decrease")
+                                    .resizable()
+                                    .frame(width: 20, height: 10)
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fill)
+                            }
+                        }
+                        .position(x: geoReader.size.height * -0.09, y: geoReader.size.height * 0.08)
         }
     }
     
@@ -544,11 +489,6 @@ struct HomeView: View {
                     .opacity(textOpacityChanged ? 1 : 0.1)
                     .animation(Animation.linear(duration: 1).repeatForever())
                 
-                //                Text("SpeedDate")
-                //                    .font(.system(size: 30))
-                //                    .foregroundColor(.white)
-                //                    .opacity(textOpacityChanged ? 1 : 0.1)
-                //                    .animation(Animation.linear(duration: 1).repeatForever())
             }
             
             ZStack {
