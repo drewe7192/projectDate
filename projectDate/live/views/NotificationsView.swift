@@ -14,7 +14,7 @@ struct NotificationsView: View {
                 .ignoresSafeArea()
             
             VStack{
-               Text("No Notifications")
+               Text("No Notifications at this time")
                     .foregroundColor(.mainGrey)
                     .opacity(0.5)
                     .font(.system(size: 50))

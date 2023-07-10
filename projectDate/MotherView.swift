@@ -20,15 +20,15 @@ struct MotherView: View {
             switch viewRouter.currentPage {
             case .homePage :
                 TabView {
-                    HomeView()
+                    LiveView()
                         .tabItem{
                             Label("Live", systemImage: "livephoto")
                         }.tag(1)
-                    EventHomeView()
+                    EventsView()
                         .tabItem{
-                            Label("Current", systemImage: "calendar")
+                            Label("Events", systemImage: "calendar")
                         }.tag(2)
-                    MessageHomeView()
+                    MatchView()
                         .tabItem{
                             Label("Connect", systemImage: "point.3.connected.trianglepath.dotted")
                         }.tag(3)

@@ -19,7 +19,7 @@ public struct Throwable<T: Decodable>: Decodable {
 
 struct ScheduleSpeedDateView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = LiveViewModel()
     
    // @State private var date = Date()
     

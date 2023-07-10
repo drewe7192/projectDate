@@ -25,7 +25,7 @@ struct FacetimeView: View {
     @State private var isRemovePeersDirty: Bool = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    let homeViewModel: HomeViewModel
+    let homeViewModel: LiveViewModel
     @Binding var launchJoinRoom: Bool
     @Binding var hasPeerJoined: Bool
     @Binding var lookForRoom: Bool

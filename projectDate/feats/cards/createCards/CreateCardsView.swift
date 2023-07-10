@@ -24,7 +24,7 @@ struct CreateCardsView: View {
     @State private var isLoading: Bool = false
     @State var swipeStatus: LikeDislike = .none
     
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = LiveViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
     @Binding var showCardCreatedAlert: Bool
     

@@ -1,29 +1,15 @@
 //
-//  MatchView.swift
+//  CircularProgressView.swift
 //  projectDate
 //
-//  Created by DotZ3R0 on 3/9/23.
+//  Created by DotZ3R0 on 1/21/23.
 //
 
 import SwiftUI
-import Firebase
-import FirebaseCore
-import FirebaseFirestore
-import FirebaseAuth
-import FirebaseFirestoreSwift
-import FirebaseStorage
-import UIKit
 
-struct MatchView: View {
-    @EnvironmentObject var viewRouter: ViewRouter
-    @StateObject var viewModel = LiveViewModel()
-    
-    
-    @State private var userProfileImage: UIImage = UIImage()
-    @State private var isNoMatches: Bool = false
+struct DiscoverView: View {
     @State private var showHamburgerMenu: Bool = false
-    
-    let storage = Storage.storage()
+    @ObservedObject private var viewModel = LiveViewModel()
     
     var body: some View {
         GeometryReader{ geoReader in
@@ -31,33 +17,60 @@ struct MatchView: View {
                 ZStack{
                     Color.mainBlack
                         .ignoresSafeArea()
-                    
+                   
                     VStack{
-                        
-                        Image(uiImage: viewModel.profileImage)
-                            .resizable()
-                            .cornerRadius(50)
-                            .frame(width: 200, height: 200)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
+                        Text("Discover")
+                            .font(.system(size: geoReader.size.height * 0.05))
+                            .bold()
+                            .foregroundColor(.white)
                         
                         Spacer()
-                            .frame(height: 50)
+                            .frame(height: 40)
                         
-                        Button(action: {
+                        Text("1v1")
+                            .font(.system(size: geoReader.size.height * 0.05))
+                            .foregroundColor(.white)
+                        
+                        ScrollView{
+                            ForEach(0..<4, id: \.self) { item in
+                                Text("sfdfsd")
+                                    .bold()
+                                    .frame(width: 400, height: 100)
+                                    .background(Color.mainGrey)
+                                    .foregroundColor(.iceBreakrrrBlue)
+                                    .font(.system(size: 24))
+                                    .cornerRadius(20)
+                                    .shadow(radius: 8, x: 10, y:10)
+                            }
+                        }
+                        .frame(height: 150)
                      
-                        }) {
-                            Text("Spin")
-                                .bold()
-                                .frame(width: 300, height: 70)
-                                .background(Color.mainGrey)
-                                .foregroundColor(.iceBreakrrrBlue)
-                                .font(.system(size: 24))
-                                .cornerRadius(20)
-                                .shadow(radius: 8, x: 10, y:10)
+                        
+                        VStack{
+                            Text("Groups")
+                                .font(.system(size: geoReader.size.height * 0.05))
+                                .foregroundColor(.white)
+                            
+                            ScrollView{
+                                ForEach(0..<4, id: \.self) { item in
+                                    Text("sfdfsd")
+                                        .bold()
+                                        .frame(width: 400, height: 100)
+                                        .background(Color.mainGrey)
+                                        .foregroundColor(.iceBreakrrrBlue)
+                                        .font(.system(size: 24))
+                                        .cornerRadius(20)
+                                        .shadow(radius: 8, x: 10, y:10)
+                                }
+                                
+                            }
+                         
                         }
                     }
+                    .padding(.top,130)
+                   
+                    
+                    
                     
                     
                     headerSection(for: geoReader)
@@ -65,34 +78,21 @@ struct MatchView: View {
                         .padding(.top,10)
                 }
                 
+                
                 //Display hamburgerMenu
                 if self.showHamburgerMenu {
                     MenuView(showHamburgerMenu: self.$showHamburgerMenu)
                         .frame(width: geoReader.size.width/2)
                         .padding(.trailing,geoReader.size.width * 0.5)
                 }
+                
             }
             .ignoresSafeArea(edges: .top)
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
-            .onAppear{
-                viewModel.getUserProfile(){(profileId) -> Void in
-                    if profileId != "" {
-                        viewModel.getStorageFile(profileId: profileId)
-                        viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
-                            if !matchRecordsPreviousWeek.isEmpty {
-                                viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
-                                    if !matchProfiles.isEmpty{
-                                        viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
-                                    }
-                                }
-                            } else {
-                                self.isNoMatches.toggle()
-                            }
-                        }
-                    }
-                }
-            }
+            .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
         }
+     
+      
+      
     }
     
     
@@ -167,7 +167,7 @@ struct MatchView: View {
                         }
                     }
                 }
-            }
+            } 
             .position(x: geoReader.size.width * 0.32, y: geoReader.size.height * 0.08)
             
             Button(action: {
@@ -193,17 +193,10 @@ struct MatchView: View {
             .position(x: geoReader.size.width * -0.13, y: geoReader.size.height * 0.08)
         }
     }
-    
-    @Sendable private func delayOnAppear() async {
-        // Delay of 3.5 seconds (1 second = 1_000_000_000 nanoseconds)
-        try? await Task.sleep(nanoseconds: 6_500_000_000)
-    }
-    
-    
 }
 
-struct MatchView_Previews: PreviewProvider {
+struct DiscoverView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(viewModel: LiveViewModel())
+        DiscoverView()
     }
 }

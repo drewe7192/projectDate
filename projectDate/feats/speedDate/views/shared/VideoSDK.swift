@@ -16,7 +16,7 @@ class VideoSDK: ObservableObject {
     @Published var isMuted = false
     @Published var videoIsShowing = true
     
-    func joinRoom(viewModel: HomeViewModel ) {
+    func joinRoom(viewModel: LiveViewModel ) {
         //male
         if viewModel.userProfile.gender.lowercased() == "male" {
             hmsSDK.getAuthTokenByRoomCode(viewModel.currentSpeedDate.maleRoomCode) { token, error in

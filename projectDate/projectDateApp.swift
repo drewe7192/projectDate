@@ -155,7 +155,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 }
 
 func notifyPeerInRoom() {
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = LiveViewModel()
     
 // calling the viewModel will return a purple error about StateObject
     viewModel.getUserProfileForBackground() {(profile) -> Void in

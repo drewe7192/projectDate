@@ -13,7 +13,7 @@ import FirebaseStorage
 
 struct SettingsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = LiveViewModel()
     
     @State public var isLoggedOut = false
     @State private var image = UIImage()

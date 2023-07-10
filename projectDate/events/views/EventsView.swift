@@ -13,14 +13,14 @@ import FirebaseAuth
 import FirebaseFirestoreSwift
 import FirebaseStorage
 
-struct EventHomeView: View {
+struct EventsView: View {
     @ObservedObject private var viewModel = EventViewModel()
-    @StateObject private var homeViewModel = HomeViewModel()
+    @StateObject private var homeViewModel = LiveViewModel()
     
     @State private var searchText: String = ""
     @State private var isJoining: Bool = false
-    @State private var showMenu: Bool = false
     @State private var events: [EventModel] = []
+    @State private var showHamburgerMenu: Bool = false
     
     private var db = Firestore.firestore()
     
@@ -28,22 +28,28 @@ struct EventHomeView: View {
         NavigationView{
             GeometryReader{geoReader in
                 ZStack{
-                    Color.mainBlack
-                        .ignoresSafeArea()
-                    VStack{
+                    ZStack{
+                        Color.mainBlack
+                            .ignoresSafeArea()
+                        
                         eventCardView(for: geoReader)
+                            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.65)
+                            .disabled(self.showHamburgerMenu ? true : false)
+                        
+                        headerSection(for: geoReader)
+                            .padding(.leading, geoReader.size.width * 0.25)
+                            .padding(.top,10)
                     }
-                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
-                    .disabled(self.showMenu ? true : false)
                     
-                    if self.showMenu {
-                        MenuView(showHamburgerMenu: .constant(false))
+                    //Display hamburgerMenu
+                    if self.showHamburgerMenu {
+                        MenuView(showHamburgerMenu: self.$showHamburgerMenu)
                             .frame(width: geoReader.size.width/2)
                             .padding(.trailing,geoReader.size.width * 0.5)
                     }
-                
                 }
-                .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
+                .ignoresSafeArea(edges: .top)
+                .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                 .onAppear{
                     getEvents()
                     homeViewModel.getUserProfile(){(profileId) -> Void in
@@ -52,15 +58,11 @@ struct EventHomeView: View {
                         }
                     }
                 }
-                .navigationBarItems(leading: (
-                        headerSection(for: geoReader)
-                            .padding(.leading, geoReader.size.width * 0.25)
-                ))
             }
         }
     }
     
- private func eventCardView(for geoReader: GeometryProxy) -> some View {
+    private func eventCardView(for geoReader: GeometryProxy) -> some View {
         VStack{
             Text("Events")
                 .font(.system(size: geoReader.size.height * 0.05))
@@ -75,10 +77,10 @@ struct EventHomeView: View {
                     ForEach(self.events.filter({searchText.isEmpty ? true : $0.title.contains(searchText)})) { event in
                         NavigationLink(destination: EventInfoView(event: event)){
                             ZStack{
-                                    Text("")
-                                        .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.25)
-                                        .background(Color.mainGrey)
-                                        .cornerRadius(30)
+                                Text("")
+                                    .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.25)
+                                    .background(Color.mainGrey)
+                                    .cornerRadius(30)
                                 
                                 
                                 VStack{
@@ -168,117 +170,104 @@ struct EventHomeView: View {
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
             HStack{
-                Text("iceBreakrrr")
-                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
-                    .bold()
-                    .foregroundColor(Color.iceBreakrrrBlue)
-                    .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.03)
-            
-            Image("logo")
-                .resizable()
-                .frame(width: 40, height: 40)
-                .background(Color.mainBlack)
-                .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
-            }
-            
-            HStack{
-//                Button(action: {
-//                    withAnimation{
-//                        self.showMenu.toggle()
-//                    }
-//                }) {
-//                    ZStack{
-//                        Text("")
-//                            .frame(width: 40, height: 40)
-//                            .background(Color.black.opacity(0.2))
-//                            .aspectRatio(contentMode: .fill)
-//                            .clipShape(Rectangle())
-//                            .cornerRadius(10)
-//
-//                        Image(systemName: "line.3.horizontal.decrease")
-//                            .resizable()
-//                            .frame(width: 20, height: 10)
-//                            .foregroundColor(.white)
-//                            .aspectRatio(contentMode: .fill)
-//                    }
-//                }
-//                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
-
-                Spacer()
-                    .frame(width: geoReader.size.width * 0.55)
+                HStack{
+                    Image("logo")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    
+                    Text("iceBreakrrr")
+                        .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
+                        .bold()
+                        .foregroundColor(Color.iceBreakrrrBlue)
+                }
                 
-//                NavigationLink(destination: NotificationsView(), label: {
-//                    ZStack{
-//                        Text("")
-//                            .cornerRadius(20)
-//                            .frame(width: 40, height: 40)
-//                            .background(Color.black.opacity(0.2))
-//                            .aspectRatio(contentMode: .fill)
-//                            .clipShape(Circle())
-//
-//                        Image(systemName: "bell")
-//                            .resizable()
-//                            .frame(width: 20, height: 20)
-//                            .foregroundColor(.white)
-//                            .aspectRatio(contentMode: .fill)
-//                    }
-//                })
-
-                NavigationLink(destination: SettingsView()) {
-                    if(!homeViewModel.profileImage.size.width.isZero){
+                HStack{
+                    NavigationLink(destination: NotificationsView(), label: {
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
                                 .frame(width: 40, height: 40)
-                                .background(.black.opacity(0.2))
+                                .background(Color.black.opacity(0.6))
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: homeViewModel.profileImage)
+                            Image(systemName: "bell")
                                 .resizable()
-                                .cornerRadius(20)
-                                .frame(width: 30, height: 30)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                        }
-                    } else {
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-
-                            Image(systemName: "person.circle")
-                                .resizable()
-                                .cornerRadius(20)
                                 .frame(width: 20, height: 20)
-                                .background(Color.black.opacity(0.2))
                                 .foregroundColor(.white)
                                 .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
+                        }
+                    })
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        if(!homeViewModel.profileImage.size.width.isZero){
+                            ZStack{
+                                Text("")
+                                    .cornerRadius(20)
+                                    .frame(width: 40, height: 40)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Image(uiImage: homeViewModel.profileImage)
+                                    .resizable()
+                                    .cornerRadius(20)
+                                    .frame(width: 30, height: 30)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
+                        } else {
+                            ZStack{
+                                Text("")
+                                    .cornerRadius(20)
+                                    .frame(width: 40, height: 40)
+                                    .background(.black.opacity(0.6))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Image(systemName: "person.circle")
+                                    .resizable()
+                                    .cornerRadius(20)
+                                    .frame(width: 20, height: 20)
+                                    .background(Color.black.opacity(0.6))
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
                         }
                     }
                 }
-                
-                // Dating/Friend Toggle button
-                // adding this back in future versions
-                
-                //            Toggle(isOn: $showFriendDisplay, label: {
-                //
-                //            })
-                //            .padding(geoReader.size.width * 0.02)
-                //            .toggleStyle(SwitchToggleStyle(tint: .white))
             }
+            .position(x: geoReader.size.width * 0.32, y: geoReader.size.height * 0.08)
+            
+            Button(action: {
+                withAnimation{
+                    self.showHamburgerMenu.toggle()
+                }
+            }) {
+                ZStack{
+                    Text("")
+                        .frame(width: 35, height: 35)
+                        .background(Color.black.opacity(0.6))
+                        .aspectRatio(contentMode: .fill)
+                        .clipShape(Rectangle())
+                        .cornerRadius(10)
+                    
+                    Image(systemName: "line.3.horizontal.decrease")
+                        .resizable()
+                        .frame(width: 20, height: 10)
+                        .foregroundColor(.white)
+                        .aspectRatio(contentMode: .fill)
+                }
+            }
+            .position(x: geoReader.size.width * -0.13, y: geoReader.size.height * 0.08)
         }
-       
     }
 }
 
 struct EventHomeView_Previews: PreviewProvider {
     static var previews: some View {
-        EventHomeView()
+        EventsView()
     }
 }

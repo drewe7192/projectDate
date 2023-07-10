@@ -17,7 +17,7 @@ struct BasicInfoPopoverView: View {
     @Binding var showingInstructionsPopover: Bool
     @Binding var isSearchingForRoom: Bool
     
-    @ObservedObject var viewModel = HomeViewModel()
+    @ObservedObject var viewModel = LiveViewModel()
     
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]

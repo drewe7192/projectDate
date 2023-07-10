@@ -16,7 +16,7 @@ import FirebaseStorage
 import UIKit
 
 struct CardView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = LiveViewModel()
     @State private var selectedChoice = "Your Match's Answer"
     @Binding var updateData: Bool
     

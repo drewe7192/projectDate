@@ -56,7 +56,7 @@ struct MenuView: View {
                             .aspectRatio(contentMode: .fill)
                     }
                 }
-                .position(x: geoReader.size.height * 0.035, y: geoReader.size.height * 0.075)
+                .position(x: geoReader.size.width * 0.24, y: geoReader.size.height * 0.087)
             }
         }
      

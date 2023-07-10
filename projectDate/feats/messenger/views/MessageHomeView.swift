@@ -17,7 +17,7 @@ import UIKit
 
 struct MessageHomeView: View {
     @ObservedObject var viewModel = MessageViewModel()
-    @StateObject var homeViewModel = HomeViewModel()
+    @StateObject var homeViewModel = LiveViewModel()
     
     @State private var foo: [String] = ["","","::"]
     @State private var showMenu: Bool = false

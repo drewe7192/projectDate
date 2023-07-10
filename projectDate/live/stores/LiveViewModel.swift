@@ -16,7 +16,7 @@ import FirebaseStorage
 import UIKit
 import FirebaseMessaging
 
-class HomeViewModel: ObservableObject {
+class LiveViewModel: ObservableObject {
     @Published var createCards: [CardModel] = MockService.cardObjectSampleData.cards
     @Published var cards: [CardModel] = []
     @Published var allCards: [CardModel] = []
@@ -30,7 +30,6 @@ class HomeViewModel: ObservableObject {
     @Published var swipedCards: [CardModel] = []
     @Published var lastDoc: DocumentSnapshot!
     @Published var successfullMatchSnapshots: [MatchRecordModel] = []
-    @Published var speedDates: [SpeedDateModel] = []
     @Published var matchRecords: [MatchRecordModel] = []
     @Published var matchProfiles: [ProfileModel] = []
     @Published var matchProfileImages: [UIImage] = []
@@ -295,47 +294,6 @@ class HomeViewModel: ObservableObject {
                     }
                 }
             }
-        }
-    }
-    
-    public func getSpeedDate(speedDateIds: [String], completed: @escaping(_ speedDates: [SpeedDateModel]) -> Void){
-        if !speedDateIds.isEmpty {
-            let firstSpeedDate = speedDateIds.first!
-            
-            db.collection("speedDates")
-                .whereField("id", isEqualTo: firstSpeedDate)
-                .addSnapshotListener{ (querySnapshot, error) in
-                    if let error {
-                        print("Error getting documents from speedDates: \(error)")
-                        completed([])
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let data = document.data()
-                            
-                            if !data.isEmpty{
-                                let timeStampEvent = data["eventDate"] as? Timestamp
-                                let eventDate = timeStampEvent?.dateValue()
-                                
-                                let timeStampCreated = data["createdDate"] as? Timestamp
-                                let createdDate = timeStampCreated?.dateValue()
-                                
-                                let speedDate = SpeedDateModel(
-                                    id: data["id"] as? String ?? "",
-                                    maleRoomCode: data["maleRoomCode"] as? String ?? "",
-                                    femaleRoomCode: data["femaleRoomCode"] as? String ?? "",
-                                    roomId: data["roomId"] as? String ?? "",
-                                    matchProfileIds: data["matchProfileIds"] as? [String] ?? [],
-                                    eventDate: eventDate ?? Date(),
-                                    createdDate: createdDate ?? Date(),
-                                    isActive: data["isActive"] as? Bool ?? false
-                                )
-                                
-                                self.speedDates.append(speedDate)
-                            }
-                        }
-                        completed(self.speedDates)
-                    }
-                }
         }
     }
     
