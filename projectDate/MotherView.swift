@@ -9,6 +9,10 @@ import SwiftUI
 
 struct MotherView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @State private var tabSelection = 1
+    @State private var timeRemaining = 10
+    @State private var showAlert: Bool = false
+    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     //Change the menuBar color to white
     init() {
@@ -19,11 +23,19 @@ struct MotherView: View {
         GeometryReader{geoReader in
             switch viewRouter.currentPage {
             case .homePage :
-                TabView {
-                    LiveView()
+                TabView(selection: $tabSelection) {
+                    LiveView(tabSelection: $tabSelection, showAlert: $showAlert)
                         .tabItem{
                             Label("Live", systemImage: "livephoto")
                         }.tag(1)
+                        .onReceive(timer) { time in
+                            if timeRemaining > 0 && tabSelection == 1 {
+                                timeRemaining -= 1
+                            }else if timeRemaining == 0 && tabSelection == 1 {
+                                showAlert = true
+                                timeRemaining += 10
+                            }
+                        }
                     EventsView()
                         .tabItem{
                             Label("Events", systemImage: "calendar")

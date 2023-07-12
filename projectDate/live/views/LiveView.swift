@@ -22,6 +22,9 @@ struct LiveView: View {
     @ObservedObject private var speedMeetViewModel = SpeedMeetViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
     
+    @Binding var tabSelection: Int
+    @Binding var showAlert: Bool
+    
     @State private var showCardCreatedAlert: Bool = false
     @State private var profileText: String = ""
     @State private var gotSwipedRecords: Bool = false
@@ -96,8 +99,16 @@ struct LiveView: View {
                 .popover(isPresented: $showingBasicInfoPopover) {
                     BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover, isSearchingForRoom: $isSearchingForRoom)
                 }
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Unable to connect"), message: Text("Cant find a friend at this time. Please try again or go to connect page"), primaryButton: .default(Text("Try again")), secondaryButton: .default(Text("connect page"), action: routeToConnectView))
+                    
+                }
             }
         }
+    }
+    
+    private func routeToConnectView(){
+        self.tabSelection = 3
     }
     
     private func getAllData() {
@@ -364,6 +375,6 @@ struct LiveView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        LiveView()
+        LiveView(tabSelection: .constant(1), showAlert: .constant(false))
     }
 }
