@@ -22,7 +22,7 @@ class projectDateTests: XCTestCase {
     
     
     func test_getStorageFile_wrongProfileId_returnsError() throws {
-     let sut = HomeViewModel()
+     let sut = liveViewModel()
         
      let actual = sut.getStorageFile(profileId: "fkjfu6fkuycfkuycv")
         print("actual")

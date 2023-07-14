@@ -25,7 +25,7 @@ struct FacetimeView: View {
     @State private var isRemovePeersDirty: Bool = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    let homeViewModel: LiveViewModel
+    let liveViewModel: LiveViewModel
     @Binding var launchJoinRoom: Bool
     @Binding var hasPeerJoined: Bool
     @Binding var lookForRoom: Bool
@@ -96,7 +96,7 @@ struct FacetimeView: View {
                 Text("")
                     .onChange(of: launchJoinRoom) { newValue in
                         //listen()
-                        videoSDK.joinRoom(viewModel: homeViewModel)
+                        videoSDK.joinRoom(viewModel: liveViewModel)
                         isJoining.toggle()
                     }
             }
@@ -211,7 +211,7 @@ struct FacetimeView: View {
     }
     
     private func endActiveRoom(completed: @escaping (_ peersRemoved: String) -> Void){
-        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/endActiveRoom?room_id=\(homeViewModel.currentSpeedDate.roomId)") else {
+        guard let url = URL(string: "https://us-central1-projectdate-a365b.cloudfunctions.net/endActiveRoom?room_id=\(liveViewModel.currentSpeedDate.roomId)") else {
             fatalError("Missing URL") }
         
         let json: [String: Any] = [

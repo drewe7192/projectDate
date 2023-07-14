@@ -13,6 +13,7 @@ import FirebaseAuth
 import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
+import AVFoundation
 
 struct MatchView: View {
     @EnvironmentObject var viewRouter: ViewRouter
@@ -22,7 +23,15 @@ struct MatchView: View {
     @State private var userProfileImage: UIImage = UIImage()
     @State private var isNoMatches: Bool = false
     @State private var showHamburgerMenu: Bool = false
+    @State private var activeImageIndex = 0
+    @State private var startSpin: Bool = false
+    @State private var email: String = ""
+    @State private var showMatchPopover: Bool = false
     
+    let images = ["https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg","https://hws.dev/paul.jpg"]
+    
+    let imageSwitchTimer = Timer.publish(every: 0.08, on: .main, in: .common)
+        .autoconnect()
     let storage = Storage.storage()
     
     var body: some View {
@@ -33,20 +42,77 @@ struct MatchView: View {
                         .ignoresSafeArea()
                     
                     VStack{
+                        Text("Spin & Connect")
+                            .font(.system(size: geoReader.size.height * 0.05))
+                            .bold()
+                            .foregroundColor(.white)
                         
-                        Image(uiImage: viewModel.profileImage)
-                            .resizable()
-                            .cornerRadius(50)
-                            .frame(width: 200, height: 200)
-                            .background(Color.black.opacity(0.2))
-                            .aspectRatio(contentMode: .fill)
-                            .clipShape(Circle())
+                        if !viewModel.matchProfileImages.isEmpty {
+                            Image(uiImage: viewModel.matchProfileImages[activeImageIndex])
+                                .resizable()
+                                .blur(radius: 15.0)
+                                .cornerRadius(20)
+                                .frame(width: 300, height: 300)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                                .onReceive(imageSwitchTimer) { _ in
+                                    if startSpin {
+                                        // Go to the next image. If this is the last image, go
+                                        // back to the image #0
+                                        self.activeImageIndex = (self.activeImageIndex + 1) % viewModel.matchProfileImages.count
+                                    }
+                                }
+                        }
+                        
+                        //                        Spacer()
+                        //                            .frame(height: 50)
+                        //
+                        //                        Text("Choose Category")
+                        //                            .foregroundColor(.white)
+                        ZStack{
+                            // using 2 text fields to get the proper effect I want:
+                            // a faded background inside textField but text is still bold
+                            //and visible
+                            //                            TextField("", text: $email)
+                            //                                .foregroundColor(.black)
+                            //                                .frame(width: 270, height: 25)
+                            //                                .padding()
+                            //                                .background(.white)
+                            //                                .opacity(0.3)
+                            //                                .cornerRadius(10)
+                            //                                .textInputAutocapitalization(.never)
+                            //                                .overlay(
+                            //                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                            //                                )
+                            //                                .padding(.bottom,3)
+                            
+                            TextField("Category", text: $email)
+                                .foregroundColor(.white)
+                                .frame(width: 270, height: 25)
+                                .padding()
+                                .cornerRadius(10)
+                                .textInputAutocapitalization(.never)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                                )
+                                .padding(.bottom,3)
+                        }
                         
                         Spacer()
-                            .frame(height: 50)
+                            .frame(height: 20)
                         
                         Button(action: {
-                     
+                            AudioServicesPlaySystemSound(1103)
+                            startSpin.toggle()
+                            
+                            if !startSpin {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    showMatchPopover.toggle()
+                                }
+                             
+                            }
+                            
                         }) {
                             Text("Spin")
                                 .bold()
@@ -56,6 +122,49 @@ struct MatchView: View {
                                 .font(.system(size: 24))
                                 .cornerRadius(20)
                                 .shadow(radius: 8, x: 10, y:10)
+                        }
+                        .popover(isPresented: $showMatchPopover) {
+                            Text("Let's Connect")
+                                .font(.system(size: geoReader.size.height * 0.05))
+                                .foregroundColor(.iceBreakrrrBlue)
+                                .padding()
+                            
+                            
+                            Image(uiImage: viewModel.matchProfileImages[activeImageIndex])
+                                .resizable()
+                                .cornerRadius(20)
+                                .frame(width: 250, height: 250)
+                                .background(.black.opacity(0.2))
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(Circle())
+                            
+                            Button(action: {
+                              
+                            }) {
+                                Text("1v1 SpeedMeet")
+                                    .bold()
+                                    .frame(width: 300, height: 70)
+                                    .background(Color.mainGrey)
+                                    .foregroundColor(.iceBreakrrrBlue)
+                                    .font(.system(size: 24))
+                                    .cornerRadius(20)
+                                    .shadow(radius: 8, x: 10, y:10)
+                            }
+                        
+                        
+                        Button(action: {
+                          
+                        }) {
+                            Text("Group SpeedMeet")
+                                .bold()
+                                .frame(width: 300, height: 70)
+                                .background(Color.mainGrey)
+                                .foregroundColor(.iceBreakrrrBlue)
+                                .font(.system(size: 24))
+                                .cornerRadius(20)
+                                .shadow(radius: 8, x: 10, y:10)
+                        }
+                            
                         }
                     }
                     
@@ -78,17 +187,18 @@ struct MatchView: View {
                 viewModel.getUserProfile(){(profileId) -> Void in
                     if profileId != "" {
                         viewModel.getStorageFile(profileId: profileId)
-                        viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
-                            if !matchRecordsPreviousWeek.isEmpty {
-                                viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
-                                    if !matchProfiles.isEmpty{
-                                        viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
-                                    }
-                                }
-                            } else {
-                                self.isNoMatches.toggle()
-                            }
-                        }
+                        viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
+                        //                        viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
+                        //                            if !matchRecordsPreviousWeek.isEmpty {
+                        //                                viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
+                        //                                    if !matchProfiles.isEmpty{
+                        //                                        viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
+                        //                                    }
+                        //                                }
+                        //                            } else {
+                        //                                self.isNoMatches.toggle()
+                        //                            }
+                        //                        }
                     }
                 }
             }

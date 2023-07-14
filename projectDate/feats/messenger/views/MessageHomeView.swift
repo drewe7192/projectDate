@@ -17,7 +17,7 @@ import UIKit
 
 struct MessageHomeView: View {
     @ObservedObject var viewModel = MessageViewModel()
-    @StateObject var homeViewModel = LiveViewModel()
+    @StateObject var liveViewModel = LiveViewModel()
     
     @State private var foo: [String] = ["","","::"]
     @State private var showMenu: Bool = false
@@ -48,7 +48,7 @@ struct MessageHomeView: View {
                 .onAppear {
                     getUserProfile(){(profileId) -> Void in
                         if profileId != "" {
-                            homeViewModel.getStorageFile(profileId: profileId)
+                            liveViewModel.getStorageFile(profileId: profileId)
                             if viewModel.messageThreads.isEmpty {
                                 viewModel.getMessageThreads()
                             }
@@ -153,7 +153,7 @@ struct MessageHomeView: View {
 //                })
                
                 NavigationLink(destination: SettingsView()) {
-                    if(!homeViewModel.profileImage.size.width.isZero){
+                    if(!liveViewModel.profileImage.size.width.isZero){
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
@@ -162,7 +162,7 @@ struct MessageHomeView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: homeViewModel.profileImage)
+                            Image(uiImage: liveViewModel.profileImage)
                                 .resizable()
                                 .cornerRadius(20)
                                 .frame(width: 30, height: 30)

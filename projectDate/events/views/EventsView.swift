@@ -15,7 +15,7 @@ import FirebaseStorage
 
 struct EventsView: View {
     @ObservedObject private var viewModel = EventViewModel()
-    @StateObject private var homeViewModel = LiveViewModel()
+    @StateObject private var liveViewModel = LiveViewModel()
     
     @State private var searchText: String = ""
     @State private var isJoining: Bool = false
@@ -33,7 +33,7 @@ struct EventsView: View {
                             .ignoresSafeArea()
                         
                         eventCardView(for: geoReader)
-                            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.65)
+                            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.68)
                             .disabled(self.showHamburgerMenu ? true : false)
                         
                         headerSection(for: geoReader)
@@ -52,9 +52,9 @@ struct EventsView: View {
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                 .onAppear{
                     getEvents()
-                    homeViewModel.getUserProfile(){(profileId) -> Void in
+                    liveViewModel.getUserProfile(){(profileId) -> Void in
                         if profileId != "" {
-                            homeViewModel.getStorageFile(profileId: profileId)
+                            liveViewModel.getStorageFile(profileId: profileId)
                         }
                     }
                 }
@@ -64,12 +64,13 @@ struct EventsView: View {
     
     private func eventCardView(for geoReader: GeometryProxy) -> some View {
         VStack{
-            Text("Events")
-                .font(.system(size: geoReader.size.height * 0.05))
-                .bold()
-                .foregroundColor(.white)
+                Text("All Upcoming SpeedMeets")
+                    .font(.system(size: geoReader.size.height * 0.05))
+                    .bold()
+                    .foregroundColor(.white)
             
             SearchInput(searchText: $searchText)
+                .position(x: geoReader.size.width * 0.64, y: geoReader.size.height * 0.21)
             
             ScrollView{
                 VStack{
@@ -78,69 +79,37 @@ struct EventsView: View {
                         NavigationLink(destination: EventInfoView(event: event)){
                             ZStack{
                                 Text("")
-                                    .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.25)
+                                    .frame(width: geoReader.size.width * 0.9, height: geoReader.size.height * 0.2)
                                     .background(Color.mainGrey)
-                                    .cornerRadius(30)
+                                    .cornerRadius(40)
+
                                 
-                                
-                                VStack{
-                                    VStack(spacing: 5){
-                                        Text("\(event.eventDate.formatted(.dateTime.day().month().year()))")
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 15))
-                                        
-                                        Text("\(event.title)")
-                                            .bold()
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 25))
-                                            .padding(10)
-                                        
-                                        VStack{
-                                            Text("\(event.location)")
-                                                .foregroundColor(.white)
-                                                .font(.system(size: 15))
-                                        }
-                                    }
+                                VStack(alignment: .leading){
+                             
+                                    Image("animeGirl")
+                                        .resizable()
+                                        .frame(width: geoReader.size.width * 0.14, height: geoReader.size.width * 0.14)
+                                        .background(.gray)
+                                        .clipShape(Circle())
                                     
-                                    HStack{
-                                        HStack{
-                                            Image(systemName: "person.2.fill")
-                                                .resizable()
-                                                .frame(width: 25,height: 15)
-                                                .foregroundColor(.iceBreakrrrPink)
-                                            
-                                            Text("\(event.participants.count) guests")
-                                                .foregroundColor(.black)
-                                                .shadow(radius: 7, x: 2, y: 5)
-                                                .font(.system(size:15))
-                                        }
-                                        
-                                        Button(action: {
-                                            if(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId")){
-                                                viewModel.updateEventParticipants(event: event, action: "remove")
-                                                
-                                            } else{
-                                                viewModel.updateEventParticipants(event: event, action: "add")
-                                            }
-                                        }) {
-                                            Text(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId") ? "UnJoin" : "Join")
-                                                .font(.system(size: 15))
-                                        }
-                                        .frame(width: 100,height: 35)
-                                        .background(event.participants.contains(Auth.auth().currentUser?.uid ?? "noId") ? Color.iceBreakrrrPink : Color.mainGrey)
+                                    Text("Xavier Peloski")
                                         .foregroundColor(.white)
-                                        .cornerRadius(15)
-                                        .padding(.leading,100)
-                                        .shadow(radius: 5, x: 7, y: 10)
-                                    }
+                                        .font(.system(size: 25))
+                                        .padding(.bottom,5)
+                                    
+                                    Text("\(event.eventDate.formatted(.dateTime.day().month().year()))")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 15))
+                                    
                                 }
-                                .padding()
+                                .padding(.trailing,170)
                             }
-                            .padding(.bottom,geoReader.size.height * 0.03)
+                            // .padding(.bottom,geoReader.size.height * 0.03)
                         }
                     }
                 }
-            }.padding(.top, -270)
+            }
+            .padding(.top, -340)
         }
     }
     
@@ -200,7 +169,7 @@ struct EventsView: View {
                     })
                     
                     NavigationLink(destination: SettingsView()) {
-                        if(!homeViewModel.profileImage.size.width.isZero){
+                        if(!liveViewModel.profileImage.size.width.isZero){
                             ZStack{
                                 Text("")
                                     .cornerRadius(20)
@@ -209,7 +178,7 @@ struct EventsView: View {
                                     .aspectRatio(contentMode: .fill)
                                     .clipShape(Circle())
                                 
-                                Image(uiImage: homeViewModel.profileImage)
+                                Image(uiImage: liveViewModel.profileImage)
                                     .resizable()
                                     .cornerRadius(20)
                                     .frame(width: 30, height: 30)

@@ -70,7 +70,7 @@ struct LiveView: View {
                             .ignoresSafeArea()
                         
                         ZStack{
-                            FacetimeView(homeViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined, lookForRoom: $lookForRoom)
+                            FacetimeView(liveViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined, lookForRoom: $lookForRoom)
                             
                             if !hasPeerJoined {
                                 loadingIcon(for: geoReader)
@@ -101,7 +101,6 @@ struct LiveView: View {
                 }
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text("Unable to connect"), message: Text("Cant find a friend at this time. Please try again or go to connect page"), primaryButton: .default(Text("Try again")), secondaryButton: .default(Text("connect page"), action: routeToConnectView))
-                    
                 }
             }
         }

@@ -15,7 +15,7 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
 
-//PLACE in Init HomeViewModel()
+//PLACE in Init liveViewModel()
 //getDocs() { (success) -> Void in
 //    if !success.isEmpty {
 //
@@ -59,7 +59,7 @@ import UIKit
 
 
 
-//Place this button in the HomeView() and use it to add and delete stuff. Cant put it in the HomeViewModel() init() becuase it'll run at least twice.. not sure why
+//Place this button in the HomeView() and use it to add and delete stuff. Cant put it in the liveViewModel() init() becuase it'll run at least twice.. not sure why
 
 //Button(action: {
 ////                                    viewModel.getDocs() { (success) -> Void in

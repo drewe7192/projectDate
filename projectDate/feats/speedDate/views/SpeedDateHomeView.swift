@@ -136,7 +136,7 @@ struct SpeedDateHomeView: View {
     private func buttonSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             //button
-            NavigationLink(destination: FacetimeView(homeViewModel: viewModel, launchJoinRoom: $isTimeEnded, hasPeerJoined: $isTimeEnded, lookForRoom: $isTimeEnded), label: {
+            NavigationLink(destination: FacetimeView(liveViewModel: viewModel, launchJoinRoom: $isTimeEnded, hasPeerJoined: $isTimeEnded, lookForRoom: $isTimeEnded), label: {
 //                CountdownTimerView(timeRemaining: $timeRemainingSpeedDateHomeView,
 //                                   geoReader: geoReader,
 //                                   isStartNow: $isStartVideoNow,

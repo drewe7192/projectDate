@@ -46,7 +46,7 @@ enum MockService {
     static var profilesSampleData: [ProfileModel] {
         [
             ProfileModel(
-                id: "John",
+                id: "1C104E11-D984-4435-A41D-39968BD39062",
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
@@ -58,7 +58,7 @@ enum MockService {
                 currentRoomId: ""
             ),
             ProfileModel(
-                id: "John",
+                id: "4D2210FA-D5D8-48C2-8FBB-F81593987EE1",
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
@@ -70,7 +70,7 @@ enum MockService {
                 currentRoomId: ""
             ),
             ProfileModel(
-                id: "John",
+                id: "B2F39E11-0241-499B-AC79-DD639C5E15EF",
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
@@ -82,7 +82,7 @@ enum MockService {
                 currentRoomId: ""
             ),
             ProfileModel(
-                id: "John",
+                id: "EF7C8A72-87C1-4FD5-ABFE-D458C0D86E90",
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",

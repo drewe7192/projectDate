@@ -58,10 +58,10 @@ class SpeedMeetViewModel: ObservableObject {
         }
     }
     
-//    public func setLineAndTime(viewModel: SpeedMeetViewModel, homeViewModel: HomeViewModel){
-//        self.setPlaceInLine(viewModel: SpeedMeetViewModel, homeViewModel: homeViewModel){(placeIn) -> Void in
+//    public func setLineAndTime(viewModel: SpeedMeetViewModel, liveViewModel: liveViewModel){
+//        self.setPlaceInLine(viewModel: SpeedMeetViewModel, liveViewModel: liveViewModel){(placeIn) -> Void in
 //            if placeIn != 0 {
-//                self.setTimeRemaining(viewModel: homeViewModel){(timeRemaining) -> Void in
+//                self.setTimeRemaining(viewModel: liveViewModel){(timeRemaining) -> Void in
 //                    if timeRemaining != 0 {
 //                        self.timeLeft(inLine: placeIn, viewModel: viewModel)
 //                    }
@@ -163,8 +163,8 @@ class SpeedMeetViewModel: ObservableObject {
 //        return 0
 //    }
 //
-//    private func setPlaceInLine(viewModel: SpeedMeetViewModel, homeViewModel: HomeViewModel,completed: @escaping(_ placeIn: Int) -> Void) {
-//        let placeInLine = viewModel.speedDates.first!.matchProfileIds.firstIndex(of: homeViewModel.userProfile.id) ?? 4
+//    private func setPlaceInLine(viewModel: SpeedMeetViewModel, liveViewModel: liveViewModel,completed: @escaping(_ placeIn: Int) -> Void) {
+//        let placeInLine = viewModel.speedDates.first!.matchProfileIds.firstIndex(of: liveViewModel.userProfile.id) ?? 4
 //
 //        // remove 0 based index
 //        self.placeInLine = placeInLine.advanced(by: 1)

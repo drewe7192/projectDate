@@ -15,10 +15,11 @@ struct SearchInput: View {
         GeometryReader{geoReader in
             HStack {
                 TextField("Search ...", text: $searchText)
-                    .padding(geoReader.size.height * 0.01)
-                    .padding(.horizontal, geoReader.size.height * 0.1)
+                    .padding(geoReader.size.height * 0.06)
+                    //.padding(.horizontal, geoReader.size.height * 0.1)
+                    .frame(width: 320, height: 50)
                     .background(Color(.systemGray6))
-                    .cornerRadius(geoReader.size.height * 0.03)
+                    .cornerRadius(geoReader.size.height * 0.09)
                     .overlay(
                         HStack{
                             Image(systemName: "magnifyingglass")
@@ -32,16 +33,17 @@ struct SearchInput: View {
                                 }) {
                                     Image(systemName: "multiply.circle.fill")
                                         .foregroundColor(.gray)
-                                        .padding(.trailing, geoReader.size.height * 0.01)
+                                        //.padding(.trailing, geoReader.size.height * 0.01)
                                 }
                             }
                         }
                     )
-                    .padding(.horizontal, 10)
+                    //.padding(.horizontal, 10)
                     .onTapGesture {
                         self.isEditing = true
                     }
             }
+            //.position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.1)
         }
     
     }
