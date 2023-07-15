@@ -44,10 +44,10 @@ struct MotherView: View {
                         .tabItem{
                             Label("Connect", systemImage: "point.3.connected.trianglepath.dotted")
                         }.tag(3)
-                    MessageHomeView()
-                        .tabItem{
-                            Label("Discover", systemImage: "globe")
-                        }.tag(4)
+//                    MessageHomeView()
+//                        .tabItem{
+//                            Label("Discover", systemImage: "globe")
+//                        }.tag(4)
                     SettingsView()
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")

@@ -82,7 +82,6 @@
 		77626AEE28C87AF600D1DD9E /* AppleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77626AED28C87AF600D1DD9E /* AppleAuth.swift */; };
 		77626AF628CB1D2F00D1DD9E /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 77626AF528CB1D2F00D1DD9E /* GoogleSignIn */; };
 		77626AF828CB1D2F00D1DD9E /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 77626AF728CB1D2F00D1DD9E /* GoogleSignInSwift */; };
-		776D4709295F359100754DE5 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D4708295F359100754DE5 /* UserModel.swift */; };
 		776D470F2961FD9000754DE5 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D470E2961FD9000754DE5 /* ProfileViewModel.swift */; };
 		776D47112962010000754DE5 /* ProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47102962010000754DE5 /* ProfileInfoModel.swift */; };
 		776D47132964053100754DE5 /* SideBarInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47122964053100754DE5 /* SideBarInfoModel.swift */; };
@@ -134,7 +133,6 @@
 		77ED3F112A0F872B00C26C33 /* MockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77619ECF295DC8AE00B1BF1F /* MockService.swift */; };
 		77ED3F122A0F875A00C26C33 /* SwipedCardGroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DCADA929B9E62300641558 /* SwipedCardGroupModel.swift */; };
 		77ED3F132A0F879A00C26C33 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1C7C3297C4094004C8FA6 /* EventModel.swift */; };
-		77ED3F142A0F87AB00C26C33 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D4708295F359100754DE5 /* UserModel.swift */; };
 		77ED3F152A0F87C200C26C33 /* ProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776D47102962010000754DE5 /* ProfileInfoModel.swift */; };
 		77ED3F162A0F87CB00C26C33 /* CardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771AE4212979B44F00F3A6A1 /* CardsModel.swift */; };
 		77FB23BF292B5E62008F5469 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB23BE292B5E62008F5469 /* ProfileView.swift */; };
@@ -208,7 +206,6 @@
 		775E062F28C72B450082C27E /* projectDate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDate.entitlements; sourceTree = "<group>"; };
 		77619ECF295DC8AE00B1BF1F /* MockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockService.swift; sourceTree = "<group>"; };
 		77626AED28C87AF600D1DD9E /* AppleAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAuth.swift; sourceTree = "<group>"; };
-		776D4708295F359100754DE5 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		776D470E2961FD9000754DE5 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = projectDate/feats/utils/views/ProfileViewModel.swift; sourceTree = SOURCE_ROOT; };
 		776D47102962010000754DE5 /* ProfileInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoModel.swift; sourceTree = "<group>"; };
 		776D47122964053100754DE5 /* SideBarInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarInfoModel.swift; sourceTree = "<group>"; };
@@ -574,7 +571,6 @@
 		776D4707295F357600754DE5 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				776D4708295F359100754DE5 /* UserModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1148,7 +1144,6 @@
 				77C3D500289910CE0088554F /* projectDateApp.swift in Sources */,
 				7714060229DD4279008C0BC1 /* VideoSDK.swift in Sources */,
 				771EA00F28A045EC007EBC40 /* Extensions.swift in Sources */,
-				776D4709295F359100754DE5 /* UserModel.swift in Sources */,
 				77DCADAC29B9E9CE00641558 /* SwipedCardGroupsModel.swift in Sources */,
 				776E903429BC868B00C14F8A /* BasicInfoPopoverView.swift in Sources */,
 				777BD9852A5B51CD00E29E72 /* MatchViewModel.swift in Sources */,
@@ -1178,7 +1173,6 @@
 				77ED3F0B2A0F869A00C26C33 /* CardModel.swift in Sources */,
 				77ED3F0C2A0F86B200C26C33 /* ProfileModel.swift in Sources */,
 				77ED3F152A0F87C200C26C33 /* ProfileInfoModel.swift in Sources */,
-				77ED3F142A0F87AB00C26C33 /* UserModel.swift in Sources */,
 				77ED3F122A0F875A00C26C33 /* SwipedCardGroupModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

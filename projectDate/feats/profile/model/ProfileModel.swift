@@ -12,7 +12,6 @@ struct ProfileModel: Codable, Identifiable  {
     var fullName: String
     var location: String
     var gender: String
-    var matchDay: String
     var messageThreadIds: [String]
     var speedDateIds: [String]
     var fcmTokens: [String]

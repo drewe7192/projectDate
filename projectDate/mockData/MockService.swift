@@ -10,23 +10,12 @@ import Foundation
 enum MockService {
     static var homeTabTitles: Array = ["Top-Rated", "Recommended",  "Upcoming"]
     
-    static var userSampleData: UserModel {
-        UserModel(
-            firstName: "Travon",
-            lastName: "Dayvon",
-            email: "bob@google.com",
-            location: "ClearWater, Fl",
-            userProfile: profileSampleData
-        )
-    }
-    
     static var profileSampleData: ProfileModel {
         ProfileModel(
             id: "John",
             fullName: "Bon",
             location: "Tampa, Fl",
             gender: "Male",
-            matchDay: "Mondays",
             messageThreadIds: [],
             speedDateIds: [],
             fcmTokens: [],
@@ -50,7 +39,6 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
@@ -62,7 +50,6 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
@@ -74,7 +61,6 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],
@@ -86,7 +72,6 @@ enum MockService {
                 fullName: "Bon",
                 location: "Tampa, Fl",
                 gender: "Male",
-                matchDay: "Wednesdays",
                 messageThreadIds: [],
                 speedDateIds: [],
                 fcmTokens: [],

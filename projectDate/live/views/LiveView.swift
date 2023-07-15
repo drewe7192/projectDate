@@ -4,61 +4,28 @@
 //
 //  Created by DotZ3R0 on 1/18/23.
 //
-
 import SwiftUI
-
 import Firebase
-import FirebaseFirestore
-import FirebaseAuth
-import FirebaseStorage
-import FirebaseFunctions
-import FirebaseMessaging
-import UIKit
 
 struct LiveView: View {
     @StateObject public var viewModel = LiveViewModel()
-    @ObservedObject private var cardsViewModel = CardsViewModel()
-    @ObservedObject private var matchViewModel = MatchViewModel()
-    @ObservedObject private var speedMeetViewModel = SpeedMeetViewModel()
     @EnvironmentObject var viewRouter: ViewRouter
     
     @Binding var tabSelection: Int
     @Binding var showAlert: Bool
     
-    @State private var showCardCreatedAlert: Bool = false
-    @State private var profileText: String = ""
-    @State private var gotSwipedRecords: Bool = false
-    @State private var cards: [CardModel] = []
-    @State private var userMatchSnapshots: [CardGroupSnapShotModel] = []
-    @State private var potentialMatchSnapshots: [CardGroupSnapShotModel] = []
-    
     @State private var showingInstructionsPopover: Bool = false
     @State private var showingBasicInfoPopover: Bool = false
     @State private var showHamburgerMenu: Bool = false
-    @State private var isStartSpeedDateNow: Bool = false
-    @State private var isStartVideoNow: Bool = false
-    @State private var isTimeEnded: Bool = false
-    @State private var placeInLine: Int = 0
-    @State private var timeRemainingSpeedDateHomeView: Int = 0
-    @State private var isPeerButtonDisabled: Bool = false
-    @State private var timeRemainingHomeView: Int = 0
     @State private var circleColorChanged = false
     @State private var heartColorChanged = false
     @State private var heartSizeChanged = false
     @State private var textOpacityChanged = false
     @State private var launchJoinRoom = false
     @State private var hasPeerJoined = false
-    @State private var showCardAlert = false
     @State private var emptyRooms: [RoomModel] = []
-    @State private var displayCardsTime: Int = 60
     @State private var lookForRoom: Bool = false
     @State private var isSearchingForRoom: Bool = false
-    @State private var startGettingAvailableRoom: Int = 20
-    @State private var subjectField: String = ""
-    @State private var connectBih: Bool = false
-    
-    let db = Firestore.firestore()
-    let storage = Storage.storage()
     
     var body: some View {
         NavigationView{

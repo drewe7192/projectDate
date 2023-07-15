@@ -6,19 +6,11 @@
 //
 
 import SwiftUI
-import Firebase
-import FirebaseCore
-import FirebaseFirestore
-import FirebaseAuth
-import FirebaseFirestoreSwift
-import FirebaseStorage
-import UIKit
 import AVFoundation
 
 struct MatchView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var viewModel = LiveViewModel()
-    
     
     @State private var userProfileImage: UIImage = UIImage()
     @State private var isNoMatches: Bool = false
@@ -27,12 +19,11 @@ struct MatchView: View {
     @State private var startSpin: Bool = false
     @State private var email: String = ""
     @State private var showMatchPopover: Bool = false
-    
-    let images = ["https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg","https://hws.dev/paul.jpg"]
+    @State private var alertFor1v1SpeedMeet: Bool = false
+    @State private var alertForGroupSpeedMeet: Bool = false
     
     let imageSwitchTimer = Timer.publish(every: 0.08, on: .main, in: .common)
         .autoconnect()
-    let storage = Storage.storage()
     
     var body: some View {
         GeometryReader{ geoReader in
@@ -64,29 +55,7 @@ struct MatchView: View {
                                     }
                                 }
                         }
-                        
-                        //                        Spacer()
-                        //                            .frame(height: 50)
-                        //
-                        //                        Text("Choose Category")
-                        //                            .foregroundColor(.white)
                         ZStack{
-                            // using 2 text fields to get the proper effect I want:
-                            // a faded background inside textField but text is still bold
-                            //and visible
-                            //                            TextField("", text: $email)
-                            //                                .foregroundColor(.black)
-                            //                                .frame(width: 270, height: 25)
-                            //                                .padding()
-                            //                                .background(.white)
-                            //                                .opacity(0.3)
-                            //                                .cornerRadius(10)
-                            //                                .textInputAutocapitalization(.never)
-                            //                                .overlay(
-                            //                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            //                                )
-                            //                                .padding(.bottom,3)
-                            
                             TextField("Category", text: $email)
                                 .foregroundColor(.white)
                                 .frame(width: 270, height: 25)
@@ -110,7 +79,6 @@ struct MatchView: View {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                     showMatchPopover.toggle()
                                 }
-                             
                             }
                             
                         }) {
@@ -124,51 +92,65 @@ struct MatchView: View {
                                 .shadow(radius: 8, x: 10, y:10)
                         }
                         .popover(isPresented: $showMatchPopover) {
-                            Text("Let's Connect")
-                                .font(.system(size: geoReader.size.height * 0.05))
-                                .foregroundColor(.iceBreakrrrBlue)
-                                .padding()
-                            
-                            
-                            Image(uiImage: viewModel.matchProfileImages[activeImageIndex])
-                                .resizable()
-                                .cornerRadius(20)
-                                .frame(width: 250, height: 250)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                            
-                            Button(action: {
-                              
-                            }) {
-                                Text("1v1 SpeedMeet")
-                                    .bold()
-                                    .frame(width: 300, height: 70)
-                                    .background(Color.mainGrey)
+                            VStack{
+                                Text("Let's Connect")
+                                    .font(.system(size: geoReader.size.height * 0.05))
                                     .foregroundColor(.iceBreakrrrBlue)
-                                    .font(.system(size: 24))
+                                    .padding()
+                                
+                                
+                                Image(uiImage: viewModel.matchProfileImages[activeImageIndex])
+                                    .resizable()
                                     .cornerRadius(20)
-                                    .shadow(radius: 8, x: 10, y:10)
+                                    .frame(width: 250, height: 250)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Button(action: {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        alertFor1v1SpeedMeet.toggle()
+                                    }
+                                }) {
+                                    Text("1v1 SpeedMeet")
+                                        .bold()
+                                        .frame(width: 300, height: 70)
+                                        .background(Color.mainGrey)
+                                        .foregroundColor(.iceBreakrrrBlue)
+                                        .font(.system(size: 24))
+                                        .cornerRadius(20)
+                                        .shadow(radius: 8, x: 10, y:10)
+                                }
+                                .alert(isPresented: $alertFor1v1SpeedMeet) {
+                                    
+                                    Alert(title: Text("Request sent!"), message: Text("a notification will popup if someone has accepted your request"), dismissButton: .default(Text("Got it!")) {
+                                        showMatchPopover.toggle()
+                                    })
+                                }
+                                
+                                Button(action: {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        alertForGroupSpeedMeet.toggle()
+                                    }
+                                }) {
+                                    Text("Group SpeedMeet")
+                                        .bold()
+                                        .frame(width: 300, height: 70)
+                                        .background(Color.mainGrey)
+                                        .foregroundColor(.iceBreakrrrBlue)
+                                        .font(.system(size: 24))
+                                        .cornerRadius(20)
+                                        .shadow(radius: 8, x: 10, y:10)
+                                }
+                                .alert(isPresented: $alertForGroupSpeedMeet) {
+                                    Alert(title: Text("Request sent!"), message: Text("a notification will popup if someone has accepted your request"), dismissButton: .default(Text("Got it!")) {
+                                        showMatchPopover.toggle()
+                                    })
+                                }
                             }
-                        
-                        
-                        Button(action: {
-                          
-                        }) {
-                            Text("Group SpeedMeet")
-                                .bold()
-                                .frame(width: 300, height: 70)
-                                .background(Color.mainGrey)
-                                .foregroundColor(.iceBreakrrrBlue)
-                                .font(.system(size: 24))
-                                .cornerRadius(20)
-                                .shadow(radius: 8, x: 10, y:10)
-                        }
-                            
+                            .interactiveDismissDisabled()
                         }
                     }
-                    
-                    
                     headerSection(for: geoReader)
                         .padding(.leading, geoReader.size.width * 0.25)
                         .padding(.top,10)
@@ -188,23 +170,22 @@ struct MatchView: View {
                     if profileId != "" {
                         viewModel.getStorageFile(profileId: profileId)
                         viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
-                        //                        viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
-                        //                            if !matchRecordsPreviousWeek.isEmpty {
-                        //                                viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
-                        //                                    if !matchProfiles.isEmpty{
-                        //                                        viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
-                        //                                    }
-                        //                                }
-                        //                            } else {
-                        //                                self.isNoMatches.toggle()
-                        //                            }
-                        //                        }
+                        //                                                viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
+                        //                                                    if !matchRecordsPreviousWeek.isEmpty {
+                        //                                                        viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
+                        //                                                            if !matchProfiles.isEmpty{
+                        //                                                                viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
+                        //                                                            }
+                        //                                                        }
+                        //                                                    } else {
+                        //                                                        self.isNoMatches.toggle()
+                        //                                                    }
+                        //                                                }
                     }
                 }
             }
         }
     }
-    
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
@@ -308,12 +289,10 @@ struct MatchView: View {
         // Delay of 3.5 seconds (1 second = 1_000_000_000 nanoseconds)
         try? await Task.sleep(nanoseconds: 6_500_000_000)
     }
-    
-    
 }
 
 struct MatchView_Previews: PreviewProvider {
     static var previews: some View {
-        MatchView(viewModel: LiveViewModel())
+        MatchView()
     }
 }
