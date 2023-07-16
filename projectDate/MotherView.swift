@@ -36,10 +36,10 @@ struct MotherView: View {
                                 timeRemaining += 10
                             }
                         }
-                    EventsView()
-                        .tabItem{
-                            Label("Events", systemImage: "calendar")
-                        }.tag(2)
+//                    EventsView()
+//                        .tabItem{
+//                            Label("Events", systemImage: "calendar")
+//                        }.tag(2)
                     MatchView()
                         .tabItem{
                             Label("Connect", systemImage: "point.3.connected.trianglepath.dotted")

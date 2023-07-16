@@ -22,11 +22,11 @@ struct SettingsView: View {
     @State private var showSheet = false
     @State private var showSaveButton = false
     @State private var editInfo = false
-    @State private var showMenu: Bool = false
 //    @State private var userProfile: ProfileModel = ProfileModel(id: "", fullName: "", location: "", gender: "", matchDay: "", messageThreadIds: [], speedDateIds: [])
     @State private var genderChoices: [String] = ["Female","Male"]
     @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]
     @State private var isDeletingAccount: Bool = false
+    @State private var showHamburgerMenu: Bool = false
     
     let storage = Storage.storage()
     
@@ -34,47 +34,51 @@ struct SettingsView: View {
         NavigationView {
             GeometryReader {geoReader in
                 ZStack{
-                    Color.mainBlack
-                        .ignoresSafeArea()
-                
-                    VStack{
-                            Text("Settings")
-                                .foregroundColor(Color.white)
-                                .bold()
-                                .font(.system(size: geoReader.size.height * 0.05))
-                        
-                            imageSection(for: geoReader)
-                                .padding(geoReader.size.height * 0.03)
-                            
-                        Spacer()
-                            .frame(height: geoReader.size.width * 0.07)
-                        
-                        nameSection(for: geoReader)
-                        
-                        Spacer()
-                            .frame(height: geoReader.size.height * 0.02)
-                        
-                        pickerSections(for: geoReader)
-                            
-                            buttonsSection(for: geoReader)
-                    }
-                    .sheet(isPresented: $showSheet){
-                        // Pick an image from the photo library:
-                        ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.profileImage)
-                        
-                        //  If you wish to take a photo from camera instead:
-                        // ImagePicker(sourceType: .camera, selectedImage: self.$image)
-                    }
-                    .offset(x: self.showMenu ? geoReader.size.width/2 : 0)
-                    .disabled(self.showMenu ? true : false)
+                    ZStack{
+                        Color.mainBlack
+                            .ignoresSafeArea()
                     
-                    if self.showMenu {
-                        MenuView(showHamburgerMenu: .constant(false))
+                        VStack{
+                                Text("Settings")
+                                    .foregroundColor(Color.white)
+                                    .bold()
+                                    .font(.system(size: geoReader.size.height * 0.05))
+                            
+                                imageSection(for: geoReader)
+                                    .padding(geoReader.size.height * 0.03)
+                                
+                            Spacer()
+                                .frame(height: geoReader.size.width * 0.07)
+                            
+                            nameSection(for: geoReader)
+                            
+                            Spacer()
+                                .frame(height: geoReader.size.height * 0.02)
+                            
+                            pickerSections(for: geoReader)
+                                
+                                buttonsSection(for: geoReader)
+                        }
+                        .sheet(isPresented: $showSheet){
+                            // Pick an image from the photo library:
+                            ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.profileImage)
+                            
+                            //  If you wish to take a photo from camera instead:
+                            // ImagePicker(sourceType: .camera, selectedImage: self.$image)
+                        }
+                        
+                        headerSection(for: geoReader)
+                            .padding(.leading, geoReader.size.width * 0.25)
+                            .padding(.top,10)
+                    }
+                    
+                    if self.showHamburgerMenu {
+                        MenuView(showHamburgerMenu: self.$showHamburgerMenu)
                             .frame(width: geoReader.size.width/2)
                             .padding(.trailing,geoReader.size.width * 0.5)
                     }
-                  
                 }
+                .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .onAppear{
                     viewModel.getUserProfile(){(profileId) -> Void in
@@ -83,10 +87,6 @@ struct SettingsView: View {
                         }
                     }
                 }
-                .navigationBarItems(leading: (
-                        headerSection(for: geoReader)
-                            .padding(.leading, geoReader.size.width * 0.25)
-                ))
                 .alert(isPresented: $isDeletingAccount){
                     Alert(
                         title: Text("Error deleting account"),
@@ -224,102 +224,98 @@ struct SettingsView: View {
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
             HStack{
-                Text("iceBreakrrr")
-                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
-                    .bold()
-                    .foregroundColor(Color.iceBreakrrrBlue)
-                    .position(x: geoReader.size.width * 0.3, y: geoReader.size.height * 0.03)
-            
-            Image("logo")
-                .resizable()
-                .frame(width: 40, height: 40)
-                .background(Color.mainBlack)
-                .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
-            }
-            
-            HStack{
-//                Button(action: {
-//                    withAnimation{
-//                        self.showMenu.toggle()
-//                    }
-//                }) {
-//                    ZStack{
-//                        Text("")
-//                            .frame(width: 40, height: 40)
-//                            .background(Color.black.opacity(0.2))
-//                            .aspectRatio(contentMode: .fill)
-//                            .clipShape(Rectangle())
-//                            .cornerRadius(10)
-//
-//                        Image(systemName: "line.3.horizontal.decrease")
-//                            .resizable()
-//                            .frame(width: 20, height: 10)
-//                            .foregroundColor(.white)
-//                            .aspectRatio(contentMode: .fill)
-//                    }
-//                }
-//                .position(x: geoReader.size.height * -0.08, y: geoReader.size.height * 0.03)
-
-                Spacer()
-                    .frame(width: geoReader.size.width * 0.6)
+                HStack{
+                    Image("logo")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    
+                    Text("iceBreakrrr")
+                        .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.03))
+                        .bold()
+                        .foregroundColor(Color.iceBreakrrrBlue)
+                }
                 
-//                NavigationLink(destination: NotificationsView(), label: {
-//                    ZStack{
-//                        Text("")
-//                            .cornerRadius(20)
-//                            .frame(width: 40, height: 40)
-//                            .background(Color.black.opacity(0.2))
-//                            .aspectRatio(contentMode: .fill)
-//                            .clipShape(Circle())
-//
-//                        Image(systemName: "bell")
-//                            .resizable()
-//                            .frame(width: 20, height: 20)
-//                            .foregroundColor(.white)
-//                            .aspectRatio(contentMode: .fill)
-//                    }
-//                })
-               
-
-                NavigationLink(destination: SettingsView()) {
-                    if(viewModel.profileImage != nil){
+                HStack{
+                    NavigationLink(destination: NotificationsView(), label: {
                         ZStack{
                             Text("")
                                 .cornerRadius(20)
                                 .frame(width: 40, height: 40)
-                                .background(.black.opacity(0.2))
+                                .background(Color.black.opacity(0.6))
                                 .aspectRatio(contentMode: .fill)
                                 .clipShape(Circle())
                             
-                            Image(uiImage: viewModel.profileImage)
+                            Image(systemName: "bell")
                                 .resizable()
-                                .cornerRadius(20)
-                                .frame(width: 30, height: 30)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                        }
-                    } else {
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-
-                            Image(systemName: "person.circle")
-                                .resizable()
-                                .cornerRadius(20)
                                 .frame(width: 20, height: 20)
-                                .background(Color.black.opacity(0.2))
                                 .foregroundColor(.white)
                                 .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
+                        }
+                    })
+                    
+                    NavigationLink(destination: SettingsView()) {
+                        if(!viewModel.profileImage.size.width.isZero){
+                            ZStack{
+                                Text("")
+                                    .cornerRadius(20)
+                                    .frame(width: 40, height: 40)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Image(uiImage: viewModel.profileImage)
+                                    .resizable()
+                                    .cornerRadius(20)
+                                    .frame(width: 30, height: 30)
+                                    .background(.black.opacity(0.2))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
+                        } else {
+                            ZStack{
+                                Text("")
+                                    .cornerRadius(20)
+                                    .frame(width: 40, height: 40)
+                                    .background(.black.opacity(0.6))
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                                
+                                Image(systemName: "person.circle")
+                                    .resizable()
+                                    .cornerRadius(20)
+                                    .frame(width: 20, height: 20)
+                                    .background(Color.black.opacity(0.6))
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fill)
+                                    .clipShape(Circle())
+                            }
                         }
                     }
                 }
             }
+            .position(x: geoReader.size.width * 0.32, y: geoReader.size.height * 0.08)
+            
+            Button(action: {
+                withAnimation{
+                    self.showHamburgerMenu.toggle()
+                }
+            }) {
+                ZStack{
+                    Text("")
+                        .frame(width: 35, height: 35)
+                        .background(Color.black.opacity(0.6))
+                        .aspectRatio(contentMode: .fill)
+                        .clipShape(Rectangle())
+                        .cornerRadius(10)
+                    
+                    Image(systemName: "line.3.horizontal.decrease")
+                        .resizable()
+                        .frame(width: 20, height: 10)
+                        .foregroundColor(.white)
+                        .aspectRatio(contentMode: .fill)
+                }
+            }
+            .position(x: geoReader.size.width * -0.13, y: geoReader.size.height * 0.08)
         }
     }
     
