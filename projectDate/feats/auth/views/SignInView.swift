@@ -28,9 +28,12 @@ struct SignInView: View {
                         .ignoresSafeArea()
                     
                     VStack{
+                        headerSection(for: geoReader)
                         bodySection(for: geoReader)
                         footerSection(for: geoReader)
                     }
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+                    
                     LogInItems(isSignInPage: true).loadingIndicator
                 }
                 .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
@@ -39,27 +42,37 @@ struct SignInView: View {
         .navigationBarBackButtonHidden(true)
     }
     
-    private func bodySection(for geoReader: GeometryProxy) -> some View {
+    private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
             Image("logo")
                 .resizable()
-                .frame(width: 100, height: 100)
+                .frame(width: 70, height: 70)
                 .background(Color.mainBlack)
-                .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.1)
+                .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.04)
             
             VStack{
                 Text("iceBreakrrr")
-                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.07))
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.04))
                     .bold()
                     .foregroundColor(Color.iceBreakrrrBlue)
                 
-                Text("Break the Ice")
+                Text("break the ice")
                     .foregroundColor(.white)
                     .font(.system(size: geoReader.size.height * 0.02))
                     .multilineTextAlignment(.center)
+                    .padding(.bottom,2)
+                
+//                Text("Create Account To get started now!")
+//                    .foregroundColor(.white)
+//                    .bold()
+//                    .font(.system(size: geoReader.size.height * 0.03))
             }
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.17)
-            
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.12)
+   
+        }
+    }
+    
+    private func bodySection(for geoReader: GeometryProxy) -> some View {
             VStack{
                 EmailPasswordLoginView(email: $email, password: $password,confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, displayConfirmPassword: $displayConfirmPassword)
                 
@@ -68,7 +81,7 @@ struct SignInView: View {
                     .padding(.top,geoReader.size.height * 0.01)
                     .foregroundColor(.white)
             }
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.42)
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.05)
         }
     }
     
@@ -76,9 +89,8 @@ struct SignInView: View {
         VStack{
             LogInItems(isSignInPage: true)
         }
-        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.3)
+        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.25)
     }
-}
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {

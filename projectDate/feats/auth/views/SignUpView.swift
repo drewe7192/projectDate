@@ -25,30 +25,36 @@ struct SignUpView: View {
                     // need a ZStack and color to change the background color
                     Color.mainBlack
                         .ignoresSafeArea()
-                    
+                   
                     VStack{
+                        headerSection(for: geoReader)
                         bodySection(for: geoReader)
                         footerSection(for: geoReader)
+                     
                     }
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+                    
                     LogInItems(isSignInPage: false).loadingIndicator
+                   
                 }
                 .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
+               
             }
         }
         .navigationBarBackButtonHidden(true)
     }
     
-    private func bodySection(for geoReader: GeometryProxy) -> some View {
+    private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
             Image("logo")
                 .resizable()
-                .frame(width: 100, height: 100)
+                .frame(width: 70, height: 70)
                 .background(Color.mainBlack)
-                .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.08)
+                .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.04)
             
             VStack{
                 Text("iceBreakrrr")
-                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.07))
+                    .font(.custom("Georgia-BoldItalic", size: geoReader.size.height * 0.04))
                     .bold()
                     .foregroundColor(Color.iceBreakrrrBlue)
                 
@@ -58,13 +64,17 @@ struct SignUpView: View {
                     .multilineTextAlignment(.center)
                     .padding(.bottom,2)
                 
-                Text("Create Account To get started now!")
-                    .foregroundColor(.white)
-                    .bold()
-                    .font(.system(size: geoReader.size.height * 0.03))
+//                Text("Create Account To get started now!")
+//                    .foregroundColor(.white)
+//                    .bold()
+//                    .font(.system(size: geoReader.size.height * 0.03))
             }
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.17)
-            
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.12)
+   
+        }
+    }
+    
+    private func bodySection(for geoReader: GeometryProxy) -> some View {
             VStack{
                 EmailPasswordLoginView(email: $email, password: $password, confirmPassword: $confirmPassword, signInErrorMessage: $signInErrorMessage, displayConfirmPassword: $displayConfirmPassword)
                 
@@ -73,7 +83,7 @@ struct SignUpView: View {
                     .padding(.top,geoReader.size.height * 0.01)
                     .foregroundColor(.white)
             }
-            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.47)
+            .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.05)
         }
     }
     
@@ -82,9 +92,9 @@ struct SignUpView: View {
             LogInItems(isSignInPage: false)
             
         }
-        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.35)
+        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.25)
     }
-}
+
 
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
