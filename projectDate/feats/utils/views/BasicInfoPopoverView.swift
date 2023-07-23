@@ -15,7 +15,6 @@ struct BasicInfoPopoverView: View {
     @Binding var profileImage: UIImage
     @Binding var showingBasicInfoPopover: Bool
     @Binding var showingInstructionsPopover: Bool
-    @Binding var isSearchingForRoom: Bool
     
     @ObservedObject var viewModel = LiveViewModel()
     
@@ -214,7 +213,6 @@ struct BasicInfoPopoverView: View {
             
             Button(action: {
                 showingBasicInfoPopover.toggle()
-               // isSearchingForRoom.toggle()
                 
             }) {
                 Text("Got it")
@@ -437,6 +435,6 @@ struct BasicInfoPopoverView: View {
 
 struct BasicInfoPopoverView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender", currentRoomId: "")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true), isSearchingForRoom: .constant(false))
+        BasicInfoPopoverView(userProfile: .constant(ProfileModel(id: "", fullName: "", location: "", gender: "Pick gender", messageThreadIds: [], speedDateIds: [], fcmTokens: [], preferredGender: "Pick gender", currentRoomId: "")), profileImage: .constant(UIImage()), showingBasicInfoPopover: .constant(false), showingInstructionsPopover: .constant(true))
     }
 }

@@ -89,7 +89,7 @@ struct SignInView: View {
         VStack{
             LogInItems(isSignInPage: true)
         }
-        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.25)
+        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.15)
     }
 
 struct SignInView_Previews: PreviewProvider {

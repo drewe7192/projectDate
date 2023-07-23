@@ -24,18 +24,18 @@ struct MotherView: View {
             switch viewRouter.currentPage {
             case .homePage :
                 TabView(selection: $tabSelection) {
-                    LiveView(tabSelection: $tabSelection, showAlert: $showAlert)
-                        .tabItem{
-                            Label("Live", systemImage: "livephoto")
-                        }.tag(1)
-                        .onReceive(timer) { time in
-                            if timeRemaining > 0 && tabSelection == 1 {
-                                timeRemaining -= 1
-                            }else if timeRemaining == 0 && tabSelection == 1 {
-                                showAlert = true
-                                timeRemaining += 10
-                            }
-                        }
+//                    LiveView(tabSelection: $tabSelection, showAlert: $showAlert)
+//                        .tabItem{
+//                            Label("Live", systemImage: "livephoto")
+//                        }.tag(1)
+//                        .onReceive(timer) { time in
+//                            if timeRemaining > 0 && tabSelection == 1 {
+//                                timeRemaining -= 1
+//                            }else if timeRemaining == 0 && tabSelection == 1 {
+//                                showAlert = true
+//                                timeRemaining += 10
+//                            }
+//                        }
 //                    EventsView()
 //                        .tabItem{
 //                            Label("Events", systemImage: "calendar")

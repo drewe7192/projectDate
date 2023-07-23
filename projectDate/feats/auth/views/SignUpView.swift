@@ -92,7 +92,7 @@ struct SignUpView: View {
             LogInItems(isSignInPage: false)
             
         }
-        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.25)
+        .position(x: geoReader.frame(in: .local).midX, y: geoReader.size.height * 0.15)
     }
 
 

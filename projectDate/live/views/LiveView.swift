@@ -25,7 +25,9 @@ struct LiveView: View {
     @State private var hasPeerJoined = false
     @State private var emptyRooms: [RoomModel] = []
     @State private var lookForRoom: Bool = false
-    @State private var isSearchingForRoom: Bool = false
+    @State private var isPeerWantsToJoin: Bool = true
+    @State private var category: String = ""
+    
     
     var body: some View {
         NavigationView{
@@ -40,14 +42,21 @@ struct LiveView: View {
                             FacetimeView(liveViewModel: viewModel, launchJoinRoom: $launchJoinRoom, hasPeerJoined: $hasPeerJoined, lookForRoom: $lookForRoom)
                             
                             if !hasPeerJoined {
-                                loadingIcon(for: geoReader)
+                               if isPeerWantsToJoin {
+                                   incomingProfile(for: geoReader)
+                               } else {
+                                   loadingIcon(for: geoReader)
+                               }
                             }
+        
                         }
                         .disabled(self.showHamburgerMenu ? true : false)
                         
                         headerSection(for: geoReader)
                             .padding(.leading, geoReader.size.width * 0.25)
                             .padding(.top,10)
+                        
+                                   
                     }
                     
                     //Display hamburgerMenu
@@ -61,10 +70,11 @@ struct LiveView: View {
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                 .onAppear {
                     getAllData()
+                    viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
                     getAvailableRoom()
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {
-                    BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover, isSearchingForRoom: $isSearchingForRoom)
+                    BasicInfoPopoverView(userProfile: $viewModel.userProfile,profileImage: $viewModel.profileImage,showingBasicInfoPopover: $showingBasicInfoPopover, showingInstructionsPopover: $showingInstructionsPopover)
                 }
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text("Unable to connect"), message: Text("Cant find a friend at this time. Please try again or go to connect page"), primaryButton: .default(Text("Try again")), secondaryButton: .default(Text("connect page"), action: routeToConnectView))
@@ -253,6 +263,58 @@ struct LiveView: View {
                 self.heartSizeChanged.toggle()
                 self.textOpacityChanged.toggle()
             }
+        }
+    }
+    
+    private func incomingProfile(for geoReader: GeometryProxy) -> some View {
+        VStack{
+            if !viewModel.matchProfileImages.isEmpty {
+                Image(uiImage: viewModel.matchProfileImages[0])
+                    .resizable()
+                    .cornerRadius(20)
+                    .frame(width: 200, height: 200)
+                    .background(.black.opacity(0.2))
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(Circle())
+            }
+            
+            Text("Wants to meet")
+                .font(.system(size: 30))
+                .foregroundColor(.white)
+            
+            HStack{
+                Button(action: {
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                            alertFor1v1SpeedMeet.toggle()
+//                                        }
+                }) {
+                    Text("Connect")
+                        .bold()
+                        .frame(width: 150, height: 70)
+                        .background(Color.mainGrey)
+                        .foregroundColor(.iceBreakrrrBlue)
+                        .font(.system(size: 24))
+                        .cornerRadius(20)
+                        .shadow(radius: 8, x: 10, y:10)
+                }
+                
+                Button(action: {
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                            alertFor1v1SpeedMeet.toggle()
+//                                        }
+                }) {
+                    Text("Nope")
+                        .bold()
+                        .frame(width: 150, height: 70)
+                        .background(Color.red)
+                        .foregroundColor(.iceBreakrrrBlue)
+                        .font(.system(size: 24))
+                        .cornerRadius(20)
+                        .shadow(radius: 8, x: 10, y:10)
+                }
+            }
+      
+            
         }
     }
     

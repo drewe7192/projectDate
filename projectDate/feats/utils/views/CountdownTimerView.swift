@@ -21,58 +21,78 @@ struct CountdownTimerView: View {
     @State private var profilesToMessage: [ProfileModel] = []
     @State private var tokens: [String] = []
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
     let db = Firestore.firestore()
     
     var body: some View {
         VStack{
-            if speedDates.isEmpty {
-                Text("Swipe for SpeedDates")
-                //normal styling for button
-                    .multilineTextAlignment(.center)
-                    .font(.title.bold())
-                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
-                    .background(Color.mainGrey)
-                    .foregroundColor(Color.iceBreakrrrBlue)
-                    .cornerRadius(geoReader.size.width * 0.05)
-                    .shadow(radius: 10, x: 3, y: 10)
-                    .opacity(0.3)
-            }
-            else if isTimeEnded {
-                Text("Missed your window!")
-                //normal styling for button
-                    .multilineTextAlignment(.center)
-                    .font(.title.bold())
-                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
-                    .background(Color.mainGrey)
-                    .foregroundColor(Color.iceBreakrrrBlue)
-                    .cornerRadius(geoReader.size.width * 0.05)
-                    .shadow(radius: 10, x: 3, y: 10)
-                    .opacity(0.3)
-                
-            } else{
-                Text(
-                    //just the display
-                    (isStartNow ? "Start Now!": "") +
-                    (isStartNow ? "" : displayCountdown()))
-                //main logic for countdown
-                .onReceive(timer) { _ in
-                    if timeRemaining > 0 {
-                        timeRemaining -= 1
-                    } else if timeRemaining == 0 {
-                        isStartNow = true
-                    }
+            Text(
+                //just the display
+                (isStartNow ? "Start Now!": "") +
+                (isStartNow ? "" : "\(displayCountdown()) left to reply"))
+            //main logic for countdown
+            .onReceive(timer) { _ in
+                if timeRemaining > 0 {
+                    timeRemaining -= 1
+                } else if timeRemaining == 0 {
+                    isStartNow = true
                 }
-                //normal styling for button
-                .multilineTextAlignment(.center)
-                .font(.title.bold())
-                .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
-                .background(Color.mainGrey)
-                .foregroundColor(Color.iceBreakrrrBlue)
-                .cornerRadius(geoReader.size.width * 0.05)
-                .shadow(radius: 10, x: 3, y: 10)
-                .opacity(isStartNow ? 1 : 0.3)
             }
+                            .multilineTextAlignment(.center)
+                            .font(.title2)
+                            .frame(width: geoReader.size.width * 0.5, height: geoReader.size.height * 0.1)
+                            .foregroundColor(Color.iceBreakrrrBlue)
+                            .cornerRadius(geoReader.size.width * 0.05)
+                            .opacity(isStartNow ? 1 : 0.3)
+            
+            
+//            if speedDates.isEmpty {
+//                Text("Swipe for SpeedDates")
+//                //normal styling for button
+//                    .multilineTextAlignment(.center)
+//                    .font(.title.bold())
+//                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+//                    .background(Color.mainGrey)
+//                    .foregroundColor(Color.iceBreakrrrBlue)
+//                    .cornerRadius(geoReader.size.width * 0.05)
+//                    .shadow(radius: 10, x: 3, y: 10)
+//                    .opacity(0.3)
+//            }
+//            else if isTimeEnded {
+//                Text("Missed your window!")
+//                //normal styling for button
+//                    .multilineTextAlignment(.center)
+//                    .font(.title.bold())
+//                    .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+//                    .background(Color.mainGrey)
+//                    .foregroundColor(Color.iceBreakrrrBlue)
+//                    .cornerRadius(geoReader.size.width * 0.05)
+//                    .shadow(radius: 10, x: 3, y: 10)
+//                    .opacity(0.3)
+//
+//            } else{
+//                Text(
+//                    //just the display
+//                    (isStartNow ? "Start Now!": "") +
+//                    (isStartNow ? "" : displayCountdown()))
+//                //main logic for countdown
+//                .onReceive(timer) { _ in
+//                    if timeRemaining > 0 {
+//                        timeRemaining -= 1
+//                    } else if timeRemaining == 0 {
+//                        isStartNow = true
+//                    }
+//                }
+//                //normal styling for button
+//                .multilineTextAlignment(.center)
+//                .font(.title.bold())
+//                .frame(width: geoReader.size.width * 0.95, height: geoReader.size.height * 0.1)
+//                .background(Color.mainGrey)
+//                .foregroundColor(Color.iceBreakrrrBlue)
+//                .cornerRadius(geoReader.size.width * 0.05)
+//                .shadow(radius: 10, x: 3, y: 10)
+//                .opacity(isStartNow ? 1 : 0.3)
+//            }
         }
     }
     
