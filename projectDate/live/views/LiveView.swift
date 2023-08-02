@@ -69,7 +69,7 @@ struct LiveView: View {
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                 .onAppear {
-                    getAllData()
+                   // getAllData()
                     viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
                     getAvailableRoom()
                 }
@@ -87,13 +87,13 @@ struct LiveView: View {
         self.tabSelection = 3
     }
     
-    private func getAllData() {
-        getProfileAndRecords() {(getProfileId) -> Void in
-            if getProfileId != "" {
-                viewModel.saveMessageToken()
-            }
-        }
-    }
+//    private func getAllData() {
+//        getProfileAndRecords() {(getProfileId) -> Void in
+//            if getProfileId != "" {
+//                viewModel.saveMessageToken()
+//            }
+//        }
+//    }
     
     private func getAvailableRoom(){
         viewModel.getActiveSessions() {(activeSessions) -> Void in
@@ -111,30 +111,30 @@ struct LiveView: View {
         }
     }
     
-    private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
-        if viewModel.userProfile.id == "" {
-            viewModel.getUserProfile(){(profileId) -> Void in
-                if profileId != "" {
-                    //get profileImage
-                    viewModel.getStorageFile(profileId: profileId)
-                } else {
-                    viewModel.createUserProfile() {(createdUserProfileId) -> Void in
-                        if createdUserProfileId != "" {
-                            let user = Auth.auth().currentUser?.email ?? ""
-                            
-                            // for apple sign in
-                            if !user.contains("appleid") {
-                                showingBasicInfoPopover.toggle()
-                            }else {
-                                viewModel.userProfile.gender = "male"
-                            }
-                        }
-                        completed(createdUserProfileId)
-                    }
-                }
-            }
-        }
-    }
+//    private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
+//        if viewModel.userProfile.id == "" {
+//            viewModel.getUserProfile(){(profileId) -> Void in
+//                if profileId != "" {
+//                    //get profileImage
+//                    viewModel.getStorageFile(profileId: profileId)
+//                } else {
+//                    viewModel.createUserProfile() {(createdUserProfileId) -> Void in
+//                        if createdUserProfileId != "" {
+//                            let user = Auth.auth().currentUser?.email ?? ""
+//
+//                            // for apple sign in
+//                            if !user.contains("appleid") {
+//                                showingBasicInfoPopover.toggle()
+//                            }else {
+//                                viewModel.userProfile.gender = "male"
+//                            }
+//                        }
+//                        completed(createdUserProfileId)
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     private func headerSection(for geoReader: GeometryProxy) -> some View {
         ZStack{
@@ -195,6 +195,7 @@ struct LiveView: View {
                                     .aspectRatio(contentMode: .fill)
                                     .clipShape(Circle())
                                 
+                                Image(systemName: "person.circle")
                                 Image(systemName: "person.circle")
                                     .resizable()
                                     .cornerRadius(20)

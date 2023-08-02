@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import Firebase
 
 struct MatchView: View {
     @EnvironmentObject var viewRouter: ViewRouter
@@ -29,6 +30,8 @@ struct MatchView: View {
     @State private var timeRemaining: Int = 86400
     @State private var raiseEmptyAlert: Bool = false
     @State private var imageIndex: Int = 0
+   // @State private var showingInstructionsPopover: Bool = false
+    @State private var showingBasicInfoPopover: Bool = false
     
     //let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -67,7 +70,7 @@ struct MatchView: View {
                             potentialProfiles(for: geoReader)
                                 .popover(isPresented: $showMatchPopover) {
                                     matchPopover(for: geoReader, imageIndex: self.imageIndex)
-                                        .interactiveDismissDisabled()
+                                        //.interactiveDismissDisabled()
                                 }
                         }
                         
@@ -86,23 +89,25 @@ struct MatchView: View {
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
                 .onAppear{
-                    viewModel.getUserProfile(){(profileId) -> Void in
-                        if profileId != "" {
-                            viewModel.getStorageFile(profileId: profileId)
-                            viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
-                            //                                                viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
-                            //                                                    if !matchRecordsPreviousWeek.isEmpty {
-                            //                                                        viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
-                            //                                                            if !matchProfiles.isEmpty{
-                            //                                                                viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
-                            //                                                            }
-                            //                                                        }
-                            //                                                    } else {
-                            //                                                        self.isNoMatches.toggle()
-                            //                                                    }
-                            //                                                }
-                        }
-                    }
+                    getAllData()
+                    viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
+//                    viewModel.getUserProfile(){(profileId) -> Void in
+//                        if profileId != "" {
+//                            viewModel.getStorageFile(profileId: profileId)
+//                            viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
+//                            //                                                viewModel.getMatchRecordsForPreviousWeek() {(matchRecordsPreviousWeek) -> Void in
+//                            //                                                    if !matchRecordsPreviousWeek.isEmpty {
+//                            //                                                        viewModel.getProfiles(matchRecords: matchRecordsPreviousWeek) {(matchProfiles) -> Void in
+//                            //                                                            if !matchProfiles.isEmpty{
+//                            //                                                                viewModel.getMatchStorageFiles(matchProfiles: matchProfiles)
+//                            //                                                            }
+//                            //                                                        }
+//                            //                                                    } else {
+//                            //                                                        self.isNoMatches.toggle()
+//                            //                                                    }
+//                            //                                                }
+//                        }
+//                    }
                 }
 //                .onReceive(timer) { time in
 //                    if isSent{
@@ -513,6 +518,39 @@ struct MatchView: View {
                     .font(.system(size: 20))
                     .foregroundColor(.white)
                     .opacity(0.3)
+            }
+        }
+    }
+    
+    private func getAllData() {
+        getProfileAndRecords() {(getProfileId) -> Void in
+            if getProfileId != "" {
+                viewModel.saveMessageToken()
+            }
+        }
+    }
+    
+    private func getProfileAndRecords(completed: @escaping (_ getProfileId: String) -> Void) {
+        if viewModel.userProfile.id == "" {
+            viewModel.getUserProfile(){(profileId) -> Void in
+                if profileId != "" {
+                    //get profileImage
+                    viewModel.getStorageFile(profileId: profileId)
+                } else {
+                    viewModel.createUserProfile() {(createdUserProfileId) -> Void in
+                        if createdUserProfileId != "" {
+                            let user = Auth.auth().currentUser?.email ?? ""
+                            
+                            // for apple sign in
+                            if !user.contains("appleid") {
+                                showingBasicInfoPopover.toggle()
+                            }else {
+                                viewModel.userProfile.gender = "male"
+                            }
+                        }
+                        completed(createdUserProfileId)
+                    }
+                }
             }
         }
     }

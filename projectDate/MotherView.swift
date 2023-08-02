@@ -43,7 +43,7 @@ struct MotherView: View {
                     MatchView()
                         .tabItem{
                             Label("Connect", systemImage: "point.3.connected.trianglepath.dotted")
-                        }.tag(3)
+                        }.tag(1)
 //                    MessageHomeView()
 //                        .tabItem{
 //                            Label("Discover", systemImage: "globe")
@@ -51,7 +51,7 @@ struct MotherView: View {
                     SettingsView()
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")
-                        }.tag(5)
+                        }.tag(2)
                 }
                 .frame(height: geoReader.size.height * 1.07)
                 
