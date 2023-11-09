@@ -24,30 +24,26 @@ struct MotherView: View {
             switch viewRouter.currentPage {
             case .homePage :
                 TabView(selection: $tabSelection) {
-//                    LiveView(tabSelection: $tabSelection, showAlert: $showAlert)
-//                        .tabItem{
-//                            Label("Live", systemImage: "livephoto")
-//                        }.tag(1)
-//                        .onReceive(timer) { time in
-//                            if timeRemaining > 0 && tabSelection == 1 {
-//                                timeRemaining -= 1
-//                            }else if timeRemaining == 0 && tabSelection == 1 {
-//                                showAlert = true
-//                                timeRemaining += 10
-//                            }
-//                        }
-//                    EventsView()
-//                        .tabItem{
-//                            Label("Events", systemImage: "calendar")
-//                        }.tag(2)
-                    MatchView()
-                        .tabItem{
-                            Label("Connect", systemImage: "point.3.connected.trianglepath.dotted")
-                        }.tag(1)
-//                    MessageHomeView()
-//                        .tabItem{
-//                            Label("Discover", systemImage: "globe")
-//                        }.tag(4)
+                    //                    LiveView(tabSelection: $tabSelection, showAlert: $showAlert)
+                    //                        .tabItem{
+                    //                            Label("Live", systemImage: "livephoto")
+                    //                        }.tag(1)
+                    //                        .onReceive(timer) { time in
+                    //                            if timeRemaining > 0 && tabSelection == 1 {
+                    //                                timeRemaining -= 1
+                    //                            }else if timeRemaining == 0 && tabSelection == 1 {
+                    //                                showAlert = true
+                    //                                timeRemaining += 10
+                    //                            }
+                    //                        }
+                    //                    EventsView()
+                    //                        .tabItem{
+                    //                            Label("Events", systemImage: "calendar")
+                    //                        }.tag(2)
+                    //                    MessageHomeView()
+                    //                        .tabItem{
+                    //                            Label("Discover", systemImage: "globe")
+                    //                        }.tag(4)
                     SettingsView()
                         .tabItem{
                             Label("Settings", systemImage: "gearshape")
@@ -63,8 +59,6 @@ struct MotherView: View {
                 ConfirmationView(confirmationText: "New card Created")
             case .failedPage:
                 FailedView()
-            case .matchPage:
-                MatchView()
             case .scheduleSpeedDatePage:
                 ScheduleSpeedDateView()
             case .speedDateConfirmationPage:
@@ -74,10 +68,11 @@ struct MotherView: View {
             }
         }
     }
-}
-
-struct MotherView_Previews: PreviewProvider {
-    static var previews: some View {
-        MotherView().environmentObject(ViewRouter())
+    
+    struct MotherView_Previews: PreviewProvider {
+        static var previews: some View {
+            MotherView().environmentObject(ViewRouter())
+        }
     }
+    
 }

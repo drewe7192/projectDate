@@ -12,7 +12,7 @@ import FirebaseAuth
 
 class ViewRouter: ObservableObject {
     static let shared = ViewRouter()
-    @Published var currentPage: Route = .signUpPage
+    @Published var currentPage: Route = .homePage
 
     init(){
         run()
@@ -33,7 +33,6 @@ enum Route {
     case homePage
     case confirmationPage
     case failedPage
-    case matchPage
     case scheduleSpeedDatePage
     case speedDateConfirmationPage
     case speedDateEndedPage

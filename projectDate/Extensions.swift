@@ -47,19 +47,6 @@ extension DragGesture.Value {
     }
 }
 
-extension Array where Element == CardModel {
-    func cardOffset(cardId: Int) -> CGFloat {
-        // done really get this logic
-        CGFloat(count - 1 - cardId) * 8
-    }
-    
-    func cardWidth(in geometry: GeometryProxy,
-                   cardId: Int) -> CGFloat {
-        // what does this have to do with width? 
-        geometry.size.width - cardOffset(cardId: cardId)
-    }
-}
-
 extension Array {
     public func unique<T:Hashable>(by: ((Element) -> (T)))  -> [Element] {
         var set = Set<T>() //the unique list kept in a Set for fast retrieval
