@@ -1036,7 +1036,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IceBreakrrr;
+				INFOPLIST_KEY_CFBundleDisplayName = "The Opener";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
@@ -1045,6 +1045,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1077,7 +1078,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IceBreakrrr;
+				INFOPLIST_KEY_CFBundleDisplayName = "The Opener";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
@@ -1086,6 +1087,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1231,9 +1233,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				kind = versionRange;
-				maximumVersion = 10.0.0;
-				minimumVersion = 9.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
 			};
 		};
 		7731738328CE2F6500B8885B /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
