@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct ProfileView: View {
-    let participant: ProfileModel
+   // let participant: ProfileModel
     @StateObject var viewModel = ProfileViewModel()
     
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
-                ProfileInfoOverlay(participant: participant)
+                ProfileInfoOverlay()
                     .padding(.top, geoReader.size.height * 0.15)
                 
                 VStack{
@@ -74,6 +74,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(participant: MockService.profileSampleData)
+        ProfileView()
     }
 }

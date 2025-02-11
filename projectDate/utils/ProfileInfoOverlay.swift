@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ProfileInfoOverlay: View {
-    let participant: ProfileModel
-    
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
@@ -21,11 +19,11 @@ struct ProfileInfoOverlay: View {
                     .opacity(0.5)
                 
                 VStack(alignment: .leading){
-                    Text(participant.fullName)
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding()
+//                    Text(participant.fullName)
+//                        .font(.title)
+//                        .bold()
+//                        .foregroundColor(.white)
+//                        .padding()
                     
                     ScrollView{
                         VStack{
@@ -109,6 +107,6 @@ struct ProfileInfoOverlay: View {
 
 struct ProfileInfoOverlay_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileInfoOverlay(participant: MockService.profileSampleData)
+        ProfileInfoOverlay()
     }
 }

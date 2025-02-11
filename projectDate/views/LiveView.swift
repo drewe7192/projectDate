@@ -70,7 +70,7 @@ struct LiveView: View {
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY )
                 .onAppear {
                    // getAllData()
-                    viewModel.getMatchStorageFiles(matchProfiles: MockService.profilesSampleData)
+//                    viewModel.getMatchStorageFiles()
                     getAvailableRoom()
                 }
                 .popover(isPresented: $showingBasicInfoPopover) {

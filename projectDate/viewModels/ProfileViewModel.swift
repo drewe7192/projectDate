@@ -8,11 +8,11 @@
 import Foundation
 
 class ProfileViewModel: ObservableObject {
-    @Published var person: ProfileModel = MockService.profileSampleData
+//    @Published var person: ProfileModel = MockService.profileSampleData
     
     init(forPreview: Bool = false) {
         if forPreview {
-            person = MockService.profileSampleData
+         //   person = MockService.profileSampleData
 
         }
     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PreviewProfileView: View {
     var body: some View {
-       ProfileView(participant: MockService.profileSampleData)
+       ProfileView()
     }
 }
 
