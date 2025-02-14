@@ -68,9 +68,9 @@
 /* Begin PBXFileReference section */
 		770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDateRelease.entitlements; sourceTree = "<group>"; };
 		775E062F28C72B450082C27E /* projectDate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDate.entitlements; sourceTree = "<group>"; };
-		7766CEC62D5B3F2100B9BC6C /* ProjectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7766CEC72D5B3F2100B9BC6C /* ProjectDateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectDateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7766CEC82D5B3F2100B9BC6C /* ProjectDateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectDateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7766CEC62D5B3F2100B9BC6C /* ProjectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ProjectDate.app; path = "/Users/dotz3r0/prj/projectDate/build/Debug-iphoneos/ProjectDate.app"; sourceTree = "<absolute>"; };
+		7766CEC72D5B3F2100B9BC6C /* ProjectDateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ProjectDateTests.xctest; path = "/Users/dotz3r0/prj/projectDate/build/Debug-iphoneos/ProjectDate.app/PlugIns/ProjectDateTests.xctest"; sourceTree = "<absolute>"; };
+		7766CEC82D5B3F2100B9BC6C /* ProjectDateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ProjectDateUITests.xctest; path = "/Users/dotz3r0/prj/projectDate/build/Debug-iphoneos/ProjectDateUITests-Runner.app/PlugIns/ProjectDateUITests.xctest"; sourceTree = "<absolute>"; };
 		7766CF3B2D5B3F7300B9BC6C /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		77C3D4FF289910CE0088554F /* projectDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectDateApp.swift; sourceTree = "<group>"; };
 		77C3D503289910CF0088554F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -179,9 +179,6 @@
 				77C3D4FE289910CE0088554F /* projectDate */,
 				77C3D50F289910CF0088554F /* projectDateTests */,
 				77C3D519289910CF0088554F /* projectDateUITests */,
-				7766CEC62D5B3F2100B9BC6C /* ProjectDate.app */,
-				7766CEC72D5B3F2100B9BC6C /* ProjectDateTests.xctest */,
-				7766CEC82D5B3F2100B9BC6C /* ProjectDateUITests.xctest */,
 				7766CF3B2D5B3F7300B9BC6C /* .gitignore */,
 			);
 			sourceTree = "<group>";
