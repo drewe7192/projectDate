@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import HMSSDK
+import FirebaseMessaging
 
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
@@ -231,19 +232,46 @@ extension Date {
   }
 }
 
-//extension RolesModel {
-//    init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        let throwables = try values.decode([Throwable<RoleModel>].self, forKey: .roles)
-//        roles = throwables.compactMap { try? $0.result.get() }
-//
-//        throwables.forEach {
-//            switch $0.result {
-//            case .success(let role):
-//                roles.append(role)
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
-//}
+extension AppDelegate: MessagingDelegate {
+    //prints the device token
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        let deviceToken:[String: String] = ["token": fcmToken ?? ""]
+         print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
+    }
+}
+
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    //Notification Center
+    //This is where all the notification actions are handled
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+        
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+        
+        // Change this to your preferred presentation option
+        completionHandler([[.banner, .badge, .sound]])
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID from userNotificationCenter didReceive: \(messageID)")
+        }
+        completionHandler()
+    }
+}

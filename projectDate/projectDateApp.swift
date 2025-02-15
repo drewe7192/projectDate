@@ -16,15 +16,14 @@ import FirebaseAuth
 import FirebaseFirestoreSwift
 import BackgroundTasks
 
-@available(iOS 16.0, *)
 @main
 struct projectDateApp: App {
     
     init(){
-        //Initializing Firebase
         FirebaseApp.configure()
     }
-    //Linking App Delegate to your App
+
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var viewRouter = ViewRouter()
     @Environment(\.scenePhase) private var phase
@@ -33,7 +32,7 @@ struct projectDateApp: App {
         WindowGroup {
             MotherView().environmentObject(viewRouter)
         }
-        .onChange(of: phase) { newPhase in
+        .onChange(of: phase) {oldValue, newPhase in
             switch newPhase {
             case .background: runBackgroundTasks()
             default: break
@@ -102,55 +101,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
             annotation: options[UIApplication.OpenURLOptionsKey.annotation]
         )
         return GIDSignIn.sharedInstance.handle(url)
-    }
-}
-
-extension AppDelegate: MessagingDelegate {
-    //prints the device token
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        let deviceToken:[String: String] = ["token": fcmToken ?? ""]
-        // print("Device token: ", deviceToken) // This token can be used for testing notifications on FCM
-    }
-}
-
-@available(iOS 10, *)
-extension AppDelegate : UNUserNotificationCenterDelegate {
-    //Notification Center
-    //This is where all the notification actions are handled
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-        }
-        
-        //print(userInfo)
-        
-        // Change this to your preferred presentation option
-        completionHandler([[.banner, .badge, .sound]])
-    }
-    
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        
-    }
-    
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
-        
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID from userNotificationCenter didReceive: \(messageID)")
-        }
-        
-        //  print(userInfo)
-        completionHandler()
     }
 }
 
