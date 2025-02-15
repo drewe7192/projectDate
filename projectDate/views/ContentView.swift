@@ -93,7 +93,7 @@ struct ContentView: View {
     
     struct MotherView_Previews: PreviewProvider {
         static var previews: some View {
-            MotherView().environmentObject(ViewRouter())
+            ContentView().environmentObject(ViewRouter())
         }
     }
     
