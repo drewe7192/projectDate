@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct MotherView: View {
+struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @State private var tabSelection = 1
     @State private var timeRemaining = 10
     @State private var showAlert: Bool = false
+    @Environment(\.scenePhase) private var phase
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     //Change the menuBar color to white
@@ -50,6 +51,12 @@ struct MotherView: View {
                         }.tag(2)
                 }
                 .frame(height: geoReader.size.height * 1.07)
+                .onChange(of: phase) {oldValue, newPhase in
+                    switch newPhase {
+                    case .background: runBackgroundTasks()
+                    default: break
+                    }
+                }
                 
             case .signUpPage :
                 SignUpView()
@@ -67,6 +74,21 @@ struct MotherView: View {
                 SpeedDateEndedPage()
             }
         }
+    }
+    
+    func notifyPeerInRoom() {
+        @StateObject var viewModel = LiveViewModel()
+        
+    // calling the viewModel will return a purple error about StateObject
+        viewModel.getUserProfileForBackground() {(profile) -> Void in
+            if !profile.fcmTokens.isEmpty {
+                viewModel.checkForPeer(userProfileBackground: profile)
+            }
+        }
+    }
+
+    public func runBackgroundTasks(){
+        notifyPeerInRoom()
     }
     
     struct MotherView_Previews: PreviewProvider {
