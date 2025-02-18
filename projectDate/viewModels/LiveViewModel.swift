@@ -6,14 +6,14 @@
 //
 
 import Foundation
-
 import Firebase
 import FirebaseCore
-import FirebaseFirestore
+import FirebaseAnalytics
 import FirebaseAuth
-import FirebaseFirestoreSwift
+// import FirebaseFirestoreSwift
 import FirebaseStorage
 import UIKit
+import FirebaseFirestore
 import FirebaseMessaging
 
 class LiveViewModel: ObservableObject {

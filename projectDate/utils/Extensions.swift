@@ -96,6 +96,10 @@ extension UIImage {
 
 extension FacetimeView {
     class VideoViewModel: ObservableObject, HMSUpdateListener{
+        func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer]) {
+            
+        }
+        
         @Published var addVideoView: ((_ videoView: HMSVideoTrack) -> ())?
         @Published var removeVideoView: ((_ videoView: HMSVideoTrack) -> ())?
 

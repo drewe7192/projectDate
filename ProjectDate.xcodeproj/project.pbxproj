@@ -68,9 +68,9 @@
 /* Begin PBXFileReference section */
 		770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDateRelease.entitlements; sourceTree = "<group>"; };
 		775E062F28C72B450082C27E /* projectDate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDate.entitlements; sourceTree = "<group>"; };
-		7766CEC62D5B3F2100B9BC6C /* ProjectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ProjectDate.app; path = "/Users/dotz3r0/prj/projectDate/build/Debug-iphoneos/ProjectDate.app"; sourceTree = "<absolute>"; };
-		7766CEC72D5B3F2100B9BC6C /* ProjectDateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ProjectDateTests.xctest; path = "/Users/dotz3r0/prj/projectDate/build/Debug-iphoneos/ProjectDate.app/PlugIns/ProjectDateTests.xctest"; sourceTree = "<absolute>"; };
-		7766CEC82D5B3F2100B9BC6C /* ProjectDateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = ProjectDateUITests.xctest; path = "/Users/dotz3r0/prj/projectDate/build/Debug-iphoneos/ProjectDateUITests-Runner.app/PlugIns/ProjectDateUITests.xctest"; sourceTree = "<absolute>"; };
+		775EC41C2D6336750040680B /* ProjectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		775EC41D2D6336750040680B /* ProjectDateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectDateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		775EC41E2D6336750040680B /* ProjectDateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectDateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7766CF3B2D5B3F7300B9BC6C /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		77C3D4FF289910CE0088554F /* projectDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = projectDateApp.swift; sourceTree = "<group>"; };
 		77C3D503289910CF0088554F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -180,6 +180,9 @@
 				77C3D50F289910CF0088554F /* projectDateTests */,
 				77C3D519289910CF0088554F /* projectDateUITests */,
 				7766CF3B2D5B3F7300B9BC6C /* .gitignore */,
+				775EC41C2D6336750040680B /* ProjectDate.app */,
+				775EC41D2D6336750040680B /* ProjectDateTests.xctest */,
+				775EC41E2D6336750040680B /* ProjectDateUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -286,7 +289,7 @@
 				770E60D929F8E461005DDE79 /* FirebaseStorageCombine-Community */,
 			);
 			productName = projectDate;
-			productReference = 7766CEC62D5B3F2100B9BC6C /* ProjectDate.app */;
+			productReference = 775EC41C2D6336750040680B /* ProjectDate.app */;
 			productType = "com.apple.product-type.application";
 		};
 		77C3D50B289910CF0088554F /* ProjectDateTests */ = {
@@ -304,7 +307,7 @@
 			);
 			name = ProjectDateTests;
 			productName = projectDateTests;
-			productReference = 7766CEC72D5B3F2100B9BC6C /* ProjectDateTests.xctest */;
+			productReference = 775EC41D2D6336750040680B /* ProjectDateTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		77C3D515289910CF0088554F /* ProjectDateUITests */ = {
@@ -322,7 +325,7 @@
 			);
 			name = ProjectDateUITests;
 			productName = projectDateUITests;
-			productReference = 7766CEC82D5B3F2100B9BC6C /* ProjectDateUITests.xctest */;
+			productReference = 775EC41E2D6336750040680B /* ProjectDateUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -810,7 +813,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.0.0;
+				minimumVersion = 10.29.0;
 			};
 		};
 		7731738328CE2F6500B8885B /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
@@ -825,8 +828,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/100mslive/100ms-ios-sdk";
 			requirement = {
-				kind = exactVersion;
-				version = 0.9.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.17.0;
 			};
 		};
 		77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {

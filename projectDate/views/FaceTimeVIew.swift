@@ -54,27 +54,27 @@ struct FacetimeView: View {
                                 videoOptions(for: geoReader)
                             }
                         }
-                        .onReceive(timer) { time in
-                            if videoSDK.tracks.count == 2 {
-                                hasPeerJoined = true
-                                if timeRemaining > 0 {
-                                    timeRemaining -= 1
-                                } else if timeRemaining == 0 {
-                                    endActiveRoom() {(peersRemoved) -> Void in
-                                            if peersRemoved != "" {
-                                                viewRouter.currentPage = .speedDateEndedPage
-                                            }
-                                        }
-                                }
-                            }
-                        }
-                        .onChange(of: tapped2) {_ in
-                            if self.timeRemaining < 120 && !isDirty {
-                                self.timeRemaining += 120
-                                self.isDirty = true
-                            }
-                            
-                        }
+//                        .onReceive(timer) { time in
+//                            if videoSDK.tracks.count == 2 {
+//                                hasPeerJoined = true
+//                                if timeRemaining > 0 {
+//                                    timeRemaining -= 1
+//                                } else if timeRemaining == 0 {
+//                                    endActiveRoom() {(peersRemoved) -> Void in
+//                                            if peersRemoved != "" {
+//                                                viewRouter.currentPage = .speedDateEndedPage
+//                                            }
+//                                        }
+//                                }
+//                            }
+//                        }
+//                        .onChange(of: tapped2) {_ in
+//                            if self.timeRemaining < 120 && !isDirty {
+//                                self.timeRemaining += 120
+//                                self.isDirty = true
+//                            }
+//                            
+//                        }
                     }
                     
                     //SpeedDate Timer
@@ -94,11 +94,11 @@ struct FacetimeView: View {
             }
             else {
                 Text("")
-                    .onChange(of: launchJoinRoom) { newValue in
-                        //listen()
-                        videoSDK.joinRoom(viewModel: liveViewModel)
-                        isJoining.toggle()
-                    }
+//                    .onChange(of: launchJoinRoom) { newValue in
+//                        //listen()
+//                        videoSDK.joinRoom(viewModel: liveViewModel)
+//                        isJoining.toggle()
+//                    }
             }
         }
     }

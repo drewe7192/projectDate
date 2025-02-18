@@ -20,12 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     //Facebook and Google Auth
     public func application(_ application: UIApplication, open url: URL,
                             options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
-        FacebookCore.ApplicationDelegate.shared.application(
-            application,
-            open: url,
-            sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
-            annotation: options[UIApplication.OpenURLOptionsKey.annotation]
-        )
+//        FacebookCore.ApplicationDelegate.shared.application(
+//            application,
+//            open: url,
+//            sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+//            annotation: options[UIApplication.OpenURLOptionsKey.annotation]
+//        )
         
         return GIDSignIn.sharedInstance.handle(url)
     }
