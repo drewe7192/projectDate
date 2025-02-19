@@ -7,7 +7,7 @@
 import SwiftUI
 import Firebase
 
-struct LiveView: View {
+struct RoomView: View {
         @StateObject var videoSDK = VideoSDK()
         @State var isJoining = false
         
