@@ -8,43 +8,70 @@
 import SwiftUI
 
 struct HomeView: View {
-    @Environment(\.scenePhase) private var phase
-    @State private var tabSelection = 1
-    @State private var timeRemaining = 10
-    @State private var showAlert: Bool = false
-    
-    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+    @State private var isSearching: Bool = false
     var body: some View {
-        LiveView()
-//        LiveView(tabSelection: $tabSelection, showAlert: $showAlert)
-//            .tabItem{
-//                Label("Live", systemImage: "livephoto")
-//            }.tag(1)
-//            .onReceive(timer) { time in
-//                if timeRemaining > 0 && tabSelection == 1 {
-//                    timeRemaining -= 1
-//                }else if timeRemaining == 0 && tabSelection == 1 {
-//                    showAlert = true
-//                    timeRemaining += 10
-//                }
-//            }
-    }
-}
-
-func notifyPeerInRoom() {
-    @StateObject var viewModel = LiveViewModel()
-    
-// calling the viewModel will return a purple error about StateObject
-    viewModel.getUserProfileForBackground() {(profile) -> Void in
-        if !profile.fcmTokens.isEmpty {
-            viewModel.checkForPeer(userProfileBackground: profile)
+        VStack{
+            ZStack{
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(.gray)
+                    .frame(width: 350, height: 100)
+                
+                if isSearching {
+                    HStack{
+                        Text("Searching for Friends")
+                        ProgressView()
+                    }
+                } else {
+                    VStack{
+                        Text("John wants to connect")
+                        HStack{
+                            Button(action: {
+                                
+                            }) {
+                                Text("Connect")
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 5)
+                                    .background(Color.blue)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            }
+                            
+                            Button(action: {
+                                
+                            }) {
+                                Text("Cancel")
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 5)
+                                    .background(Color.blue)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                            }
+                        }
+                    }
+                }
+            }
+            
+            RoomView()
+            
+            Text("Upcoming Events")
+                .bold()
+                .font(.system(size: 30))
+            HStack{
+                ForEach(1...3, id: \.self) {_ in
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(.gray)
+                            .frame(width: 150, height: 160)
+                        VStack{
+                            Text("Title")
+                            Text("Event Date: Jan 3")
+                            
+                        }
+                    }
+                }
+            }
         }
     }
-}
-
-public func runBackgroundTasks(){
-    notifyPeerInRoom()
 }
 
 #Preview {

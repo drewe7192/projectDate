@@ -12,30 +12,34 @@ struct RoomView: View {
         @State var isJoining = false
         
         var body: some View {
-            
             Group {
                 if videoSDK.isJoined {
-                    List {
                         ForEach(videoSDK.tracks, id: \.self) { track in
                             VideoView(track: track)
                                 .frame(height: 300)
                         }
-                    }
                 }
                 else if isJoining {
                     ProgressView()
                 }
                 else {
-                    Text("Join")
-                        .foregroundColor(.white)
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
-                        .background(Color.blue)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .onTapGesture {
-                            videoSDK.joinRoom()
-                            isJoining.toggle()
-                        }
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(.red)
+                            .frame(width: 350, height: 350)
+                        
+                        Text("Join")
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                            .padding(.vertical, 5)
+                            .background(Color.blue)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .onTapGesture {
+                                videoSDK.joinRoom()
+                                isJoining.toggle()
+                            }
+                    }
+                 
                 }
             }
         }
@@ -437,6 +441,6 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
 //        LiveView(tabSelection: .constant(1), showAlert: .constant(false))
         
-        LiveView()
+        RoomView()
     }
 }
