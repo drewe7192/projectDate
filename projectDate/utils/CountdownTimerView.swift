@@ -11,7 +11,6 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct CountdownTimerView: View {
-    @StateObject var viewModel = speedDateViewModel()
     @Binding var timeRemaining: Int
     
     var geoReader: GeometryProxy

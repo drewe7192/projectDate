@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseFirestore
 
 
-class SpeedMeetViewModel: ObservableObject {
+class EventViewModel: ObservableObject {
     @Published var speedMeet: Bool = false
     @Published var speedDates: [SpeedDateModel] = []
     

@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import Combine
 
 struct HomeView: View {
     @State private var isSearching: Bool = false
+   // @State private var names: [String] = ["Bob","John"]
+    @State private var name: String = ""
+    @State var timer: AnyCancellable?
+    
     var body: some View {
         VStack{
             ZStack{
@@ -24,7 +29,10 @@ struct HomeView: View {
                     }
                 } else {
                     VStack{
-                        Text("John wants to connect")
+                        Text("\(self.name) wants to connect")
+                            .id(self.name)
+                            .transition(.opacity.animation(.smooth))
+                            
                         HStack{
                             Button(action: {
                                 
@@ -76,6 +84,21 @@ struct HomeView: View {
                 }
             }
           
+        }
+        .task {
+            startRotation(with: ["Bob","John", "Mitchone"])
+        }
+    }
+    
+    
+    private func startRotation(with names: [String]) {
+        guard !names.isEmpty else { return }
+        
+        var index = 0
+        self.name = names[0]
+        self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
+            index = (index + 1) % names.count
+            self.name = names[index]
         }
     }
 }

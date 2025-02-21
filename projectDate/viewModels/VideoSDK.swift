@@ -15,7 +15,7 @@ class VideoSDK: ObservableObject {
     @Published var isJoined = false
     
     func joinRoom() {
-        let config = HMSConfig(userName:"John Doe", authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MzhkOWM5OWE1MDJjZjdmZDk1NDk0MTEiLCJyb2xlIjoiZmVtYWxlIiwicm9vbV9pZCI6IjY0NmExYWE4M2FjNGIzMDE1YjQ5MGI5YyIsInVzZXJfaWQiOiJhOTM3Njg2NS0zMTdkLTRjYzAtYjQ1Mi02NzNkZWM3YjU4YWIiLCJleHAiOjE3NDAwMzc2MzEsImp0aSI6IjE3MDE0NGYwLTRjNzAtNDAzMy1iYmQzLTViMDY3MWYzNmMzYiIsImlhdCI6MTczOTk1MTIzMSwiaXNzIjoiNjM4ZDljOTlhNTAyY2Y3ZmQ5NTQ5NDBmIiwibmJmIjoxNzM5OTUxMjMxLCJzdWIiOiJhcGkifQ.eIvjGKumk5PPoxGWnLwlnVNIOTh1Wspa89T58aQa-j4")
+        let config = HMSConfig(userName:"John Doe", authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MzhkOWM5OWE1MDJjZjdmZDk1NDk0MTEiLCJyb2xlIjoiZmVtYWxlIiwicm9vbV9pZCI6IjY0NmExYWE4M2FjNGIzMDE1YjQ5MGI5YyIsInVzZXJfaWQiOiIyYWE3N2FmZC01NThkLTQ5NTEtYTNmMC04ODJhN2QxMzJhMDUiLCJleHAiOjE3NDAyNDc3MjksImp0aSI6Ijc2ZWI4MGMyLTIxYjMtNDQ5Ny05NzZjLTdjM2ZkNzFiNzQ3MiIsImlhdCI6MTc0MDE2MTMyOSwiaXNzIjoiNjM4ZDljOTlhNTAyY2Y3ZmQ5NTQ5NDBmIiwibmJmIjoxNzQwMTYxMzI5LCJzdWIiOiJhcGkifQ.wCcHMiSKugpjro-tT9vF-LRgidTjRi83R28BfQBNmjY")
         hmsSDK.join(config: config, delegate: self)
     }
 }
