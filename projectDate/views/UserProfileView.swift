@@ -60,20 +60,12 @@ struct CircleImageView: View{
 struct Buttons: View {
     var body: some View{
         VStack{
-            NavigationLink(destination: PreviewProfileView()) {
-                Text("PreviewProfile")
-            }.frame(width: 300, height: 60)
-                .background(Color.black)
-                .foregroundColor(.white)
-                .cornerRadius(30)
-            
-            NavigationLink(destination: EditProfileView()){
+            NavigationLink(destination: EditUserProfileView()){
                 Text("Edit Profile")
             }.frame(width: 300, height: 60)
                 .background(Color.gray)
                 .foregroundColor(.white)
                 .cornerRadius(30)
-            
             
             NavigationLink(destination: SettingsView()) {
                 Text("Settings")

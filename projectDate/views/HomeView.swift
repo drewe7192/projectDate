@@ -12,9 +12,10 @@ struct HomeView: View {
     var body: some View {
         VStack{
             ZStack{
-                RoundedRectangle(cornerRadius: 25)
+                RoundedRectangle(cornerRadius: 40)
                     .fill(.gray)
-                    .frame(width: 350, height: 100)
+                    .opacity(0.3)
+                    .frame(width: 350, height: 80)
                 
                 if isSearching {
                     HStack{
@@ -55,21 +56,26 @@ struct HomeView: View {
             
             Text("Upcoming Events")
                 .bold()
-                .font(.system(size: 30))
-            HStack{
-                ForEach(1...3, id: \.self) {_ in
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 25)
-                            .fill(.gray)
-                            .frame(width: 150, height: 160)
-                        VStack{
-                            Text("Title")
-                            Text("Event Date: Jan 3")
-                            
+                .font(.system(size: 25))
+            ScrollView(.horizontal) {
+                
+                HStack{
+                    ForEach(1...3, id: \.self) {_ in
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 25)
+                                .fill(.gray)
+                                .opacity(0.3)
+                                .frame(width: 200, height: 200)
+                            VStack{
+                                Text("Title")
+                                Text("Event Date: Jan 3")
+                                
+                            }
                         }
                     }
                 }
             }
+          
         }
     }
 }

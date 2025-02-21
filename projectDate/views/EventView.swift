@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SpeedDateHomeView: View {
+struct EventView: View {
     let viewModel: LiveViewModel
     let placeInLine: Int
     @Binding var timeRemainingSpeedDateHomeView: Int
@@ -136,14 +136,14 @@ struct SpeedDateHomeView: View {
     private func buttonSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             //button
-            NavigationLink(destination: FacetimeView(liveViewModel: viewModel, launchJoinRoom: $isTimeEnded, hasPeerJoined: $isTimeEnded, lookForRoom: $isTimeEnded), label: {
-//                CountdownTimerView(timeRemaining: $timeRemainingSpeedDateHomeView,
-//                                   geoReader: geoReader,
-//                                   isStartNow: $isStartVideoNow,
-//                                   isTimeEnded: $isTimeEnded,
-//                                   speedDates: viewModel.speedDates
-//                )
-            }).disabled(isStartVideoNow == true ? false: true)
+//            NavigationLink(destination: FacetimeView(liveViewModel: viewModel, launchJoinRoom: $isTimeEnded, hasPeerJoined: $isTimeEnded, lookForRoom: $isTimeEnded), label: {
+////                CountdownTimerView(timeRemaining: $timeRemainingSpeedDateHomeView,
+////                                   geoReader: geoReader,
+////                                   isStartNow: $isStartVideoNow,
+////                                   isTimeEnded: $isTimeEnded,
+////                                   speedDates: viewModel.speedDates
+////                )
+//            }).disabled(isStartVideoNow == true ? false: true)
         }
     }
     
@@ -249,11 +249,11 @@ struct SpeedDateHomeView: View {
     }
 }
 
-struct SpeedDateHomeView_Previews: PreviewProvider {
+struct EventView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                SpeedDateHomeView(viewModel: LiveViewModel(), placeInLine: 0, timeRemainingSpeedDateHomeView: .constant(9), isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
+                EventView(viewModel: LiveViewModel(), placeInLine: 0, timeRemainingSpeedDateHomeView: .constant(9), isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }

@@ -61,7 +61,6 @@ struct SettingsView: View {
                         }
                         .sheet(isPresented: $showSheet){
                             // Pick an image from the photo library:
-                            ImagePicker(sourceType: .photoLibrary, selectedImage: $viewModel.profileImage)
                             
                             //  If you wish to take a photo from camera instead:
                             // ImagePicker(sourceType: .camera, selectedImage: self.$image)
@@ -72,11 +71,6 @@ struct SettingsView: View {
                             .padding(.top,10)
                     }
                     
-                    if self.showHamburgerMenu {
-                        MenuView(showHamburgerMenu: self.$showHamburgerMenu)
-                            .frame(width: geoReader.size.width/2)
-                            .padding(.trailing,geoReader.size.width * 0.5)
-                    }
                 }
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
@@ -236,23 +230,6 @@ struct SettingsView: View {
                 }
                 
                 HStack{
-                    NavigationLink(destination: NotificationsView(), label: {
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(Color.black.opacity(0.6))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                            
-                            Image(systemName: "bell")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fill)
-                        }
-                    })
-                    
                     NavigationLink(destination: SettingsView()) {
                         if(!viewModel.profileImage.size.width.isZero){
                             ZStack{

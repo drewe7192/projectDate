@@ -14,9 +14,7 @@ struct ProfileView: View {
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
-                ProfileInfoOverlay()
-                    .padding(.top, geoReader.size.height * 0.15)
-                
+    
                 VStack{
                     HStack{
                         sideBar(for: geoReader)

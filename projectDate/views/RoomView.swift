@@ -25,8 +25,9 @@ struct RoomView: View {
                 else {
                     ZStack{
                         RoundedRectangle(cornerRadius: 25)
-                            .fill(.red)
-                            .frame(width: 350, height: 350)
+                            .fill(.gray)
+                            .opacity(0.3)
+                            .frame(width: 370, height: 400)
                         
                         Text("Join")
                             .foregroundColor(.white)
