@@ -13,6 +13,8 @@ struct HomeView: View {
    // @State private var names: [String] = ["Bob","John"]
     @State private var name: String = ""
     @State var timer: AnyCancellable?
+    @State var isGuestJoining = false
+    @EnvironmentObject var videoManager: VideoManager
     
     var body: some View {
         VStack{
@@ -35,7 +37,7 @@ struct HomeView: View {
                             
                         HStack{
                             Button(action: {
-                                
+                                self.isGuestJoining.toggle()
                             }) {
                                 Text("Connect")
                                     .foregroundColor(.white)
@@ -46,7 +48,7 @@ struct HomeView: View {
                             }
                             
                             Button(action: {
-                                
+                                videoManager.leaveRoom()
                             }) {
                                 Text("Cancel")
                                     .foregroundColor(.white)
@@ -60,7 +62,7 @@ struct HomeView: View {
                 }
             }
             
-            RoomView()
+            RoomView(isGuestJoining: self.$isGuestJoining)
             
             Text("Upcoming Events")
                 .bold()

@@ -8,19 +8,33 @@ import SwiftUI
 import Firebase
 
 struct RoomView: View {
-    @StateObject var videoSDK = VideoSDK()
-    @State var isJoining = false
+    @Binding var isGuestJoining: Bool
+    @EnvironmentObject var videoManager: VideoManager
+    @State var isUserJoining = false
     
     var body: some View {
         VStack {
-            if videoSDK.isJoined {
-                ForEach(videoSDK.tracks, id: \.self) { track in
-                    VideoView(track: track)
-                        .frame(width: 370, height: 400)
-                        .clipShape(RoundedRectangle(cornerRadius: 25))
+            if videoManager.isJoined {
+                ForEach(videoManager.tracks, id: \.self) { track in
+                    if isGuestJoining {
+                        ZStack{
+                            VideoView(track: videoManager.tracks[1])
+                                .frame(width: 370, height: 400)
+                                .background(.gray)
+                                .clipShape(RoundedRectangle(cornerRadius: 25))
+                            
+                            VideoView(track: videoManager.tracks[0])
+                                .frame(width: 100, height: 100)
+                                .position(x: 320, y: 520)
+                        }
+                    } else {
+                        VideoView(track: track)
+                            .frame(width: 370, height: 400)
+                            .clipShape(RoundedRectangle(cornerRadius: 25))
+                    }
                 }
             }
-            else if isJoining {
+            else if isUserJoining {
                 ZStack{
                     RoundedRectangle(cornerRadius: 25)
                         .fill(.gray)
@@ -32,8 +46,10 @@ struct RoomView: View {
             }
         }
         .task {
-            videoSDK.joinRoom()
-            isJoining.toggle()
+            if videoManager.tracks.isEmpty {
+                isUserJoining.toggle()
+                videoManager.joinRoom()
+            }
         }
     }
     //    @StateObject public var viewModel = LiveViewModel()
@@ -434,6 +450,6 @@ struct RoomView_Previews: PreviewProvider {
     static var previews: some View {
         //        LiveView(tabSelection: .constant(1), showAlert: .constant(false))
         
-        RoomView()
+        RoomView(isGuestJoining: .constant(false))
     }
 }

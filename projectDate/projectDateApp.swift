@@ -34,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
 @main
 struct projectDateApp: App {
     @StateObject var viewRouter = ViewRouter()
+    @StateObject var videoManager = VideoManager()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init(){
@@ -42,7 +43,9 @@ struct projectDateApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(viewRouter)
+            ContentView()
+                .environmentObject(viewRouter)
+                .environmentObject(videoManager)
         }
     }
 }

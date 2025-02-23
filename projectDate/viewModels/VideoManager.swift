@@ -8,19 +8,24 @@
 import Foundation
 import HMSSDK
 
-class VideoSDK: ObservableObject {
+class VideoManager: ObservableObject {
     
     let hmsSDK = HMSSDK.build()
     @Published var tracks = [HMSVideoTrack]()
     @Published var isJoined = false
     
     func joinRoom() {
-        let config = HMSConfig(userName:"John Doe", authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MzhkOWM5OWE1MDJjZjdmZDk1NDk0MTEiLCJyb2xlIjoiZmVtYWxlIiwicm9vbV9pZCI6IjY0NmExYWE4M2FjNGIzMDE1YjQ5MGI5YyIsInVzZXJfaWQiOiIyYWE3N2FmZC01NThkLTQ5NTEtYTNmMC04ODJhN2QxMzJhMDUiLCJleHAiOjE3NDAyNDc3MjksImp0aSI6Ijc2ZWI4MGMyLTIxYjMtNDQ5Ny05NzZjLTdjM2ZkNzFiNzQ3MiIsImlhdCI6MTc0MDE2MTMyOSwiaXNzIjoiNjM4ZDljOTlhNTAyY2Y3ZmQ5NTQ5NDBmIiwibmJmIjoxNzQwMTYxMzI5LCJzdWIiOiJhcGkifQ.wCcHMiSKugpjro-tT9vF-LRgidTjRi83R28BfQBNmjY")
+        let config = HMSConfig(userName:"John Doe", authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoyLCJ0eXBlIjoiYXBwIiwiYXBwX2RhdGEiOm51bGwsImFjY2Vzc19rZXkiOiI2MzhkOWM5OWE1MDJjZjdmZDk1NDk0MTEiLCJyb2xlIjoiZmVtYWxlIiwicm9vbV9pZCI6IjY0NmExYWE4M2FjNGIzMDE1YjQ5MGI5YyIsInVzZXJfaWQiOiIxZGMyZjM2Mi05ZjIwLTRkNjAtYjU4Yi0zMjllODM5OTA3NDQiLCJleHAiOjE3NDAzNzk2NjcsImp0aSI6IjM2OGMyMDljLWM3OTAtNDg0NS1iYjRkLTM0ZDU2OTVhNzQwZiIsImlhdCI6MTc0MDI5MzI2NywiaXNzIjoiNjM4ZDljOTlhNTAyY2Y3ZmQ5NTQ5NDBmIiwibmJmIjoxNzQwMjkzMjY3LCJzdWIiOiJhcGkifQ.0cmW2xcA-ab69TxtGrt1nL96DntgEN29vbhP25uutCI")
         hmsSDK.join(config: config, delegate: self)
+    }
+    
+    func leaveRoom() {
+        hmsSDK.leave()
+      //  tracks.removeAll()
     }
 }
 
-extension VideoSDK: HMSUpdateListener {
+extension VideoManager: HMSUpdateListener {
     func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer]) {
         
     }

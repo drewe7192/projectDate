@@ -8,6 +8,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var videoManager: VideoManager
     
     init() {
         //Change the menuBar color to white
@@ -30,6 +31,8 @@ struct ContentView: View {
     }
     
     #Preview {
-        ContentView().environmentObject(ViewRouter())
+        ContentView()
+            .environmentObject(ViewRouter())
+            .environmentObject(VideoManager())
     }
 }

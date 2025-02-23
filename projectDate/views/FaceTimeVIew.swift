@@ -10,7 +10,7 @@ import HMSSDK
 
 struct FacetimeView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @StateObject var videoSDK = VideoSDK()
+    @StateObject var videoManager = VideoManager()
     @StateObject var videoViewModel = VideoViewModel()
     
     @State var isJoining = false
@@ -32,25 +32,25 @@ struct FacetimeView: View {
     
     var body: some View {
         GeometryReader { geoReader in
-            if videoSDK.isJoined {
+            if videoManager.isJoined {
                 ZStack{
-                    ForEach(Array(videoSDK.tracks.enumerated().reversed()), id: \.offset) {index, track in
+                    ForEach(Array(videoManager.tracks.enumerated().reversed()), id: \.offset) {index, track in
                         ZStack{
                             VideoView(track: track)
                                 .frame(width: index == 0 ?
-                                       videoSDK.tracks.count == 2 ? geoReader.size.width * 0.3 : geoReader.size.width :
+                                       videoManager.tracks.count == 2 ? geoReader.size.width * 0.3 : geoReader.size.width :
                                         geoReader.size.width,
                                        height: index == 0 ?
-                                       videoSDK.tracks.count == 2 ? geoReader.size.height * 0.3 : geoReader.size.height :
+                                       videoManager.tracks.count == 2 ? geoReader.size.height * 0.3 : geoReader.size.height :
                                         geoReader.size.height)
                                 .position(x: index == 0 ?
-                                          videoSDK.tracks.count == 2 ? geoReader.size.width * 0.75 : geoReader.frame(in: .local).midX :
+                                          videoManager.tracks.count == 2 ? geoReader.size.width * 0.75 : geoReader.frame(in: .local).midX :
                                             geoReader.frame(in: .local).midX,
                                           y: index == 0 ?
-                                          videoSDK.tracks.count == 2 ? geoReader.size.height * 0.3 :  geoReader.frame(in: .local).midY :
+                                          videoManager.tracks.count == 2 ? geoReader.size.height * 0.3 :  geoReader.frame(in: .local).midY :
                                             geoReader.frame(in: .local).midY)
                             
-                            if index == 0 && videoSDK.tracks.count == 2 {
+                            if index == 0 && videoManager.tracks.count == 2 {
                                 videoOptions(for: geoReader)
                             }
                         }
@@ -195,8 +195,8 @@ struct FacetimeView: View {
     private func listen() {
         self.videoViewModel.addVideoView = {
             track in
-            videoSDK.hmsSDK.localPeer?.localAudioTrack()?.setMute(false)
-            self.localTrack = videoSDK.hmsSDK.localPeer?.localVideoTrack() as! HMSVideoTrack
+            videoManager.hmsSDK.localPeer?.localAudioTrack()?.setMute(false)
+            self.localTrack = videoManager.hmsSDK.localPeer?.localVideoTrack() as! HMSVideoTrack
             self.friendTrack = track
         }
         
