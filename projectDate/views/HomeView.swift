@@ -15,6 +15,7 @@ struct HomeView: View {
     @State var timer: AnyCancellable?
     @State var isGuestJoining = false
     @EnvironmentObject var videoManager: VideoManager
+    @EnvironmentObject var profileViewModel: ProfileViewModel
     
     var body: some View {
         VStack{
@@ -107,5 +108,7 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .environmentObject(VideoManager())
+        .environmentObject(ProfileViewModel())
 }
 

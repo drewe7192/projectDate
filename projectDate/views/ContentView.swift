@@ -8,7 +8,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var videoManager: VideoManager
+    @StateObject var videoManager = VideoManager()
+    @StateObject var profileViewModel = ProfileViewModel()
     
     init() {
         //Change the menuBar color to white
@@ -20,6 +21,8 @@ struct ContentView: View {
             switch viewRouter.currentPage {
             case .homePage :
                 HomeView()
+                    .environmentObject(videoManager)
+                    .environmentObject(profileViewModel)
             case .signUpPage:
                 SignUpView()
             case .signInPage:
@@ -33,6 +36,5 @@ struct ContentView: View {
     #Preview {
         ContentView()
             .environmentObject(ViewRouter())
-            .environmentObject(VideoManager())
     }
 }

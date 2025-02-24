@@ -44,8 +44,8 @@ struct SettingsView: View {
                                     .bold()
                                     .font(.system(size: geoReader.size.height * 0.05))
                             
-                                imageSection(for: geoReader)
-                                    .padding(geoReader.size.height * 0.03)
+//                                imageSection(for: geoReader)
+//                                    .padding(geoReader.size.height * 0.03)
                                 
                             Spacer()
                                 .frame(height: geoReader.size.width * 0.07)
@@ -75,11 +75,11 @@ struct SettingsView: View {
                 .ignoresSafeArea(edges: .top)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.frame(in: .local).midY)
                 .onAppear{
-                    viewModel.getUserProfile(){(profileId) -> Void in
-                        if profileId != "" {
-                            viewModel.getStorageFile(profileId: profileId)
-                        }
-                    }
+//                    viewModel.getUserProfile(){(profileId) -> Void in
+//                        if profileId != "" {
+//                            viewModel.getStorageFile(profileId: profileId)
+//                        }
+//                    }
                 }
                 .alert(isPresented: $isDeletingAccount){
                     Alert(
@@ -91,39 +91,39 @@ struct SettingsView: View {
         }
     }
     
-    private func imageSection(for geoReader: GeometryProxy) -> some View {
-        VStack{
-            Image(uiImage: viewModel.profileImage)
-                .resizable()
-                .cornerRadius(50)
-                .frame(width: 200, height: 200)
-                .background(Color.black.opacity(0.2))
-                .aspectRatio(contentMode: .fill)
-                .clipShape(Circle())
-            
-            if(editInfo){
-                Button(action: {
-                    showSheet = true
-                }) {
-                    Text("Upload Image")
-                        .font(.headline)
-                        .frame(width: geoReader.size.width * 0.6)
-                        .frame(height: geoReader.size.height * 0.04)
-                        .background(Color.mainGrey)
-                        .cornerRadius(40)
-                        .shadow(radius: 10, x: 10, y: 10)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                }
-            }
-        }
-    }
+//    private func imageSection(for geoReader: GeometryProxy) -> some View {
+//        VStack{
+//            Image(uiImage: viewModel.profileImage)
+//                .resizable()
+//                .cornerRadius(50)
+//                .frame(width: 200, height: 200)
+//                .background(Color.black.opacity(0.2))
+//                .aspectRatio(contentMode: .fill)
+//                .clipShape(Circle())
+//            
+//            if(editInfo){
+//                Button(action: {
+//                    showSheet = true
+//                }) {
+//                    Text("Upload Image")
+//                        .font(.headline)
+//                        .frame(width: geoReader.size.width * 0.6)
+//                        .frame(height: geoReader.size.height * 0.04)
+//                        .background(Color.mainGrey)
+//                        .cornerRadius(40)
+//                        .shadow(radius: 10, x: 10, y: 10)
+//                        .foregroundColor(.white)
+//                        .padding(.horizontal, 20)
+//                }
+//            }
+//        }
+//    }
     
     private func buttonsSection(for geoReader: GeometryProxy) -> some View {
         VStack{
             Button(action: {
                 editInfo.toggle()
-                saveAllInfo()
+              //  saveAllInfo()
             }) {
                 Text(editInfo ? "Save Profile" : "Edit Profile")
                     .foregroundColor(.white)
@@ -183,16 +183,16 @@ struct SettingsView: View {
        
     }
     
-    private func saveAllInfo(){
-        if(editInfo == false){
-            viewModel.updateUserProfile(updatedProfile: viewModel.userProfile) { (profileId) -> Void in
-                if profileId != "" {
-                    uploadStorageFile(image: viewModel.profileImage, profileId: viewModel.userProfile.id)
-                }
-            }
-          
-        }
-    }
+//    private func saveAllInfo(){
+//        if(editInfo == false){
+//            viewModel.updateUserProfile(updatedProfile: viewModel.userProfile) { (profileId) -> Void in
+//                if profileId != "" {
+//                    uploadStorageFile(image: viewModel.profileImage, profileId: viewModel.userProfile.id)
+//                }
+//            }
+//          
+//        }
+//    }
     
     public func uploadStorageFile(image: UIImage, profileId: String){
         let storageRef = storage.reference().child("\(String(describing: profileId))"+"/images/image.jpg")
@@ -229,46 +229,46 @@ struct SettingsView: View {
                         .foregroundColor(Color.iceBreakrrrBlue)
                 }
                 
-                HStack{
-                    NavigationLink(destination: SettingsView()) {
-                        if(!viewModel.profileImage.size.width.isZero){
-                            ZStack{
-                                Text("")
-                                    .cornerRadius(20)
-                                    .frame(width: 40, height: 40)
-                                    .background(.black.opacity(0.2))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                                
-                                Image(uiImage: viewModel.profileImage)
-                                    .resizable()
-                                    .cornerRadius(20)
-                                    .frame(width: 30, height: 30)
-                                    .background(.black.opacity(0.2))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                            }
-                        } else {
-                            ZStack{
-                                Text("")
-                                    .cornerRadius(20)
-                                    .frame(width: 40, height: 40)
-                                    .background(.black.opacity(0.6))
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                                
-                                Image(systemName: "person.circle")
-                                    .resizable()
-                                    .cornerRadius(20)
-                                    .frame(width: 20, height: 20)
-                                    .background(Color.black.opacity(0.6))
-                                    .foregroundColor(.white)
-                                    .aspectRatio(contentMode: .fill)
-                                    .clipShape(Circle())
-                            }
-                        }
-                    }
-                }
+//                HStack{
+//                    NavigationLink(destination: SettingsView()) {
+//                        if(!viewModel.profileImage.size.width.isZero){
+//                            ZStack{
+//                                Text("")
+//                                    .cornerRadius(20)
+//                                    .frame(width: 40, height: 40)
+//                                    .background(.black.opacity(0.2))
+//                                    .aspectRatio(contentMode: .fill)
+//                                    .clipShape(Circle())
+//                                
+//                                Image(uiImage: viewModel.profileImage)
+//                                    .resizable()
+//                                    .cornerRadius(20)
+//                                    .frame(width: 30, height: 30)
+//                                    .background(.black.opacity(0.2))
+//                                    .aspectRatio(contentMode: .fill)
+//                                    .clipShape(Circle())
+//                            }
+//                        } else {
+//                            ZStack{
+//                                Text("")
+//                                    .cornerRadius(20)
+//                                    .frame(width: 40, height: 40)
+//                                    .background(.black.opacity(0.6))
+//                                    .aspectRatio(contentMode: .fill)
+//                                    .clipShape(Circle())
+//                                
+//                                Image(systemName: "person.circle")
+//                                    .resizable()
+//                                    .cornerRadius(20)
+//                                    .frame(width: 20, height: 20)
+//                                    .background(Color.black.opacity(0.6))
+//                                    .foregroundColor(.white)
+//                                    .aspectRatio(contentMode: .fill)
+//                                    .clipShape(Circle())
+//                            }
+//                        }
+//                    }
+//                }
             }
             .position(x: geoReader.size.width * 0.32, y: geoReader.size.height * 0.08)
             
@@ -305,22 +305,22 @@ struct SettingsView: View {
             .padding(.leading)
             
             if(editInfo){
-                TextField("", text: $viewModel.userProfile.fullName)
-                    .foregroundColor(.black)
-                    .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
-                    .padding()
-                    .background(.white)
-                    .opacity(0.5)
-                    .cornerRadius(geoReader.size.width * 0.03)
-                    .textInputAutocapitalization(.never)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 1)
-                    )
+//                TextField("", text: $viewModel.userProfile.fullName)
+//                    .foregroundColor(.black)
+//                    .frame(width: geoReader.size.width * 0.35, height: geoReader.size.height * 0.005)
+//                    .padding()
+//                    .background(.white)
+//                    .opacity(0.5)
+//                    .cornerRadius(geoReader.size.width * 0.03)
+//                    .textInputAutocapitalization(.never)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: geoReader.size.width * 0.03).stroke(.white, lineWidth: 1)
+//                    )
             }else {
-                Text(viewModel.userProfile.fullName == "" ? "Enter Name" : viewModel.userProfile.fullName)
-                    .foregroundColor(Color.gray)
-                    .font(.system(size: geoReader.size.height * 0.025))
-                    .padding(.trailing,geoReader.size.height * 0.1)
+//                Text(viewModel.userProfile.fullName == "" ? "Enter Name" : viewModel.userProfile.fullName)
+//                    .foregroundColor(Color.gray)
+//                    .font(.system(size: geoReader.size.height * 0.025))
+//                    .padding(.trailing,geoReader.size.height * 0.1)
             }
         }
     }
@@ -334,22 +334,22 @@ struct SettingsView: View {
             .padding(.leading)
             
             
-            Menu {
-                Picker(selection: $viewModel.userProfile.gender) {
-                    ForEach(genderChoices, id: \.self) { choice in
-                        Text("\(choice)")
-                            .tag(choice)
-                            .font(.system(size: geoReader.size.height * 0.04))
-                    }
-                } label: {}
-            } label: {
-                Text("\(viewModel.userProfile.gender)")
-                    .font(.system(size: geoReader.size.height * 0.04))
-            }
-            .padding(.bottom,geoReader.size.height * 0.02)
-            .padding(.trailing,geoReader.size.height * 0.1)
-            .accentColor(.white)
-            .disabled(editInfo == false)
+//            Menu {
+//                Picker(selection: $viewModel.userProfile.gender) {
+//                    ForEach(genderChoices, id: \.self) { choice in
+//                        Text("\(choice)")
+//                            .tag(choice)
+//                            .font(.system(size: geoReader.size.height * 0.04))
+//                    }
+//                } label: {}
+//            } label: {
+////                Text("\(viewModel.userProfile.gender)")
+////                    .font(.system(size: geoReader.size.height * 0.04))
+//            }
+//            .padding(.bottom,geoReader.size.height * 0.02)
+//            .padding(.trailing,geoReader.size.height * 0.1)
+//            .accentColor(.white)
+//            .disabled(editInfo == false)
         }
     }
 }

@@ -206,44 +206,44 @@ struct EventView: View {
 //                    }
 //                })
                 
-                NavigationLink(destination: SettingsView()) {
-                    if(!viewModel.profileImage.size.width.isZero){
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                            
-                            Image(uiImage: viewModel.profileImage)
-                                .resizable()
-                                .cornerRadius(20)
-                                .frame(width: 30, height: 30)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                        }
-                    } else {
-                        ZStack{
-                            Text("")
-                                .cornerRadius(20)
-                                .frame(width: 40, height: 40)
-                                .background(.black.opacity(0.2))
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                            
-                            Image(systemName: "person.circle")
-                                .resizable()
-                                .cornerRadius(20)
-                                .frame(width: 20, height: 20)
-                                .background(Color.black.opacity(0.2))
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(Circle())
-                        }
-                    }
-                }
+//                NavigationLink(destination: SettingsView()) {
+//                    if(!viewModel.profileImage.size.width.isZero){
+//                        ZStack{
+//                            Text("")
+//                                .cornerRadius(20)
+//                                .frame(width: 40, height: 40)
+//                                .background(.black.opacity(0.2))
+//                                .aspectRatio(contentMode: .fill)
+//                                .clipShape(Circle())
+//                            
+//                            Image(uiImage: viewModel.profileImage)
+//                                .resizable()
+//                                .cornerRadius(20)
+//                                .frame(width: 30, height: 30)
+//                                .background(.black.opacity(0.2))
+//                                .aspectRatio(contentMode: .fill)
+//                                .clipShape(Circle())
+//                        }
+//                    } else {
+//                        ZStack{
+//                            Text("")
+//                                .cornerRadius(20)
+//                                .frame(width: 40, height: 40)
+//                                .background(.black.opacity(0.2))
+//                                .aspectRatio(contentMode: .fill)
+//                                .clipShape(Circle())
+//                            
+//                            Image(systemName: "person.circle")
+//                                .resizable()
+//                                .cornerRadius(20)
+//                                .frame(width: 20, height: 20)
+//                                .background(Color.black.opacity(0.2))
+//                                .foregroundColor(.white)
+//                                .aspectRatio(contentMode: .fill)
+//                                .clipShape(Circle())
+//                        }
+//                    }
+//                }
             }
         }
     }

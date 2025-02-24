@@ -6,15 +6,20 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct ProfileModel: Codable, Identifiable  {
+struct ProfileModel: Identifiable {
     var id : String
-    var fullName: String
-    var location: String
+    var name: String
     var gender: String
-    var messageThreadIds: [String]
-    var speedDateIds: [String]
-    var fcmTokens: [String]
-    var preferredGender: String
-    var currentRoomId: String
+    var roomCode: String
+    var profileImage: UIImage
 }
+
+var emptyProfileModel = ProfileModel(
+    id: "",
+    name: "",
+    gender: "",
+    roomCode: "",
+    profileImage: UIImage()
+)

@@ -6,15 +6,32 @@
 //
 
 import Foundation
+import Firebase
+import FirebaseStorage
 
+@MainActor
 class ProfileViewModel: ObservableObject {
-//    @Published var person: ProfileModel = MockService.profileSampleData
+    private let profileService = ProfileService()
+    let storage = Storage.storage()
+    @Published var userProfile: ProfileModel = emptyProfileModel
+    @Published var isNewUser: Bool = false
     
-    init(forPreview: Bool = false) {
-        if forPreview {
-         //   person = MockService.profileSampleData
-
+    public func GetUserProfile() async throws {
+        let userProfile = try await profileService.GetProfile(userId: Auth.auth().currentUser?.uid ?? "")
+        if(userProfile.id != "") {
+            self.userProfile = userProfile
+        } else {
+            if isNewUser {
+                try await CreateUserProfile()
+            }
         }
     }
     
+    public func CreateUserProfile() async throws {
+        let  createdProfile = try await profileService.CreateProfile()
+        
+        if(createdProfile.id != "") {
+            self.userProfile = createdProfile
+        }
+    }
 }

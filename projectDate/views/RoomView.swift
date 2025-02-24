@@ -10,6 +10,7 @@ import Firebase
 struct RoomView: View {
     @Binding var isGuestJoining: Bool
     @EnvironmentObject var videoManager: VideoManager
+    @EnvironmentObject var profileViewModel: ProfileViewModel
     @State var isUserJoining = false
     
     var body: some View {
@@ -46,9 +47,15 @@ struct RoomView: View {
             }
         }
         .task {
-            if videoManager.tracks.isEmpty {
-                isUserJoining.toggle()
-                videoManager.joinRoom()
+            do {
+                try await profileViewModel.GetUserProfile()
+                
+                if videoManager.tracks.isEmpty {
+                    isUserJoining.toggle()
+                    videoManager.joinRoom(roomCode: profileViewModel.userProfile.roomCode)
+                }
+            } catch {
+                // HANDLE ERROR
             }
         }
     }
@@ -448,8 +455,6 @@ struct RoomView: View {
 
 struct RoomView_Previews: PreviewProvider {
     static var previews: some View {
-        //        LiveView(tabSelection: .constant(1), showAlert: .constant(false))
-        
         RoomView(isGuestJoining: .constant(false))
     }
 }

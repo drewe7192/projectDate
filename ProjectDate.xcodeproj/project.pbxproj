@@ -113,6 +113,8 @@
 		77650EE32D58FDC400586676 /* models */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (77650EE62D58FE1200586676 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = models; sourceTree = "<group>"; };
 		77650EE42D58FDCA00586676 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
 		77650EE72D58FFB100586676 /* utils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = utils; sourceTree = "<group>"; };
+		77DB9E832D6B30D700935F69 /* services */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = services; sourceTree = "<group>"; };
+		77DB9E882D6B316B00935F69 /* database */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = database; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,8 @@
 		77C3D4FE289910CE0088554F /* projectDate */ = {
 			isa = PBXGroup;
 			children = (
+				77DB9E882D6B316B00935F69 /* database */,
+				77DB9E832D6B30D700935F69 /* services */,
 				774432A32D5B386400BAF98A /* firebase */,
 				77650EE72D58FFB100586676 /* utils */,
 				77650EE42D58FDCA00586676 /* views */,
@@ -251,6 +255,8 @@
 				77650EE32D58FDC400586676 /* models */,
 				77650EE42D58FDCA00586676 /* views */,
 				77650EE72D58FFB100586676 /* utils */,
+				77DB9E832D6B30D700935F69 /* services */,
+				77DB9E882D6B316B00935F69 /* database */,
 			);
 			name = ProjectDate;
 			packageProductDependencies = (
