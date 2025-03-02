@@ -29,6 +29,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
         
         return GIDSignIn.sharedInstance.handle(url)
     }
+    
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        print("... sceneWillEnterForeground ALWAYS CALLED")
+    }
 }
 
 @main

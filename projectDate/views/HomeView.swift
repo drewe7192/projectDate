@@ -38,7 +38,12 @@ struct HomeView: View {
                             
                         HStack{
                             Button(action: {
-                                self.isGuestJoining.toggle()
+                               // self.isGuestJoining.toggle()
+                                
+                                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
+                                    videoManager.joinRoom(roomCode: pickedUser.roomCode)
+                                }
+                               
                             }) {
                                 Text("Connect")
                                     .foregroundColor(.white)
@@ -89,20 +94,29 @@ struct HomeView: View {
           
         }
         .task {
-            startRotation(with: ["Bob","John", "Mitchone"])
+            do {
+                try await getActiveUsers()
+                startRotation(with: profileViewModel.activeUsers)
+            } catch {
+                // HANDLE ERROR
+            }
         }
     }
     
     
-    private func startRotation(with names: [String]) {
-        guard !names.isEmpty else { return }
+    private func startRotation(with activeProfiles: [ProfileModel]) {
+        guard !activeProfiles.isEmpty else { return }
         
         var index = 0
-        self.name = names[0]
+        self.name = activeProfiles[0].name
         self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
-            index = (index + 1) % names.count
-            self.name = names[index]
+            index = (index + 1) % activeProfiles.count
+            self.name = activeProfiles[index].name
         }
+    }
+    
+    private func getActiveUsers() async throws {
+        try await profileViewModel.GetActiveUsers()
     }
 }
 

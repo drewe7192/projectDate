@@ -13,6 +13,7 @@ struct ProfileModel: Identifiable {
     var name: String
     var gender: String
     var roomCode: String
+    var isActive: Bool
     var profileImage: UIImage
 }
 
@@ -21,5 +22,6 @@ var emptyProfileModel = ProfileModel(
     name: "",
     gender: "",
     roomCode: "",
+    isActive: false,
     profileImage: UIImage()
 )

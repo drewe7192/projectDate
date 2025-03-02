@@ -24,6 +24,7 @@ class ProfileRepository {
             profile.name = documentData["name"] as! String
             profile.gender = documentData["gender"] as! String
             profile.roomCode = documentData["roomCode"] as! String
+            profile.isActive = documentData["isActive"] as! Bool
         }
         return profile
     }
@@ -31,6 +32,36 @@ class ProfileRepository {
     public func Create(newID: String, newProfile: [String: Any]) async throws {
         let docRef = db.collection("profiles").document(newID)
         try await docRef.setData(newProfile)
+    }
+    
+    public func GetActive(userId: String) async throws -> [ProfileModel] {
+        var activeProfiles: [ProfileModel] = []
+        let snapshot = try await db.collection("profiles")
+            .whereField("userId", isNotEqualTo: userId as String)
+            .whereField("isActive", isEqualTo: true as Bool)
+            .limit(to: 10)
+            .getDocuments()
+        
+        snapshot.documents.forEach { documentSnapshot in
+            let documentData = documentSnapshot.data()
+            var profile: ProfileModel = emptyProfileModel
+            
+            profile.id = documentData["id"] as! String
+            profile.name = documentData["name"] as! String
+            profile.gender = documentData["gender"] as! String
+            profile.roomCode = documentData["roomCode"] as! String
+            profile.isActive = documentData["isActive"] as! Bool
+            
+            activeProfiles.append(profile)
+        }
+        return activeProfiles
+    }
+    
+    public func UpdateActiveStatus(profileId: String, isActive: Bool)  async throws {
+        let docRef = db.collection("profiles").document(profileId)
+        try await docRef.updateData([
+            "isActive": isActive
+        ])
     }
 }
 

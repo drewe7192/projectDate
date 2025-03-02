@@ -10,6 +10,7 @@ struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var videoManager = VideoManager()
     @StateObject var profileViewModel = ProfileViewModel()
+    @Environment(\.scenePhase) var scenePhase
     
     init() {
         //Change the menuBar color to white
@@ -23,6 +24,28 @@ struct ContentView: View {
                 HomeView()
                     .environmentObject(videoManager)
                     .environmentObject(profileViewModel)
+                    .onChange(of: scenePhase) { oldPhase, newPhase in
+                                   if newPhase == .active {
+                                       print("Active")
+                                       if profileViewModel.userProfile.id != "" {
+                                           Task{
+                                               try await profileViewModel.UpdateActivityStatus(isActive: true)
+                                           }
+                                         
+                                       }
+                                   } else if newPhase == .inactive {
+                                       print("Inactive")
+                                       if profileViewModel.userProfile.id != "" {
+                                           Task {
+                                               try await
+                                               profileViewModel.UpdateActivityStatus(isActive: false)
+                                           }
+                                       
+                                       }
+                                   } else if newPhase == .background {
+                                       print("Background")
+                                   }
+                               }
             case .signUpPage:
                 SignUpView()
             case .signInPage:

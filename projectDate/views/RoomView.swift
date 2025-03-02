@@ -49,6 +49,8 @@ struct RoomView: View {
         .task {
             do {
                 try await profileViewModel.GetUserProfile()
+//                print("\(String(describing: Auth.auth().currentUser?.uid))")
+//                print("\(profileViewModel.userProfile)")
                 
                 if videoManager.tracks.isEmpty {
                     isUserJoining.toggle()

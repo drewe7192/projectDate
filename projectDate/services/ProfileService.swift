@@ -13,7 +13,7 @@ class ProfileService {
     
     public func GetProfile(userId: String) async throws -> ProfileModel {
         let responseProfile = try await profileRepo.Get(userId: userId)
-        var result = responseProfile
+        let result = responseProfile
         
         return result
     }
@@ -25,6 +25,7 @@ class ProfileService {
             name: Auth.auth().currentUser?.displayName ?? "",
             gender: "",
             roomCode: "",
+            isActive: false,
             profileImage: UIImage()
         )
         
@@ -38,5 +39,16 @@ class ProfileService {
         
         try await profileRepo.Create(newID: newProfile.id, newProfile: docData)
         return newProfile
+    }
+    
+    public func GetActiveUsers(userId: String) async throws -> [ProfileModel] {
+        let responseActiveProfiles = try await profileRepo.GetActive(userId: userId)
+        var results = responseActiveProfiles
+        
+        return results
+    }
+    
+    public func UpdateActivityStatus(profileId: String, isActive: Bool) async throws {
+        try await profileRepo.UpdateActiveStatus(profileId: profileId, isActive: isActive)
     }
 }

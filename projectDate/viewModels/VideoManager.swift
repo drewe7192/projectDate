@@ -16,13 +16,12 @@ class VideoManager: ObservableObject {
     func joinRoom(roomCode: String) {
         hmsSDK.getAuthTokenByRoomCode(roomCode, completion: { authToken, args in
             let config = HMSConfig(userName:"John Doe", authToken: authToken ?? "")
-            
             self.hmsSDK.join(config: config, delegate: self)
         } )
     }
     
     func leaveRoom() {
-        hmsSDK.leave()
+        self.hmsSDK.leave()
     }
 }
 

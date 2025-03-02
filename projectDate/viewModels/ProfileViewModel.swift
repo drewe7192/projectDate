@@ -11,10 +11,12 @@ import FirebaseStorage
 
 @MainActor
 class ProfileViewModel: ObservableObject {
-    private let profileService = ProfileService()
-    let storage = Storage.storage()
     @Published var userProfile: ProfileModel = emptyProfileModel
     @Published var isNewUser: Bool = false
+    @Published var activeUsers: [ProfileModel] = []
+    
+    private let profileService = ProfileService()
+    let storage = Storage.storage()
     
     public func GetUserProfile() async throws {
         let userProfile = try await profileService.GetProfile(userId: Auth.auth().currentUser?.uid ?? "")
@@ -33,5 +35,17 @@ class ProfileViewModel: ObservableObject {
         if(createdProfile.id != "") {
             self.userProfile = createdProfile
         }
+    }
+    
+    public func GetActiveUsers() async throws {
+        let activeUsers = try await profileService.GetActiveUsers(userId: Auth.auth().currentUser?.uid ?? "")
+        
+        if(!activeUsers.isEmpty) {
+            self.activeUsers = activeUsers
+        }
+    }
+    
+    public func UpdateActivityStatus(isActive: Bool) async throws {
+        try await profileService.UpdateActivityStatus(profileId: userProfile.id, isActive: isActive)
     }
 }
