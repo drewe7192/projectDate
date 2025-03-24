@@ -8,7 +8,6 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @StateObject var videoManager = VideoManager()
     @StateObject var profileViewModel = ProfileViewModel()
     @Environment(\.scenePhase) var scenePhase
     
@@ -22,7 +21,6 @@ struct ContentView: View {
             switch viewRouter.currentPage {
             case .homePage :
                 HomeView()
-                    .environmentObject(videoManager)
                     .environmentObject(profileViewModel)
                     .onChange(of: scenePhase) { oldPhase, newPhase in
                                    if newPhase == .active {

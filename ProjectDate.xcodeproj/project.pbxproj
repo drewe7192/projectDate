@@ -37,9 +37,9 @@
 		7731738528CE2F6500B8885B /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738428CE2F6500B8885B /* FacebookCore */; };
 		7731738728CE2F6500B8885B /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738628CE2F6500B8885B /* FacebookLogin */; };
 		7731738928CE2F6500B8885B /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738828CE2F6500B8885B /* FacebookShare */; };
-		77433FE229DBDC6F00D62F31 /* HMSSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 77433FE129DBDC6F00D62F31 /* HMSSDK */; };
 		77626AF628CB1D2F00D1DD9E /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 77626AF528CB1D2F00D1DD9E /* GoogleSignIn */; };
 		77626AF828CB1D2F00D1DD9E /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 77626AF728CB1D2F00D1DD9E /* GoogleSignInSwift */; };
+		77AE81AD2D8D719B007FCB75 /* HMSRoomKit in Frameworks */ = {isa = PBXBuildFile; productRef = 77AE81AC2D8D719B007FCB75 /* HMSRoomKit */; };
 		77C3D500289910CE0088554F /* projectDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3D4FF289910CE0088554F /* projectDateApp.swift */; };
 		77C3D504289910CF0088554F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77C3D503289910CF0088554F /* Assets.xcassets */; };
 		77C3D507289910CF0088554F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77C3D506289910CF0088554F /* Preview Assets.xcassets */; };
@@ -125,7 +125,6 @@
 				770E60AA29F8E461005DDE79 /* FirebaseAnalyticsSwift in Frameworks */,
 				770E60AC29F8E461005DDE79 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				770E60A629F8E461005DDE79 /* FirebaseAnalytics in Frameworks */,
-				77433FE229DBDC6F00D62F31 /* HMSSDK in Frameworks */,
 				770E60D229F8E461005DDE79 /* FirebasePerformance in Frameworks */,
 				770E60D829F8E461005DDE79 /* FirebaseStorage in Frameworks */,
 				770E60BE29F8E461005DDE79 /* FirebaseFirestore in Frameworks */,
@@ -150,6 +149,7 @@
 				770E60A829F8E461005DDE79 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				770E60B229F8E461005DDE79 /* FirebaseAuth in Frameworks */,
 				770E60B629F8E461005DDE79 /* FirebaseCrashlytics in Frameworks */,
+				77AE81AD2D8D719B007FCB75 /* HMSRoomKit in Frameworks */,
 				770E60C229F8E461005DDE79 /* FirebaseFirestoreSwift in Frameworks */,
 				770E60BA29F8E461005DDE79 /* FirebaseDatabaseSwift in Frameworks */,
 				770E60CE29F8E461005DDE79 /* FirebaseMLModelDownloader in Frameworks */,
@@ -265,7 +265,6 @@
 				7731738428CE2F6500B8885B /* FacebookCore */,
 				7731738628CE2F6500B8885B /* FacebookLogin */,
 				7731738828CE2F6500B8885B /* FacebookShare */,
-				77433FE129DBDC6F00D62F31 /* HMSSDK */,
 				770E60A529F8E461005DDE79 /* FirebaseAnalytics */,
 				770E60A729F8E461005DDE79 /* FirebaseAnalyticsOnDeviceConversion */,
 				770E60A929F8E461005DDE79 /* FirebaseAnalyticsSwift */,
@@ -293,6 +292,7 @@
 				770E60D529F8E461005DDE79 /* FirebaseRemoteConfigSwift */,
 				770E60D729F8E461005DDE79 /* FirebaseStorage */,
 				770E60D929F8E461005DDE79 /* FirebaseStorageCombine-Community */,
+				77AE81AC2D8D719B007FCB75 /* HMSRoomKit */,
 			);
 			productName = projectDate;
 			productReference = 775EC41C2D6336750040680B /* ProjectDate.app */;
@@ -369,8 +369,8 @@
 			packageReferences = (
 				77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				7731738328CE2F6500B8885B /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
-				77433FE029DBDC6F00D62F31 /* XCRemoteSwiftPackageReference "100ms-ios-sdk" */,
 				770E60A429F8E461005DDE79 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				77AE81AB2D8D719B007FCB75 /* XCLocalSwiftPackageReference "../100ms-roomkit-ios" */,
 			);
 			productRefGroup = 77C3D4F3289910CD0088554F;
 			projectDirPath = "";
@@ -630,7 +630,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -672,7 +672,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -813,6 +813,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		77AE81AB2D8D719B007FCB75 /* XCLocalSwiftPackageReference "../100ms-roomkit-ios" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../100ms-roomkit-ios";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		770E60A429F8E461005DDE79 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -828,14 +835,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 9.0.0;
-			};
-		};
-		77433FE029DBDC6F00D62F31 /* XCRemoteSwiftPackageReference "100ms-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/100mslive/100ms-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.17.0;
 			};
 		};
 		77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
@@ -999,11 +998,6 @@
 			package = 7731738328CE2F6500B8885B /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookShare;
 		};
-		77433FE129DBDC6F00D62F31 /* HMSSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 77433FE029DBDC6F00D62F31 /* XCRemoteSwiftPackageReference "100ms-ios-sdk" */;
-			productName = HMSSDK;
-		};
 		77626AF528CB1D2F00D1DD9E /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
@@ -1013,6 +1007,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 77626AF428CB1D2F00D1DD9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		77AE81AC2D8D719B007FCB75 /* HMSRoomKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HMSRoomKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

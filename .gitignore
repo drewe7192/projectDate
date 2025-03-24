@@ -22,6 +22,7 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcuserstate
+Package.resolved
 
 ## Obj-C/Swift specific
 *.hmap

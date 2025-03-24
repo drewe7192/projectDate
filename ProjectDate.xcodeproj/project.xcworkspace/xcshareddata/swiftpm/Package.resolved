@@ -1,22 +1,22 @@
 {
-  "originHash" : "7c33d25a2af4df02847eb23b6bc519af865a0b6a39e552fcffe849ade00b4a6d",
+  "originHash" : "79c4f48456e22c80553d452c6c3be9554207b14254d94fcb0b04ac801d3c21fd",
   "pins" : [
     {
-      "identity" : "100ms-ios-analytics-sdk",
+      "identity" : "100ms-noise-cancellation-models-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/100mslive/100ms-ios-analytics-sdk",
+      "location" : "https://github.com/100mslive/100ms-noise-cancellation-models-ios",
       "state" : {
-        "revision" : "ffbd36c153603a3309ad9740d287438c4e89bd40",
-        "version" : "0.0.2"
+        "revision" : "2e763a3a5df9dd25f68a439544da0fabe975e6e1",
+        "version" : "1.0.0"
       }
     },
     {
-      "identity" : "100ms-ios-sdk",
+      "identity" : "100ms-roomkit-models-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/100mslive/100ms-ios-sdk",
+      "location" : "https://github.com/100mslive/100ms-roomkit-models-ios",
       "state" : {
-        "revision" : "d7967cc32f9b39e8e0fbaf26fe5dcd4460563707",
-        "version" : "1.17.0"
+        "revision" : "a05f69ed6cf2a6b9be08e3a1fd30d6d7540fb7e7",
+        "version" : "1.13.2"
       }
     },
     {
@@ -137,6 +137,15 @@
       }
     },
     {
+      "identity" : "jwtdecode.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/auth0/JWTDecode.swift",
+      "state" : {
+        "revision" : "1e153ef009969543191970c66b7c60163c0b4a65",
+        "version" : "3.2.0"
+      }
+    },
+    {
       "identity" : "leveldb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
@@ -146,12 +155,30 @@
       }
     },
     {
+      "identity" : "lottie-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-spm.git",
+      "state" : {
+        "revision" : "8c6edf4f0fa84fe9c058600a4295eb0c01661c69",
+        "version" : "4.5.1"
+      }
+    },
+    {
       "identity" : "nanopb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/nanopb.git",
       "state" : {
         "revision" : "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
         "version" : "2.30910.0"
+      }
+    },
+    {
+      "identity" : "popovers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/100mslive/Popovers",
+      "state" : {
+        "revision" : "f9743225a3d1b8acf080be0b16c8b288588269dc",
+        "version" : "1.0.0"
       }
     },
     {
