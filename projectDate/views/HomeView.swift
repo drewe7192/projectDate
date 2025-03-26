@@ -23,19 +23,24 @@ struct HomeView: View {
             Color.white
                 .ignoresSafeArea()
             VStack{
-              //  header()
+                header()
+                Spacer()
+                quickChat()
                 
                 if !profileViewModel.userProfile.roomCode.isEmpty {
-                      HMSPrebuiltView(roomCode: profileViewModel.userProfile.roomCode)
+                    HMSPrebuiltView(roomCode: profileViewModel.userProfile.roomCode)
+                        .frame(width: 350, height: 380)
+                        .cornerRadius(30)
                 } else {
-                    Text("...Loading")
-                        .font(.system(size: 50))
-                        .bold()
+                    RoundedRectangle(cornerRadius: 25)
+                        .fill(.black)
+                        .frame(width: 350, height: 400)
                 }
-               // footer()
-              //  speedDateTiles()
+                
+                events()
+                Spacer()
+                footer()
             }
-       
         }
         .task {
             do {
@@ -50,102 +55,209 @@ struct HomeView: View {
     
     private func header() -> some View {
         VStack{
-            ZStack{
-                RoundedRectangle(cornerRadius: 40)
-                    .fill(.gray)
-                    .opacity(0.3)
-                    .frame(width: 350, height: 80)
-                
-                if isSearching {
-                    HStack{
-                        Text("Searching for Friends")
-                        ProgressView()
+            HStack{
+                Circle()
+                    .frame(width: 35)
+                    .overlay {
+                        Image(systemName: "person.fill")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.black)
                     }
-                } else {
-                    VStack{
-                        Text("\(self.name) wants to connect")
-                            .id(self.name)
-                            .transition(.opacity.animation(.smooth))
-                        
+                    .padding(.leading)
+                    .foregroundColor(.gray)
+                
+                HStack(spacing: 0){
+                    Text("Hello,")
+                        .font(.title3)
+                        .foregroundColor(.black)
+                    
+                    Text("Drew")
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(.black)
+                }
+                
+                Spacer()
+                
+                
+                Image(systemName: "circle.hexagongrid")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 30)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
+                    .padding(.vertical, 5)
+                    .clipShape(Circle())
+                
+            }
+        }
+    }
+    
+    private func quickChat() -> some View {
+        VStack{
+            RoundedRectangle(cornerRadius: 40)
+                .fill(.gray)
+                .opacity(0.3)
+                .frame(width: 350, height: 60)
+                .overlay {
+                    if isSearching {
                         HStack{
-                            Button(action: {
-                                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
-                                    Task {
-                                        // this removes HMSPreBuiltView and triggers its onDisappear()
-                                        self.roomCode = ""
-                                        // Delay of 7.5 seconds (1 second = 1_000_000_000 nanoseconds)
-                                        try? await Task.sleep(nanoseconds: 7_500_000_000)
-                                        self.roomCode = pickedUser.roomCode
-                                    }
+                            Text("Searching for Friends")
+                                .foregroundColor(.black)
+                            ProgressView()
+                        }
+                    } else {
+                        HStack{
+                            Circle()
+                                .frame(width: 45)
+                                .overlay {
+                                    Image(systemName: "person.fill")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
+                                        .foregroundColor(.black)
                                 }
+                                .padding(.leading)
+                                .foregroundColor(.gray)
+                            
+                            VStack{
+                                Text("\(self.name)")
+                                    .bold()
+                                    .foregroundColor(.black)
                                 
+                                    .id(self.name)
+                                    .transition(.opacity.animation(.smooth))
+                                    .foregroundColor(.black)
                                 
-                                
-                            }) {
-                                Text("Connect")
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 5)
-                                    .background(Color.blue)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                Text("Wants to connect")
+                                    .foregroundColor(.black)
                             }
                             
-                            Button(action: {
+                            Spacer()
+                            
+                            HStack(spacing: -15){
+                                Button(action: {
+                                    if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
+                                        Task {
+                                            // this removes HMSPreBuiltView and triggers its onDisappear()
+                                            self.roomCode = ""
+                                            // Delay of 7.5 seconds (1 second = 1_000_000_000 nanoseconds)
+                                            try? await Task.sleep(nanoseconds: 7_500_000_000)
+                                            self.roomCode = pickedUser.roomCode
+                                        }
+                                    }
+                                    
+                                }) {
+                                    Image(systemName: "checkmark.circle")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(height: 40)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 5)
+                                        .background(Color.green)
+                                        .clipShape(Circle())
+                                }
                                 
-                            }) {
-                                Text("Cancel")
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 5)
-                                    .background(Color.blue)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                Button(action: {
+                                    
+                                }) {
+                                    Image(systemName: "x.circle")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(height: 40)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 5)
+                                        .background(Color.red)
+                                        .clipShape(Circle())
+                                }
                             }
                         }
+                    }
+                }
+        }
+    }
+    
+    private func events() -> some View {
+        VStack{
+            Text("Upcoming Events")
+                .bold()
+                .font(.system(size: 20))
+                .foregroundColor(.black)
+            
+            ScrollView(.horizontal) {
+                HStack{
+                    ForEach(1...3, id: \.self) {_ in
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(.gray)
+                            .opacity(0.3)
+                            .frame(width: 250, height: 110)
+                            .overlay {
+                                VStack{
+                                    Text("Title")
+                                        .foregroundColor(.black)
+                                    
+                                    Text("Event Date: Jan 3")
+                                        .foregroundColor(.black)
+                                    Text("Sarah has one more spot for upcoming event")
+                                        .foregroundColor(.black)
+                                }
+                            }
                     }
                 }
             }
         }
     }
+    
     private func footer() -> some View {
         VStack{
-            if isSettingsView {
-                SettingsView()
-            }
-            
-            Button(action: {
-                isSettingsView.toggle()
-            }) {
-                Text("Settings")
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-                    .padding(.vertical, 5)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-            }
-        }
-    }
-    
-    private func speedDateTiles() -> some View {
-        VStack{
-            Text("Upcoming Events")
-                .bold()
-                .font(.system(size: 25))
-            ScrollView(.horizontal) {
+            HStack{
+                Button(action: {
+                    
+                }){
+                    Image(systemName: "house")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 30)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                        .padding(.vertical, 5)
+                }
                 
-                HStack{
-                    ForEach(1...3, id: \.self) {_ in
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 25)
-                                .fill(.gray)
-                                .opacity(0.3)
-                                .frame(width: 200, height: 200)
-                            VStack{
-                                Text("Title")
-                                Text("Event Date: Jan 3")
-                                
-                            }
-                        }
-                    }
+                Button(action: {
+                    
+                }){
+                    Image(systemName: "bell")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 30)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                        .padding(.vertical, 5)
+                }
+                Button(action: {
+                    
+                }){
+                    Image(systemName: "gear")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 30)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                        .padding(.vertical, 5)
+                }
+                
+                Button(action: {
+                    
+                }){
+                    Image(systemName: "message")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 30)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                        .padding(.vertical, 5)
                 }
             }
         }

@@ -31,9 +31,5 @@ enum Route {
     case signUpPage
     case signInPage
     case homePage
-    case confirmationPage
-    case failedPage
-    case scheduleSpeedDatePage
-    case speedDateConfirmationPage
-    case speedDateEndedPage
+    case settingsPage
 }

@@ -12,46 +12,45 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
     init() {
-        //Change the menuBar color to white
-        UITabBar.appearance().backgroundColor = UIColor.darkGray
+
     }
     
     var body: some View {
-        GeometryReader{geoReader in
-            switch viewRouter.currentPage {
-            case .homePage :
-                HomeView()
-                    .environmentObject(profileViewModel)
-                    .onChange(of: scenePhase) { oldPhase, newPhase in
-                                   if newPhase == .active {
-                                       print("Active")
-                                       if profileViewModel.userProfile.id != "" {
-                                           Task{
-                                               try await profileViewModel.UpdateActivityStatus(isActive: true)
+            GeometryReader{ geoReader in
+                switch viewRouter.currentPage {
+                case .homePage :
+                    HomeView()
+                        .environmentObject(profileViewModel)
+                        .onChange(of: scenePhase) { oldPhase, newPhase in
+                                       if newPhase == .active {
+                                           print("Active")
+                                           if profileViewModel.userProfile.id != "" {
+                                               Task{
+                                                   try await profileViewModel.UpdateActivityStatus(isActive: true)
+                                               }
+                                             
                                            }
-                                         
-                                       }
-                                   } else if newPhase == .inactive {
-                                       print("Inactive")
-                                       if profileViewModel.userProfile.id != "" {
-                                           Task {
-                                               try await
-                                               profileViewModel.UpdateActivityStatus(isActive: false)
+                                       } else if newPhase == .inactive {
+                                           print("Inactive")
+                                           if profileViewModel.userProfile.id != "" {
+                                               Task {
+                                                   try await
+                                                   profileViewModel.UpdateActivityStatus(isActive: false)
+                                               }
+                                           
                                            }
-                                       
+                                       } else if newPhase == .background {
+                                           print("Background")
                                        }
-                                   } else if newPhase == .background {
-                                       print("Background")
                                    }
-                               }
-            case .signUpPage:
-                SignUpView()
-            case .signInPage:
-                SignInView()
-            default:
-                SignInView()
+                case .signUpPage:
+                    SignUpView()
+                case .signInPage:
+                    SignInView()
+                case .settingsPage:
+                    SettingsView()
+                }
             }
-        }
     }
     
     #Preview {
