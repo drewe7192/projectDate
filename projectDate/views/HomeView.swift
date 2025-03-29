@@ -10,6 +10,7 @@ import Combine
 import HMSRoomKit
 
 struct HomeView: View {
+    @Binding var selectedTab: Int
     @State private var isSearching: Bool = false
     @State private var name: String = ""
     @State private var roomCode: String = ""
@@ -39,7 +40,6 @@ struct HomeView: View {
                 
                 events()
                 Spacer()
-                footer()
             }
         }
         .task {
@@ -66,6 +66,9 @@ struct HomeView: View {
                     }
                     .padding(.leading)
                     .foregroundColor(.gray)
+                    .onTapGesture {
+                        selectedTab = 1
+                    }
                 
                 HStack(spacing: 0){
                     Text("Hello,")
@@ -80,11 +83,10 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                
-                Image(systemName: "circle.hexagongrid")
+                Image(systemName: "bell.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: 30)
+                    .frame(height: 40)
                     .foregroundColor(.gray)
                     .padding(.horizontal)
                     .padding(.vertical, 5)
@@ -155,7 +157,7 @@ struct HomeView: View {
                                         .foregroundColor(.white)
                                         .padding(.horizontal)
                                         .padding(.vertical, 5)
-                                        .background(Color.green)
+                                        .background(Color.gray)
                                         .clipShape(Circle())
                                 }
                                 
@@ -169,7 +171,7 @@ struct HomeView: View {
                                         .foregroundColor(.white)
                                         .padding(.horizontal)
                                         .padding(.vertical, 5)
-                                        .background(Color.red)
+                                        .background(Color.gray)
                                         .clipShape(Circle())
                                 }
                             }
@@ -192,7 +194,7 @@ struct HomeView: View {
                         RoundedRectangle(cornerRadius: 25)
                             .fill(.gray)
                             .opacity(0.3)
-                            .frame(width: 250, height: 110)
+                            .frame(width: 250, height: 100)
                             .overlay {
                                 VStack{
                                     Text("Title")
@@ -205,59 +207,6 @@ struct HomeView: View {
                                 }
                             }
                     }
-                }
-            }
-        }
-    }
-    
-    private func footer() -> some View {
-        VStack{
-            HStack{
-                Button(action: {
-                    
-                }){
-                    Image(systemName: "house")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 30)
-                        .foregroundColor(.gray)
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
-                }
-                
-                Button(action: {
-                    
-                }){
-                    Image(systemName: "bell")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 30)
-                        .foregroundColor(.gray)
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
-                }
-                Button(action: {
-                    
-                }){
-                    Image(systemName: "gear")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 30)
-                        .foregroundColor(.gray)
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
-                }
-                
-                Button(action: {
-                    
-                }){
-                    Image(systemName: "message")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 30)
-                        .foregroundColor(.gray)
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
                 }
             }
         }
@@ -280,7 +229,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(selectedTab: .constant(0))
         .environmentObject(ProfileViewModel())
 }
 
