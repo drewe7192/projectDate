@@ -32,4 +32,5 @@ enum Route {
     case signInPage
     case homePage
     case settingsPage
+    case videoPage
 }

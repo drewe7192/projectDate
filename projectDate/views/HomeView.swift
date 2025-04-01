@@ -10,41 +10,36 @@ import Combine
 import HMSRoomKit
 
 struct HomeView: View {
+    @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var viewRouter: ViewRouter
     @Binding var selectedTab: Int
     @State private var isSearching: Bool = false
     @State private var name: String = ""
-    @State private var roomCode: String = ""
+    @State private var isJoiningQuickChat: Bool = false
     @State var timer: AnyCancellable?
-    @State var isGuestJoining = false
-    @State var isSettingsView = false
-    @State private var hasTimeElapsed = false
-    @EnvironmentObject var profileViewModel: ProfileViewModel
+    
     var body: some View {
         ZStack {
             Color.white
                 .ignoresSafeArea()
             VStack{
                 header()
+                
                 Spacer()
+                
                 quickChat()
-                
-                if !profileViewModel.userProfile.roomCode.isEmpty {
-                    HMSPrebuiltView(roomCode: profileViewModel.userProfile.roomCode)
-                        .frame(width: 350, height: 380)
-                        .cornerRadius(30)
-                } else {
-                    RoundedRectangle(cornerRadius: 25)
-                        .fill(.black)
-                        .frame(width: 350, height: 400)
-                }
-                
+                videoSection()
                 events()
+                
                 Spacer()
             }
         }
         .task {
             do {
                 try await profileViewModel.GetUserProfile()
+                videoViewModel.roomCode = profileViewModel.userProfile.roomCode
+                
                 try await getActiveUsers()
                 startRotation(with: profileViewModel.activeUsers)
             } catch {
@@ -139,13 +134,19 @@ struct HomeView: View {
                             
                             HStack(spacing: -15){
                                 Button(action: {
+                                    self.isJoiningQuickChat = true
                                     if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                         Task {
                                             // this removes HMSPreBuiltView and triggers its onDisappear()
-                                            self.roomCode = ""
+                                            videoViewModel.roomCode = ""
+                                            
                                             // Delay of 7.5 seconds (1 second = 1_000_000_000 nanoseconds)
-                                            try? await Task.sleep(nanoseconds: 7_500_000_000)
-                                            self.roomCode = pickedUser.roomCode
+                                            try? await Task.sleep(nanoseconds: 17_500_000_000)
+                                            
+                                            videoViewModel.roomCode = pickedUser.roomCode
+                                            
+                                            viewRouter.currentPage = .videoPage
+                                            videoViewModel.isFullScreen = true
                                         }
                                     }
                                     
@@ -178,6 +179,51 @@ struct HomeView: View {
                         }
                     }
                 }
+        }
+    }
+    
+    private func videoSection() -> some View {
+        VStack {
+            if !videoViewModel.roomCode.isEmpty {
+                VideoView()
+            } else if self.isJoiningQuickChat {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(.white)
+                    .frame(width: 350, height: 400)
+                    .overlay {
+                        VStack {
+                            ProgressView {
+                                
+                            }
+                            .scaleEffect(x: 4, y: 4, anchor: .center)
+                            .padding(.bottom)
+                            
+                            Text("Connecting to \(self.name)...")
+                                .font(.system(size: 25))
+                                .bold()
+                                .foregroundColor(.black)
+                        }
+                    }
+            }
+            else {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(.white)
+                    .frame(width: 350, height: 400)
+                    .overlay {
+                        VStack {
+                            ProgressView {
+                                
+                            }
+                            .scaleEffect(x: 4, y: 4, anchor: .center)
+                            .padding(.bottom)
+                            
+                            Text("Joining room...")
+                                .font(.system(size: 25))
+                                .bold()
+                                .foregroundColor(.black)
+                        }
+                    }
+            }
         }
     }
     
@@ -231,5 +277,6 @@ struct HomeView: View {
 #Preview {
     HomeView(selectedTab: .constant(0))
         .environmentObject(ProfileViewModel())
+        .environmentObject(VideoViewModel())
 }
 

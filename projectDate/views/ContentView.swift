@@ -7,11 +7,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var profileViewModel = ProfileViewModel()
-    @State private var selectedIndex: Int = 0
-    
-    @Environment(\.scenePhase) var scenePhase
+    @StateObject var videoViewModel = VideoViewModel()
     
     init() {
         
@@ -22,6 +21,7 @@ struct ContentView: View {
         case .homePage :
             MainView()
                 .environmentObject(profileViewModel)
+                .environmentObject(videoViewModel)
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                     if newPhase == .active {
                         print("Active")
@@ -50,6 +50,10 @@ struct ContentView: View {
             SignInView()
         case .settingsPage:
             SettingsView()
+        case .videoPage:
+            VideoView()
+                .environmentObject(profileViewModel)
+                .environmentObject(videoViewModel)
         }
     }
 }
