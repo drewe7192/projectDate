@@ -8,7 +8,6 @@ import SwiftUI
 import HMSRoomKit
 
 struct VideoView: View {
-    @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     
     var body: some View {

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct ProfileModel: Identifiable {
+struct ProfileModel: Identifiable, Equatable {
     var id : String
     var name: String
     var gender: String
@@ -25,3 +25,30 @@ var emptyProfileModel = ProfileModel(
     isActive: false,
     profileImage: UIImage()
 )
+
+var mockActiveUsers = [
+    ProfileModel(
+        id: "1",
+        name: "test1",
+        gender: "",
+        roomCode: "grtgrt",
+        isActive: true,
+        profileImage: UIImage()
+    ),
+    ProfileModel(
+        id: "2",
+        name: "test2",
+        gender: "",
+        roomCode: "grrgrtg",
+        isActive: true,
+        profileImage: UIImage()
+    ),
+    ProfileModel(
+        id: "3",
+        name: "test3",
+        gender: "",
+        roomCode: "fdsfds",
+        isActive: true,
+        profileImage: UIImage()
+    )
+]

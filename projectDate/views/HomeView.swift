@@ -14,10 +14,10 @@ struct HomeView: View {
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var viewRouter: ViewRouter
     @Binding var selectedTab: Int
-    @State private var isSearching: Bool = false
-    @State private var name: String = ""
-    @State private var isJoiningQuickChat: Bool = false
     @State var timer: AnyCancellable?
+    @State private var name: String = ""
+    @State private var isSearching: Bool = false
+    @State private var isJoiningQuickChat: Bool = false
     
     var body: some View {
         ZStack {
@@ -41,7 +41,7 @@ struct HomeView: View {
                 videoViewModel.roomCode = profileViewModel.userProfile.roomCode
                 
                 try await getActiveUsers()
-                startRotation(with: profileViewModel.activeUsers)
+                startRotation()
             } catch {
                 // HANDLE ERROR
             }
@@ -86,7 +86,6 @@ struct HomeView: View {
                     .padding(.horizontal)
                     .padding(.vertical, 5)
                     .clipShape(Circle())
-                
             }
         }
     }
@@ -120,8 +119,6 @@ struct HomeView: View {
                             VStack{
                                 Text("\(self.name)")
                                     .bold()
-                                    .foregroundColor(.black)
-                                
                                     .id(self.name)
                                     .transition(.opacity.animation(.smooth))
                                     .foregroundColor(.black)
@@ -163,7 +160,8 @@ struct HomeView: View {
                                 }
                                 
                                 Button(action: {
-                                    
+                                    profileViewModel.activeUsers.removeAll(where: {$0.name == self.name })
+                                    startRotation()
                                 }) {
                                     Image(systemName: "x.circle")
                                         .resizable()
@@ -258,14 +256,13 @@ struct HomeView: View {
         }
     }
     
-    private func startRotation(with activeProfiles: [ProfileModel]) {
-        guard !activeProfiles.isEmpty else { return }
-        
+    private func startRotation() {
+        guard !profileViewModel.activeUsers.isEmpty else { return }
         var index = 0
-        self.name = activeProfiles[0].name
+        self.name = profileViewModel.activeUsers[0].name
         self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
-            index = (index + 1) % activeProfiles.count
-            self.name = activeProfiles[index].name
+            index = (index + 1) % profileViewModel.activeUsers.count
+            self.name = profileViewModel.activeUsers[index].name
         }
     }
     
