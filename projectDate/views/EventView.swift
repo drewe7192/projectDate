@@ -8,20 +8,22 @@
 import SwiftUI
 
 struct EventView: View {
-    let viewModel: LiveViewModel
-    let placeInLine: Int
-    @Binding var timeRemainingSpeedDateHomeView: Int
-    @Binding var isStartVideoNow: Bool
-    @Binding var isTimeEnded: Bool
+//    let viewModel: LiveViewModel
+//    let placeInLine: Int
+//    @Binding var timeRemainingSpeedDateHomeView: Int
+//    @Binding var isStartVideoNow: Bool
+//    @Binding var isTimeEnded: Bool
     
     @State private var showHamburgerMenu: Bool = false
     
     var body: some View {
             GeometryReader{ geoReader in
                 ZStack{
-                    Color.mainBlack
-                        .ignoresSafeArea()
+//                    Color.mainBlack
+//                        .ignoresSafeArea()
                     
+                    
+                    Text("Hello world")
 //                    if !viewModel.speedDates.isEmpty {
 //                        // role is Host if userProfileId isnt in the array of matchingProfilesId
 //                        if(!viewModel.speedDates.first!.matchProfileIds.contains(viewModel.userProfile.id)){
@@ -253,7 +255,8 @@ struct EventView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader{geo in
             VStack{
-                EventView(viewModel: LiveViewModel(), placeInLine: 0, timeRemainingSpeedDateHomeView: .constant(9), isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
+                EventView()
+//                EventView(viewModel: LiveViewModel(), placeInLine: 0, timeRemainingSpeedDateHomeView: .constant(9), isStartVideoNow: .constant(false), isTimeEnded: .constant(false))
             }
             .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }

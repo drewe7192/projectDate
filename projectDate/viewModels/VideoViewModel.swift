@@ -8,7 +8,5 @@
 import Foundation
 
 class VideoViewModel: ObservableObject {
-    @Published var isFullScreen: Bool = false
-    @Published var isButtonDisabled: Bool = false
     @Published var roomCode: String = ""
 }
