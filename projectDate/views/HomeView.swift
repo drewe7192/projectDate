@@ -16,8 +16,6 @@ struct HomeView: View {
     @Binding var selectedTab: Int
     @State var timer: AnyCancellable?
     @State private var name: String = ""
-    @State private var isSearching: Bool = false
-    @State private var isQuickChatDirty: Bool = false
     @State private var isFullScreen: Bool = false
     
     var body: some View {
@@ -101,13 +99,6 @@ struct HomeView: View {
                 .opacity(0.3)
                 .frame(width: 350, height: 60)
                 .overlay {
-                    if isSearching {
-                        HStack{
-                            Text("Searching for Friends")
-                                .foregroundColor(.black)
-                            ProgressView()
-                        }
-                    } else {
                         HStack{
                             Circle()
                                 .frame(width: 40)
@@ -178,7 +169,6 @@ struct HomeView: View {
                                 }
                             }
                         }
-                    }
                 }
         }
     }
