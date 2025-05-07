@@ -12,10 +12,8 @@ class ProfileService {
     private let profileRepo = ProfileRepository()
     
     public func GetProfile(userId: String) async throws -> ProfileModel {
-        let responseProfile = try await profileRepo.Get(userId: userId)
-        let result = responseProfile
-        
-        return result
+        let response = try await profileRepo.Get(userId: userId)
+        return response
     }
     
     public func CreateProfile() async throws -> ProfileModel {

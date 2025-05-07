@@ -14,9 +14,13 @@ struct VideoView: View {
     
     var body: some View {
         ZStack{
-            HMSPrebuiltView(roomCode: videoViewModel.roomCode, questions: self.questions, isFullScreen: self.$isFullScreen)
+            HMSPrebuiltView(roomCode: videoViewModel.roomCode)
                 .frame(width: isFullScreen ? .infinity : 350, height: isFullScreen ? .infinity : 380)
                 .cornerRadius(30)
+            
+            if self.isFullScreen {
+                FullScreenComponentsView()
+            }
         }
     }
 }

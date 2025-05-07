@@ -8,8 +8,10 @@
 import Foundation
 
 struct QuestionModel: Identifiable, Equatable {
-    var id : String
+    var id: String
     var body: String
     var answers: [String]
 }
+
+var emptyQuestionModel = QuestionModel(id: "", body: "", answers: [])
 

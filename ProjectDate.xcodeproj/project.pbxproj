@@ -92,9 +92,20 @@
 		77650EE62D58FE1200586676 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AnswerModel.swift,
 				ProfileInfoModel.swift,
 				ProfileModel.swift,
 				SpeedDateModel.swift,
+			);
+			target = 77C3D50B289910CF0088554F /* ProjectDateTests */;
+		};
+		779B19D72DC8BDBD00FF38F9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AnimatedButton.swift,
+				BiDirectionalSlider.swift,
+				Spinner.swift,
+				TransactionState.swift,
 			);
 			target = 77C3D50B289910CF0088554F /* ProjectDateTests */;
 		};
@@ -105,7 +116,7 @@
 		77650EE22D58FDB500586676 /* viewModels */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = viewModels; sourceTree = "<group>"; };
 		77650EE32D58FDC400586676 /* models */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (77650EE62D58FE1200586676 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = models; sourceTree = "<group>"; };
 		77650EE42D58FDCA00586676 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
-		77650EE72D58FFB100586676 /* utils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = utils; sourceTree = "<group>"; };
+		77650EE72D58FFB100586676 /* utils */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (779B19D72DC8BDBD00FF38F9 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = utils; sourceTree = "<group>"; };
 		77DB9E832D6B30D700935F69 /* services */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = services; sourceTree = "<group>"; };
 		77DB9E882D6B316B00935F69 /* database */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = database; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
