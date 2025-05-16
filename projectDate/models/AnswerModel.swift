@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AnswerModel: Identifiable, Equatable {
+struct AnswerModel: Identifiable, Equatable, Codable {
     var id: String
     var profileId: String
     var questionId: String

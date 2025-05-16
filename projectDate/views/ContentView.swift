@@ -11,6 +11,7 @@ struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var videoViewModel = VideoViewModel()
+    @StateObject var qaViewModel = QAViewModel()
     
     init() {
         
@@ -22,6 +23,7 @@ struct ContentView: View {
             MainView()
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
+                .environmentObject(qaViewModel)
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                     if newPhase == .active {
                         print("Active")
@@ -54,6 +56,7 @@ struct ContentView: View {
             VideoView(isFullScreen: .constant(true))
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
+                .environmentObject(qaViewModel)
         }
     }
 }

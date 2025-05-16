@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FullScreenComponentsView: View {
     @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var qaViewModel: QAViewModel
     
     @State private var timeRemaining = 15
     @State private var question: String = "testing"
@@ -28,7 +30,7 @@ struct FullScreenComponentsView: View {
         }
         .task {
             do {
-                try await videoViewModel.getQuestions()
+                try await qaViewModel.getQuestions()
             } catch {
                 // HANDLE ERROR
             }
@@ -58,11 +60,11 @@ struct FullScreenComponentsView: View {
             Color.blue
                 .ignoresSafeArea()
             VStack{
-                if !videoViewModel.questions.isEmpty {
+                if !qaViewModel.questions.isEmpty {
                     Spacer()
                         .frame(height: 20)
                     
-                    Text("\(videoViewModel.questions[0].body)")
+                    Text("\(qaViewModel.questions[0].body)")
                         .font(.system(size: 40))
                         .foregroundColor(.white)
                     
@@ -71,24 +73,18 @@ struct FullScreenComponentsView: View {
                     VStack{
                         if sliderValue > 0 {
                             Text("True")
-                                .font(.system(size: 20))
+                                .font(.system(size: 40))
+                                .foregroundColor(.white)
                         } else {
                             Text("False")
-                                .font(.system(size: 20))
+                                .font(.system(size: 40))
+                                .foregroundColor(.white)
                         }
                         BiDirectionalSlider(value: $sliderValue)
                     }
                     .padding()
                     
                     Spacer()
-                    
-                    //                    RoundedRectangle(cornerRadius: 25)
-                    //                        .fill(.gray)
-                    //                        .frame(width: 350, height: 80)
-                    //                        .overlay{
-                    //                            Text("Send")
-                    //                                .font(.system(size: 20))
-                    //                        }
                     
                     let config = AnimatedButton.Config(
                         title: transactionState.rawValue,
@@ -98,8 +94,14 @@ struct FullScreenComponentsView: View {
                     )
                     
                     AnimatedButton(config: config) {
+                        let guid = UUID().uuidString
+                        qaViewModel.answer.id = guid
+                        qaViewModel.answer.answer = sliderValue > 0 ? "True" : "False"
+                        qaViewModel.answer.profileId = profileViewModel.userProfile.id
+                        qaViewModel.answer.questionId = qaViewModel.questions[0].id
+                        
                         transactionState = .analyzing
-                        try? await Task.sleep(for: .seconds(3))
+                        try? await qaViewModel.saveAnswer()
                         transactionState = .processing
                         try? await Task.sleep(for: .seconds(3))
                         transactionState = .failed
@@ -116,4 +118,5 @@ struct FullScreenComponentsView: View {
 #Preview {
     FullScreenComponentsView()
         .environmentObject(VideoViewModel())
+        .environmentObject(QAViewModel())
 }

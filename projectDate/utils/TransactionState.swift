@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 
 enum TransactionState: String {
-    case idle = "Click to pay"
-    case analyzing = "Analyzing Transaction"
-    case processing =  "Processing Transaction"
-    case completed = "Transaction Completed"
-    case failed = "Transaction Failed"
+    case idle = "Click to match"
+    case analyzing = "Waiting for guest's answer"
+    case processing =  "Checking for Match"
+    case completed = "It's a match!"
+    case failed = "Not a match. Leaving Session"
     
     var color: Color {
         switch self {
@@ -32,7 +32,7 @@ enum TransactionState: String {
     
     var image: String? {
         switch self {
-        case .idle: "apple.logo"
+        case .idle: "heart"
         case .analyzing: nil
         case .processing: nil
         case .completed: "checkmark.circle.fill"

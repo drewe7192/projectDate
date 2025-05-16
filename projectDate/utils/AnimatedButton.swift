@@ -74,7 +74,3 @@ fileprivate struct ScaleButtonStyle: ButtonStyle {
             }
     }
 }
-
-#Preview {
-    FullScreenComponentsView()
-}
