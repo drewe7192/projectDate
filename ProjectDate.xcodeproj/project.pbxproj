@@ -37,6 +37,7 @@
 		7731738528CE2F6500B8885B /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738428CE2F6500B8885B /* FacebookCore */; };
 		7731738728CE2F6500B8885B /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738628CE2F6500B8885B /* FacebookLogin */; };
 		7731738928CE2F6500B8885B /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 7731738828CE2F6500B8885B /* FacebookShare */; };
+		773EA1F22DDBD3CC00069D37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773EA1F12DDBD3CC00069D37 /* AppDelegate.swift */; };
 		77626AF628CB1D2F00D1DD9E /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 77626AF528CB1D2F00D1DD9E /* GoogleSignIn */; };
 		77626AF828CB1D2F00D1DD9E /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 77626AF728CB1D2F00D1DD9E /* GoogleSignInSwift */; };
 		77AE81AD2D8D719B007FCB75 /* HMSRoomKit in Frameworks */ = {isa = PBXBuildFile; productRef = 77AE81AC2D8D719B007FCB75 /* HMSRoomKit */; };
@@ -67,6 +68,7 @@
 
 /* Begin PBXFileReference section */
 		770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDateRelease.entitlements; sourceTree = "<group>"; };
+		773EA1F12DDBD3CC00069D37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		775E062F28C72B450082C27E /* projectDate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = projectDate.entitlements; sourceTree = "<group>"; };
 		775EC41C2D6336750040680B /* ProjectDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		775EC41D2D6336750040680B /* ProjectDateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectDateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +95,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AnswerModel.swift,
+				FCMTokenModel.swift,
 				ProfileInfoModel.swift,
 				ProfileModel.swift,
 				SpeedDateModel.swift,
@@ -221,6 +224,7 @@
 				775E062F28C72B450082C27E /* projectDate.entitlements */,
 				770CF55129C5138C00AA90AE /* projectDateRelease.entitlements */,
 				77C3D505289910CF0088554F /* Preview Content */,
+				773EA1F12DDBD3CC00069D37 /* AppDelegate.swift */,
 			);
 			path = projectDate;
 			sourceTree = "<group>";
@@ -472,6 +476,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				773EA1F22DDBD3CC00069D37 /* AppDelegate.swift in Sources */,
 				77C3D500289910CE0088554F /* projectDateApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -648,7 +653,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -690,7 +695,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

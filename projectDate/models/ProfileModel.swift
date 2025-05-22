@@ -15,6 +15,7 @@ struct ProfileModel: Identifiable, Equatable {
     var roomCode: String
     var isActive: Bool
     var profileImage: UIImage
+    var userId: String
 }
 
 var emptyProfileModel = ProfileModel(
@@ -23,32 +24,6 @@ var emptyProfileModel = ProfileModel(
     gender: "",
     roomCode: "",
     isActive: false,
-    profileImage: UIImage()
+    profileImage: UIImage(),
+    userId: ""
 )
-
-var mockActiveUsers = [
-    ProfileModel(
-        id: "1",
-        name: "test1",
-        gender: "",
-        roomCode: "grtgrt",
-        isActive: true,
-        profileImage: UIImage()
-    ),
-    ProfileModel(
-        id: "2",
-        name: "test2",
-        gender: "",
-        roomCode: "grrgrtg",
-        isActive: true,
-        profileImage: UIImage()
-    ),
-    ProfileModel(
-        id: "3",
-        name: "test3",
-        gender: "",
-        roomCode: "fdsfds",
-        isActive: true,
-        profileImage: UIImage()
-    )
-]

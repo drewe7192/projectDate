@@ -8,8 +8,11 @@
 import SwiftUI
 import Combine
 import HMSRoomKit
+import FirebaseMessaging
+import FirebaseFunctions
 
 struct HomeView: View {
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var viewRouter: ViewRouter
@@ -17,6 +20,7 @@ struct HomeView: View {
     @State var timer: AnyCancellable?
     @State private var name: String = ""
     @State private var isFullScreen: Bool = false
+    @State var helloWorldMsg: String = "function not called yet"
     
     var body: some View {
         NavigationView {
@@ -30,7 +34,7 @@ struct HomeView: View {
                     
                     quickChat()
                     videoSection()
-                
+                    
                     events()
                     
                     Spacer()
@@ -38,13 +42,44 @@ struct HomeView: View {
             }
             .task {
                 do {
+                    /// get profile and launch video
                     try await profileViewModel.GetUserProfile()
                     videoViewModel.roomCode = profileViewModel.userProfile.roomCode
                     
+                    /// update user to active
+                    try await profileViewModel.UpdateActivityStatus(isActive: true)
+                    
+                    /// for quickChat
                     try await getActiveUsers()
-                    startRotation()
+                    startProfileRotation()
+                    
+                    
+                    
                 } catch {
                     // HANDLE ERROR
+                }
+            }
+            .onChange(of: scenePhase) { oldPhase, newPhase in
+                print("scenPhase \(oldPhase) new phase \(newPhase)")
+                if newPhase == .active {
+                    print("Active \(profileViewModel.userProfile.id)")
+                    if profileViewModel.userProfile.id != "" {
+                        Task{
+                            try await profileViewModel.UpdateActivityStatus(isActive: true)
+                        }
+                        
+                    }
+                } else if newPhase == .inactive {
+                    print("Inactive")
+                    if profileViewModel.userProfile.id != "" {
+                        Task {
+                            try await
+                            profileViewModel.UpdateActivityStatus(isActive: false)
+                        }
+                        
+                    }
+                } else if newPhase == .background {
+                    print("Background")
                 }
             }
         }
@@ -99,76 +134,81 @@ struct HomeView: View {
                 .opacity(0.3)
                 .frame(width: 350, height: 60)
                 .overlay {
-                        HStack{
-                            Circle()
-                                .frame(width: 40)
-                                .overlay {
-                                    Image(systemName: "person.fill")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(.black)
-                                }
-                                .padding(.leading)
-                                .foregroundColor(.gray)
-                            
-                            VStack{
-                                Text("\(self.name)")
-                                    .bold()
-                                    .id(self.name)
-                                    .transition(.opacity.animation(.smooth))
-                                    .foregroundColor(.black)
-                                
-                                Text("Wants to connect")
+                    HStack{
+                        Circle()
+                            .frame(width: 40)
+                            .overlay {
+                                Image(systemName: "person.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
                                     .foregroundColor(.black)
                             }
+                            .padding(.leading)
+                            .foregroundColor(.gray)
+                        
+                        VStack{
+                            Text("\(self.name)")
+                                .bold()
+                                .id(self.name)
+                                .transition(.opacity.animation(.smooth))
+                                .foregroundColor(.black)
                             
-                            Spacer()
-                            
-                            HStack(spacing: -15){
-                                Button(action: {
-                                    if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
-                                        Task {
-                                            // this removes HMSPreBuiltView and triggers its onDisappear()
-                                            videoViewModel.roomCode = ""
-                                            
-                                            // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
-                                            try? await Task.sleep(nanoseconds: 7_500_000_000)
-                                            
-                                            videoViewModel.roomCode = pickedUser.roomCode
-                                            
-                                            viewRouter.currentPage = .videoPage
-                                            isFullScreen = true
-                                        }
+                            Text("Wants to connect")
+                                .foregroundColor(.black)
+                        }
+                        
+                        Spacer()
+                        
+                        HStack(spacing: -15){
+                            Button(action: {
+                                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
+                                    Task {
+                                        
+                                        var fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
+
+                                        helloWorldMsg = try await profileViewModel.callSendNotification(fcmToken: fcmToken)
+                                        
+                                        //                                            // this removes HMSPreBuiltView and triggers its onDisappear()
+                                        //                                            videoViewModel.roomCode = ""
+                                        //
+                                        //                                            // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
+                                        //                                            try? await Task.sleep(nanoseconds: 5_000_000_000)
+                                        //
+                                        //                                            videoViewModel.roomCode = pickedUser.roomCode
+                                        //
+                                        //                                            viewRouter.currentPage = .videoPage
+                                        //                                            isFullScreen = true
                                     }
-                                    
-                                }) {
-                                    Image(systemName: "checkmark.circle")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 5)
-                                        .background(Color.gray)
-                                        .clipShape(Circle())
                                 }
                                 
-                                Button(action: {
-                                    profileViewModel.activeUsers.removeAll(where: { $0.name == self.name })
-                                    startRotation()
-                                }) {
-                                    Image(systemName: "x.circle")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 5)
-                                        .background(Color.gray)
-                                        .clipShape(Circle())
-                                }
+                            }) {
+                                Image(systemName: "checkmark.circle")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 35)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 5)
+                                    .background(Color.gray)
+                                    .clipShape(Circle())
+                            }
+                            
+                            Button(action: {
+                                profileViewModel.activeUsers.removeAll(where: { $0.name == self.name })
+                                startProfileRotation()
+                            }) {
+                                Image(systemName: "x.circle")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 35)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 5)
+                                    .background(Color.gray)
+                                    .clipShape(Circle())
                             }
                         }
+                    }
                 }
         }
     }
@@ -211,9 +251,7 @@ struct HomeView: View {
                 VStack{
                     ForEach(1...3, id: \.self) {_ in
                         HStack{
-                            NavigationLink(destination: EventView()) {
-                                              Text("Choose Heads")
-                                          }
+                            Spacer()
                             Circle()
                                 .frame(width: 45)
                                 .overlay {
@@ -241,6 +279,10 @@ struct HomeView: View {
                                         .font(.system(size: 10))
                                 }
                                 
+                                NavigationLink(destination: EventView()) {
+                                    Text("Choose Heads")
+                                }
+                                
                             }
                             
                             Spacer()
@@ -256,7 +298,7 @@ struct HomeView: View {
         }
     }
     
-    private func startRotation() {
+    private func startProfileRotation() {
         guard !profileViewModel.activeUsers.isEmpty else { return }
         var index = 0
         self.name = profileViewModel.activeUsers[0].name
@@ -276,4 +318,3 @@ struct HomeView: View {
         .environmentObject(ProfileViewModel())
         .environmentObject(VideoViewModel())
 }
-

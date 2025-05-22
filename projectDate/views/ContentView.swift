@@ -7,15 +7,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var viewRouter: ViewRouter
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var videoViewModel = VideoViewModel()
     @StateObject var qaViewModel = QAViewModel()
-    
-    init() {
-        
-    }
     
     var body: some View {
         switch viewRouter.currentPage {
@@ -24,28 +19,6 @@ struct ContentView: View {
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
-                .onChange(of: scenePhase) { oldPhase, newPhase in
-                    if newPhase == .active {
-                        print("Active")
-                        if profileViewModel.userProfile.id != "" {
-                            Task{
-                                try await profileViewModel.UpdateActivityStatus(isActive: true)
-                            }
-                            
-                        }
-                    } else if newPhase == .inactive {
-                        print("Inactive")
-                        if profileViewModel.userProfile.id != "" {
-                            Task {
-                                try await
-                                profileViewModel.UpdateActivityStatus(isActive: false)
-                            }
-                            
-                        }
-                    } else if newPhase == .background {
-                        print("Background")
-                    }
-                }
         case .signUpPage:
             SignUpView()
         case .signInPage:

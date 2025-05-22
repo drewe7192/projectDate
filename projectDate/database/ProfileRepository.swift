@@ -51,6 +51,7 @@ class ProfileRepository {
             profile.gender = documentData["gender"] as! String
             profile.roomCode = documentData["roomCode"] as! String
             profile.isActive = documentData["isActive"] as! Bool
+            profile.userId = documentData["userId"] as! String
             
             activeProfiles.append(profile)
         }

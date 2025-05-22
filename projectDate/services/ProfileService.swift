@@ -10,6 +10,7 @@ import Firebase
 
 class ProfileService {
     private let profileRepo = ProfileRepository()
+    private let fcmTokenRepo = FCMTokenRepository()
     
     public func GetProfile(userId: String) async throws -> ProfileModel {
         let response = try await profileRepo.Get(userId: userId)
@@ -24,7 +25,8 @@ class ProfileService {
             gender: "",
             roomCode: "",
             isActive: false,
-            profileImage: UIImage()
+            profileImage: UIImage(),
+            userId: ""
         )
         
         let docData: [String: Any] = [
@@ -41,7 +43,7 @@ class ProfileService {
     
     public func GetActiveUsers(userId: String) async throws -> [ProfileModel] {
         let responseActiveProfiles = try await profileRepo.GetActive(userId: userId)
-        var results = responseActiveProfiles
+        let results = responseActiveProfiles
         
         return results
     }

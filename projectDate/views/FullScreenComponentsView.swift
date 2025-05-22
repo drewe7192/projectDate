@@ -12,11 +12,12 @@ struct FullScreenComponentsView: View {
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var qaViewModel: QAViewModel
     
+    /// there's a 5 sec delay once user taps checkmark
     @State private var timeRemaining = 15
     @State private var question: String = "testing"
     @State private var answer: String = ""
     @State private var questionNumber: Int = 0
-    @State private var showSheet: Bool = true
+    @State private var showSheet: Bool = false
     @State private var sliderValue: Double = 0
     @State private var transactionState: TransactionState = .idle
     
@@ -45,7 +46,6 @@ struct FullScreenComponentsView: View {
             }
         }
         .onChange(of: self.answer) { value, _ in
-            
             self.questionNumber = self.questionNumber + 1
             
             //            self.question = self.littleThingsList[self.questionNumber]
