@@ -15,11 +15,11 @@ struct HomeView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var viewRouter: ViewRouter
     @Binding var selectedTab: Int
     @State var timer: AnyCancellable?
     @State private var name: String = ""
-    @State private var isFullScreen: Bool = false
     @State var helloWorldMsg: String = "function not called yet"
     
     var body: some View {
@@ -29,7 +29,8 @@ struct HomeView: View {
                     .ignoresSafeArea()
                 VStack{
                     header()
-                    
+                    Text("\(delegate.requestMessage)")
+                        .foregroundColor(.red)
                     Spacer()
                     
                     quickChat()
@@ -46,21 +47,19 @@ struct HomeView: View {
                     try await profileViewModel.GetUserProfile()
                     videoViewModel.roomCode = profileViewModel.userProfile.roomCode
                     
-                    /// update user to active
+                    /// update user app status to active
                     try await profileViewModel.UpdateActivityStatus(isActive: true)
                     
                     /// for quickChat
                     try await getActiveUsers()
                     startProfileRotation()
                     
-                    
-                    
                 } catch {
                     // HANDLE ERROR
                 }
             }
+            /// update foreground and background  status in db
             .onChange(of: scenePhase) { oldPhase, newPhase in
-                print("scenPhase \(oldPhase) new phase \(newPhase)")
                 if newPhase == .active {
                     print("Active \(profileViewModel.userProfile.id)")
                     if profileViewModel.userProfile.id != "" {
@@ -81,6 +80,10 @@ struct HomeView: View {
                 } else if newPhase == .background {
                     print("Background")
                 }
+            }
+            /// display requestView once user recieves request for BlindDate
+            .onChange(of: delegate.requestMessage) { oldValue, newValue in
+                viewRouter.currentPage = .requestPage
             }
         }
     }
@@ -164,20 +167,20 @@ struct HomeView: View {
                                 if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                     Task {
                                         
-                                        var fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
-
-                                        helloWorldMsg = try await profileViewModel.callSendNotification(fcmToken: fcmToken)
+//                                        let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
+//
+//                                        helloWorldMsg = try await profileViewModel.callSendNotification(fcmToken: fcmToken)
                                         
-                                        //                                            // this removes HMSPreBuiltView and triggers its onDisappear()
-                                        //                                            videoViewModel.roomCode = ""
-                                        //
-                                        //                                            // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
-                                        //                                            try? await Task.sleep(nanoseconds: 5_000_000_000)
-                                        //
-                                        //                                            videoViewModel.roomCode = pickedUser.roomCode
-                                        //
-                                        //                                            viewRouter.currentPage = .videoPage
-                                        //                                            isFullScreen = true
+                                                                                    // this removes HMSPreBuiltView and triggers its onDisappear()
+                                                                                    videoViewModel.roomCode = ""
+                                        
+                                                                                    // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
+                                                                                    try? await Task.sleep(nanoseconds: 5_000_000_000)
+                                        
+                                                                                    videoViewModel.roomCode = pickedUser.roomCode
+                                        
+                                                                                    viewRouter.currentPage = .videoPage
+                                        delegate.isFullScreen = .constant(true)
                                     }
                                 }
                                 
@@ -216,7 +219,7 @@ struct HomeView: View {
     private func videoSection() -> some View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
-                VideoView(isFullScreen: self.$isFullScreen)
+                VideoView(isFullScreen: delegate.isFullScreen)
             }
             else {
                 RoundedRectangle(cornerRadius: 25)
@@ -317,4 +320,5 @@ struct HomeView: View {
     HomeView(selectedTab: .constant(0))
         .environmentObject(ProfileViewModel())
         .environmentObject(VideoViewModel())
+        .environmentObject(AppDelegate())
 }

@@ -10,10 +10,13 @@ import UserNotifications
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
+import SwiftUICore
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
+    @Published var requestMessage: String = ""
+    @Published var isFullScreen: Binding<Bool> = .constant(false)
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication
@@ -95,13 +98,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
         }
         
-        print(userInfo)
+        // Get message from userInfo object
+        if let aps = userInfo["aps"] as? NSDictionary {
+            if let alert = aps["alert"] as? NSDictionary {
+                if let message = alert["body"] as? NSString {
+                    requestMessage = message as String
+                }
+            } else if let alert = aps["alert"] as? NSString {
+                  // TODO
+            }
+        }
         
         return [[.alert, .sound]]
     }

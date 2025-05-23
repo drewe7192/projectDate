@@ -8,6 +8,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var delegate: AppDelegate
+    
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var videoViewModel = VideoViewModel()
     @StateObject var qaViewModel = QAViewModel()
@@ -26,10 +28,12 @@ struct ContentView: View {
         case .settingsPage:
             SettingsView()
         case .videoPage:
-            VideoView(isFullScreen: .constant(true))
+            VideoView(isFullScreen: delegate.isFullScreen)
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
+        case .requestPage:
+            RequestView()
         }
     }
 }

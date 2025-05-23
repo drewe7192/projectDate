@@ -67,6 +67,7 @@ class ProfileViewModel: ObservableObject {
             let payload = [
                 "fcmToken": fcmToken.token
             ]
+            
             let result = try await functions.httpsCallable("sendNotification").call(payload)
             
             // Parse the response to extract the string message
