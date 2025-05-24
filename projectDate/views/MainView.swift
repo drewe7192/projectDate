@@ -43,8 +43,6 @@ struct MainView: View {
              .padding(.horizontal, 26)
          }
      }
-    
-    
 }
 
 enum TabbedItems: Int, CaseIterable{

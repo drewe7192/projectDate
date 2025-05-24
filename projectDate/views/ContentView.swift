@@ -34,6 +34,7 @@ struct ContentView: View {
                 .environmentObject(qaViewModel)
         case .requestPage:
             RequestView()
+                .environmentObject(profileViewModel)
         }
     }
 }

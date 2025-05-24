@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct RequestView: View {
+    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var delegate: AppDelegate
+    
     var body: some View {
         ZStack {
             Color.yellow
                 .ignoresSafeArea()
             
             VStack{
-                Text("Drew")
+                Text("\(delegate.requestByProfileName)")
                     .bold()
                     .font(.system(size: 60))
                     .foregroundColor(.black)
@@ -24,7 +27,8 @@ struct RequestView: View {
                     .foregroundColor(.black)
                 
                 Button(action: {
-        
+                    delegate.isFullScreen = .constant(true)
+                    viewRouter.currentPage = .homePage
                 }) {
                     Text("Accept")
                         .foregroundColor(.white)

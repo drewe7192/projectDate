@@ -59,13 +59,15 @@ class ProfileViewModel: ObservableObject {
         return fcmToken
     }
     
-    func callSendNotification(fcmToken: FCMTokenModel) async throws -> String {
+    func callSendNotification(fcmToken: FCMTokenModel, requestByProfile: ProfileModel) async throws -> String {
         do {
             /// Used for testing
             //functions.useEmulator(withHost: "localhost", port: 5001)
             
             let payload = [
-                "fcmToken": fcmToken.token
+                "fcmToken": fcmToken.token,
+                "requestByProfileName": requestByProfile.name,
+                "requestByProfileRoomCode": requestByProfile.roomCode
             ]
             
             let result = try await functions.httpsCallable("sendNotification").call(payload)

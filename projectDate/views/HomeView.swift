@@ -17,27 +17,23 @@ struct HomeView: View {
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var viewRouter: ViewRouter
+    
     @Binding var selectedTab: Int
     @State var timer: AnyCancellable?
     @State private var name: String = ""
-    @State var helloWorldMsg: String = "function not called yet"
     
     var body: some View {
         NavigationView {
             ZStack {
                 Color.white
                     .ignoresSafeArea()
+                
                 VStack{
                     header()
-                    Text("\(delegate.requestMessage)")
-                        .foregroundColor(.red)
                     Spacer()
-                    
                     quickChat()
                     videoSection()
-                    
                     events()
-                    
                     Spacer()
                 }
             }
@@ -58,7 +54,7 @@ struct HomeView: View {
                     // HANDLE ERROR
                 }
             }
-            /// update foreground and background  status in db
+            /// update status in db whether app is in foreground and background
             .onChange(of: scenePhase) { oldPhase, newPhase in
                 if newPhase == .active {
                     print("Active \(profileViewModel.userProfile.id)")
@@ -82,7 +78,7 @@ struct HomeView: View {
                 }
             }
             /// display requestView once user recieves request for BlindDate
-            .onChange(of: delegate.requestMessage) { oldValue, newValue in
+            .onChange(of: delegate.requestByProfileName) { oldValue, newValue in
                 viewRouter.currentPage = .requestPage
             }
         }
@@ -166,21 +162,9 @@ struct HomeView: View {
                             Button(action: {
                                 if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                     Task {
+                                        try await sendRequestMessage(pickedUser: pickedUser)
                                         
-//                                        let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
-//
-//                                        helloWorldMsg = try await profileViewModel.callSendNotification(fcmToken: fcmToken)
-                                        
-                                                                                    // this removes HMSPreBuiltView and triggers its onDisappear()
-                                                                                    videoViewModel.roomCode = ""
-                                        
-                                                                                    // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
-                                                                                    try? await Task.sleep(nanoseconds: 5_000_000_000)
-                                        
-                                                                                    videoViewModel.roomCode = pickedUser.roomCode
-                                        
-                                                                                    viewRouter.currentPage = .videoPage
-                                        delegate.isFullScreen = .constant(true)
+                                        try await launchVideoSession(pickedUser: pickedUser)
                                     }
                                 }
                                 
@@ -313,6 +297,23 @@ struct HomeView: View {
     
     private func getActiveUsers() async throws {
         try await profileViewModel.GetActiveUsers()
+    }
+    
+    private func launchVideoSession(pickedUser: ProfileModel) async throws {
+        // this removes HMSPreBuiltView and triggers its onDisappear()
+        // makes sure current video sesh has closed
+        videoViewModel.roomCode = ""
+        
+        // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
+        try? await Task.sleep(nanoseconds: 5_000_000_000)
+        
+        videoViewModel.roomCode = pickedUser.roomCode
+        viewRouter.currentPage = .videoPage
+    }
+    
+    private func sendRequestMessage(pickedUser: ProfileModel) async throws {
+        let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
+        var response = try await profileViewModel.callSendNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
     }
 }
 
