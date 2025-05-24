@@ -17,7 +17,7 @@ struct RequestView: View {
                 .ignoresSafeArea()
             
             VStack{
-                Text("\(delegate.requestByProfileName)")
+                Text("\(delegate.requestByProfile.name)")
                     .bold()
                     .font(.system(size: 60))
                     .foregroundColor(.black)

@@ -15,8 +15,7 @@ import SwiftUICore
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
-    @Published var requestByProfileName: String = ""
-    @Published var requestByProfileRoomCode: String = ""
+    @Published var requestByProfile: ProfileModel = emptyProfileModel
     @Published var isFullScreen: Bool = false
     
     func application(_ application: UIApplication,
@@ -107,7 +106,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         // Get message from userInfo object
         if let name = userInfo["requestByProfileName"] as? NSString {
-            requestByProfileName = name as String
+            requestByProfile.name = name as String
+        }
+        if let roomCode = userInfo["requestByProfileRoomCode"] as? NSString {
+            requestByProfile.roomCode = roomCode as String
         }
         
         return [[.alert, .sound]]

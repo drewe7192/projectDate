@@ -78,11 +78,15 @@ struct HomeView: View {
                 }
             }
             /// display requestView once user recieves request for BlindDate
-            .onChange(of: delegate.requestByProfileName) { oldValue, newValue in
+            .onChange(of: delegate.requestByProfile) { oldValue, newValue in
                 viewRouter.currentPage = .requestPage
             }
             .onChange(of: delegate.isFullScreen) { oldValue, newValue in
-        
+                Task {
+                    try await launchVideoSession(pickedUser: delegate.requestByProfile)
+                    
+                    viewRouter.currentPage = .videoPage
+                }
             }
         }
     }
@@ -166,8 +170,6 @@ struct HomeView: View {
                                 if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                     Task {
                                         try await sendRequestMessage(pickedUser: pickedUser)
-                                        
-                                        try await launchVideoSession(pickedUser: pickedUser)
                                     }
                                 }
                                 
