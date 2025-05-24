@@ -9,16 +9,16 @@ import HMSRoomKit
 
 struct VideoView: View {
     @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var delegate: AppDelegate
     @State private var questions: [String] = ["Test1", "Test2", "Test3"]
-    @Binding var isFullScreen: Bool
     
     var body: some View {
         ZStack{
             HMSPrebuiltView(roomCode: videoViewModel.roomCode)
-                .frame(width: isFullScreen ? .infinity : 350, height: isFullScreen ? .infinity : 380)
+                .frame(width: delegate.isFullScreen ? .infinity : 350, height: delegate.isFullScreen ? .infinity : 380)
                 .cornerRadius(30)
             
-            if self.isFullScreen {
+            if delegate.isFullScreen {
                 FullScreenComponentsView()
             }
         }
@@ -26,5 +26,5 @@ struct VideoView: View {
 }
 
 #Preview {
-    VideoView(isFullScreen: .constant(false))
+    VideoView()
 }

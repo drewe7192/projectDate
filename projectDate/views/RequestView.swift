@@ -27,7 +27,7 @@ struct RequestView: View {
                     .foregroundColor(.black)
                 
                 Button(action: {
-                    delegate.isFullScreen = .constant(true)
+                    delegate.isFullScreen = true
                     viewRouter.currentPage = .homePage
                 }) {
                     Text("Accept")

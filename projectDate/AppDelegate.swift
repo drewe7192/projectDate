@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     let gcmMessageIDKey = "gcm.message_id"
     @Published var requestByProfileName: String = ""
     @Published var requestByProfileRoomCode: String = ""
-    @Published var isFullScreen: Binding<Bool> = .constant(false)
+    @Published var isFullScreen: Bool = false
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication

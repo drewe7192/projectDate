@@ -28,7 +28,7 @@ struct ContentView: View {
         case .settingsPage:
             SettingsView()
         case .videoPage:
-            VideoView(isFullScreen: delegate.isFullScreen)
+            VideoView()
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)

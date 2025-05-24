@@ -81,6 +81,9 @@ struct HomeView: View {
             .onChange(of: delegate.requestByProfileName) { oldValue, newValue in
                 viewRouter.currentPage = .requestPage
             }
+            .onChange(of: delegate.isFullScreen) { oldValue, newValue in
+        
+            }
         }
     }
     
@@ -203,7 +206,7 @@ struct HomeView: View {
     private func videoSection() -> some View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
-                VideoView(isFullScreen: delegate.isFullScreen)
+                VideoView()
             }
             else {
                 RoundedRectangle(cornerRadius: 25)
