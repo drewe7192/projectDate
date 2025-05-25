@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @EnvironmentObject var delegate: AppDelegate
     @State var selectedTab = 0
      
      var body: some View {
@@ -14,6 +15,7 @@ struct MainView: View {
              TabView(selection: $selectedTab) {
                  HomeView(selectedTab: self.$selectedTab)
                      .tag(0)
+                 
 
                  EventsView()
                      .tag(1)

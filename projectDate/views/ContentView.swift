@@ -8,19 +8,20 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var delegate: AppDelegate
     
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var videoViewModel = VideoViewModel()
+    @StateObject var eventViewModel = EventViewModel()
     @StateObject var qaViewModel = QAViewModel()
     
     var body: some View {
         switch viewRouter.currentPage {
-        case .homePage :
+        case .homePage:
             MainView()
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
+                .environmentObject(eventViewModel)
         case .signUpPage:
             SignUpView()
         case .signInPage:
@@ -32,9 +33,11 @@ struct ContentView: View {
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
+                .environmentObject(eventViewModel)
         case .requestPage:
             RequestView()
                 .environmentObject(profileViewModel)
+                .environmentObject(eventViewModel)
         }
     }
 }

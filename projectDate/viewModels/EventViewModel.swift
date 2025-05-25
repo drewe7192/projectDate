@@ -14,6 +14,7 @@ import FirebaseFirestore
 class EventViewModel: ObservableObject {
     @Published var speedMeet: Bool = false
     @Published var messageInfo: [AnyHashable: Any] = [:]
+    @Published var isFullScreen: Bool = false
     
     let db = Firestore.firestore()
     

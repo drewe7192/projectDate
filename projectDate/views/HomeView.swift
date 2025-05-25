@@ -14,8 +14,9 @@ import FirebaseFunctions
 struct HomeView: View {
     @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var profileViewModel: ProfileViewModel
-    @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var delegate: AppDelegate
+    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var eventViewModel: EventViewModel
     @EnvironmentObject var viewRouter: ViewRouter
     
     @Binding var selectedTab: Int
@@ -32,8 +33,12 @@ struct HomeView: View {
                     header()
                     Spacer()
                     quickChat()
+                    
                     videoSection()
+                    
+                    
                     events()
+                    
                     Spacer()
                 }
             }
@@ -80,14 +85,15 @@ struct HomeView: View {
             /// display requestView once user recieves request for BlindDate
             .onChange(of: delegate.requestByProfile) { oldValue, newValue in
                 viewRouter.currentPage = .requestPage
+                
             }
-            .onChange(of: delegate.isFullScreen) { oldValue, newValue in
-                Task {
-                    try await launchVideoSession(pickedUser: delegate.requestByProfile)
-                    
-                    viewRouter.currentPage = .videoPage
-                }
-            }
+            //            .onChange(of: eventViewModel.isFullScreen) { oldValue, newValue in
+            //                Task  {
+            //                    try await launchVideoSession(pickedUser: delegate.requestByProfile)
+            //
+            //                    viewRouter.currentPage = .videoPage
+            //                }
+            //            }
         }
     }
     
@@ -170,6 +176,7 @@ struct HomeView: View {
                                 if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                     Task {
                                         try await sendRequestMessage(pickedUser: pickedUser)
+                                        
                                     }
                                 }
                                 
@@ -318,7 +325,7 @@ struct HomeView: View {
     
     private func sendRequestMessage(pickedUser: ProfileModel) async throws {
         let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
-        var response = try await profileViewModel.callSendNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
+        _ = try await profileViewModel.callSendNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
     }
 }
 
@@ -327,4 +334,5 @@ struct HomeView: View {
         .environmentObject(ProfileViewModel())
         .environmentObject(VideoViewModel())
         .environmentObject(AppDelegate())
+        .environmentObject(EventViewModel())
 }

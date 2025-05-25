@@ -15,7 +15,7 @@ import FirebaseMessaging
 struct projectDateApp: App {
     @StateObject var viewRouter = ViewRouter()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()

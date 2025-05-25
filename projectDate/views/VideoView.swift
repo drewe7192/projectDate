@@ -10,16 +10,19 @@ import HMSRoomKit
 struct VideoView: View {
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var delegate: AppDelegate
-    @State private var questions: [String] = ["Test1", "Test2", "Test3"]
+    @EnvironmentObject var eventViewModel: EventViewModel
     
     var body: some View {
         ZStack{
-            HMSPrebuiltView(roomCode: videoViewModel.roomCode)
-                .frame(width: delegate.isFullScreen ? .infinity : 350, height: delegate.isFullScreen ? .infinity : 380)
-                .cornerRadius(30)
-            
-            if delegate.isFullScreen {
-                FullScreenComponentsView()
+            // prevents refresh of video
+            if delegate.requestByProfile.roomCode == "" {
+                HMSPrebuiltView(roomCode: videoViewModel.roomCode)
+                    .frame(width: eventViewModel.isFullScreen ? .infinity : 350, height: eventViewModel.isFullScreen ? .infinity : 380)
+                    .cornerRadius(30)
+                
+                if eventViewModel.isFullScreen {
+                    FullScreenComponentsView()
+                }
             }
         }
     }

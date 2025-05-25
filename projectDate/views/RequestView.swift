@@ -10,6 +10,8 @@ import SwiftUI
 struct RequestView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var delegate: AppDelegate
+    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var eventViewModel: EventViewModel
     
     var body: some View {
         ZStack {
@@ -27,8 +29,8 @@ struct RequestView: View {
                     .foregroundColor(.black)
                 
                 Button(action: {
-                    delegate.isFullScreen = true
-                    viewRouter.currentPage = .homePage
+//                    eventViewModel.isFullScreen = true
+//                    viewRouter.currentPage = .homePage
                 }) {
                     Text("Accept")
                         .foregroundColor(.white)
@@ -38,7 +40,8 @@ struct RequestView: View {
                 }
                 
                 Button(action: {
-        
+                    delegate.requestByProfile.roomCode = ""
+                    viewRouter.currentPage = .homePage
                 }) {
                     Text("Decline")
                         .foregroundColor(.white)
