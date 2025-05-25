@@ -24,10 +24,13 @@ import * as functions from 'firebase-functions';
 
 admin.initializeApp();
 
-exports.sendNotification = onCall(async(data: any, context: any) => {
+exports.sendRequestNotification = onCall(async(data: any, context: any) => {
     const fcmToken = data.data.fcmToken
+    const requestByProfileId = data.data.requestByProfileId
     const requestByProfileName = data.data.requestByProfileName
+    const requestByProfileGender = data.data.requestByProfileGender
     const requestByProfileRoomCode = data.data.requestByProfileRoomCode
+    const requestByProfileUserId = data.data.requestByProfileUserId
 
     const message: any = {
     notification: {
@@ -36,8 +39,61 @@ exports.sendNotification = onCall(async(data: any, context: any) => {
     },
     token: fcmToken,
     data : {
-      'requestByProfileName': requestByProfileName,
-      'requestByProfileRoomCode': requestByProfileRoomCode
+        'requestByProfileId' : requestByProfileId,
+        'requestByProfileName': requestByProfileName,
+        'requestByProfileGender' : requestByProfileGender,
+        'requestByProfileRoomCode' : requestByProfileRoomCode,
+        'requestByProfileUserId' : requestByProfileUserId
+    }
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log('Successfully sent message:', response);
+    return { success: true, messageId: response };
+  } catch (error) {
+    console.error('Error sending message:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to send notification', error);
+  }
+});
+
+exports.sendAcceptNotification = onCall(async(data: any, context: any) => {
+    const fcmToken = data.data.fcmToken
+    const isRequestAccepted = data.data.isRequestAccepted
+
+    const message: any = {
+    notification: {
+      title: 'Request Accepted',
+      body: 'Connecting now',
+    },
+    token: fcmToken,
+    data : {
+      'isRequestAccepted': isRequestAccepted
+    }
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log('Successfully sent message:', response);
+    return { success: true, messageId: response };
+  } catch (error) {
+    console.error('Error sending message:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to send notification', error);
+  }
+});
+
+exports.callDeclineNotification = onCall(async(data: any, context: any) => {
+    const fcmToken = data.data.fcmToken
+    const isRequestAccepted = data.data.isRequestAccepted
+
+    const message: any = {
+    notification: {
+      title: 'Request Decline',
+      body: 'You suck',
+    },
+    token: fcmToken,
+    data : {
+      'isRequestAccepted': isRequestAccepted
     }
   };
 

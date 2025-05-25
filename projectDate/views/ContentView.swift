@@ -29,7 +29,7 @@ struct ContentView: View {
         case .settingsPage:
             SettingsView()
         case .videoPage:
-            VideoView()
+            VideoView(isFullScreen: true)
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
@@ -38,6 +38,7 @@ struct ContentView: View {
             RequestView()
                 .environmentObject(profileViewModel)
                 .environmentObject(eventViewModel)
+                .environmentObject(videoViewModel)
         }
     }
 }

@@ -59,18 +59,72 @@ class ProfileViewModel: ObservableObject {
         return fcmToken
     }
     
-    func callSendNotification(fcmToken: FCMTokenModel, requestByProfile: ProfileModel) async throws -> String {
+    func callSendRequestNotification(fcmToken: FCMTokenModel, requestByProfile: ProfileModel) async throws -> String {
         do {
             /// Used for testing
             //functions.useEmulator(withHost: "localhost", port: 5001)
             
             let payload = [
                 "fcmToken": fcmToken.token,
+                "requestByProfileId": requestByProfile.id,
                 "requestByProfileName": requestByProfile.name,
-                "requestByProfileRoomCode": requestByProfile.roomCode
+                "requestByProfileGender": requestByProfile.gender,
+                "requestByProfileRoomCode": requestByProfile.roomCode,
+                "requestByProfileUserId": requestByProfile.userId,
             ]
             
-            let result = try await functions.httpsCallable("sendNotification").call(payload)
+            let result = try await functions.httpsCallable("sendRequestNotification").call(payload)
+            
+            // Parse the response to extract the string message
+            if let data = result.data as? [String: Any],
+               let message = data["message"] as? String {
+                return message
+            } else {
+                throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
+            }
+        } catch {
+            throw error
+        }
+    }
+    
+    func callSendAcceptNotification(fcmToken: FCMTokenModel) async throws -> String {
+        do {
+            /// Used for testing
+            //functions.useEmulator(withHost: "localhost", port: 5001)
+            
+            let payload = [
+                "fcmToken": fcmToken.token,
+                "isRequestAccepted": "true",
+            ]
+            
+            let result = try await functions.httpsCallable("sendAcceptNotification").call(payload)
+            
+            // Parse the response to extract the string message
+            //            if let data = result.data as? [String: Any],
+            //               let message = data["message"] as? String {
+            //                return message
+            //            } else {
+            //                throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
+            //            }
+            //        } catch {
+            //            throw error
+            //        }
+            return ""
+        }
+        
+    }
+    
+    func callSendDeclineNotification(fcmToken: FCMTokenModel) async throws -> String {
+        do {
+            /// Used for testing
+            //functions.useEmulator(withHost: "localhost", port: 5001)
+            
+            let payload = [
+                "fcmToken": fcmToken.token,
+                "isRequestAccepted": "false",
+            ]
+            
+            let result = try await functions.httpsCallable("sendDeclineNotification").call(payload)
             
             // Parse the response to extract the string message
             if let data = result.data as? [String: Any],

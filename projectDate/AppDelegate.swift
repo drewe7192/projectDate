@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
     @Published var requestByProfile: ProfileModel = emptyProfileModel
+    @Published var isRequestAccepted: Bool = false
     
     
     func application(_ application: UIApplication,
@@ -105,11 +106,35 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         // Get message from userInfo object
-//        if let name = userInfo["requestByProfileName"] as? NSString {
-//            requestByProfile.name = name as String
-//        }
-        if let roomCode = userInfo["requestByProfileRoomCode"] as? NSString {
-            requestByProfile.roomCode = roomCode as String
+        var profileDTO: ProfileModel = emptyProfileModel
+        
+        if let requestByProfileId = userInfo["requestByProfileId"] as? NSString {
+            profileDTO.id = requestByProfileId as String
+        }
+        
+        if let requestByProfileName = userInfo["requestByProfileName"] as? NSString {
+            profileDTO.name = requestByProfileName as String
+        }
+        
+        if let requestByProfileGender = userInfo["requestByProfileGender"] as? NSString {
+            profileDTO.gender = requestByProfileGender as String
+        }
+        
+        
+        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
+            profileDTO.roomCode = requestByProfileRoomCode as String
+        }
+        
+        if let requestByProfileUserId = userInfo["requestByProfileUserId"] as? NSString {
+            profileDTO.userId = requestByProfileUserId as String
+            
+            self.requestByProfile = profileDTO
+        }
+        
+        if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
+            if isRequestAccepted == "true" {
+                self.isRequestAccepted = true
+            }
         }
         
         return [[.alert, .sound]]

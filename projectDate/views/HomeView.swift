@@ -8,8 +8,7 @@
 import SwiftUI
 import Combine
 import HMSRoomKit
-import FirebaseMessaging
-import FirebaseFunctions
+import Firebase
 
 struct HomeView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -33,12 +32,8 @@ struct HomeView: View {
                     header()
                     Spacer()
                     quickChat()
-                    
                     videoSection()
-                    
-                    
                     events()
-                    
                     Spacer()
                 }
             }
@@ -87,13 +82,9 @@ struct HomeView: View {
                 viewRouter.currentPage = .requestPage
                 
             }
-            //            .onChange(of: eventViewModel.isFullScreen) { oldValue, newValue in
-            //                Task  {
-            //                    try await launchVideoSession(pickedUser: delegate.requestByProfile)
-            //
-            //                    viewRouter.currentPage = .videoPage
-            //                }
-            //            }
+            .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
+                viewRouter.currentPage = .videoPage
+            }
         }
     }
     
@@ -215,7 +206,7 @@ struct HomeView: View {
     private func videoSection() -> some View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
-                VideoView()
+                VideoView(isFullScreen: false)
             }
             else {
                 RoundedRectangle(cornerRadius: 25)
@@ -325,7 +316,9 @@ struct HomeView: View {
     
     private func sendRequestMessage(pickedUser: ProfileModel) async throws {
         let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
-        _ = try await profileViewModel.callSendNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
+        profileViewModel.userProfile.userId = Auth.auth().currentUser?.uid as Any as! String
+        
+        _ = try await profileViewModel.callSendRequestNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
     }
 }
 

@@ -12,6 +12,7 @@ struct RequestView: View {
     @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var eventViewModel: EventViewModel
+    @EnvironmentObject var profileViewModel: ProfileViewModel
     
     var body: some View {
         ZStack {
@@ -29,8 +30,14 @@ struct RequestView: View {
                     .foregroundColor(.black)
                 
                 Button(action: {
-//                    eventViewModel.isFullScreen = true
-//                    viewRouter.currentPage = .homePage
+                    Task {
+                        let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
+                        _ = try await profileViewModel.callSendAcceptNotification(fcmToken: fcmToken)
+                        
+                        videoViewModel.roomCode = delegate.requestByProfile.roomCode
+                        
+                        viewRouter.currentPage = .videoPage
+                    }
                 }) {
                     Text("Accept")
                         .foregroundColor(.white)
@@ -40,8 +47,12 @@ struct RequestView: View {
                 }
                 
                 Button(action: {
-                    delegate.requestByProfile.roomCode = ""
-                    viewRouter.currentPage = .homePage
+                    Task {
+                        let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
+                        _ = try await profileViewModel.callSendDeclineNotification(fcmToken: fcmToken)
+                        
+                        viewRouter.currentPage = .homePage
+                    }
                 }) {
                     Text("Decline")
                         .foregroundColor(.white)

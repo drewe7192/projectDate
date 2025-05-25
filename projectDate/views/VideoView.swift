@@ -8,26 +8,22 @@ import SwiftUI
 import HMSRoomKit
 
 struct VideoView: View {
+    let isFullScreen: Bool
     @EnvironmentObject var videoViewModel: VideoViewModel
-    @EnvironmentObject var delegate: AppDelegate
-    @EnvironmentObject var eventViewModel: EventViewModel
     
     var body: some View {
         ZStack{
-            // prevents refresh of video
-            if delegate.requestByProfile.roomCode == "" {
-                HMSPrebuiltView(roomCode: videoViewModel.roomCode)
-                    .frame(width: eventViewModel.isFullScreen ? .infinity : 350, height: eventViewModel.isFullScreen ? .infinity : 380)
-                    .cornerRadius(30)
-                
-                if eventViewModel.isFullScreen {
-                    FullScreenComponentsView()
-                }
+            HMSPrebuiltView(roomCode: videoViewModel.roomCode)
+                .frame(width: self.isFullScreen ? .infinity : 350, height: self.isFullScreen ? .infinity : 380)
+                .cornerRadius(30)
+            
+            if self.isFullScreen {
+                FullScreenComponentsView()
             }
         }
     }
 }
 
 #Preview {
-    VideoView()
+    VideoView(isFullScreen: false)
 }
