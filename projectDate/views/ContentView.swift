@@ -8,6 +8,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @Environment(\.scenePhase) var scenePhase
     
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var videoViewModel = VideoViewModel()
@@ -22,6 +23,10 @@ struct ContentView: View {
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
                 .environmentObject(eventViewModel)
+            /// update status in db whether app is in foreground and background
+                .onChange(of: scenePhase) { oldPhase, newPhase in
+                    updateActiveStatus(newPhase: newPhase)
+                }
         case .signUpPage:
             SignUpView()
         case .signInPage:
@@ -34,11 +39,35 @@ struct ContentView: View {
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
                 .environmentObject(eventViewModel)
+            /// update status in db whether app is in foreground and background
+                .onChange(of: scenePhase) { oldPhase, newPhase in
+                    updateActiveStatus(newPhase: newPhase)
+                }
         case .requestPage:
             RequestView()
                 .environmentObject(profileViewModel)
                 .environmentObject(eventViewModel)
                 .environmentObject(videoViewModel)
+        }
+    }
+
+    private func updateActiveStatus(newPhase: ScenePhase) {
+        if newPhase == .active {
+            if profileViewModel.userProfile.id != "" {
+                Task{
+                    try await profileViewModel.UpdateActivityStatus(isActive: true)
+                }
+            }
+        } else if newPhase == .inactive {
+            if profileViewModel.userProfile.id != "" {
+                Task {
+                    try await
+                    profileViewModel.UpdateActivityStatus(isActive: false)
+                }
+                
+            }
+        } else if newPhase == .background {
+           // Todo
         }
     }
 }

@@ -11,7 +11,6 @@ import HMSRoomKit
 import Firebase
 
 struct HomeView: View {
-    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var videoViewModel: VideoViewModel
@@ -52,29 +51,6 @@ struct HomeView: View {
                     
                 } catch {
                     // HANDLE ERROR
-                }
-            }
-            /// update status in db whether app is in foreground and background
-            .onChange(of: scenePhase) { oldPhase, newPhase in
-                if newPhase == .active {
-                    print("Active \(profileViewModel.userProfile.id)")
-                    if profileViewModel.userProfile.id != "" {
-                        Task{
-                            try await profileViewModel.UpdateActivityStatus(isActive: true)
-                        }
-                        
-                    }
-                } else if newPhase == .inactive {
-                    print("Inactive")
-                    if profileViewModel.userProfile.id != "" {
-                        Task {
-                            try await
-                            profileViewModel.UpdateActivityStatus(isActive: false)
-                        }
-                        
-                    }
-                } else if newPhase == .background {
-                    print("Background")
                 }
             }
             /// display requestView once user recieves request for BlindDate
