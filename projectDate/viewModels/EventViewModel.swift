@@ -12,9 +12,7 @@ import FirebaseFirestore
 
 
 class EventViewModel: ObservableObject {
-    @Published var isRequestViewDisplay: Bool = false
-    @Published var messageInfo: [AnyHashable: Any] = [:]
-    @Published var isFullScreen: Bool = false
+    @Published var isBlurredScreen: Bool = false
     
     let db = Firestore.firestore()
     

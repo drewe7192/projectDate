@@ -10,10 +10,12 @@ import HMSRoomKit
 struct VideoView: View {
     let isFullScreen: Bool
     @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var eventViewModel: EventViewModel
     
     var body: some View {
         ZStack{
             HMSPrebuiltView(roomCode: videoViewModel.roomCode)
+                .blur(radius: eventViewModel.isBlurredScreen ? 30 : 0)
                 .frame(width: self.isFullScreen ? .infinity : 350, height: self.isFullScreen ? .infinity : 380)
                 .cornerRadius(30)
             

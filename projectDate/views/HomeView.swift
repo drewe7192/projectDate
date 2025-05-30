@@ -55,10 +55,13 @@ struct HomeView: View {
             }
             /// display requestView once user recieves request for BlindDate
             .onChange(of: delegate.requestByProfile) { oldValue, newValue in
+                eventViewModel.isBlurredScreen = true
                 viewRouter.currentPage = .requestPage
                 
             }
+            /// once user accepts BlindDate request
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
+                eventViewModel.isBlurredScreen = true
                 viewRouter.currentPage = .videoPage
             }
         }
