@@ -10,4 +10,5 @@ import Foundation
 @MainActor
 class VideoViewModel: ObservableObject {
     @Published var roomCode: String = ""
+    @Published var isBlurredScreen: Bool = false
 }

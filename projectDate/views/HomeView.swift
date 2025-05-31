@@ -55,14 +55,15 @@ struct HomeView: View {
             }
             /// display requestView once user recieves request for BlindDate
             .onChange(of: delegate.requestByProfile) { oldValue, newValue in
-                eventViewModel.isBlurredScreen = true
+                videoViewModel.isBlurredScreen = true
+                ///prevents video session from launching when routing to requestPage
+                videoViewModel.roomCode = ""
                 viewRouter.currentPage = .requestPage
                 
             }
             /// once user accepts BlindDate request
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
-                eventViewModel.isBlurredScreen = true
-                viewRouter.currentPage = .videoPage
+                viewRouter.currentPage = .videoPage(isScreenBlurred: true)
             }
         }
     }
@@ -146,10 +147,8 @@ struct HomeView: View {
                                 if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                     Task {
                                         try await sendRequestMessage(pickedUser: pickedUser)
-                                        
                                     }
                                 }
-                                
                             }) {
                                 Image(systemName: "checkmark.circle")
                                     .resizable()
@@ -185,7 +184,7 @@ struct HomeView: View {
     private func videoSection() -> some View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
-                VideoView(isFullScreen: false)
+                VideoView(isFullScreen: false, isScreenBlurred: false)
             }
             else {
                 RoundedRectangle(cornerRadius: 25)
@@ -290,7 +289,7 @@ struct HomeView: View {
         try? await Task.sleep(nanoseconds: 5_000_000_000)
         
         videoViewModel.roomCode = pickedUser.roomCode
-        viewRouter.currentPage = .videoPage
+        //viewRouter.currentPage = .videoPage
     }
     
     private func sendRequestMessage(pickedUser: ProfileModel) async throws {

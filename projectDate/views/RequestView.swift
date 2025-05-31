@@ -36,7 +36,7 @@ struct RequestView: View {
                         
                         videoViewModel.roomCode = delegate.requestByProfile.roomCode
                         
-                        viewRouter.currentPage = .videoPage
+                        viewRouter.currentPage = .videoPage(isScreenBlurred: true)
                     }
                 }) {
                     Text("Accept")

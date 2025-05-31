@@ -33,8 +33,8 @@ struct ContentView: View {
             SignInView()
         case .settingsPage:
             SettingsView()
-        case .videoPage:
-            VideoView(isFullScreen: true)
+        case .videoPage(let isScreenBlurred):
+            VideoView(isFullScreen: true,isScreenBlurred: isScreenBlurred )
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)

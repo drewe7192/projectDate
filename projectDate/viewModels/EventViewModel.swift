@@ -12,8 +12,6 @@ import FirebaseFirestore
 
 
 class EventViewModel: ObservableObject {
-    @Published var isBlurredScreen: Bool = false
-    
     let db = Firestore.firestore()
     
 //    public func getSpeedDate(speedDateIds: [String], completed: @escaping(_ speedDates: [SpeedDateModel]) -> Void){
