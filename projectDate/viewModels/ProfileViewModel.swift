@@ -26,7 +26,7 @@ class ProfileViewModel: ObservableObject {
     
     public func GetUserProfile() async throws {
         let userProfile = try await profileService.GetProfile(userId: Auth.auth().currentUser?.uid ?? "")
-        if(userProfile.id != "") {
+        if(!userProfile.id.isEmpty) {
             self.userProfile = userProfile
         } else {
             if isNewUser {

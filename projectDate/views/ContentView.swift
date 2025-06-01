@@ -53,13 +53,13 @@ struct ContentView: View {
 
     private func updateActiveStatus(newPhase: ScenePhase) {
         if newPhase == .active {
-            if profileViewModel.userProfile.id != "" {
+            if !profileViewModel.userProfile.id.isEmpty {
                 Task{
                     try await profileViewModel.UpdateActivityStatus(isActive: true)
                 }
             }
         } else if newPhase == .inactive {
-            if profileViewModel.userProfile.id != "" {
+            if !profileViewModel.userProfile.id.isEmpty {
                 Task {
                     try await
                     profileViewModel.UpdateActivityStatus(isActive: false)

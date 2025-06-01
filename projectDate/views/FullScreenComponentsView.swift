@@ -14,9 +14,9 @@ struct FullScreenComponentsView: View {
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var delegate: AppDelegate
+    @EnvironmentObject var viewRouter: ViewRouter
     
-    /// there's a 5 sec delay once user taps checkmark
-    @State private var timeRemaining = 15
+    @State private var timeRemaining = 10
     @State private var question: String = "testing"
     @State private var answer: String = ""
     @State private var questionNumber: Int = 0
@@ -51,10 +51,10 @@ struct FullScreenComponentsView: View {
         .onChange(of: delegate.hostAnswerBlindDate) { oldValue, newValue in
             Task {
                 do {
-                    if qaViewModel.answer.answer != "" {
-                        try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: self.answer)
+                    if !qaViewModel.answer.answer.isEmpty {
+                        try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: qaViewModel.answer.answer)
                         
-                        /// clear if dirty
+                        /// clean if dirty
                         delegate.hostAnswerBlindDate = ""
                     } else {
                         transactionState = .waitingForResponse
@@ -68,16 +68,14 @@ struct FullScreenComponentsView: View {
         .onChange(of: delegate.guestAnswerBlindDate) { oldValue, newValue in
             Task {
                 do {
-                    if qaViewModel.answer.answer != "" {
-                        try await compareAnswers(role: RoleType.host, hostAnswer: self.answer, guestAnswer: newValue)
+                    if !qaViewModel.answer.answer.isEmpty {
+                        try await compareAnswers(role: RoleType.host, hostAnswer: qaViewModel.answer.answer, guestAnswer: newValue)
                         
-                        /// clear if dirty
+                        /// clean if dirty
                         delegate.guestAnswerBlindDate = ""
                     } else {
                         transactionState = .waitingForResponse
                     }
-                    
-                    
                 } catch {
                     // HANDLE ERROR
                 }
@@ -130,17 +128,15 @@ struct FullScreenComponentsView: View {
                         qaViewModel.answer.profileId = profileViewModel.userProfile.id
                         qaViewModel.answer.questionId = qaViewModel.questions[0].id
                         
+                        /// Ontap of button this fires
                         Task {
                             do {
-                               // self.answer = qaViewModel.answer.answer
-                                
-                                if delegate.guestAnswerBlindDate != "" || delegate.hostAnswerBlindDate != "" {
-                                    
+                                if !delegate.guestAnswerBlindDate.isEmpty || !delegate.hostAnswerBlindDate.isEmpty {
                                     transactionState = .analyzingAnswers
                                     
-                                    try await compareAnswers(role: role, hostAnswer: delegate.hostAnswerBlindDate != "" ? delegate.hostAnswerBlindDate : self.answer, guestAnswer: delegate.guestAnswerBlindDate != "" ? delegate.guestAnswerBlindDate : self.answer)
+                                    try await compareAnswers(role: role, hostAnswer: !delegate.hostAnswerBlindDate.isEmpty ? delegate.hostAnswerBlindDate : qaViewModel.answer.answer, guestAnswer: !delegate.guestAnswerBlindDate.isEmpty ? delegate.guestAnswerBlindDate : qaViewModel.answer.answer)
                                     
-                                    /// clear if dirty
+                                    /// clean if dirty
                                     delegate.hostAnswerBlindDate = ""
                                     delegate.guestAnswerBlindDate = ""
                                 } else {
@@ -162,7 +158,7 @@ struct FullScreenComponentsView: View {
         if role == RoleType.host {
             Task {
                 do {
-                    let fcmToken = try await profileViewModel.GetFCMToken(userId: profileViewModel.participantProfile.id != "" ? profileViewModel.participantProfile.userId : Auth.auth().currentUser?.uid ?? "")
+                    let fcmToken = try await profileViewModel.GetFCMToken(userId: !profileViewModel.participantProfile.userId.isEmpty ? profileViewModel.participantProfile.userId : Auth.auth().currentUser?.uid ?? "")
                     
                     _ = try await qaViewModel.sendAnswerNotification(fcmToken: fcmToken, role: RoleType.host, answer: "HOSTANSWERED")
                 } catch {
@@ -173,7 +169,7 @@ struct FullScreenComponentsView: View {
         else {
             Task {
                 do {
-                    let fcmToken = try await profileViewModel.GetFCMToken(userId: profileViewModel.participantProfile.id != "" ? profileViewModel.participantProfile.userId : Auth.auth().currentUser?.uid ?? "")
+                    let fcmToken = try await profileViewModel.GetFCMToken(userId: !profileViewModel.participantProfile.userId.isEmpty ? profileViewModel.participantProfile.userId : Auth.auth().currentUser?.uid ?? "")
                     
                     _ = try await qaViewModel.sendAnswerNotification(fcmToken: fcmToken, role: RoleType.guest, answer: "GUESTANSWERED")
                 } catch {
@@ -187,9 +183,19 @@ struct FullScreenComponentsView: View {
         Task {
             do {
                 transactionState = .analyzingAnswers
-                var isAnswerMatch = true
-                transactionState = isAnswerMatch ? .success : .failed
-                try await Task.sleep(for: .seconds(2))
+                transactionState = hostAnswer == guestAnswer ? .success : .failed
+                try await Task.sleep(for: .seconds(3))
+                
+                if transactionState == .success {
+                    /// continue videoChat
+                    timeRemaining = 10
+                    showSheet.toggle()
+                    
+                } else if transactionState == .failed {
+                    /// leave session
+                    viewRouter.currentPage = .homePage
+                    videoViewModel.roomCode = ""
+                }
                 transactionState = .idle
             } catch {
                 
