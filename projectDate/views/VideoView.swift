@@ -8,24 +8,23 @@ import SwiftUI
 import HMSRoomKit
 
 struct VideoView: View {
-    let isFullScreen: Bool
-    let isScreenBlurred: Bool
+    let videoConfig: VideoConfigModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     
     var body: some View {
         ZStack{
             HMSPrebuiltView(roomCode: videoViewModel.roomCode)
-                .blur(radius: isScreenBlurred ? 30 : 0)
-                .frame(width: self.isFullScreen ? .infinity : 350, height: self.isFullScreen ? .infinity : 380)
+                .blur(radius: videoConfig.isScreenBlurred ? 30 : 0)
+                .frame(width: videoConfig.isFullScreen ? .infinity : 350, height: videoConfig.isFullScreen ? .infinity : 380)
                 .cornerRadius(30)
             
-            if self.isFullScreen {
-                FullScreenComponentsView()
+            if videoConfig.isFullScreen  {
+                FullScreenComponentsView(role: videoConfig.role)
             }
         }
     }
 }
 
 #Preview {
-    VideoView(isFullScreen: false, isScreenBlurred: false)
+    VideoView(videoConfig: emptyVideoConfig)
 }

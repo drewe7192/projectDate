@@ -32,6 +32,6 @@ enum Route {
     case signInPage
     case homePage
     case settingsPage
-    case videoPage(isScreenBlurred: Bool)
+    case videoPage(videoConfig: VideoConfigModel)
     case requestPage
 }

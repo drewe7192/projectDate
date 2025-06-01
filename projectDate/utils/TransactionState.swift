@@ -10,20 +10,23 @@ import SwiftUI
 
 enum TransactionState: String {
     case idle = "Click to match"
-    case analyzing = "Waiting for guest's answer"
-    case processing =  "Checking for Match"
-    case completed = "It's a match!"
+    case answerSubmitted = "Answer submitted! Waiting on participant"
+    case waitingForResponse = "User submitted answer! Waiting for you..."
+    case analyzingAnswers =  "Answers submitted! Checking for Match"
+    case success = "It's a match!"
     case failed = "Not a match. Leaving Session"
     
     var color: Color {
         switch self {
         case .idle:
             return .black
-        case .analyzing:
+        case .answerSubmitted:
             return .blue
-        case .processing:
+        case .waitingForResponse:
+            return .pink
+        case .analyzingAnswers:
             return Color(red: 0.8, green: 0.35, blue: 0.2)
-        case .completed:
+        case .success:
             return .green
         case .failed:
             return .red
@@ -33,9 +36,10 @@ enum TransactionState: String {
     var image: String? {
         switch self {
         case .idle: "heart"
-        case .analyzing: nil
-        case .processing: nil
-        case .completed: "checkmark.circle.fill"
+        case .answerSubmitted: nil
+        case .waitingForResponse: nil
+        case .analyzingAnswers: nil
+        case .success: "checkmark.circle.fill"
         case .failed: "xmark.circle.fill"
         }
     }

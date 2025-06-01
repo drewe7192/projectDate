@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     let gcmMessageIDKey = "gcm.message_id"
     @Published var requestByProfile: ProfileModel = emptyProfileModel
     @Published var isRequestAccepted: Bool = false
+    @Published var hostAnswerBlindDate: String = ""
+    @Published var guestAnswerBlindDate: String = ""
     
     
     func application(_ application: UIApplication,
@@ -136,6 +138,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 self.isRequestAccepted = true
             }
         }
+        
+        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
+            profileDTO.roomCode = requestByProfileRoomCode as String
+        }
+        
+        if let hostAnswerBlindDate = userInfo["hostAnswer"] as? NSString {
+            self.hostAnswerBlindDate = hostAnswerBlindDate as String
+        }
+        
+        if let guestAnswerBlindDate = userInfo["guestAnswer"] as? NSString {
+            self.guestAnswerBlindDate = guestAnswerBlindDate as String
+        }
+        
         
         return [[.alert, .sound]]
     }

@@ -20,6 +20,7 @@ struct HomeView: View {
     @Binding var selectedTab: Int
     @State var timer: AnyCancellable?
     @State private var name: String = ""
+    @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     
     var body: some View {
         NavigationView {
@@ -55,7 +56,6 @@ struct HomeView: View {
             }
             /// display requestView once user recieves request for BlindDate
             .onChange(of: delegate.requestByProfile) { oldValue, newValue in
-                videoViewModel.isBlurredScreen = true
                 ///prevents video session from launching when routing to requestPage
                 videoViewModel.roomCode = ""
                 viewRouter.currentPage = .requestPage
@@ -63,7 +63,8 @@ struct HomeView: View {
             }
             /// once user accepts BlindDate request
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
-                viewRouter.currentPage = .videoPage(isScreenBlurred: true)
+                let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
+                viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
             }
         }
     }
@@ -146,6 +147,7 @@ struct HomeView: View {
                             Button(action: {
                                 if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
                                     Task {
+                                        profileViewModel.participantProfile = pickedUser
                                         try await sendRequestMessage(pickedUser: pickedUser)
                                     }
                                 }
@@ -184,7 +186,8 @@ struct HomeView: View {
     private func videoSection() -> some View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
-                VideoView(isFullScreen: false, isScreenBlurred: false)
+                VideoView(videoConfig: videoConfig)
+                    
             }
             else {
                 RoundedRectangle(cornerRadius: 25)

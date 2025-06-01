@@ -82,7 +82,7 @@ exports.sendAcceptNotification = onCall(async(data: any, context: any) => {
   }
 });
 
-exports.callDeclineNotification = onCall(async(data: any, context: any) => {
+exports.sendDeclineNotification = onCall(async(data: any, context: any) => {
     const fcmToken = data.data.fcmToken
     const isRequestAccepted = data.data.isRequestAccepted
 
@@ -94,6 +94,56 @@ exports.callDeclineNotification = onCall(async(data: any, context: any) => {
     token: fcmToken,
     data : {
       'isRequestAccepted': isRequestAccepted
+    }
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log('Successfully sent message:', response);
+    return { success: true, messageId: response };
+  } catch (error) {
+    console.error('Error sending message:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to send notification', error);
+  }
+});
+
+exports.sendHostAnswerNotification = onCall(async(data: any, context: any) => {
+    const fcmToken = data.data.fcmToken
+    const answer = data.data.answer
+
+    const message: any = {
+    notification: {
+      title: 'Received Host Answer',
+      body: 'Waiting on response from guest',
+    },
+    token: fcmToken,
+    data : {
+      'hostAnswer': answer
+    }
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log('Successfully sent message:', response);
+    return { success: true, messageId: response };
+  } catch (error) {
+    console.error('Error sending message:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to send notification', error);
+  }
+});
+
+exports.sendGuestAnswerNotification = onCall(async(data: any, context: any) => {
+    const fcmToken = data.data.fcmToken
+    const answer = data.data.answer
+
+    const message: any = {
+    notification: {
+       title: 'Received Guest Answer',
+      body: 'Waiting on response from host',
+    },
+    token: fcmToken,
+    data : {
+      'guestAnswer': answer
     }
   };
 

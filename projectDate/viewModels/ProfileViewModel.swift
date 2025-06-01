@@ -13,6 +13,7 @@ import FirebaseFunctions
 @MainActor
 class ProfileViewModel: ObservableObject {
     @Published var userProfile: ProfileModel = emptyProfileModel
+    @Published var participantProfile: ProfileModel =  emptyProfileModel
     @Published var isNewUser: Bool = false
     @Published var activeUsers: [ProfileModel] = []
     @Published var profileImage: UIImage = UIImage()
