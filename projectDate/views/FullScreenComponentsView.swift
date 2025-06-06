@@ -128,7 +128,7 @@ struct FullScreenComponentsView: View {
                         qaViewModel.answer.profileId = profileViewModel.userProfile.id
                         qaViewModel.answer.questionId = qaViewModel.questions[0].id
                         
-                        /// Ontap of button this fires
+                        /// Fires Ontap of button
                         Task {
                             do {
                                 if !delegate.guestAnswerBlindDate.isEmpty || !delegate.hostAnswerBlindDate.isEmpty {

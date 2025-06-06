@@ -86,17 +86,11 @@ struct HomeView: View {
                         selectedTab = 1
                     }
                 
-                HStack(spacing: 0){
-                    Text("Hello,")
-                        .font(.title3)
-                        .foregroundColor(.black)
-                    
-                    Text("Drew")
-                        .font(.title3)
-                        .bold()
-                        .foregroundColor(.black)
-                }
-                
+                Spacer()
+                Text("LittleBigThings")
+                    .font(.custom("Copperplate", size: 20))
+                    .foregroundColor(.black)
+                    .bold()
                 Spacer()
                 
                 Image(systemName: "bell.circle")
@@ -129,6 +123,8 @@ struct HomeView: View {
                             }
                             .padding(.leading)
                             .foregroundColor(.gray)
+                        
+                        Spacer()
                         
                         VStack{
                             Text("\(self.name)")
@@ -213,18 +209,22 @@ struct HomeView: View {
     
     private func events() -> some View {
         VStack{
-            Text("Upcoming Events")
-                .bold()
-                .font(.system(size: 20))
-                .foregroundColor(.black)
+            HStack{
+                Text("Upcoming Events")
+                    .bold()
+                    .font(.system(size: 20))
+                    .foregroundColor(.black)
+                    .padding(10)
+                
+                Spacer()
+            }
             
             ScrollView(.vertical) {
                 VStack{
                     ForEach(1...3, id: \.self) {_ in
                         HStack{
-                            Spacer()
                             Circle()
-                                .frame(width: 45)
+                                .frame(width: 40)
                                 .overlay {
                                     Image(systemName: "person.fill")
                                         .resizable()
@@ -237,7 +237,7 @@ struct HomeView: View {
                             VStack{
                                 Text("Facebook Arena")
                                     .foregroundColor(.black)
-                                    .font(.system(size: 20))
+                                    .font(.system(size: 16))
                                     .bold()
                                 
                                 HStack{
@@ -249,11 +249,6 @@ struct HomeView: View {
                                         .foregroundColor(.black)
                                         .font(.system(size: 10))
                                 }
-                                
-                                NavigationLink(destination: EventView()) {
-                                    Text("Choose Heads")
-                                }
-                                
                             }
                             
                             Spacer()

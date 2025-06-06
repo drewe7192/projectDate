@@ -131,11 +131,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             profileDTO.userId = requestByProfileUserId as String
             
             self.requestByProfile = profileDTO
+            return [[]]
         }
         
         if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
             if isRequestAccepted == "true" {
                 self.isRequestAccepted = true
+                return [[]]
             }
         }
         
@@ -151,8 +153,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self.guestAnswerBlindDate = guestAnswerBlindDate as String
         }
         
-        
-        return [[.alert, .sound]]
+        return [[.sound, .banner, .badge]]
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
