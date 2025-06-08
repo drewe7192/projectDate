@@ -34,4 +34,5 @@ enum Route {
     case settingsPage
     case videoPage(videoConfig: VideoConfigModel)
     case requestPage
+    case notificationsPage
 }

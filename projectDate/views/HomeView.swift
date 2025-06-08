@@ -19,19 +19,22 @@ struct HomeView: View {
     
     @Binding var selectedTab: Int
     @State var timer: AnyCancellable?
-    @State private var name: String = ""
+    @State private var currentActiveUser: ProfileModel = emptyProfileModel
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     
     var body: some View {
         NavigationView {
             ZStack {
-                Color.white
+                Color.primaryColor
                     .ignoresSafeArea()
                 
                 VStack{
                     header()
                     Spacer()
+                        .frame(height: 10)
                     quickChat()
+                    Spacer()
+                        .frame(height: 10)
                     videoSection()
                     events()
                     Spacer()
@@ -41,6 +44,8 @@ struct HomeView: View {
                 do {
                     /// get profile and launch video
                     try await profileViewModel.GetUserProfile()
+                    try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
+                    
                     videoViewModel.roomCode = profileViewModel.userProfile.roomCode
                     
                     /// update user app status to active
@@ -75,32 +80,56 @@ struct HomeView: View {
                 Circle()
                     .frame(width: 30)
                     .overlay {
-                        Image(systemName: "person.fill")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                            .foregroundColor(.black)
+                        if !profileViewModel.userProfile.profileImage.size.height.isZero {
+                            Circle()
+                               // .fill(Color.secondaryColor)
+                                .overlay(
+                                    Image(uiImage: profileViewModel.userProfile.profileImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                      //  .foregroundColor(.black)
+                                        .clipShape(Circle())
+                                )
+                                .frame(width: 35, height: 35)
+                            
+                        } else {
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .frame(width: 15, height: 15)
+                               // .foregroundColor(.secondaryColor)
+                        }
+                        
                     }
                     .padding(.leading)
-                    .foregroundColor(.gray)
+                  //  .foregroundColor(.secondaryColor)
                     .onTapGesture {
-                        selectedTab = 1
+                        selectedTab = 2
                     }
                 
                 Spacer()
-                Text("LittleBigThings")
+                Image("logo")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                
+                Text("LittleBigTings")
                     .font(.custom("Copperplate", size: 20))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("tertiaryColor"))
                     .bold()
+                
                 Spacer()
                 
-                Image(systemName: "bell.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 30)
-                    .foregroundColor(.gray)
-                    .padding(.horizontal)
-                    .padding(.vertical, 5)
-                    .clipShape(Circle())
+                Button(action : {
+                    viewRouter.currentPage = .notificationsPage
+                }){
+                    Image(systemName: "bell.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 30)
+                        .foregroundColor(Color("tertiaryColor"))
+                        .padding(.horizontal)
+                        .padding(.vertical, 5)
+                        .clipShape(Circle())
+                }
             }
         }
     }
@@ -108,40 +137,49 @@ struct HomeView: View {
     private func quickChat() -> some View {
         VStack{
             RoundedRectangle(cornerRadius: 40)
-                .fill(.gray)
-                .opacity(0.3)
-                .frame(width: 350, height: 60)
+                .fill(Color.secondaryColor)
+                .frame(width: 350, height: 55)
                 .overlay {
                     HStack{
                         Circle()
-                            .frame(width: 40)
+                            .frame(width: 35)
                             .overlay {
-                                Image(systemName: "person.fill")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.black)
+                                if !currentActiveUser.profileImage.size.height.isZero {
+                                    Image(uiImage: currentActiveUser.profileImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundColor(.black)
+                                        .clipShape(Circle())
+                                        .frame(width: 40 , height: 40)
+                                } else {
+                                    Image(systemName: "person.fill")
+                                        .resizable()
+                                        .frame(width: 15, height: 15)
+                                        .foregroundColor(.black)
+                                }
+                            
                             }
                             .padding(.leading)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color.secondaryColor)
                         
                         Spacer()
                         
                         VStack{
-                            Text("\(self.name)")
+                            Text("\(self.currentActiveUser.name)")
                                 .bold()
-                                .id(self.name)
+                                .id(self.currentActiveUser.id)
                                 .transition(.opacity.animation(.smooth))
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("tertiaryColor"))
                             
                             Text("Wants to connect")
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("tertiaryColor"))
                         }
                         
                         Spacer()
                         
                         HStack(spacing: -15){
                             Button(action: {
-                                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.name == self.name}) {
+                                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.id == self.currentActiveUser.id}) {
                                     Task {
                                         profileViewModel.participantProfile = pickedUser
                                         try await sendRequestMessage(pickedUser: pickedUser)
@@ -151,8 +189,8 @@ struct HomeView: View {
                                 Image(systemName: "checkmark.circle")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 35)
-                                    .foregroundColor(.white)
+                                    .frame(height: 30)
+                                    .foregroundColor(Color("tertiaryColor"))
                                     .padding(.horizontal)
                                     .padding(.vertical, 5)
                                     .background(Color.gray)
@@ -160,14 +198,14 @@ struct HomeView: View {
                             }
                             
                             Button(action: {
-                                profileViewModel.activeUsers.removeAll(where: { $0.name == self.name })
+                                profileViewModel.activeUsers.removeAll(where: { $0.id == self.currentActiveUser.id })
                                 startProfileRotation()
                             }) {
                                 Image(systemName: "x.circle")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 35)
-                                    .foregroundColor(.white)
+                                    .frame(height: 30)
+                                    .foregroundColor(Color("tertiaryColor"))
                                     .padding(.horizontal)
                                     .padding(.vertical, 5)
                                     .background(Color.gray)
@@ -183,11 +221,10 @@ struct HomeView: View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
                 VideoView(videoConfig: videoConfig)
-                    
             }
             else {
                 RoundedRectangle(cornerRadius: 25)
-                    .fill(.white)
+                    .fill(Color.primaryColor)
                     .frame(width: 350, height: 400)
                     .overlay {
                         VStack {
@@ -209,68 +246,65 @@ struct HomeView: View {
     
     private func events() -> some View {
         VStack{
-            HStack{
-                Text("Upcoming Events")
-                    .bold()
-                    .font(.system(size: 20))
-                    .foregroundColor(.black)
-                    .padding(10)
-                
-                Spacer()
-            }
+            Text("Upcoming Tings")
+                .font(.system(size: 20))
+                .foregroundColor(Color("tertiaryColor"))
             
-            ScrollView(.vertical) {
-                VStack{
-                    ForEach(1...3, id: \.self) {_ in
-                        HStack{
-                            Circle()
-                                .frame(width: 40)
-                                .overlay {
-                                    Image(systemName: "person.fill")
-                                        .resizable()
-                                        .frame(width: 25, height: 25)
-                                        .foregroundColor(.black)
-                                }
-                                .padding(.leading)
-                                .foregroundColor(.gray)
-                            
-                            VStack{
-                                Text("Facebook Arena")
-                                    .foregroundColor(.black)
-                                    .font(.system(size: 16))
-                                    .bold()
-                                
-                                HStack{
-                                    Text("Community")
-                                        .foregroundColor(.black)
-                                        .font(.system(size: 10))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack{
+                    ForEach(0...4, id: \.self) {_ in
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.secondaryColor)
+                            .frame(width: 140, height: 160)
+                            .overlay{
+                                VStack{
+                                    HStack(spacing: -15) {
+                                        ForEach(0...4, id: \.self) { _ in
+                                            HStack(spacing: 0) {
+                                                Circle()
+                                                    .overlay {
+                                                        Image(systemName: "person.fill")
+                                                            .resizable()
+                                                            .frame(width: 25, height: 25)
+                                                            .foregroundColor(.black)
+                                                    }
+                                                    .foregroundColor(.gray)
+                                                    .frame(width: 30,height: 30)
+                                            }
+                                        }
+                                    }
                                     
-                                    Text("2 squad")
-                                        .foregroundColor(.black)
-                                        .font(.system(size: 10))
+                                    Text("TingTalk")
+                                        .foregroundColor(Color("tertiaryColor"))
+                                        .font(.system(size: 20))
+                                        .bold()
+                                        .padding(.bottom,5)
+                                    
+                                    HStack{
+                                        Text("3/3/25 @4pm")
+                                            .foregroundColor(Color("tertiaryColor"))
+                                            .font(.system(size: 10))
+                                    }
+                                    .padding(.bottom)
                                 }
+                                .padding(5)
+                                
                             }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "ellipsis")
-                                .foregroundColor(.black)
-                                .rotationEffect(.degrees(-90))
-                        }
-                        .padding(.bottom)
+                        
                     }
                 }
             }
         }
+        .padding(.bottom)
     }
     
     private func startProfileRotation() {
         guard !profileViewModel.activeUsers.isEmpty else { return }
         var index = 0
-        self.name = profileViewModel.activeUsers[0].name
+        self.currentActiveUser = profileViewModel.activeUsers[0]
         self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
             index = (index + 1) % profileViewModel.activeUsers.count
-            self.name = profileViewModel.activeUsers[index].name
+            self.currentActiveUser = profileViewModel.activeUsers[index]
         }
     }
     

@@ -16,55 +16,60 @@ struct BiDirectionalSlider: View {
     private let thumbRadius: CGFloat = 12
     
     var body: some View {
-        
-        GeometryReader { geometry in
-            //--Container ZStack
-            ZStack(alignment: .leading){
-                //--Track
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.orange.opacity(0.5))
-                    .frame(width: geometry.size.width, height: 8)
-                
-                //--Center indicator
-                RoundedRectangle(cornerRadius: 1)
-                    .fill(Color.orange.opacity(0.5))
-                    .frame(width: 2, height: 40,alignment: .center)
-                    .offset(x: geometry.size.width / 2 - 1)
-                
-                //--Tinted track
-                ZStack{
-                    let valueChangeFraction = CGFloat(value/(maxValue - minValue))
-                    let tintedTrackWidth = geometry.size.width * valueChangeFraction
+        ZStack{
+//            Color.black
+//                .ignoresSafeArea()
+            
+            GeometryReader { geometry in
+                //--Container ZStack
+                ZStack(alignment: .leading){
+                    //--Track
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.white.opacity(0.5))
+                        .frame(width: geometry.size.width, height: 8)
                     
-                    let tintedTrackOffset = min((geometry.size.width / 2) + tintedTrackWidth, geometry.size.width / 2)
+                    //--Center indicator
+                    RoundedRectangle(cornerRadius: 1)
+                        .fill(Color.white.opacity(0.5))
+                        .frame(width: 2, height: 40,alignment: .center)
+                        .offset(x: geometry.size.width / 2 - 1)
                     
-                    Rectangle()
-                        .fill(Color.orange)
-                        .frame(width: abs(tintedTrackWidth), height: 8)
-                        .offset(x: tintedTrackOffset)
+                    //--Tinted track
+                    ZStack{
+                        let valueChangeFraction = CGFloat(value/(maxValue - minValue))
+                        let tintedTrackWidth = geometry.size.width * valueChangeFraction
+                        
+                        let tintedTrackOffset = min((geometry.size.width / 2) + tintedTrackWidth, geometry.size.width / 2)
+                        
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(width: abs(tintedTrackWidth), height: 8)
+                            .offset(x: tintedTrackOffset)
+                    }
+                    
+                    //--Thumb
+                    Circle()
+                        .fill(Color.white)
+                        .fill(Color.white.opacity(0.5))
+                        .stroke(Color.white, lineWidth: 3)
+                        .frame(width: thumbRadius * 2)
+                    
+                        .offset(x: CGFloat((maxValue + value)/(maxValue - minValue)) * geometry.size.width - thumbRadius)
+                    
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged({ gesture in
+                                    updateValue(with: gesture, in: geometry)
+                                })
+                        )
+                    
                 }
                 
-                //--Thumb
-                Circle()
-                    .fill(Color.white)
-                    .fill(Color.orange.opacity(0.5))
-                    .stroke(Color.orange, lineWidth: 3)
-                    .frame(width: thumbRadius * 2)
-                
-                    .offset(x: CGFloat((maxValue + value)/(maxValue - minValue)) * geometry.size.width - thumbRadius)
-                
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged({ gesture in
-                                updateValue(with: gesture, in: geometry)
-                            })
-                    )
-                
             }
-            
+            .frame(height: 100)
+            .padding()
         }
-        .frame(height: 100)
-        .padding()
+      
         
     }
     

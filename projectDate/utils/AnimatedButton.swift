@@ -21,7 +21,7 @@ struct AnimatedButton: View {
                 isLoading = false
             }
         } label: {
-            HStack(spacing: 10) {
+            HStack {
                 if let symbolImage = config.symbolImage {
                     Image(systemName: symbolImage)
                         .font(.title3)
@@ -35,8 +35,11 @@ struct AnimatedButton: View {
                 }
                 
                 Text(config.title)
+                    .font(.system(size: 25))
+                    .frame(width: 300, height: 50)
                     .contentTransition(.interpolate)
                     .fontWeight(.semibold)
+                
             }
             .padding(.horizontal, config.hPadding)
             .padding(.vertical, config.vPadding)
@@ -47,11 +50,10 @@ struct AnimatedButton: View {
         }
         /// Disabling Button when Task is Performing
         .disabled(isLoading)
-        /// Let's create a custom button style which uses scale animation rather than default opacity animation
+        /// custom button style which uses scale animation rather than default opacity animation
         .buttonStyle(ScaleButtonStyle())
         .animation(config.animation, value: config)
         .animation(config.animation, value: isLoading)
-        
     }
     
     struct Config: Equatable {

@@ -63,8 +63,8 @@ extension Array {
 }
 
 extension Color {
-    static let mainBlack = Color("mainBlack")
-    static let mainGrey = Color("mainGrey")
+    static let primaryColor = Color("primaryColor")
+    static let secondaryColor = Color("secondaryColor")
     static let iceBreakrrrBlue = Color("IceBreakrrrBlue")
     static let iceBreakrrrPink = Color("IceBreakrrrPink")
 }

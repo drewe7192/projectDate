@@ -16,7 +16,6 @@ class ProfileViewModel: ObservableObject {
     @Published var participantProfile: ProfileModel =  emptyProfileModel
     @Published var isNewUser: Bool = false
     @Published var activeUsers: [ProfileModel] = []
-    @Published var profileImage: UIImage = UIImage()
     
     private let profileService = ProfileService()
     private let fcmService = FCMService()
@@ -45,9 +44,14 @@ class ProfileViewModel: ObservableObject {
     
     public func GetActiveUsers() async throws {
         let activeUsers = try await profileService.GetActiveUsers(userId: Auth.auth().currentUser?.uid ?? "")
-        
-        if(!activeUsers.isEmpty) {
-            self.activeUsers = activeUsers
+        self.activeUsers = activeUsers
+        print("\(self.activeUsers)")
+        if(!self.activeUsers.isEmpty) {
+            for activeUser in self.activeUsers {
+                try await getFileFromStorage(profileId: activeUser.id, isActiveUser: true)
+            }
+            print("\(self.activeUsers[0].profileImage.size.height)")
+          
         }
     }
     
@@ -136,6 +140,26 @@ class ProfileViewModel: ObservableObject {
             }
         } catch {
             throw error
+        }
+    }
+    
+    func getFileFromStorage(profileId: String, isActiveUser: Bool = false) async throws {
+        let islandRef = storage.reference().child("\(profileId)/images/image.jpg")
+        
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        islandRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error getting file from storage: \(error)")
+            } else {
+                if isActiveUser {
+                    if let i = self.activeUsers.firstIndex(where: {$0.id == profileId}) {
+                        self.activeUsers[i].profileImage = UIImage(data: data!) ?? UIImage()
+                        
+                    }
+                } else {
+                    self.userProfile.profileImage = UIImage(data: data!) ?? UIImage()
+                }
+            }
         }
     }
 }

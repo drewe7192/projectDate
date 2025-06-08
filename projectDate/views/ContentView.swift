@@ -48,6 +48,8 @@ struct ContentView: View {
                 .environmentObject(profileViewModel)
                 .environmentObject(eventViewModel)
                 .environmentObject(videoViewModel)
+        case .notificationsPage:
+            NotificationsView()
         }
     }
 

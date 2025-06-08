@@ -14,7 +14,7 @@ struct ConfirmationView: View {
     var body: some View {
         GeometryReader{ geoReader in
             ZStack{
-                Color.mainBlack
+                Color.primaryColor
                     .ignoresSafeArea()
                 
                 VStack(spacing: 20){

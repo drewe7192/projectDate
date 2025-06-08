@@ -19,7 +19,7 @@ struct EventView: View {
     var body: some View {
             GeometryReader{ geoReader in
                 ZStack{
-//                    Color.mainBlack
+//                    Color.primaryColor
 //                        .ignoresSafeArea()
                     
                     
@@ -161,7 +161,7 @@ struct EventView: View {
                 Image("logo")
                     .resizable()
                     .frame(width: 40, height: 40)
-                    .background(Color.mainBlack)
+                    .background(Color.primaryColor)
                     .position(x: geoReader.size.width * -0.35, y: geoReader.size.height * 0.03)
             }
             

@@ -49,7 +49,7 @@ struct LogInItems: View {
                         .foregroundColor(Color.white)
                 }
                 .frame(width: 120, height: 50)
-                .background(Color.mainGrey)
+                .background(Color.secondaryColor)
                 .cornerRadius(15)
                 .shadow(radius: 5)
                 
@@ -61,7 +61,7 @@ struct LogInItems: View {
                         .frame(width: 35, height: 35)
                 }
                 .frame(width: 120, height: 50)
-                .background(Color.mainGrey)
+                .background(Color.secondaryColor)
                 .cornerRadius(15)
                 .shadow(radius: 5)
                 
@@ -73,7 +73,7 @@ struct LogInItems: View {
 //                        .frame(width: 35, height: 35)
 //                }
 //                .frame(width: 120, height: 50)
-//                .background(Color.mainGrey)
+//                .background(Color.secondaryColor)
 //                .cornerRadius(15)
 //                .shadow(radius: 5)
             }

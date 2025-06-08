@@ -46,7 +46,7 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                pickerSections()
+               // pickerSections()
                 buttonsSection()
                 
                 Spacer()
@@ -76,20 +76,23 @@ struct SettingsView: View {
     private func imageSection() -> some View {
         VStack{
             if true {
-                //                Image(uiImage: viewModel.profileImage)
-                //                    .resizable()
-                //                    .cornerRadius(50)
-                //                    .frame(width: 200, height: 200)
-                //                    .background(Color.black.opacity(0.2))
-                //                    .aspectRatio(contentMode: .fill)
-                //                    .clipShape(Circle())
+                ZStack {
+                    Circle()
+                        .fill(Color.secondaryColor)
+                        .overlay {
+                            Image(uiImage: viewModel.userProfile.profileImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 180, height: 180)
+                                .clipShape(Circle())
+                        }
+                        .frame(width: 200, height: 200)
+                }
                 
-                Circle()
-                    .fill(.blue)
-                    .frame(width: 200, height: 200)
+           
             } else {
                 Circle()
-                    .fill(.blue)
+                    .fill(Color.secondaryColor)
                     .frame(width: 200, height: 200)
             }
             
@@ -101,7 +104,7 @@ struct SettingsView: View {
                         .font(.headline)
                         .frame(width: 250)
                         .frame(height: 50)
-                        .background(Color.mainGrey)
+                        .background(Color.secondaryColor)
                         .cornerRadius(40)
                         .shadow(radius: 10, x: 10, y: 10)
                         .foregroundColor(.white)
@@ -120,7 +123,7 @@ struct SettingsView: View {
                 Text(editInfo ? "Save Profile" : "Edit Profile")
                     .foregroundColor(.white)
                     .frame(width: 350, height: 60)
-                    .background(Color.mainGrey)
+                    .background(Color.secondaryColor)
                     .cornerRadius(40)
             }
             
@@ -130,7 +133,7 @@ struct SettingsView: View {
                 Text("Sign Out")
                     .foregroundColor(.white)
                     .frame(width: 350, height: 60)
-                    .background(Color.mainGrey)
+                    .background(Color.secondaryColor)
                     .cornerRadius(40)
             }
             
@@ -140,7 +143,7 @@ struct SettingsView: View {
                 Text("DELETE ACCOUNT")
                     .foregroundColor(.red)
                     .frame(width: 350, height: 60)
-                    .background(Color.mainGrey)
+                    .background(Color.secondaryColor)
                     .cornerRadius(40)
             }
         }

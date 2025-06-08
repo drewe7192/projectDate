@@ -85,26 +85,34 @@ struct FullScreenComponentsView: View {
     
     private func questionView() -> some View {
         ZStack{
-            Color.blue
+            Color.primaryColor
                 .ignoresSafeArea()
+            
             VStack{
-                if !qaViewModel.questions.isEmpty {
                     Spacer()
-                        .frame(height: 20)
-                    
-                    Text("\(qaViewModel.questions[0].body)")
+                      
+                /// shuffling array onAppear
+                Text("\(qaViewModel.questions[0].body)")
                         .font(.system(size: 40))
                         .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
                     
                     Spacer()
                     
                     VStack{
                         if sliderValue > 0 {
                             Text("True")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white)
-                        } else {
+                                .bold()
+                                .font(.system(size: 50))
+                                .foregroundColor(.green)
+                        } else if sliderValue < 0 {
                             Text("False")
+                                .bold()
+                                .font(.system(size: 50))
+                                .foregroundColor(.red)
+                        }
+                        else {
+                            Text("Slide to pick answer")
                                 .font(.system(size: 40))
                                 .foregroundColor(.white)
                         }
@@ -149,7 +157,10 @@ struct FullScreenComponentsView: View {
                             }
                         }
                     }
-                }
+                
+            }
+            .onAppear {
+                qaViewModel.questions.shuffle()
             }
         }
     }

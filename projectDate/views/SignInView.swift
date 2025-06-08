@@ -24,7 +24,7 @@ struct SignInView: View {
             GeometryReader{ geoReader in
                 ZStack{
                     // need a ZStack and color to change the background color
-                    Color.mainBlack
+                    Color.primaryColor
                         .ignoresSafeArea()
                     
                     VStack{
@@ -47,7 +47,7 @@ struct SignInView: View {
             Image("logo")
                 .resizable()
                 .frame(width: 70, height: 70)
-                .background(Color.mainBlack)
+                .background(Color.primaryColor)
                 .position(x: geoReader.frame(in: .local).midX , y: geoReader.size.height * 0.04)
             
             VStack{

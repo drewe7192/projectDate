@@ -16,15 +16,14 @@ struct MainView: View {
                  HomeView(selectedTab: self.$selectedTab)
                      .tag(0)
                  
-
-                 EventsView()
-                     .tag(1)
+//                 EventsView()
+//                     .tag(1)
 
                  SettingsView()
                      .tag(2)
 
-                 MessagesView()
-                     .tag(3)
+//                 MessagesView()
+//                     .tag(3)
              }
              
              ZStack{
@@ -39,7 +38,7 @@ struct MainView: View {
                  }
                  .padding(6)
              }
-             .frame(height: 70)
+             .frame(height: 55)
              .background(.gray.opacity(0.2))
              .cornerRadius(35)
              .padding(.horizontal, 26)
@@ -88,7 +87,7 @@ extension MainView{
                 .resizable()
                 .renderingMode(.template)
                 .foregroundColor(isActive ? .black : .gray)
-                .frame(width: 30, height: 30)
+                .frame(width: 25, height: 25)
             if isActive{
                 Text(title)
                     .font(.system(size: 14))
@@ -96,7 +95,7 @@ extension MainView{
             }
             Spacer()
         }
-        .frame(width: isActive ? .infinity : 60, height: 60)
+        .frame(width: isActive ? .infinity : 55, height: 55)
         .background(isActive ? .gray.opacity(0.4) : .clear)
         .cornerRadius(30)
     }

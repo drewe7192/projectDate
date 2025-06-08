@@ -45,7 +45,7 @@ struct RequestView: View {
                     Text("Accept")
                         .foregroundColor(.white)
                         .frame(width: 350, height: 60)
-                        .background(Color.mainGrey)
+                        .background(Color.secondaryColor)
                         .cornerRadius(40)
                 }
                 
@@ -60,7 +60,7 @@ struct RequestView: View {
                     Text("Decline")
                         .foregroundColor(.white)
                         .frame(width: 350, height: 60)
-                        .background(Color.mainGrey)
+                        .background(Color.secondaryColor)
                         .cornerRadius(40)
                 }
             }
