@@ -23,7 +23,7 @@ xcuserdata/
 *.xccheckout
 *.xcuserstate
 Package.resolved
-GoogleService-Info.plist
+*GoogleService-Info.plist
 
 ## Obj-C/Swift specific
 *.hmap
