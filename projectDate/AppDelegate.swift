@@ -122,11 +122,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             profileDTO.gender = requestByProfileGender as String
         }
         
-        
-        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
-            profileDTO.roomCode = requestByProfileRoomCode as String
-        }
-        
         if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
             profileDTO.roomCode = requestByProfileRoomCode as String
         }

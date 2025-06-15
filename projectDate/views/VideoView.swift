@@ -15,7 +15,7 @@ struct VideoView: View {
         ZStack{
             HMSPrebuiltView(roomCode: videoViewModel.roomCode)
                 .blur(radius: videoConfig.isScreenBlurred ? 30 : 0)
-                .frame(width: videoConfig.isFullScreen ? .infinity : 350, height: videoConfig.isFullScreen ? .infinity : 370)
+                .frame(width: videoConfig.isFullScreen ? .infinity : 350, height: videoConfig.isFullScreen ? .infinity : 300)
                 .cornerRadius(30)
             
             if videoConfig.isFullScreen  {
