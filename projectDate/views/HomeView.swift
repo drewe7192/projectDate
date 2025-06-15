@@ -18,6 +18,8 @@ struct HomeView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
     @Binding var selectedTab: Int
+    
+    @State private var selectedButton: Int = 0
     @State var timer: AnyCancellable?
     @State private var currentActiveUser: ProfileModel = emptyProfileModel
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
@@ -56,7 +58,7 @@ struct HomeView: View {
                     startProfileRotation()
                     
                 } catch {
-                    // HANDLE ERROR
+                    print("Error getting userProfile:\(error)")
                 }
             }
             /// display requestView once user recieves request for BlindDate
@@ -82,12 +84,10 @@ struct HomeView: View {
                     .overlay {
                         if !profileViewModel.userProfile.profileImage.size.height.isZero {
                             Circle()
-                               // .fill(Color.secondaryColor)
                                 .overlay(
                                     Image(uiImage: profileViewModel.userProfile.profileImage)
                                         .resizable()
                                         .scaledToFit()
-                                      //  .foregroundColor(.black)
                                         .clipShape(Circle())
                                 )
                                 .frame(width: 35, height: 35)
@@ -96,25 +96,24 @@ struct HomeView: View {
                             Image(systemName: "person.fill")
                                 .resizable()
                                 .frame(width: 15, height: 15)
-                               // .foregroundColor(.secondaryColor)
                         }
                         
                     }
                     .padding(.leading)
-                  //  .foregroundColor(.secondaryColor)
                     .onTapGesture {
                         selectedTab = 2
                     }
                 
                 Spacer()
-                Image("logo")
-                    .resizable()
-                    .frame(width: 40, height: 40)
                 
-                Text("LittleBigTings")
+                Text("LittleBigThings")
                     .font(.custom("Copperplate", size: 20))
                     .foregroundColor(Color("tertiaryColor"))
                     .bold()
+                
+                Image("logo")
+                    .resizable()
+                    .frame(width: 25, height: 25)
                 
                 Spacer()
                 
@@ -137,8 +136,10 @@ struct HomeView: View {
     private func quickChat() -> some View {
         VStack{
             RoundedRectangle(cornerRadius: 40)
-                .fill(Color.secondaryColor)
+                .stroke(changeColor(), lineWidth: 2)
                 .frame(width: 350, height: 55)
+                .opacity(selectedButton != 0 ? 0.5 : 1.0)
+                .animation(.easeInOut, value: true)
                 .overlay {
                     HStack{
                         Circle()
@@ -150,6 +151,7 @@ struct HomeView: View {
                                         .scaledToFit()
                                         .foregroundColor(.black)
                                         .clipShape(Circle())
+                                        .blur(radius: 2)
                                         .frame(width: 40 , height: 40)
                                 } else {
                                     Image(systemName: "person.fill")
@@ -157,7 +159,7 @@ struct HomeView: View {
                                         .frame(width: 15, height: 15)
                                         .foregroundColor(.black)
                                 }
-                            
+                                
                             }
                             .padding(.leading)
                             .foregroundColor(Color.secondaryColor)
@@ -165,50 +167,74 @@ struct HomeView: View {
                         Spacer()
                         
                         VStack{
-                            Text("\(self.currentActiveUser.name)")
-                                .bold()
-                                .id(self.currentActiveUser.id)
-                                .transition(.opacity.animation(.smooth))
-                                .foregroundColor(Color("tertiaryColor"))
-                            
-                            Text("Wants to connect")
-                                .foregroundColor(Color("tertiaryColor"))
+                            if selectedButton == 0 {
+                                if !self.currentActiveUser.name.isEmpty {
+                                    Text("\(self.currentActiveUser.name)")
+                                        .bold()
+                                        .id(self.currentActiveUser.id)
+                                        .transition(.opacity.animation(.smooth))
+                                        .foregroundColor(Color("tertiaryColor"))
+                                    
+                                    Text("Wants to connect")
+                                        .foregroundColor(Color("tertiaryColor"))
+                                } else {
+                                    Text("Searching for friends...")
+                                        .foregroundColor(Color("tertiaryColor"))
+                                }
+                                
+                            } else if selectedButton == 1 {
+                                
+                                Text("Request Sent Successfully!")
+                                    .foregroundColor(Color("tertiaryColor"))
+                            }
                         }
                         
                         Spacer()
                         
                         HStack(spacing: -15){
                             Button(action: {
-                                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.id == self.currentActiveUser.id}) {
-                                    Task {
-                                        profileViewModel.participantProfile = pickedUser
-                                        try await sendRequestMessage(pickedUser: pickedUser)
+                                Task {
+                                    do {
+                                        if let pickedUser = profileViewModel.activeUsers.first(where: {$0.id == self.currentActiveUser.id}) {
+                                            selectedButton = 1
+                                            profileViewModel.participantProfile = pickedUser
+                                            try await sendRequestMessage(pickedUser: pickedUser)
+                                            // try? await Task.sleep(nanoseconds: 0_300_000_000)
+                                            selectedButton = 0
+                                        }
+                                    } catch {
+                                        print("Error when sending request message: \(error)")
                                     }
                                 }
                             }) {
                                 Image(systemName: "checkmark.circle")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 30)
-                                    .foregroundColor(Color("tertiaryColor"))
+                                    .frame(height: 40)
+                                    .foregroundColor(Color("tertiaryColor") )
                                     .padding(.horizontal)
                                     .padding(.vertical, 5)
-                                    .background(Color.gray)
                                     .clipShape(Circle())
                             }
                             
                             Button(action: {
-                                profileViewModel.activeUsers.removeAll(where: { $0.id == self.currentActiveUser.id })
-                                startProfileRotation()
+                                Task {
+                                    selectedButton = 2
+                                    
+                                    profileViewModel.activeUsers.removeAll(where: { $0.id == self.currentActiveUser.id })
+                                    // startProfileRotation()
+                                    try? await Task.sleep(nanoseconds: 0_300_000_000)
+                                    
+                                    selectedButton = 0
+                                }
                             }) {
                                 Image(systemName: "x.circle")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 30)
+                                    .frame(height: 40)
                                     .foregroundColor(Color("tertiaryColor"))
                                     .padding(.horizontal)
                                     .padding(.vertical, 5)
-                                    .background(Color.gray)
                                     .clipShape(Circle())
                             }
                         }
@@ -246,15 +272,11 @@ struct HomeView: View {
     
     private func events() -> some View {
         VStack{
-            Text("Upcoming Tings")
-                .font(.system(size: 20))
-                .foregroundColor(Color("tertiaryColor"))
-            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack{
                     ForEach(0...4, id: \.self) {_ in
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.secondaryColor)
+                            .stroke(.blue, lineWidth: 2)
                             .frame(width: 140, height: 160)
                             .overlay{
                                 VStack{
@@ -274,7 +296,7 @@ struct HomeView: View {
                                         }
                                     }
                                     
-                                    Text("TingTalk")
+                                    Text("Meet 1")
                                         .foregroundColor(Color("tertiaryColor"))
                                         .font(.system(size: 20))
                                         .bold()
@@ -290,6 +312,7 @@ struct HomeView: View {
                                 .padding(5)
                                 
                             }
+                            .padding(5)
                         
                     }
                 }
@@ -303,8 +326,12 @@ struct HomeView: View {
         var index = 0
         self.currentActiveUser = profileViewModel.activeUsers[0]
         self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
-            index = (index + 1) % profileViewModel.activeUsers.count
-            self.currentActiveUser = profileViewModel.activeUsers[index]
+            if !profileViewModel.activeUsers.isEmpty {
+                index = (index + 1) % profileViewModel.activeUsers.count
+                self.currentActiveUser = profileViewModel.activeUsers[index]
+            } else {
+                self.currentActiveUser = emptyProfileModel
+            }
         }
     }
     
@@ -328,7 +355,21 @@ struct HomeView: View {
         let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
         profileViewModel.userProfile.userId = Auth.auth().currentUser?.uid as Any as! String
         
-        _ = try await profileViewModel.callSendRequestNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
+        var response = try await profileViewModel.callSendRequestNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
+    }
+    
+    private func changeColor () -> Color {
+        switch selectedButton {
+        case 0:
+            return .blue
+        case 1:
+            return .green
+        case 2:
+            return .red
+        default:
+            return .blue
+            
+        }
     }
 }
 

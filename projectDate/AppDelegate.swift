@@ -127,6 +127,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             profileDTO.roomCode = requestByProfileRoomCode as String
         }
         
+        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
+            profileDTO.roomCode = requestByProfileRoomCode as String
+        }
+        
         if let requestByProfileUserId = userInfo["requestByProfileUserId"] as? NSString {
             profileDTO.userId = requestByProfileUserId as String
             
@@ -141,9 +145,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
         
-        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
-            profileDTO.roomCode = requestByProfileRoomCode as String
-        }
         
         if let hostAnswerBlindDate = userInfo["hostAnswer"] as? NSString {
             self.hostAnswerBlindDate = hostAnswerBlindDate as String

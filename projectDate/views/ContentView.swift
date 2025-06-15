@@ -48,6 +48,7 @@ struct ContentView: View {
                 .environmentObject(profileViewModel)
                 .environmentObject(eventViewModel)
                 .environmentObject(videoViewModel)
+                .animation(.easeInOut, value: true)
         case .notificationsPage:
             NotificationsView()
         }

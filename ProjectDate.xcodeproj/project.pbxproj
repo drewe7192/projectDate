@@ -86,7 +86,6 @@
 		774432AA2D5B39F800BAF98A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Dev/GoogleService-Info.plist",
 				"Prod/GoogleService-Info.plist",
 			);
 			target = 77C3D4FB289910CE0088554F /* ProjectDate */;
@@ -646,7 +645,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = LittleBigTings;
+				INFOPLIST_KEY_CFBundleDisplayName = LittleBigThings;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
@@ -688,7 +687,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = LittleBigTings;
+				INFOPLIST_KEY_CFBundleDisplayName = LittleBigThings;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";

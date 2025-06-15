@@ -64,7 +64,7 @@ class ProfileViewModel: ObservableObject {
         return fcmToken
     }
     
-    func callSendRequestNotification(fcmToken: FCMTokenModel, requestByProfile: ProfileModel) async throws -> String {
+    func callSendRequestNotification(fcmToken: FCMTokenModel, requestByProfile: ProfileModel) async throws -> Bool {
         do {
             /// Used for testing
             //functions.useEmulator(withHost: "localhost", port: 5001)
@@ -80,9 +80,9 @@ class ProfileViewModel: ObservableObject {
             
             let result = try await functions.httpsCallable("sendRequestNotification").call(payload)
             
-            // Parse the response to extract the string message
+            // Parse the response to extract the bool message
             if let data = result.data as? [String: Any],
-               let message = data["message"] as? String {
+               let message = data["success"] as? Bool {
                 return message
             } else {
                 throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
@@ -119,7 +119,7 @@ class ProfileViewModel: ObservableObject {
         
     }
     
-    func callSendDeclineNotification(fcmToken: FCMTokenModel) async throws -> String {
+    func callSendDeclineNotification(fcmToken: FCMTokenModel) async throws -> Bool {
         do {
             /// Used for testing
             //functions.useEmulator(withHost: "localhost", port: 5001)
@@ -131,9 +131,9 @@ class ProfileViewModel: ObservableObject {
             
             let result = try await functions.httpsCallable("sendDeclineNotification").call(payload)
             
-            // Parse the response to extract the string message
+            // Parse the response to extract the bool message
             if let data = result.data as? [String: Any],
-               let message = data["message"] as? String {
+               let message = data["success"] as? Bool {
                 return message
             } else {
                 throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
