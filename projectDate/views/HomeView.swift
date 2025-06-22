@@ -15,6 +15,7 @@ struct HomeView: View {
     @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var eventViewModel: EventViewModel
+    @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var viewRouter: ViewRouter
     
     @Binding var selectedTab: Int
@@ -24,6 +25,7 @@ struct HomeView: View {
     @State private var currentActiveUser: ProfileModel = emptyProfileModel
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var answer: String = ""
+    @State private var quickChatQuestion: String = ""
     
     var body: some View {
         NavigationView {
@@ -56,6 +58,7 @@ struct HomeView: View {
                     
                     /// for quickChat
                     try await getActiveUsers()
+                    try await qaViewModel.getQuestions()
                     startProfileRotation()
                     
                 } catch {
@@ -144,6 +147,7 @@ struct HomeView: View {
                 .overlay {
                     VStack {
                         connectSection()
+                        Spacer()
                         questionSection()
                     }
                     .padding(10)
@@ -180,14 +184,14 @@ struct HomeView: View {
     
     private func events() -> some View {
         VStack{
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack{
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack{
                     ForEach(0...4, id: \.self) {_ in
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(.blue, lineWidth: 2)
-                            .frame(width: 140, height: 100)
+                            .frame(width: 340, height: 100)
                             .overlay{
-                                VStack{
+                                HStack{
                                     HStack(spacing: -15) {
                                         ForEach(0...4, id: \.self) { _ in
                                             HStack(spacing: 0) {
@@ -221,6 +225,12 @@ struct HomeView: View {
                                 
                             }
                             .padding(5)
+                            .scrollTransition { content, phase in
+                                          content
+                                              .opacity(phase.isIdentity ? 1 : 0)
+                                              .scaleEffect(phase.isIdentity ? 1 : 0.75)
+                                              .blur(radius: phase.isIdentity ? 0 : 10)
+                                      }
                         
                     }
                 }
@@ -236,15 +246,22 @@ struct HomeView: View {
             Spacer()
             
             Button(action:  {
-                
+                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.id == self.currentActiveUser.id}) {
+                    Task {
+                        profileViewModel.participantProfile = pickedUser
+                        try await sendRequestMessage(pickedUser: pickedUser)
+                    }
+                }
             }) {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .stroke(.green, lineWidth: 2)
                     .frame(width: 80, height: 40)
                     .overlay {
-                        Text("Connect")
+                        Text("Play")
                             .foregroundColor(.white)
                             .font(.system(size: 15))
+                            .bold()
+                            .padding(5)
                     }
             }
         }
@@ -252,10 +269,12 @@ struct HomeView: View {
     
     private func questionSection() -> some View {
         VStack{
-            Text("How often do you leave the front-door to the house unlocked?")
+            Text("\(self.quickChatQuestion)")
                 .bold()
                 .font(.title3)
+                .animation(.easeInOut)
                 .foregroundColor(.white)
+
             HStack(spacing: 5) {
                 TextField("Type in answer", text: $answer)
                     .foregroundColor(.gray)
@@ -349,6 +368,7 @@ struct HomeView: View {
             if !profileViewModel.activeUsers.isEmpty {
                 index = (index + 1) % profileViewModel.activeUsers.count
                 self.currentActiveUser = profileViewModel.activeUsers[index]
+                self.quickChatQuestion = qaViewModel.questions.randomElement()?.body ?? ""
             } else {
                 self.currentActiveUser = emptyProfileModel
             }
@@ -399,4 +419,5 @@ struct HomeView: View {
         .environmentObject(VideoViewModel())
         .environmentObject(AppDelegate())
         .environmentObject(EventViewModel())
+        .environmentObject(QAViewModel())
 }
