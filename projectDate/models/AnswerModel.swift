@@ -11,7 +11,7 @@ struct AnswerModel: Identifiable, Equatable, Codable {
     var id: String
     var profileId: String
     var questionId: String
-    var answer: String
+    var body: String
 }
 
-var emptyAnswerModel = AnswerModel(id: "", profileId: "", questionId: "", answer: "")
+var emptyAnswerModel = AnswerModel(id: "", profileId: "", questionId: "", body: "")

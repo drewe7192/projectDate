@@ -12,6 +12,7 @@ import FirebaseFunctions
 class QAViewModel: ObservableObject {
     @Published var questions: [QuestionModel] = []
     @Published var answer: AnswerModel = emptyAnswerModel
+    @Published var quickChatQuestion: QuestionModel = emptyQuestionModel
     
     private let videoService = VideoService()
     let functions = Functions.functions()
@@ -23,13 +24,15 @@ class QAViewModel: ObservableObject {
         }
     }
     
-    //    public func saveAnswer() async throws {
-    //        do {
-    //             _ = try await videoService.saveAnswer(answer: answer)
-    //        } catch let error {
-    //            print("answer failed to save \(error)")
-    //        }
-    //    }
+    public func saveAnswer(profileId: String) async throws {
+        do {
+            let requestObject = AnswerModel(id: UUID().uuidString, profileId: profileId, questionId: quickChatQuestion.id, body: answer.body)
+            
+            _ = try await videoService.saveAnswer(answer: requestObject)
+        } catch let error {
+            print("answer failed to save \(error)")
+        }
+    }
     
     func sendAnswerNotification(fcmToken: FCMTokenModel, role: RoleType, answer: String) async throws -> String {
         do {

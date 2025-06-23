@@ -51,8 +51,8 @@ struct FullScreenComponentsView: View {
         .onChange(of: delegate.hostAnswerBlindDate) { oldValue, newValue in
             Task {
                 do {
-                    if !qaViewModel.answer.answer.isEmpty {
-                        try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: qaViewModel.answer.answer)
+                    if !qaViewModel.answer.body.isEmpty {
+                        try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: qaViewModel.answer.body)
                         
                         /// clean if dirty
                         delegate.hostAnswerBlindDate = ""
@@ -68,8 +68,8 @@ struct FullScreenComponentsView: View {
         .onChange(of: delegate.guestAnswerBlindDate) { oldValue, newValue in
             Task {
                 do {
-                    if !qaViewModel.answer.answer.isEmpty {
-                        try await compareAnswers(role: RoleType.host, hostAnswer: qaViewModel.answer.answer, guestAnswer: newValue)
+                    if !qaViewModel.answer.body.isEmpty {
+                        try await compareAnswers(role: RoleType.host, hostAnswer: qaViewModel.answer.body, guestAnswer: newValue)
                         
                         /// clean if dirty
                         delegate.guestAnswerBlindDate = ""
@@ -132,7 +132,7 @@ struct FullScreenComponentsView: View {
                     AnimatedButton(config: config) {
                         let guid = UUID().uuidString
                         qaViewModel.answer.id = guid
-                        qaViewModel.answer.answer = sliderValue > 0 ? "True" : "False"
+                        qaViewModel.answer.body = sliderValue > 0 ? "True" : "False"
                         qaViewModel.answer.profileId = profileViewModel.userProfile.id
                         qaViewModel.answer.questionId = qaViewModel.questions[0].id
                         
@@ -142,7 +142,7 @@ struct FullScreenComponentsView: View {
                                 if !delegate.guestAnswerBlindDate.isEmpty || !delegate.hostAnswerBlindDate.isEmpty {
                                     transactionState = .analyzingAnswers
                                     
-                                    try await compareAnswers(role: role, hostAnswer: !delegate.hostAnswerBlindDate.isEmpty ? delegate.hostAnswerBlindDate : qaViewModel.answer.answer, guestAnswer: !delegate.guestAnswerBlindDate.isEmpty ? delegate.guestAnswerBlindDate : qaViewModel.answer.answer)
+                                    try await compareAnswers(role: role, hostAnswer: !delegate.hostAnswerBlindDate.isEmpty ? delegate.hostAnswerBlindDate : qaViewModel.answer.body, guestAnswer: !delegate.guestAnswerBlindDate.isEmpty ? delegate.guestAnswerBlindDate : qaViewModel.answer.body)
                                     
                                     /// clean if dirty
                                     delegate.hostAnswerBlindDate = ""

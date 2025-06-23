@@ -11,37 +11,35 @@ import HMSRoomKit
 import Firebase
 
 struct HomeView: View {
-    @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var delegate: AppDelegate
+    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var eventViewModel: EventViewModel
-    @EnvironmentObject var qaViewModel: QAViewModel
-    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var profileViewModel: ProfileViewModel
     
     @Binding var selectedTab: Int
     
+    @State var timer: Cancellable?
     @State private var selectedButton: Int = 0
-    @State var timer: AnyCancellable?
     @State private var currentActiveUser: ProfileModel = emptyProfileModel
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
-    @State private var answer: String = ""
-    @State private var quickChatQuestion: String = ""
     
     var body: some View {
-        NavigationView {
+        GeometryReader { geometry in
             ZStack {
                 Color.primaryColor
                     .ignoresSafeArea()
                 
                 VStack{
-                    header()
+                    header(geometry: geometry)
                     Spacer()
-                        .frame(height: 10)
-                    quickChat()
+                        .frame(height: geometry.size.height * 0.02)
+                    quickChat(geometry: geometry)
                     Spacer()
-                        .frame(height: 10)
-                    videoSection()
-                    events()
+                        .frame(height: geometry.size.height * 0.02)
+                    videoSection(geometry: geometry)
+                    events(geometry: geometry)
                     Spacer()
                 }
             }
@@ -78,84 +76,82 @@ struct HomeView: View {
                 viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
             }
         }
+        .ignoresSafeArea(.keyboard)
     }
     
-    private func header() -> some View {
-        VStack{
-            HStack{
-                Circle()
-                    .frame(width: 30)
-                    .overlay {
-                        if !profileViewModel.userProfile.profileImage.size.height.isZero {
-                            Circle()
-                                .overlay(
-                                    Image(uiImage: profileViewModel.userProfile.profileImage)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .clipShape(Circle())
-                                )
-                                .frame(width: 35, height: 35)
-                            
-                        } else {
-                            Image(systemName: "person.fill")
-                                .resizable()
-                                .frame(width: 15, height: 15)
-                        }
+    private func header(geometry: GeometryProxy) -> some View {
+        HStack{
+            Circle()
+                .frame(width: geometry.size.width * 0.08)
+                .overlay {
+                    if !profileViewModel.userProfile.profileImage.size.height.isZero {
+                        Circle()
+                            .overlay(
+                                Image(uiImage: profileViewModel.userProfile.profileImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipShape(Circle())
+                            )
+                            .frame(width: geometry.size.width * 0.09)
                         
+                    } else {
+                        Image(systemName: "person.fill")
+                            .resizable()
+                            .frame(width: geometry.size.width * 0.01, height: geometry.size.height * 0.01)
                     }
-                    .padding(.leading)
-                    .onTapGesture {
-                        selectedTab = 2
-                    }
-                
-                Spacer()
-                
-                Text("LittleBigThings")
-                    .font(.custom("Copperplate", size: 20))
-                    .foregroundColor(Color("tertiaryColor"))
-                    .bold()
-                
-                Image("logo")
-                    .resizable()
-                    .frame(width: 25, height: 25)
-                
-                Spacer()
-                
-                Button(action : {
-                    viewRouter.currentPage = .notificationsPage
-                }){
-                    Image(systemName: "bell.circle")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 30)
-                        .foregroundColor(Color("tertiaryColor"))
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
-                        .clipShape(Circle())
+                    
                 }
+                .padding(.leading)
+                .onTapGesture {
+                    selectedTab = 2
+                }
+            
+            Spacer()
+            
+            Text("LittleBigThings")
+                .font(.custom("Copperplate", size: geometry.size.height * 0.03))
+                .foregroundColor(Color("tertiaryColor"))
+                .bold()
+            
+            Image("logo")
+                .resizable()
+                .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
+            
+            Spacer()
+            
+            Button(action : {
+                viewRouter.currentPage = .notificationsPage
+            }){
+                Image(systemName: "bell.circle")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: geometry.size.width * 0.07)
+                    .foregroundColor(Color("tertiaryColor"))
+                    .padding(.horizontal)
+                    .clipShape(Circle())
             }
         }
     }
     
-    private func quickChat() -> some View {
+    private func quickChat(geometry: GeometryProxy) -> some View {
         VStack{
             RoundedRectangle(cornerRadius: 20)
                 .stroke(changeColor(), lineWidth: 2)
-                .frame(width: 380, height: 180)
+                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
                 .opacity(selectedButton != 0 ? 0.5 : 1.0)
                 .animation(.easeInOut, value: true)
                 .overlay {
                     VStack {
-                        connectSection()
+                        connectSection(geometry: geometry)
                         Spacer()
-                        questionSection()
+                        questionSection(geometry: geometry)
                     }
-                    .padding(10)
+                    .padding(geometry.size.height * 0.02)
                 }
         }
     }
     
-    private func videoSection() -> some View {
+    private func videoSection(geometry: GeometryProxy) -> some View {
         VStack {
             if !videoViewModel.roomCode.isEmpty {
                 VideoView(videoConfig: videoConfig)
@@ -163,7 +159,7 @@ struct HomeView: View {
             else {
                 RoundedRectangle(cornerRadius: 25)
                     .fill(Color.primaryColor)
-                    .frame(width: 350, height: 400)
+                    .frame(width: geometry.size.width * 0.5, height: geometry.size.height * 0.4)
                     .overlay {
                         VStack {
                             ProgressView {
@@ -182,14 +178,14 @@ struct HomeView: View {
         }
     }
     
-    private func events() -> some View {
+    private func events(geometry: GeometryProxy) -> some View {
         VStack{
             ScrollView(.vertical, showsIndicators: false) {
                 VStack{
                     ForEach(0...4, id: \.self) {_ in
                         RoundedRectangle(cornerRadius: 20)
                             .stroke(.blue, lineWidth: 2)
-                            .frame(width: 340, height: 100)
+                            .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.15)
                             .overlay{
                                 HStack{
                                     HStack(spacing: -15) {
@@ -199,25 +195,25 @@ struct HomeView: View {
                                                     .overlay {
                                                         Image(systemName: "person.fill")
                                                             .resizable()
-                                                            .frame(width: 25, height: 25)
+                                                            .frame(width: geometry.size.width * 0.03, height: geometry.size.height * 0.02)
                                                             .foregroundColor(.black)
                                                     }
                                                     .foregroundColor(.gray)
-                                                    .frame(width: 30,height: 30)
+                                                    .frame(width: geometry.size.width * 0.08, height: geometry.size.height * 0.08)
                                             }
                                         }
                                     }
                                     
                                     Text("Meet 1")
                                         .foregroundColor(Color("tertiaryColor"))
-                                        .font(.system(size: 20))
+                                        .font(.system(size: geometry.size.height * 0.03))
                                         .bold()
                                         .padding(.bottom,5)
                                     
                                     HStack{
                                         Text("3/3/25 @4pm")
                                             .foregroundColor(Color("tertiaryColor"))
-                                            .font(.system(size: 10))
+                                            .font(.system(size: geometry.size.height * 0.015))
                                     }
                                     .padding(.bottom)
                                 }
@@ -226,11 +222,11 @@ struct HomeView: View {
                             }
                             .padding(5)
                             .scrollTransition { content, phase in
-                                          content
-                                              .opacity(phase.isIdentity ? 1 : 0)
-                                              .scaleEffect(phase.isIdentity ? 1 : 0.75)
-                                              .blur(radius: phase.isIdentity ? 0 : 10)
-                                      }
+                                content
+                                    .opacity(phase.isIdentity ? 1 : 0)
+                                    .scaleEffect(phase.isIdentity ? 1 : 0.75)
+                                    .blur(radius: phase.isIdentity ? 0 : 10)
+                            }
                         
                     }
                 }
@@ -239,9 +235,9 @@ struct HomeView: View {
         .padding(.bottom)
     }
     
-    private func connectSection() -> some View {
+    private func connectSection(geometry: GeometryProxy) -> some View {
         HStack{
-            quickChatProfileSection()
+            quickChatProfileSection(geometry: geometry)
             
             Spacer()
             
@@ -264,21 +260,29 @@ struct HomeView: View {
                             .padding(5)
                     }
             }
+            .disabled(self.currentActiveUser.id.isEmpty)
+            .opacity(self.currentActiveUser.id.isEmpty ? 0.5 : 1)
         }
     }
     
-    private func questionSection() -> some View {
+    private func questionSection(geometry: GeometryProxy) -> some View {
         VStack{
-            Text("\(self.quickChatQuestion)")
+            Text("\(qaViewModel.quickChatQuestion.body)")
                 .bold()
-                .font(.title3)
+                .font(.system(size: geometry.size.height * 0.025))
                 .animation(.easeInOut)
                 .foregroundColor(.white)
-
+            
             HStack(spacing: 5) {
-                TextField("Type in answer", text: $answer)
+                TextField("Type in answer", text: $qaViewModel.answer.body)
+                    .onSubmit {
+                        startProfileRotation()
+                    }
+                    .simultaneousGesture(TapGesture().onEnded {
+                        self.timer?.cancel()
+                    })
                     .foregroundColor(.gray)
-                    .frame(width: 220, height: 15)
+                    .frame(width: geometry.size.width * 0.55, height: geometry.size.height * 0.02)
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
@@ -289,11 +293,13 @@ struct HomeView: View {
                     )
                 
                 Button(action:  {
-                    
+                    Task {
+                        try await qaViewModel.saveAnswer(profileId: profileViewModel.userProfile.id)
+                    }
                 }) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .stroke(Color("tertiaryColor"), lineWidth: 2)
-                        .frame(width: 70, height: 45)
+                        .frame(width: geometry.size.width * 0.2, height: geometry.size.height * 0.055)
                         .overlay {
                             Text("Send")
                                 .foregroundColor(.white)
@@ -304,10 +310,10 @@ struct HomeView: View {
         }
     }
     
-    private func quickChatProfileSection() -> some View {
+    private func quickChatProfileSection(geometry: GeometryProxy) -> some View {
         HStack {
             Circle()
-                .frame(width: 35)
+                .frame(width: geometry.size.width * 0.1)
                 .overlay {
                     if !currentActiveUser.profileImage.size.height.isZero {
                         Image(uiImage: currentActiveUser.profileImage)
@@ -320,7 +326,7 @@ struct HomeView: View {
                     } else {
                         Image(systemName: "person.fill")
                             .resizable()
-                            .frame(width: 20, height: 20)
+                            .frame(width: geometry.size.width * 0.05, height: geometry.size.height * 0.03)
                             .foregroundColor(.black)
                     }
                     
@@ -338,9 +344,9 @@ struct HomeView: View {
                                 .transition(.opacity.animation(.smooth))
                                 .foregroundColor(Color("tertiaryColor"))
                             
-                            Text("Active now")
+                            Text(self.currentActiveUser.id.isEmpty ? "": "Active now")
                                 .foregroundColor(Color("tertiaryColor"))
-                                .font(.system(size: 10))
+                                .font(.system(size: geometry.size.height * 0.015))
                         }
                         
                         
@@ -363,12 +369,14 @@ struct HomeView: View {
     private func startProfileRotation() {
         guard !profileViewModel.activeUsers.isEmpty else { return }
         var index = 0
+        //  var questionIndex = 0
         self.currentActiveUser = profileViewModel.activeUsers[0]
         self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
             if !profileViewModel.activeUsers.isEmpty {
                 index = (index + 1) % profileViewModel.activeUsers.count
                 self.currentActiveUser = profileViewModel.activeUsers[index]
-                self.quickChatQuestion = qaViewModel.questions.randomElement()?.body ?? ""
+                
+                qaViewModel.quickChatQuestion =  qaViewModel.questions.randomElement() ?? emptyQuestionModel
             } else {
                 self.currentActiveUser = emptyProfileModel
             }

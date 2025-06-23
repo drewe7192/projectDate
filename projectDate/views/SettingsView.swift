@@ -32,7 +32,6 @@ struct SettingsView: View {
     let storage = Storage.storage()
     
     var body: some View {
-        NavigationStack {
             VStack{
                 headerSection()
                 
@@ -70,7 +69,6 @@ struct SettingsView: View {
                 //  If you wish to take a photo from camera instead:
                 // ImagePicker(sourceType: .camera, selectedImage: self.$image)
             }
-        }
     }
     
     private func imageSection() -> some View {
