@@ -19,11 +19,12 @@ struct HomeView: View {
     @EnvironmentObject var profileViewModel: ProfileViewModel
     
     @Binding var selectedTab: Int
+    @FocusState private var nameIsFocused: Bool
     
     @State var timer: Cancellable?
     @State private var selectedButton: Int = 0
-    @State private var currentActiveUser: ProfileModel = emptyProfileModel
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
+    @State private var currentActiveUser: ProfileModel = emptyProfileModel
     
     var body: some View {
         GeometryReader { geometry in
@@ -135,19 +136,51 @@ struct HomeView: View {
     
     private func quickChat(geometry: GeometryProxy) -> some View {
         VStack{
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(changeColor(), lineWidth: 2)
-                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
-                .opacity(selectedButton != 0 ? 0.5 : 1.0)
-                .animation(.easeInOut, value: true)
-                .overlay {
-                    VStack {
-                        connectSection(geometry: geometry)
-                        Spacer()
-                        questionSection(geometry: geometry)
+            if selectedButton == 0 {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(changeColor(), lineWidth: 2)
+                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
+                    .opacity(selectedButton != 0 ? 0.5 : 1.0)
+                    .animation(.easeInOut, value: true)
+                    .overlay {
+                        VStack {
+                            connectSection(geometry: geometry)
+                            Spacer()
+                            questionSection(geometry: geometry)
+                        }
+                        .padding(geometry.size.height * 0.02)
                     }
-                    .padding(geometry.size.height * 0.02)
-                }
+            } else if selectedButton == 1 {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(changeColor(), lineWidth: 2)
+                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
+                    .opacity(selectedButton != 0 ? 0.5 : 1.0)
+                    .animation(.easeInOut, value: true)
+                    .overlay {
+                        VStack {
+                            Text("Saved Successfully")
+                                .font(.largeTitle)
+                                .foregroundColor(.green)
+                        }
+                        .padding(geometry.size.height * 0.02)
+                    }
+            }
+            else if selectedButton == 2 {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(changeColor(), lineWidth: 2)
+                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
+                    .opacity(selectedButton != 0 ? 0.5 : 1.0)
+                    .animation(.easeInOut, value: true)
+                    .overlay {
+                        VStack {
+                            Text("Request Sent")
+                                .font(.largeTitle)
+                                .foregroundColor(.green)
+                        }
+                        .padding(geometry.size.height * 0.02)
+                    }
+            }
+
         }
     }
     
@@ -246,6 +279,11 @@ struct HomeView: View {
                     Task {
                         profileViewModel.participantProfile = pickedUser
                         try await sendRequestMessage(pickedUser: pickedUser)
+                        
+                        selectedButton = 2
+                        ///display success view for 2 seconds
+                        try await Task.sleep(nanoseconds: 2_000_000_000)
+                        selectedButton = 0
                     }
                 }
             }) {
@@ -281,6 +319,7 @@ struct HomeView: View {
                     .simultaneousGesture(TapGesture().onEnded {
                         self.timer?.cancel()
                     })
+                    .focused($nameIsFocused)
                     .foregroundColor(.gray)
                     .frame(width: geometry.size.width * 0.55, height: geometry.size.height * 0.02)
                     .padding()
@@ -295,6 +334,18 @@ struct HomeView: View {
                 Button(action:  {
                     Task {
                         try await qaViewModel.saveAnswer(profileId: profileViewModel.userProfile.id)
+                        ///dismiss keyboard
+                        nameIsFocused = false
+                        
+                        ///display success view for 2 seconds
+                        selectedButton = 1
+                        try await Task.sleep(nanoseconds: 2_000_000_000)
+                        selectedButton = 0
+
+                        qaViewModel.answer.body = ""
+                        qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
+                        
+                        startProfileRotation()
                     }
                 }) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -334,7 +385,6 @@ struct HomeView: View {
                 .foregroundColor(Color.secondaryColor)
             
             VStack{
-                if selectedButton == 0 {
                     if !self.currentActiveUser.name.isEmpty {
                         VStack(alignment: .leading) {
                             Text("\(self.currentActiveUser.name)")
@@ -348,18 +398,10 @@ struct HomeView: View {
                                 .foregroundColor(Color("tertiaryColor"))
                                 .font(.system(size: geometry.size.height * 0.015))
                         }
-                        
-                        
                     } else {
                         Text("Searching for friends...")
                             .foregroundColor(Color("tertiaryColor"))
                     }
-                    
-                } else if selectedButton == 1 {
-                    
-                    Text("Request Sent Successfully!")
-                        .foregroundColor(Color("tertiaryColor"))
-                }
             }
         }
     }
@@ -413,7 +455,7 @@ struct HomeView: View {
         case 1:
             return .green
         case 2:
-            return .red
+            return .green
         default:
             return .blue
             
