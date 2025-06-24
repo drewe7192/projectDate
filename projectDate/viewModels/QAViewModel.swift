@@ -13,8 +13,10 @@ class QAViewModel: ObservableObject {
     @Published var questions: [QuestionModel] = []
     @Published var answer: AnswerModel = emptyAnswerModel
     @Published var quickChatQuestion: QuestionModel = emptyQuestionModel
+    @Published var recentAnswers: [AnswerModel] = []
     
     private let videoService = VideoService()
+    private let qaService = QAService()
     let functions = Functions.functions()
     
     public func getQuestions() async throws {
@@ -26,7 +28,7 @@ class QAViewModel: ObservableObject {
     
     public func saveAnswer(profileId: String) async throws {
         do {
-            let requestObject = AnswerModel(id: UUID().uuidString, profileId: profileId, questionId: quickChatQuestion.id, body: answer.body)
+            let requestObject = AnswerModel(id: UUID().uuidString, profileId: profileId, questionId: quickChatQuestion.id, body: answer.body, isRead: false)
             
             _ = try await videoService.saveAnswer(answer: requestObject)
         } catch let error {
@@ -50,6 +52,14 @@ class QAViewModel: ObservableObject {
                 result = try await functions.httpsCallable("sendGuestAnswerNotification").call(payload)
             }
             return result
+        }
+    }
+    
+    func getRecentAnswers() async throws {
+        let recentAnswers = try await qaService.getRecentAnswers()
+        
+        if !recentAnswers.isEmpty {
+            self.recentAnswers = recentAnswers
         }
     }
 }

@@ -22,6 +22,7 @@ struct HomeView: View {
     @FocusState private var nameIsFocused: Bool
     
     @State var timer: Cancellable?
+    @State private var showingSheet = true
     @State private var selectedButton: Int = 0
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var currentActiveUser: ProfileModel = emptyProfileModel
@@ -55,10 +56,13 @@ struct HomeView: View {
                     /// update user app status to active
                     try await profileViewModel.UpdateActivityStatus(isActive: true)
                     
-                    /// for quickChat
+                    /// get stuff for quickChat
                     try await getActiveUsers()
                     try await qaViewModel.getQuestions()
                     startProfileRotation()
+                    
+                    /// check for new answers
+                    try await getRecentAnswers()
                     
                 } catch {
                     print("Error getting userProfile:\(error)")
@@ -75,6 +79,9 @@ struct HomeView: View {
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
                 let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
                 viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+            }
+            .sheet(isPresented: $showingSheet) {
+                newAnswersSheet()
             }
         }
         .ignoresSafeArea(.keyboard)
@@ -180,7 +187,7 @@ struct HomeView: View {
                         .padding(geometry.size.height * 0.02)
                     }
             }
-
+            
         }
     }
     
@@ -341,7 +348,7 @@ struct HomeView: View {
                         selectedButton = 1
                         try await Task.sleep(nanoseconds: 2_000_000_000)
                         selectedButton = 0
-
+                        
                         qaViewModel.answer.body = ""
                         qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
                         
@@ -385,28 +392,69 @@ struct HomeView: View {
                 .foregroundColor(Color.secondaryColor)
             
             VStack{
-                    if !self.currentActiveUser.name.isEmpty {
-                        VStack(alignment: .leading) {
-                            Text("\(self.currentActiveUser.name)")
-                                .bold()
-                                .font(.title3)
-                                .id(self.currentActiveUser.id)
-                                .transition(.opacity.animation(.smooth))
-                                .foregroundColor(Color("tertiaryColor"))
-                            
-                            Text(self.currentActiveUser.id.isEmpty ? "": "Active now")
-                                .foregroundColor(Color("tertiaryColor"))
-                                .font(.system(size: geometry.size.height * 0.015))
-                        }
-                    } else {
-                        Text("Searching for friends...")
+                if !self.currentActiveUser.name.isEmpty {
+                    VStack(alignment: .leading) {
+                        Text("\(self.currentActiveUser.name)")
+                            .bold()
+                            .font(.title3)
+                            .id(self.currentActiveUser.id)
+                            .transition(.opacity.animation(.smooth))
                             .foregroundColor(Color("tertiaryColor"))
+                        
+                        Text(self.currentActiveUser.id.isEmpty ? "": "Active now")
+                            .foregroundColor(Color("tertiaryColor"))
+                            .font(.system(size: geometry.size.height * 0.015))
                     }
+                } else {
+                    Text("Searching for friends...")
+                        .foregroundColor(Color("tertiaryColor"))
+                }
             }
         }
     }
     
-    
+    private func newAnswersSheet() -> some View {
+        ZStack{
+            Color.primaryColor
+                .ignoresSafeArea()
+            
+            VStack{
+                Spacer()
+                
+                Text("Congratulations!")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+                
+                
+                Text("You got new answers from: ")
+                    .foregroundColor(.white)
+                    .font(.title)
+                
+                Spacer()
+                
+                newAnswersView()
+             
+                Spacer()
+                
+                Button(action: {
+                    
+                }) {
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .stroke(.white, lineWidth: 2)
+                        .frame(width: 340, height: 60)
+                        .overlay {
+                            Text("More details")
+                                .foregroundColor(.white)
+                                .font(.system(size: 15))
+                                .bold()
+                                .padding(5)
+                        }
+                }
+                Spacer()
+            }
+            
+        }
+    }
     
     private func startProfileRotation() {
         guard !profileViewModel.activeUsers.isEmpty else { return }
@@ -460,6 +508,67 @@ struct HomeView: View {
             return .blue
             
         }
+    }
+    
+    private func getRecentAnswers () async throws {
+        try await qaViewModel.getRecentAnswers()
+    }
+    
+    private func newAnswersView() -> some View {
+            ScrollView {
+                ForEach(qaViewModel.recentAnswers, id: \.self) { recentAnswer in
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .stroke(.white, lineWidth: 2)
+                        .frame(width: 360, height: 80)
+                        .overlay {
+                            newAnswersBody(recentAnswer: recentAnswer)
+                        }
+                        .padding(5)
+                }
+            }
+    }
+    
+    private func newAnswersBody(recentAnswer: AnswerModel) -> some View {
+        HStack {
+            VStack{
+                Circle()
+                    .overlay(
+                        Image("person.fill")
+                            .resizable()
+                            .foregroundColor(.black)
+                    )
+                    .frame(width: 50)
+                    .foregroundColor(.gray)
+                
+                Text("John Doe")
+                    .foregroundColor(.white)
+                    .font(.system(size: 10))
+                    .bold()
+            }
+            
+            Spacer()
+            
+            VStack{
+                Text("\(recentAnswer.body)")
+                    .foregroundColor(.white)
+                    .font(.system(size: 15))
+                    .bold()
+                
+                Text("\(recentAnswer.body)")
+                    .foregroundColor(.green)
+                    .font(.system(size: 10))
+            }
+            Spacer()
+            Button(action: {
+                
+            }) {
+                Image(systemName: "heart.circle")
+                    .resizable()
+                    .foregroundColor(.white)
+                    .frame(width: 25, height: 25)
+            }
+        }
+        .padding()
     }
 }
 
