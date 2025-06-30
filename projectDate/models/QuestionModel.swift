@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct QuestionModel: Identifiable, Equatable {
+struct QuestionModel: Identifiable, Equatable, Hashable {
     var id: String
     var body: String
     var answers: [String]

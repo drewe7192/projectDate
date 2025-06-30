@@ -97,6 +97,8 @@
 				FCMTokenModel.swift,
 				ProfileInfoModel.swift,
 				ProfileModel.swift,
+				QADTOModel.swift,
+				QAModel.swift,
 				SpeedDateModel.swift,
 				VideoConfigModel.swift,
 			);

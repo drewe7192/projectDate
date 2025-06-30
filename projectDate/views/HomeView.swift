@@ -61,8 +61,8 @@ struct HomeView: View {
                     try await qaViewModel.getQuestions()
                     startProfileRotation()
                     
-                    /// check for new answers
-                    try await getRecentAnswers()
+                    /// check for newly answered questions
+                    try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
                     
                 } catch {
                     print("Error getting userProfile:\(error)")
@@ -510,30 +510,26 @@ struct HomeView: View {
         }
     }
     
-    private func getRecentAnswers () async throws {
-        try await qaViewModel.getRecentAnswers()
-    }
-    
     private func newAnswersView() -> some View {
             ScrollView {
-                ForEach(qaViewModel.recentAnswers, id: \.self) { recentAnswer in
+                ForEach(qaViewModel.recentQAs, id: \.self) { recentQA in
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
                         .stroke(.white, lineWidth: 2)
                         .frame(width: 360, height: 80)
                         .overlay {
-                            newAnswersBody(recentAnswer: recentAnswer)
+                            newAnswersBody(recentQA: recentQA)
                         }
                         .padding(5)
                 }
             }
     }
     
-    private func newAnswersBody(recentAnswer: AnswerModel) -> some View {
+    private func newAnswersBody(recentQA: QAModel) -> some View {
         HStack {
             VStack{
                 Circle()
                     .overlay(
-                        Image("person.fill")
+                        Image(uiImage: recentQA.profileImage)
                             .resizable()
                             .foregroundColor(.black)
                     )
@@ -549,12 +545,12 @@ struct HomeView: View {
             Spacer()
             
             VStack{
-                Text("\(recentAnswer.body)")
+                Text("\(recentQA.question.body)")
                     .foregroundColor(.white)
                     .font(.system(size: 15))
                     .bold()
                 
-                Text("\(recentAnswer.body)")
+                Text("\(recentQA.answer.body)")
                     .foregroundColor(.green)
                     .font(.system(size: 10))
             }

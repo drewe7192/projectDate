@@ -144,10 +144,10 @@ class ProfileViewModel: ObservableObject {
     }
     
     func getFileFromStorage(profileId: String, isActiveUser: Bool = false) async throws {
-        let islandRef = storage.reference().child("\(profileId)/images/image.jpg")
+        let ref = storage.reference().child("\(profileId)/images/image.jpg")
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        islandRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        ref.getData(maxSize: 1 * 1024 * 1024) { data, error in
             if let error = error {
                 print("Error getting file from storage: \(error)")
             } else {

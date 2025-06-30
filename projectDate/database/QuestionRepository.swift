@@ -30,4 +30,20 @@ class QuestionRepository {
         }
         return questions
     }
+    
+    public func Get(questionId: String) async throws -> QuestionModel {
+        var question: QuestionModel = emptyQuestionModel
+        let snapshot = try await db.collection("questions")
+            .whereField("id", isEqualTo: questionId)
+            .getDocuments()
+        
+        snapshot.documents.forEach { documentSnapshot in
+            let documentData = documentSnapshot.data()
+            
+            question.id = documentData["id"] as! String
+            question.body = documentData["body"] as! String
+            question.answers = documentData["answers"] as! [String]
+        }
+        return question
+    }
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 import FirebaseFunctions
+import UIKit
+import FirebaseStorage
 
 @MainActor
 class QAViewModel: ObservableObject {
@@ -14,10 +16,13 @@ class QAViewModel: ObservableObject {
     @Published var answer: AnswerModel = emptyAnswerModel
     @Published var quickChatQuestion: QuestionModel = emptyQuestionModel
     @Published var recentAnswers: [AnswerModel] = []
+    @Published var recentQAs: [QAModel] = []
+    @Published var recentQAImages: [QADTOModel] = []
     
     private let videoService = VideoService()
     private let qaService = QAService()
     let functions = Functions.functions()
+    let storage = Storage.storage()
     
     public func getQuestions() async throws {
         let questions = try await videoService.getQuestions()
@@ -60,6 +65,40 @@ class QAViewModel: ObservableObject {
         
         if !recentAnswers.isEmpty {
             self.recentAnswers = recentAnswers
+        }
+    }
+    
+    func getRecentQA(profileId: String) async throws {
+        try await getRecentAnswers()
+        for recentAnswer in self.recentAnswers {
+            let question = try await qaService.getQuestion(questionId: recentAnswer.questionId)
+            
+            getFileFromStorage(profileId: recentAnswer.profileId) {(data, error) in
+                if let error = error {
+                    print("Error getting file from storage: \(error)")
+                } else if ((data?.isEmpty) != nil) {
+                    let recentQA = QAModel(id: UUID().uuidString, answer: recentAnswer, question: question, profileImage: UIImage(data: data!) ?? UIImage())
+                    
+                    self.recentQAs.append(recentQA)
+                }
+            }
+        }
+    }
+    
+    func getFileFromStorage(profileId: String, completion: @escaping (Data?, Error?) -> Void){
+        let ref = storage.reference().child("\(profileId)/images/image.jpg")
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        ref.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error getting file from storage: \(error)")
+                completion(data, error)
+            } else {
+                if let image1 = UIImage(data: data!) {
+                    // Process the image (e.g., store it in a variable)
+                    self.recentQAImages.append(QADTOModel(profileId: profileId, profileImage: image1))
+                }
+                completion(data, error)
+            }
         }
     }
 }
