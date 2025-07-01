@@ -22,10 +22,11 @@ struct HomeView: View {
     @FocusState private var nameIsFocused: Bool
     
     @State var timer: Cancellable?
-    @State private var showingSheet = true
+    @State private var showingSheet = false
     @State private var selectedButton: Int = 0
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var currentActiveUser: ProfileModel = emptyProfileModel
+    @State private var isHeartSelected: Bool = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -79,6 +80,11 @@ struct HomeView: View {
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
                 let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
                 viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+            }
+            .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
+                if !newValue.isEmpty {
+                    showingSheet = true
+                }
             }
             .sheet(isPresented: $showingSheet) {
                 newAnswersSheet()
@@ -298,7 +304,7 @@ struct HomeView: View {
                     .stroke(.green, lineWidth: 2)
                     .frame(width: 80, height: 40)
                     .overlay {
-                        Text("Play")
+                        Text("BlindChat")
                             .foregroundColor(.white)
                             .font(.system(size: 15))
                             .bold()
@@ -340,7 +346,7 @@ struct HomeView: View {
                 
                 Button(action:  {
                     Task {
-                        try await qaViewModel.saveAnswer(profileId: profileViewModel.userProfile.id)
+                        try await qaViewModel.saveAnswer(profileId: profileViewModel.userProfile.id, askerProfileId: self.currentActiveUser.id)
                         ///dismiss keyboard
                         nameIsFocused = false
                         
@@ -433,17 +439,25 @@ struct HomeView: View {
                 Spacer()
                 
                 newAnswersView()
-             
+                
                 Spacer()
                 
                 Button(action: {
+                    Task {
+                        do {
+                            try await qaViewModel.updateAnswers()
+                            showingSheet.toggle()
+                        } catch let error {
+                            print("Error trying to deactive recent Answers: \(error)")
+                        }
+                    }
                     
                 }) {
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .stroke(.white, lineWidth: 2)
+                        .stroke(.red, lineWidth: 2)
                         .frame(width: 340, height: 60)
                         .overlay {
-                            Text("More details")
+                            Text("Dismiss")
                                 .foregroundColor(.white)
                                 .font(.system(size: 15))
                                 .bold()
@@ -511,17 +525,17 @@ struct HomeView: View {
     }
     
     private func newAnswersView() -> some View {
-            ScrollView {
-                ForEach(qaViewModel.recentQAs, id: \.self) { recentQA in
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .stroke(.white, lineWidth: 2)
-                        .frame(width: 360, height: 80)
-                        .overlay {
-                            newAnswersBody(recentQA: recentQA)
-                        }
-                        .padding(5)
-                }
+        ScrollView {
+            ForEach(qaViewModel.recentQAs, id: \.self) { recentQA in
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                    .stroke(.white, lineWidth: 2)
+                    .frame(width: 360, height: 80)
+                    .overlay {
+                        newAnswersBody(recentQA: recentQA)
+                    }
+                    .padding(5)
             }
+        }
     }
     
     private func newAnswersBody(recentQA: QAModel) -> some View {
@@ -556,11 +570,11 @@ struct HomeView: View {
             }
             Spacer()
             Button(action: {
-                
+                self.isHeartSelected.toggle()
             }) {
                 Image(systemName: "heart.circle")
                     .resizable()
-                    .foregroundColor(.white)
+                    .foregroundColor(self.isHeartSelected ? .red : .white)
                     .frame(width: 25, height: 25)
             }
         }

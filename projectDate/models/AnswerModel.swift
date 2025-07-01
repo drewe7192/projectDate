@@ -12,7 +12,8 @@ struct AnswerModel: Identifiable, Equatable, Codable, Hashable {
     var profileId: String
     var questionId: String
     var body: String
-    var isRead: Bool
+    var isActive: Bool
+    var askerProfileId: String
 }
 
-var emptyAnswerModel = AnswerModel(id: "", profileId: "", questionId: "",  body: "", isRead: false)
+var emptyAnswerModel = AnswerModel(id: "", profileId: "", questionId: "",  body: "", isActive: false, askerProfileId: "")

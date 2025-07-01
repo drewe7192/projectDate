@@ -11,8 +11,8 @@ class QAService {
     private let answerRepo = AnswerRepository()
     private let questionRepo = QuestionRepository()
     
-    func getRecentAnswers() async throws -> [AnswerModel]  {
-            let response = try await answerRepo.GetRecent()
+    func getRecentAnswers(profileId: String) async throws -> [AnswerModel]  {
+        let response = try await answerRepo.GetRecent(profileId: profileId)
             return response
     }
     

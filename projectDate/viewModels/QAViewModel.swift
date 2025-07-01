@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseFunctions
 import UIKit
 import FirebaseStorage
@@ -23,6 +24,7 @@ class QAViewModel: ObservableObject {
     private let qaService = QAService()
     let functions = Functions.functions()
     let storage = Storage.storage()
+    let db = Firestore.firestore()
     
     public func getQuestions() async throws {
         let questions = try await videoService.getQuestions()
@@ -31,9 +33,9 @@ class QAViewModel: ObservableObject {
         }
     }
     
-    public func saveAnswer(profileId: String) async throws {
+    public func saveAnswer(profileId: String, askerProfileId: String) async throws {
         do {
-            let requestObject = AnswerModel(id: UUID().uuidString, profileId: profileId, questionId: quickChatQuestion.id, body: answer.body, isRead: false)
+            let requestObject = AnswerModel(id: UUID().uuidString, profileId: profileId, questionId: quickChatQuestion.id, body: answer.body, isActive: true, askerProfileId: askerProfileId)
             
             _ = try await videoService.saveAnswer(answer: requestObject)
         } catch let error {
@@ -60,8 +62,8 @@ class QAViewModel: ObservableObject {
         }
     }
     
-    func getRecentAnswers() async throws {
-        let recentAnswers = try await qaService.getRecentAnswers()
+    func getRecentAnswers(profileId: String) async throws {
+        let recentAnswers = try await qaService.getRecentAnswers(profileId: profileId)
         
         if !recentAnswers.isEmpty {
             self.recentAnswers = recentAnswers
@@ -69,7 +71,7 @@ class QAViewModel: ObservableObject {
     }
     
     func getRecentQA(profileId: String) async throws {
-        try await getRecentAnswers()
+        try await getRecentAnswers(profileId: profileId)
         for recentAnswer in self.recentAnswers {
             let question = try await qaService.getQuestion(questionId: recentAnswer.questionId)
             
@@ -99,6 +101,15 @@ class QAViewModel: ObservableObject {
                 }
                 completion(data, error)
             }
+        }
+    }
+    
+    public func updateAnswers() async throws {
+        for recentQA in self.recentQAs {
+            let docRef = db.collection("answers").document(recentQA.answer.id)
+            try await docRef.updateData([
+                "isActive": false
+            ])
         }
     }
 }

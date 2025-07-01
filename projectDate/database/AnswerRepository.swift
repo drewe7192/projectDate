@@ -32,9 +32,11 @@ class AnswerRepository {
         return answers
     }
     
-    public func GetRecent() async throws -> [AnswerModel] {
+    public func GetRecent(profileId: String) async throws -> [AnswerModel] {
         var answers: [AnswerModel] = []
         let snapshot = try await db.collection("answers")
+            .whereField("isActive", isEqualTo: true)
+            .whereField("askerProfileId", isEqualTo: profileId)
             .limit(to: 10)
             .getDocuments()
         
@@ -46,12 +48,13 @@ class AnswerRepository {
             answer.body = documentData["body"] as! String
             answer.profileId = documentData["profileId"] as! String
             answer.questionId = documentData["questionId"] as! String
+            answer.askerProfileId = documentData["askerProfileId"] as! String
+            answer.isActive = documentData["isActive"] as! Bool
             
             answers.append(answer)
         }
         return answers
     }
-    
     
     public func Save(answer: AnswerModel) async throws {
         do {
