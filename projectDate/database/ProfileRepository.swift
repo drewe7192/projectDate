@@ -34,12 +34,10 @@ class ProfileRepository {
         try await docRef.setData(newProfile)
     }
     
-    public func GetActive(userId: String) async throws -> [ProfileModel] {
+    public func GetAll(userId: String) async throws -> [ProfileModel] {
         var activeProfiles: [ProfileModel] = []
         let snapshot = try await db.collection("profiles")
             .whereField("userId", isNotEqualTo: userId as String)
-            .whereField("isActive", isEqualTo: true as Bool)
-            .limit(to: 10)
             .getDocuments()
         
         snapshot.documents.forEach { documentSnapshot in

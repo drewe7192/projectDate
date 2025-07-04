@@ -41,8 +41,8 @@ class ProfileService {
         return newProfile
     }
     
-    public func GetActiveUsers(userId: String) async throws -> [ProfileModel] {
-        let responseActiveProfiles = try await profileRepo.GetActive(userId: userId)
+    public func GetCurrentUsers(userId: String) async throws -> [ProfileModel] {
+        let responseActiveProfiles = try await profileRepo.GetAll(userId: userId)
         let results = responseActiveProfiles
         
         return results

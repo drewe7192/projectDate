@@ -15,7 +15,7 @@ class ProfileViewModel: ObservableObject {
     @Published var userProfile: ProfileModel = emptyProfileModel
     @Published var participantProfile: ProfileModel =  emptyProfileModel
     @Published var isNewUser: Bool = false
-    @Published var activeUsers: [ProfileModel] = []
+    @Published var currentUsers: [ProfileModel] = []
     
     private let profileService = ProfileService()
     private let fcmService = FCMService()
@@ -42,15 +42,15 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    public func GetActiveUsers() async throws {
-        let activeUsers = try await profileService.GetActiveUsers(userId: Auth.auth().currentUser?.uid ?? "")
-        self.activeUsers = activeUsers
-        print("\(self.activeUsers)")
-        if(!self.activeUsers.isEmpty) {
-            for activeUser in self.activeUsers {
-                try await getFileFromStorage(profileId: activeUser.id, isActiveUser: true)
+    public func GetCurrentUsers() async throws {
+        let currentUsers = try await profileService.GetCurrentUsers(userId: Auth.auth().currentUser?.uid ?? "")
+        self.currentUsers = currentUsers
+
+        if(!self.currentUsers.isEmpty) {
+            for currentUser in self.currentUsers {
+                try await getFileFromStorage(profileId: currentUser.id, isActiveUser: true)
             }
-            print("\(self.activeUsers[0].profileImage.size.height)")
+            print("\(self.currentUsers[0].profileImage.size.height)")
           
         }
     }
@@ -152,8 +152,8 @@ class ProfileViewModel: ObservableObject {
                 print("Error getting file from storage: \(error)")
             } else {
                 if isActiveUser {
-                    if let i = self.activeUsers.firstIndex(where: {$0.id == profileId}) {
-                        self.activeUsers[i].profileImage = UIImage(data: data!) ?? UIImage()
+                    if let i = self.currentUsers.firstIndex(where: {$0.id == profileId}) {
+                        self.currentUsers[i].profileImage = UIImage(data: data!) ?? UIImage()
                         
                     }
                 } else {

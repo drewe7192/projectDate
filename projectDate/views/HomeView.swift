@@ -23,10 +23,18 @@ struct HomeView: View {
     
     @State var timer: Cancellable?
     @State private var showingSheet = false
-    @State private var selectedButton: Int = 0
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
-    @State private var currentActiveUser: ProfileModel = emptyProfileModel
+    @State private var currentUser: ProfileModel = emptyProfileModel
     @State private var isHeartSelected: Bool = false
+    @State private var updateQuestion: Bool = false
+  //  @State private var isSendingRequest: Bool = true
+    
+    enum QAWidgetState {
+        case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
+    }
+    
+    @State private var currentQAWidgetState = QAWidgetState.inital
+  //  @State private var selectedButton: Int = 0
     
     var body: some View {
         GeometryReader { geometry in
@@ -38,7 +46,7 @@ struct HomeView: View {
                     header(geometry: geometry)
                     Spacer()
                         .frame(height: geometry.size.height * 0.02)
-                    quickChat(geometry: geometry)
+                    qaWidget(geometry: geometry)
                     Spacer()
                         .frame(height: geometry.size.height * 0.02)
                     videoSection(geometry: geometry)
@@ -58,7 +66,7 @@ struct HomeView: View {
                     try await profileViewModel.UpdateActivityStatus(isActive: true)
                     
                     /// get stuff for quickChat
-                    try await getActiveUsers()
+                    try await getCurrentUsers()
                     try await qaViewModel.getQuestions()
                     startProfileRotation()
                     
@@ -84,6 +92,12 @@ struct HomeView: View {
             .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
                 if !newValue.isEmpty {
                     showingSheet = true
+                }
+            }
+            .onChange(of: self.currentUser) { oldValue, newValue in
+                
+                if oldValue.id != newValue.id {
+                    self.updateQuestion.toggle()
                 }
             }
             .sheet(isPresented: $showingSheet) {
@@ -147,53 +161,55 @@ struct HomeView: View {
         }
     }
     
-    private func quickChat(geometry: GeometryProxy) -> some View {
+    private func qaWidget(geometry: GeometryProxy) -> some View {
         VStack{
-            if selectedButton == 0 {
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(changeColor(), lineWidth: 2)
-                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
-                    .opacity(selectedButton != 0 ? 0.5 : 1.0)
-                    .animation(.easeInOut, value: true)
-                    .overlay {
-                        VStack {
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(changeColor(), lineWidth: 2)
+                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
+                .animation(.easeInOut, value: true)
+                .overlay {
+                    VStack {
+                        switch currentQAWidgetState {
+                        case .inital:
                             connectSection(geometry: geometry)
                             Spacer()
                             questionSection(geometry: geometry)
-                        }
-                        .padding(geometry.size.height * 0.02)
-                    }
-            } else if selectedButton == 1 {
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(changeColor(), lineWidth: 2)
-                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
-                    .opacity(selectedButton != 0 ? 0.5 : 1.0)
-                    .animation(.easeInOut, value: true)
-                    .overlay {
-                        VStack {
-                            Text("Saved Successfully")
-                                .font(.largeTitle)
+                        case .savingAnswer:
+                            ProgressView {
+                                
+                            }
+                            .scaleEffect(x: 2, y: 2, anchor: .center)
+                            .padding(.bottom)
+                            
+                            Text("Saving Answer...")
+                                .font(.system(size: 25))
+                                .bold()
+                                .foregroundColor(.yellow)
+                        case .AnswerSaved:
+                            Text("Saved Answer!")
+                                .font(.system(size: 25))
+                                .bold()
+                                .foregroundColor(.green)
+                        case .sendingBCRequest:
+                            ProgressView {
+                                
+                            }
+                            .scaleEffect(x: 2, y: 2, anchor: .center)
+                            .padding(.bottom)
+                            
+                            Text("Sending Request...")
+                                .font(.system(size: 25))
+                                .bold()
+                                .foregroundColor(.yellow)
+                        case .BCRequestSent:
+                            Text("Request Sent!")
+                                .font(.system(size: 25))
+                                .bold()
                                 .foregroundColor(.green)
                         }
-                        .padding(geometry.size.height * 0.02)
                     }
-            }
-            else if selectedButton == 2 {
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(changeColor(), lineWidth: 2)
-                    .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
-                    .opacity(selectedButton != 0 ? 0.5 : 1.0)
-                    .animation(.easeInOut, value: true)
-                    .overlay {
-                        VStack {
-                            Text("Request Sent")
-                                .font(.largeTitle)
-                                .foregroundColor(.green)
-                        }
-                        .padding(geometry.size.height * 0.02)
-                    }
-            }
-            
+                    .padding(geometry.size.height * 0.02)
+                }
         }
     }
     
@@ -288,15 +304,18 @@ struct HomeView: View {
             Spacer()
             
             Button(action:  {
-                if let pickedUser = profileViewModel.activeUsers.first(where: {$0.id == self.currentActiveUser.id}) {
+               
+                if let pickedUser = profileViewModel.currentUsers.first(where: {$0.id == self.currentUser.id}) {
                     Task {
+                        currentQAWidgetState = .sendingBCRequest
+                        
                         profileViewModel.participantProfile = pickedUser
                         try await sendRequestMessage(pickedUser: pickedUser)
                         
-                        selectedButton = 2
+                        currentQAWidgetState = .BCRequestSent
                         ///display success view for 2 seconds
                         try await Task.sleep(nanoseconds: 2_000_000_000)
-                        selectedButton = 0
+                        currentQAWidgetState = .inital
                     }
                 }
             }) {
@@ -311,8 +330,8 @@ struct HomeView: View {
                             .padding(5)
                     }
             }
-            .disabled(self.currentActiveUser.id.isEmpty)
-            .opacity(self.currentActiveUser.id.isEmpty ? 0.5 : 1)
+            .disabled(!self.currentUser.isActive)
+            .opacity(!self.currentUser.isActive ? 0.5 : 1)
         }
     }
     
@@ -346,14 +365,15 @@ struct HomeView: View {
                 
                 Button(action:  {
                     Task {
-                        try await qaViewModel.saveAnswer(profileId: profileViewModel.userProfile.id, askerProfileId: self.currentActiveUser.id)
+                        currentQAWidgetState = .savingAnswer
+                        try await qaViewModel.saveAnswer(profileId: profileViewModel.userProfile.id, askerProfileId: self.currentUser.id)
                         ///dismiss keyboard
                         nameIsFocused = false
                         
                         ///display success view for 2 seconds
-                        selectedButton = 1
+                        currentQAWidgetState = .AnswerSaved
                         try await Task.sleep(nanoseconds: 2_000_000_000)
-                        selectedButton = 0
+                        currentQAWidgetState = .inital
                         
                         qaViewModel.answer.body = ""
                         qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
@@ -379,8 +399,8 @@ struct HomeView: View {
             Circle()
                 .frame(width: geometry.size.width * 0.1)
                 .overlay {
-                    if !currentActiveUser.profileImage.size.height.isZero {
-                        Image(uiImage: currentActiveUser.profileImage)
+                    if !currentUser.profileImage.size.height.isZero {
+                        Image(uiImage: currentUser.profileImage)
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.black)
@@ -398,16 +418,16 @@ struct HomeView: View {
                 .foregroundColor(Color.secondaryColor)
             
             VStack{
-                if !self.currentActiveUser.name.isEmpty {
+                if !self.currentUser.name.isEmpty {
                     VStack(alignment: .leading) {
-                        Text("\(self.currentActiveUser.name)")
+                        Text("\(self.currentUser.name)")
                             .bold()
                             .font(.title3)
-                            .id(self.currentActiveUser.id)
+                            .id(self.currentUser.id)
                             .transition(.opacity.animation(.smooth))
                             .foregroundColor(Color("tertiaryColor"))
                         
-                        Text(self.currentActiveUser.id.isEmpty ? "": "Active now")
+                        Text(self.currentUser.isActive ? "Active now": "")
                             .foregroundColor(Color("tertiaryColor"))
                             .font(.system(size: geometry.size.height * 0.015))
                     }
@@ -471,24 +491,30 @@ struct HomeView: View {
     }
     
     private func startProfileRotation() {
-        guard !profileViewModel.activeUsers.isEmpty else { return }
+        guard !profileViewModel.currentUsers.isEmpty else { return }
         var index = 0
-        //  var questionIndex = 0
-        self.currentActiveUser = profileViewModel.activeUsers[0]
+        
+        self.currentUser = profileViewModel.currentUsers[0]
         self.timer = Timer.publish(every: 4, on: .main, in: .common).autoconnect().sink { output in
-            if !profileViewModel.activeUsers.isEmpty {
-                index = (index + 1) % profileViewModel.activeUsers.count
-                self.currentActiveUser = profileViewModel.activeUsers[index]
+            if !profileViewModel.currentUsers.isEmpty {
+                index = (index + 1) % profileViewModel.currentUsers.count
                 
-                qaViewModel.quickChatQuestion =  qaViewModel.questions.randomElement() ?? emptyQuestionModel
+                self.currentUser = profileViewModel.currentUsers[index]
+                
+                if self.updateQuestion {
+                    qaViewModel.quickChatQuestion =  qaViewModel.questions.randomElement() ?? emptyQuestionModel
+                    
+                    self.updateQuestion.toggle()
+                }
+                
             } else {
-                self.currentActiveUser = emptyProfileModel
+                self.currentUser = emptyProfileModel
             }
         }
     }
     
-    private func getActiveUsers() async throws {
-        try await profileViewModel.GetActiveUsers()
+    private func getCurrentUsers() async throws {
+        try await profileViewModel.GetCurrentUsers()
     }
     
     private func launchVideoSession(pickedUser: ProfileModel) async throws {
@@ -511,16 +537,17 @@ struct HomeView: View {
     }
     
     private func changeColor () -> Color {
-        switch selectedButton {
-        case 0:
+        switch currentQAWidgetState {
+        case .inital:
             return .blue
-        case 1:
+        case .savingAnswer:
+            return .yellow
+        case .AnswerSaved:
             return .green
-        case 2:
+        case .sendingBCRequest:
+            return .yellow
+        case .BCRequestSent:
             return .green
-        default:
-            return .blue
-            
         }
     }
     
