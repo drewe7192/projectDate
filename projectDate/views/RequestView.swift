@@ -14,54 +14,99 @@ struct RequestView: View {
     @EnvironmentObject var eventViewModel: EventViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     
+    @State private var showSheet: Bool = false
+    @State private var timeRemaining = 5
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
     var body: some View {
-        ZStack {
-            Color.yellow
-                .ignoresSafeArea()
-            
-            VStack{
-                Text("\(delegate.requestByProfile.name)")
-                    .bold()
-                    .font(.system(size: 60))
-                    .foregroundColor(.black)
+        GeometryReader { geometry in
+            ZStack {
+                Color.primaryColor
+                    .ignoresSafeArea()
                 
-                Text(" Requested a BlindDate!")
-                    .font(.system(size: 60))
-                    .foregroundColor(.black)
-                
-                Button(action: {
-                    Task {
-                        let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
-                        _ = try await profileViewModel.callSendAcceptNotification(fcmToken: fcmToken)
-                        
-                        videoViewModel.roomCode = delegate.requestByProfile.roomCode
-                        
-                        profileViewModel.participantProfile = delegate.requestByProfile
-                        
-                        var videoConfig = VideoConfigModel (role: RoleType.guest, isScreenBlurred: true, isFullScreen: true)
-                        viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                VStack{
+                    Text("\(delegate.requestByProfile.name)")
+                        .bold()
+                        .font(.system(size: 60))
+                        .foregroundColor(Color("tertiaryColor"))
+                    
+                    Text(" Requested a BlindChat!")
+                        .font(.system(size: 60))
+                        .foregroundColor(Color("tertiaryColor"))
+                    
+                    Button(action: {
+                        Task {
+                            /// show sheet for 5 seconds then launch
+                            self.showSheet = true
+                            try await Task.sleep(for: .seconds(5))
+                            
+                            let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
+                            _ = try await profileViewModel.callSendAcceptNotification(fcmToken: fcmToken)
+                            
+                            videoViewModel.roomCode = delegate.requestByProfile.roomCode
+                            
+                            profileViewModel.participantProfile = delegate.requestByProfile
+                            
+                            var videoConfig = VideoConfigModel (role: RoleType.guest, isScreenBlurred: true, isFullScreen: true)
+                            
+                            viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                        }
+                    }) {
+                        RoundedRectangle(cornerRadius: 30, style: .continuous)
+                            .stroke(Color("tertiaryColor"), lineWidth: 2)
+                            .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.08)
+                            .overlay {
+                                Text("Accept")
+                                    .foregroundColor(.white)
+                                    .cornerRadius(40)
+                            }
                     }
-                }) {
-                    Text("Accept")
-                        .foregroundColor(.white)
-                        .frame(width: 350, height: 60)
-                        .background(Color.secondaryColor)
-                        .cornerRadius(40)
+                    .padding(.bottom)
+                    
+                    Button(action: {
+                        Task {
+                            let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
+                            _ = try await profileViewModel.callSendDeclineNotification(fcmToken: fcmToken)
+                            
+                            viewRouter.currentPage = .homePage
+                        }
+                    }) {
+                        RoundedRectangle(cornerRadius: 30, style: .continuous)
+                            .stroke(Color("tertiaryColor"), lineWidth: 2)
+                            .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.08)
+                            .overlay {
+                                Text("Decline")
+                                    .foregroundColor(.white)
+                                    .cornerRadius(40)
+                            }
+                    }
                 }
-                
-                Button(action: {
-                    Task {
-                        let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
-                        _ = try await profileViewModel.callSendDeclineNotification(fcmToken: fcmToken)
-                        
-                        viewRouter.currentPage = .homePage
+            }
+            .onReceive(timer) { time in
+                if self.showSheet {
+                    if timeRemaining > 0 {
+                        timeRemaining -= 1
                     }
-                }) {
-                    Text("Decline")
-                        .foregroundColor(.white)
-                        .frame(width: 350, height: 60)
-                        .background(Color.secondaryColor)
-                        .cornerRadius(40)
+                    else {
+                        self.showSheet = false
+                    }
+                }
+            }
+            .sheet(isPresented: $showSheet) {
+                ZStack {
+                    Color.primaryColor
+                        .ignoresSafeArea()
+                    
+                    VStack{
+                        Text("Chat starts in")
+                            .font(.system(size: 60))
+                            .foregroundColor(Color("tertiaryColor"))
+                        
+                        Text("\(self.timeRemaining) seconds")
+                            .bold()
+                            .font(.system(size: 60))
+                            .foregroundColor(Color("tertiaryColor"))
+                    }
                 }
             }
         }
@@ -70,4 +115,5 @@ struct RequestView: View {
 
 #Preview {
     RequestView()
+        .environmentObject(AppDelegate())
 }

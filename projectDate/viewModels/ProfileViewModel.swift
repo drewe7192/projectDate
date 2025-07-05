@@ -119,7 +119,7 @@ class ProfileViewModel: ObservableObject {
         
     }
     
-    func callSendDeclineNotification(fcmToken: FCMTokenModel) async throws -> Bool {
+    func callSendDeclineNotification(fcmToken: FCMTokenModel) async throws -> String {
         do {
             /// Used for testing
             //functions.useEmulator(withHost: "localhost", port: 5001)
@@ -132,14 +132,16 @@ class ProfileViewModel: ObservableObject {
             let result = try await functions.httpsCallable("sendDeclineNotification").call(payload)
             
             // Parse the response to extract the bool message
-            if let data = result.data as? [String: Any],
-               let message = data["success"] as? Bool {
-                return message
-            } else {
-                throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
-            }
-        } catch {
-            throw error
+            //            if let data = result.data as? [String: Any],
+            //               let message = data["success"] as? Bool {
+            //                return message
+            //            } else {
+            //                throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
+            //            }
+            //        } catch {
+            //            throw error
+            //        }
+            return ""
         }
     }
     

@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
     @Published var requestByProfile: ProfileModel = emptyProfileModel
-    @Published var isRequestAccepted: Bool = false
+    @Published var isRequestAccepted: String = ""
     @Published var hostAnswerBlindDate: String = ""
     @Published var guestAnswerBlindDate: String = ""
     
@@ -98,7 +98,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification) async
     -> UNNotificationPresentationOptions {
         let userInfo = notification.request.content.userInfo
-    
+        
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
@@ -113,9 +113,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
             if isRequestAccepted == "true" {
-                self.isRequestAccepted = true
-                return [[]]
+                self.isRequestAccepted = "true"
+                
+            } else if isRequestAccepted == "false" {
+                self.isRequestAccepted = "false"
             }
+            
+            return [[]]
         }
         
         
@@ -130,6 +134,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         return [[.sound, .banner, .badge]]
     }
     
+    /// this fires onTap of apple notifications
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse) async {
         let userInfo = response.notification.request.content.userInfo
@@ -142,7 +147,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         
         if userInfo["requestByProfileId"] is NSString {
-             setRequestByProfile(userInfo: userInfo)
+            setRequestByProfile(userInfo: userInfo)
+        }
+        
+        if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
+            if isRequestAccepted == "true" {
+                self.isRequestAccepted = "true"
+                
+            } else if isRequestAccepted == "false" {
+                self.isRequestAccepted = "false"
+            }
         }
     }
     

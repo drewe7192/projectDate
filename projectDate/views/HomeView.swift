@@ -27,6 +27,7 @@ struct HomeView: View {
     @State private var currentUser: ProfileModel = emptyProfileModel
     @State private var isHeartSelected: Bool = false
     @State private var updateQuestion: Bool = false
+    @State private var showDeclineAlert: Bool = false
     
     enum QAWidgetState {
         case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
@@ -84,8 +85,13 @@ struct HomeView: View {
             }
             /// once user accepts BlindChat request
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
-                let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
-                viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                if newValue == "true" {
+                    let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
+                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                } else if newValue == "false" {
+                    self.showDeclineAlert = true
+                }
+             
             }
             .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
                 if !newValue.isEmpty {
@@ -102,6 +108,9 @@ struct HomeView: View {
             .sheet(isPresented: $showingSheet) {
                 newAnswersSheet()
             }
+            .alert("Sorry, user decline request", isPresented: $showDeclineAlert) {
+                      Button("OK", role: .cancel) { }
+                  }
         }
         .ignoresSafeArea(.keyboard)
     }
@@ -318,7 +327,7 @@ struct HomeView: View {
                         qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
                         
                         ///display success view for 2 seconds
-                        try await Task.sleep(nanoseconds: 2_000_000_000)
+                        try await Task.sleep(for: .seconds(2))
                         currentQAWidgetState = .inital
                     }
                 }
@@ -376,7 +385,7 @@ struct HomeView: View {
                         
                         ///display success view for 2 seconds
                         currentQAWidgetState = .AnswerSaved
-                        try await Task.sleep(nanoseconds: 2_000_000_000)
+                        try await Task.sleep(for: .seconds(2))
                         currentQAWidgetState = .inital
                         
                         ///Clear if dirty
@@ -531,7 +540,7 @@ struct HomeView: View {
         videoViewModel.roomCode = ""
         
         // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
-        try? await Task.sleep(nanoseconds: 5_000_000_000)
+        try? await Task.sleep(for: .seconds(5))
         
         videoViewModel.roomCode = pickedUser.roomCode
         //viewRouter.currentPage = .videoPage
