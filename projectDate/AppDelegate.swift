@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     @Published var hostAnswerBlindDate: String = ""
     @Published var guestAnswerBlindDate: String = ""
     
-    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication
                         .LaunchOptionsKey: Any]?) -> Bool {
@@ -99,7 +98,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification) async
     -> UNNotificationPresentationOptions {
         let userInfo = notification.request.content.userInfo
-        
+    
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
@@ -107,29 +106,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("Message ID: \(messageID)")
         }
         
-        // Get message from userInfo object
-        var profileDTO: ProfileModel = emptyProfileModel
-        
-        if let requestByProfileId = userInfo["requestByProfileId"] as? NSString {
-            profileDTO.id = requestByProfileId as String
-        }
-        
-        if let requestByProfileName = userInfo["requestByProfileName"] as? NSString {
-            profileDTO.name = requestByProfileName as String
-        }
-        
-        if let requestByProfileGender = userInfo["requestByProfileGender"] as? NSString {
-            profileDTO.gender = requestByProfileGender as String
-        }
-        
-        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
-            profileDTO.roomCode = requestByProfileRoomCode as String
-        }
-        
-        if let requestByProfileUserId = userInfo["requestByProfileUserId"] as? NSString {
-            profileDTO.userId = requestByProfileUserId as String
-            
-            self.requestByProfile = profileDTO
+        if userInfo["requestByProfileId"] is NSString {
+            setRequestByProfile(userInfo: userInfo)
             return [[]]
         }
         
@@ -163,7 +141,36 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         
-        print(userInfo)
+        if userInfo["requestByProfileId"] is NSString {
+             setRequestByProfile(userInfo: userInfo)
+        }
+    }
+    
+    func setRequestByProfile(userInfo: [AnyHashable: Any]){
+        // Get message from userInfo object
+        var profileDTO: ProfileModel = emptyProfileModel
+        
+        if let requestByProfileId = userInfo["requestByProfileId"] as? NSString {
+            profileDTO.id = requestByProfileId as String
+        }
+        
+        if let requestByProfileName = userInfo["requestByProfileName"] as? NSString {
+            profileDTO.name = requestByProfileName as String
+        }
+        
+        if let requestByProfileGender = userInfo["requestByProfileGender"] as? NSString {
+            profileDTO.gender = requestByProfileGender as String
+        }
+        
+        if let requestByProfileRoomCode = userInfo["requestByProfileRoomCode"] as? NSString {
+            profileDTO.roomCode = requestByProfileRoomCode as String
+        }
+        
+        if let requestByProfileUserId = userInfo["requestByProfileUserId"] as? NSString {
+            profileDTO.userId = requestByProfileUserId as String
+            
+            self.requestByProfile = profileDTO
+        }
     }
 }
 

@@ -34,8 +34,8 @@ exports.sendRequestNotification = onCall(async(data: any, context: any) => {
 
     const message: any = {
     notification: {
-      title: 'Hello from Firebase!',
-      body: 'This is a test notification.',
+      title: 'BlindChat Request',
+      body: 'Someone sent you a request',
     },
     token: fcmToken,
     data : {
@@ -89,7 +89,7 @@ exports.sendDeclineNotification = onCall(async(data: any, context: any) => {
     const message: any = {
     notification: {
       title: 'Request Decline',
-      body: 'You suck',
+      body: 'Sorry, someone denied your request',
     },
     token: fcmToken,
     data : {

@@ -27,14 +27,12 @@ struct HomeView: View {
     @State private var currentUser: ProfileModel = emptyProfileModel
     @State private var isHeartSelected: Bool = false
     @State private var updateQuestion: Bool = false
-  //  @State private var isSendingRequest: Bool = true
     
     enum QAWidgetState {
         case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
     }
     
     @State private var currentQAWidgetState = QAWidgetState.inital
-  //  @State private var selectedButton: Int = 0
     
     var body: some View {
         GeometryReader { geometry in
@@ -65,7 +63,7 @@ struct HomeView: View {
                     /// update user app status to active
                     try await profileViewModel.UpdateActivityStatus(isActive: true)
                     
-                    /// get stuff for quickChat
+                    /// get stuff for QAWidget
                     try await getCurrentUsers()
                     try await qaViewModel.getQuestions()
                     startProfileRotation()
@@ -77,14 +75,14 @@ struct HomeView: View {
                     print("Error getting userProfile:\(error)")
                 }
             }
-            /// display requestView once user recieves request for BlindDate
+            /// display requestView once user recieves BlindChat request
             .onChange(of: delegate.requestByProfile) { oldValue, newValue in
                 ///prevents video session from launching when routing to requestPage
                 videoViewModel.roomCode = ""
                 viewRouter.currentPage = .requestPage
                 
             }
-            /// once user accepts BlindDate request
+            /// once user accepts BlindChat request
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
                 let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
                 viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
@@ -94,6 +92,7 @@ struct HomeView: View {
                     showingSheet = true
                 }
             }
+            /// makes sure questions stay in sync with currentUsers
             .onChange(of: self.currentUser) { oldValue, newValue in
                 
                 if oldValue.id != newValue.id {
@@ -304,7 +303,6 @@ struct HomeView: View {
             Spacer()
             
             Button(action:  {
-               
                 if let pickedUser = profileViewModel.currentUsers.first(where: {$0.id == self.currentUser.id}) {
                     Task {
                         currentQAWidgetState = .sendingBCRequest
@@ -313,6 +311,12 @@ struct HomeView: View {
                         try await sendRequestMessage(pickedUser: pickedUser)
                         
                         currentQAWidgetState = .BCRequestSent
+                        
+                        ///remove so user doesnt see again
+                        profileViewModel.currentUsers.removeAll(where: {$0.id == self.currentUser.id})
+                        
+                        qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
+                        
                         ///display success view for 2 seconds
                         try await Task.sleep(nanoseconds: 2_000_000_000)
                         currentQAWidgetState = .inital
@@ -375,7 +379,11 @@ struct HomeView: View {
                         try await Task.sleep(nanoseconds: 2_000_000_000)
                         currentQAWidgetState = .inital
                         
+                        ///Clear if dirty
                         qaViewModel.answer.body = ""
+                        
+                        profileViewModel.currentUsers.removeAll(where: {$0.id == self.currentUser.id})
+                        
                         qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
                         
                         startProfileRotation()
