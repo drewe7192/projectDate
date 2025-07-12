@@ -9,9 +9,12 @@ import Foundation
 import Firebase
 import FirebaseStorage
 import FirebaseFunctions
+import SwiftUICore
 
 @MainActor
-class ProfileViewModel: ObservableObject {
+class ProfileViewModel: NSObject, ObservableObject {
+    @Environment(\.scenePhase) var scenePhase
+    
     @Published var userProfile: ProfileModel = emptyProfileModel
     @Published var participantProfile: ProfileModel =  emptyProfileModel
     @Published var isNewUser: Bool = false
@@ -163,5 +166,17 @@ class ProfileViewModel: ObservableObject {
                 }
             }
         }
+    }
+}
+
+///TODO:  can we put this in a more appropiate class?
+extension ProfileViewModel: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification) async
+    -> UNNotificationPresentationOptions {
+        if scenePhase == .active  {
+            return [[]]
+        }
+        return [[.sound, .banner, .badge]]
     }
 }

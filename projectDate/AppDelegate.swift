@@ -108,7 +108,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         if userInfo["requestByProfileId"] is NSString {
             setRequestByProfile(userInfo: userInfo)
-            return [[]]
         }
         
         if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
@@ -118,10 +117,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             } else if isRequestAccepted == "false" {
                 self.isRequestAccepted = "false"
             }
-            
-            return [[]]
         }
-        
         
         if let hostAnswerBlindDate = userInfo["hostAnswer"] as? NSString {
             self.hostAnswerBlindDate = hostAnswerBlindDate as String
@@ -131,10 +127,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self.guestAnswerBlindDate = guestAnswerBlindDate as String
         }
         
-        return [[.sound, .banner, .badge]]
+        return [[]]
     }
     
-    /// this fires onTap of apple notifications
+    /// this fires ontap of apple notification
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse) async {
         let userInfo = response.notification.request.content.userInfo
