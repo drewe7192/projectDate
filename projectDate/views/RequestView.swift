@@ -36,9 +36,6 @@ struct RequestView: View {
                     
                     Button(action: {
                         Task {
-                            /// show sheet for 5 seconds then launch
-                            self.showSheet = true
-                            try await Task.sleep(for: .seconds(5))
                             
                             let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
                             _ = try await profileViewModel.callSendAcceptNotification(fcmToken: fcmToken)
@@ -48,6 +45,10 @@ struct RequestView: View {
                             profileViewModel.participantProfile = delegate.requestByProfile
                             
                             var videoConfig = VideoConfigModel (role: RoleType.guest, isScreenBlurred: true, isFullScreen: true)
+                            
+                            /// show sheet for 5 seconds then launch
+                            self.showSheet = true
+                            try await Task.sleep(for: .seconds(5))
                             
                             viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
                         }

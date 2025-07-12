@@ -28,6 +28,9 @@ struct HomeView: View {
     @State private var isHeartSelected: Bool = false
     @State private var updateQuestion: Bool = false
     @State private var showDeclineAlert: Bool = false
+    @State private var showBlindChatTimerSheet: Bool = false
+    @State private var timeRemaining = 5
+    let timer2 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     enum QAWidgetState {
         case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
@@ -85,13 +88,23 @@ struct HomeView: View {
             }
             /// once user accepts BlindChat request
             .onChange(of: delegate.isRequestAccepted) { oldValue, newValue in
-                if newValue == "true" {
-                    let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
-                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                } else if newValue == "false" {
-                    self.showDeclineAlert = true
+                Task {
+                    do {
+                        if newValue == "true" {
+                           
+                            let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: true, isFullScreen: true)
+                            
+                            self.showBlindChatTimerSheet = true
+                            try await Task.sleep(for: .seconds(5))
+                            
+                            viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                        } else if newValue == "false" {
+                            self.showDeclineAlert = true
+                        }
+                    } catch {
+                        // HANDLE ERROR
+                    }
                 }
-             
             }
             .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
                 if !newValue.isEmpty {
@@ -108,9 +121,22 @@ struct HomeView: View {
             .sheet(isPresented: $showingSheet) {
                 newAnswersSheet()
             }
+            .onReceive(timer2) { time in
+                if self.showBlindChatTimerSheet {
+                    if timeRemaining > 0 {
+                        timeRemaining -= 1
+                    }
+                    else {
+                        self.showBlindChatTimerSheet = false
+                    }
+                }
+            }
+            .sheet(isPresented: $showBlindChatTimerSheet) {
+                blindChatCountdownSheet()
+            }
             .alert("Sorry, user decline request", isPresented: $showDeclineAlert) {
-                      Button("OK", role: .cancel) { }
-                  }
+                Button("OK", role: .cancel) { }
+            }
         }
         .ignoresSafeArea(.keyboard)
     }
@@ -502,6 +528,24 @@ struct HomeView: View {
                         }
                 }
                 Spacer()
+            }
+            
+        }
+    }
+    
+    private func blindChatCountdownSheet() -> some View {
+        ZStack{
+            Color.primaryColor
+                .ignoresSafeArea()
+            
+            VStack{
+                Text("\(self.timeRemaining)")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+                
+                Text("Until Chat starts")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
             }
             
         }

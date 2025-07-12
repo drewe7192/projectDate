@@ -63,8 +63,8 @@ exports.sendAcceptNotification = onCall(async(data: any, context: any) => {
 
     const message: any = {
     notification: {
-      title: 'Request Accepted',
-      body: 'Connecting now',
+      title: 'Request Accepted!',
+      body: 'Starting BlindChat with user in 5 seconds',
     },
     token: fcmToken,
     data : {
