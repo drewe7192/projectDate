@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject var delegate: AppDelegate
     @State var selectedTab = 0
      
      var body: some View {

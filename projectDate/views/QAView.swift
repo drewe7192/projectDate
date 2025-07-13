@@ -16,21 +16,17 @@ struct QAView: View {
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var viewRouter: ViewRouter
     
-    let geometry: GeometryProxy
-    let timer2 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var timer: Cancellable?
+    @State private var timeRemaining = 5
+    @FocusState private var nameIsFocused: Bool
     @State private var currentUser: ProfileModel = emptyProfileModel
     @State private var updateQuestion: Bool = false
-    @FocusState private var nameIsFocused: Bool
     @State private var showBlindChatTimerSheet: Bool = false
-    @State private var timeRemaining = 5
-    
-    enum QAWidgetState {
-        case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
-    }
-    
     @State private var currentQAWidgetState = QAWidgetState.inital
-    @State var timer: Cancellable?
     @State private var showDeclineAlert: Bool = false
+    
+    let geometry: GeometryProxy
+    let timer2 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ZStack {
@@ -381,4 +377,8 @@ struct QAView: View {
             .environmentObject(QAViewModel())
             .environmentObject(ProfileViewModel())
     }
+}
+
+enum QAWidgetState {
+    case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
 }

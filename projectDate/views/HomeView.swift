@@ -6,16 +6,12 @@
 //
 
 import SwiftUI
-import Combine
-import HMSRoomKit
 import Firebase
 
 struct HomeView: View {
-    @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
-    @EnvironmentObject var eventViewModel: EventViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     
     @Binding var selectedTab: Int
@@ -337,6 +333,5 @@ struct HomeView: View {
         .environmentObject(ProfileViewModel())
         .environmentObject(VideoViewModel())
         .environmentObject(AppDelegate())
-        .environmentObject(EventViewModel())
         .environmentObject(QAViewModel())
 }
