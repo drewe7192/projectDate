@@ -89,7 +89,6 @@ struct HomeView: View {
                             .resizable()
                             .frame(width: geometry.size.width * 0.01, height: geometry.size.height * 0.01)
                     }
-                    
                 }
                 .padding(.leading)
                 .onTapGesture {
@@ -199,7 +198,6 @@ struct HomeView: View {
                                     .scaleEffect(phase.isIdentity ? 1 : 0.75)
                                     .blur(radius: phase.isIdentity ? 0 : 10)
                             }
-                        
                     }
                 }
             }
@@ -239,7 +237,6 @@ struct HomeView: View {
                             print("Error trying to deactive recent Answers: \(error)")
                         }
                     }
-                    
                 }) {
                     RoundedRectangle(cornerRadius: 15, style: .continuous)
                         .stroke(.red, lineWidth: 2)
@@ -254,7 +251,6 @@ struct HomeView: View {
                 }
                 Spacer()
             }
-            
         }
     }
     

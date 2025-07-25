@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import HMSRoomModels
 
 struct FullScreenComponentsView: View {
     let role: RoleType
@@ -16,19 +17,35 @@ struct FullScreenComponentsView: View {
     @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var viewRouter: ViewRouter
     
-    @State private var timeRemaining = 10
+    @Binding var isMicMuted: Bool
+    
+    @State private var timeRemaining = 15
     @State private var question: String = "testing"
     @State private var answer: String = ""
     @State private var questionNumber: Int = 0
-    @State private var showSheet: Bool = false
+    @State private var showQuestion: Bool = false
     @State private var sliderValue: Double = 0
     @State private var transactionState: TransactionState = .idle
+    @State private var showTimer: Bool = true
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         VStack {
-            if showSheet {
+            if self.showTimer {
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(.blue, lineWidth: 2)
+                    .frame(width: 170, height: 100)
+                    .overlay {
+                        VStack(alignment: .center) {
+                            Text("\(self.timeRemaining)")
+                                .font(.title)
+                            Text("Until Question")
+                                .font(.title3)
+                        }
+                        .padding()
+                    }
+            } else if self.showQuestion {
                 questionView()
             }
         }
@@ -44,8 +61,14 @@ struct FullScreenComponentsView: View {
                 timeRemaining -= 1
             }
             
+            if timeRemaining == 10 {
+                self.showTimer = true
+            }
+            
             if timeRemaining == 0 {
-                self.showSheet = true
+                self.showTimer = false
+                self.showQuestion = true
+                self.isMicMuted = true
             }
         }
         .onChange(of: delegate.hostAnswerBlindDate) { oldValue, newValue in
@@ -200,7 +223,7 @@ struct FullScreenComponentsView: View {
                 if transactionState == .success {
                     /// continue videoChat
                     timeRemaining = 10
-                    showSheet.toggle()
+                    showQuestion.toggle()
                     
                 } else if transactionState == .failed {
                     /// leave session
@@ -216,7 +239,7 @@ struct FullScreenComponentsView: View {
 }
 
 #Preview {
-    FullScreenComponentsView(role: RoleType.host)
+    FullScreenComponentsView(role: RoleType.host, isMicMuted: .constant(false))
         .environmentObject(VideoViewModel())
         .environmentObject(QAViewModel())
         .environmentObject(AppDelegate())
