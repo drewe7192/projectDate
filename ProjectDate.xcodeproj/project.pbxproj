@@ -94,6 +94,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AnswerModel.swift,
+				ChoiceModel.swift,
 				FCMTokenModel.swift,
 				ProfileInfoModel.swift,
 				ProfileModel.swift,
@@ -108,7 +109,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AnimatedButton.swift,
-				BiDirectionalSlider.swift,
 				Constants.swift,
 				Spinner.swift,
 				TransactionState.swift,

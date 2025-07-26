@@ -35,10 +35,11 @@ struct AnimatedButton: View {
                 }
                 
                 Text(config.title)
-                    .font(.system(size: 25))
+                    .font(.system(size: 20))
                     .frame(width: 300, height: 50)
                     .contentTransition(.interpolate)
                     .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
                 
             }
             .padding(.horizontal, config.hPadding)
@@ -75,4 +76,12 @@ fileprivate struct ScaleButtonStyle: ButtonStyle {
                     .scaleEffect(configuration.isPressed ? 0.9 : 1)
             }
     }
+}
+
+#Preview {
+    FullScreenComponentsView(role: RoleType.host, isMicMuted: .constant(false))
+        .environmentObject(VideoViewModel())
+        .environmentObject(QAViewModel())
+        .environmentObject(AppDelegate())
+        .environmentObject(ProfileViewModel())
 }

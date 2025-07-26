@@ -10,8 +10,8 @@ import Foundation
 struct QuestionModel: Identifiable, Equatable, Hashable {
     var id: String
     var body: String
-    var answers: [String]
+    var choices: [ChoiceModel]
 }
 
-var emptyQuestionModel = QuestionModel(id: "", body: "", answers: [])
+var emptyQuestionModel = QuestionModel(id: "", body: "", choices: [])
 

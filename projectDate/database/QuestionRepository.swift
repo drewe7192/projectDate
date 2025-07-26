@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import SwiftUICore
 
 
 class QuestionRepository {
@@ -24,8 +25,11 @@ class QuestionRepository {
             var question: QuestionModel = emptyQuestionModel
             question.id = documentData["id"] as! String
             question.body = documentData["body"] as! String
-            question.answers = documentData["answers"] as! [String]
             
+            var choices = documentData["choices"] as! [String]
+            for choice in choices {
+                question.choices.append(ChoiceModel(id: UUID().uuidString, text: choice))
+            }
             questions.append(question)
         }
         return questions
@@ -42,7 +46,11 @@ class QuestionRepository {
             
             question.id = documentData["id"] as! String
             question.body = documentData["body"] as! String
-            question.answers = documentData["answers"] as! [String]
+            
+            var choices = documentData["choices"] as! [String]
+            for choice in choices {
+                question.choices.append(ChoiceModel(id: UUID().uuidString, text: choice))
+            }
         }
         return question
     }

@@ -24,9 +24,11 @@ struct FullScreenComponentsView: View {
     @State private var answer: String = ""
     @State private var questionNumber: Int = 0
     @State private var showQuestion: Bool = false
-    @State private var sliderValue: Double = 0
     @State private var transactionState: TransactionState = .idle
     @State private var showTimer: Bool = true
+    @State private var displaySubmitButton: Bool = false
+    @State private var currentChoice: ChoiceModel = emptyChoiceModel
+    
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -35,12 +37,14 @@ struct FullScreenComponentsView: View {
             if self.showTimer {
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(.blue, lineWidth: 2)
-                    .frame(width: 170, height: 100)
+                    .frame(width: 210, height: 100)
                     .overlay {
                         VStack(alignment: .center) {
+                            Text("Chat it up! You got ")
+                                .font(.title3)
                             Text("\(self.timeRemaining)")
                                 .font(.title)
-                            Text("Until Question")
+                            Text("seconds left")
                                 .font(.title3)
                         }
                         .padding()
@@ -76,9 +80,6 @@ struct FullScreenComponentsView: View {
                 do {
                     if !qaViewModel.answer.body.isEmpty {
                         try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: qaViewModel.answer.body)
-                        
-                        /// clean if dirty
-                        delegate.hostAnswerBlindDate = ""
                     } else {
                         transactionState = .waitingForResponse
                     }
@@ -93,9 +94,6 @@ struct FullScreenComponentsView: View {
                 do {
                     if !qaViewModel.answer.body.isEmpty {
                         try await compareAnswers(role: RoleType.host, hostAnswer: qaViewModel.answer.body, guestAnswer: newValue)
-                        
-                        /// clean if dirty
-                        delegate.guestAnswerBlindDate = ""
                     } else {
                         transactionState = .waitingForResponse
                     }
@@ -112,78 +110,54 @@ struct FullScreenComponentsView: View {
                 .ignoresSafeArea()
             
             VStack{
-                    Spacer()
-                      
-                /// shuffling array onAppear
-                Text("\(qaViewModel.questions[0].body)")
-                        .font(.system(size: 40))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                    
-                    Spacer()
-                    
-                    VStack{
-                        if sliderValue > 0 {
-                            Text("True")
-                                .bold()
-                                .font(.system(size: 50))
-                                .foregroundColor(.green)
-                        } else if sliderValue < 0 {
-                            Text("False")
-                                .bold()
-                                .font(.system(size: 50))
-                                .foregroundColor(.red)
-                        }
-                        else {
-                            Text("Slide to pick answer")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white)
-                        }
-                        BiDirectionalSlider(value: $sliderValue)
-                    }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    let config = AnimatedButton.Config(
-                        title: transactionState.rawValue,
-                        foregroundColor: .white,
-                        background: transactionState.color,
-                        symbolImage: transactionState.image
-                    )
-                    
-                    AnimatedButton(config: config) {
-                        let guid = UUID().uuidString
-                        qaViewModel.answer.id = guid
-                        qaViewModel.answer.body = sliderValue > 0 ? "True" : "False"
-                        qaViewModel.answer.profileId = profileViewModel.userProfile.id
-                        qaViewModel.answer.questionId = qaViewModel.questions[0].id
-                        
-                        /// Fires Ontap of button
-                        Task {
-                            do {
-                                if !delegate.guestAnswerBlindDate.isEmpty || !delegate.hostAnswerBlindDate.isEmpty {
-                                    transactionState = .analyzingAnswers
-                                    
-                                    try await compareAnswers(role: role, hostAnswer: !delegate.hostAnswerBlindDate.isEmpty ? delegate.hostAnswerBlindDate : qaViewModel.answer.body, guestAnswer: !delegate.guestAnswerBlindDate.isEmpty ? delegate.guestAnswerBlindDate : qaViewModel.answer.body)
-                                    
-                                    /// clean if dirty
-                                    delegate.hostAnswerBlindDate = ""
-                                    delegate.guestAnswerBlindDate = ""
-                                } else {
-                                    transactionState = .answerSubmitted
-                                }
-                                
-                                try await processingAnswer(config: config)
-                            } catch {
-                                // HANDLE ERROR
-                            }
-                        }
-                    }
+                Spacer()
                 
-            }
-            .onAppear {
-                qaViewModel.questions.shuffle()
+                Text("\(qaViewModel.questions[0].body)")
+                    .font(.system(size: 40))
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                displayChoices()
+                    .padding()
+                
+                Spacer()
+                
+                let config = AnimatedButton.Config(
+                    title: transactionState.rawValue,
+                    foregroundColor: .white,
+                    background: transactionState.color,
+                    symbolImage: transactionState.image
+                )
+                
+                AnimatedButton(config: config) {
+                    let guid = UUID().uuidString
+                    qaViewModel.answer.id = guid
+                    qaViewModel.answer.body = self.currentChoice.text
+                    qaViewModel.answer.profileId = profileViewModel.userProfile.id
+                    qaViewModel.answer.questionId = qaViewModel.questions[0].id
+                    
+                    /// Fires Ontap of button
+                    Task {
+                        do {
+                            if !delegate.guestAnswerBlindDate.isEmpty || !delegate.hostAnswerBlindDate.isEmpty {
+                                transactionState = .analyzingAnswers
+                                
+                                try await compareAnswers(role: role, hostAnswer: !delegate.hostAnswerBlindDate.isEmpty ? delegate.hostAnswerBlindDate : qaViewModel.answer.body, guestAnswer: !delegate.guestAnswerBlindDate.isEmpty ? delegate.guestAnswerBlindDate : qaViewModel.answer.body)
+                                
+                            } else {
+                                transactionState = .answerSubmitted
+                            }
+                            
+                            try await processingAnswer(config: config)
+                        } catch {
+                            // HANDLE ERROR
+                        }
+                    }
+                }
+                .opacity(!displaySubmitButton ? 0.5 : 1)
+                .disabled(!displaySubmitButton)
             }
         }
     }
@@ -194,7 +168,7 @@ struct FullScreenComponentsView: View {
                 do {
                     let fcmToken = try await profileViewModel.GetFCMToken(userId: !profileViewModel.participantProfile.userId.isEmpty ? profileViewModel.participantProfile.userId : Auth.auth().currentUser?.uid ?? "")
                     
-                    _ = try await qaViewModel.sendAnswerNotification(fcmToken: fcmToken, role: RoleType.host, answer: "HOSTANSWERED")
+                    _ = try await qaViewModel.sendAnswerNotification(fcmToken: fcmToken, role: RoleType.host, answer: self.currentChoice.text)
                 } catch {
                     // HANDLE ERROR
                 }
@@ -205,7 +179,7 @@ struct FullScreenComponentsView: View {
                 do {
                     let fcmToken = try await profileViewModel.GetFCMToken(userId: !profileViewModel.participantProfile.userId.isEmpty ? profileViewModel.participantProfile.userId : Auth.auth().currentUser?.uid ?? "")
                     
-                    _ = try await qaViewModel.sendAnswerNotification(fcmToken: fcmToken, role: RoleType.guest, answer: "GUESTANSWERED")
+                    _ = try await qaViewModel.sendAnswerNotification(fcmToken: fcmToken, role: RoleType.guest, answer: self.currentChoice.text)
                 } catch {
                     // HANDLE ERROR
                 }
@@ -232,7 +206,39 @@ struct FullScreenComponentsView: View {
                 }
                 transactionState = .idle
             } catch {
-                
+                /// HANDLE ERRORS
+            }
+        }
+    }
+    
+    private func displayChoices() -> some View {
+        VStack{
+            ForEach($qaViewModel.questions[0].choices, id: \.self) { $choice in
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(choice.isSelected ? .green : .white, lineWidth: 2)
+                    .frame(width: 350, height: 70)
+                    .overlay {
+                        VStack(alignment: .center) {
+                            Text("\(choice.text)")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .onTapGesture {
+                        for i in qaViewModel.questions[0].choices.indices {
+                            qaViewModel.questions[0].choices[i].isSelected = false
+                        }
+                        
+                        choice.isSelected.toggle()
+                        self.currentChoice = choice
+                        
+                        if qaViewModel.questions[0].choices.contains(where: {$0.isSelected == true}) {
+                            displaySubmitButton = true
+                        } else {
+                            displaySubmitButton = false
+                        }
+                    }
+                    .padding()
             }
         }
     }
@@ -243,5 +249,5 @@ struct FullScreenComponentsView: View {
         .environmentObject(VideoViewModel())
         .environmentObject(QAViewModel())
         .environmentObject(AppDelegate())
-    
+        .environmentObject(ProfileViewModel())
 }
