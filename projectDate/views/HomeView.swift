@@ -254,18 +254,6 @@ struct HomeView: View {
         }
     }
     
-    private func launchVideoSession(pickedUser: ProfileModel) async throws {
-        // this removes HMSPreBuiltView and triggers its onDisappear()
-        // makes sure current video sesh has closed
-        videoViewModel.roomCode = ""
-        
-        // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
-        try? await Task.sleep(for: .seconds(5))
-        
-        videoViewModel.roomCode = pickedUser.roomCode
-        //viewRouter.currentPage = .videoPage
-    }
-    
     private func newAnswersView() -> some View {
         ScrollView {
             ForEach(qaViewModel.recentQAs, id: \.self) { recentQA in
@@ -321,6 +309,18 @@ struct HomeView: View {
             }
         }
         .padding()
+    }
+    
+    private func launchVideoSession(pickedUser: ProfileModel) async throws {
+        // this removes HMSPreBuiltView and triggers its onDisappear()
+        // makes sure current video sesh has closed
+        videoViewModel.roomCode = ""
+        
+        // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
+        try? await Task.sleep(for: .seconds(5))
+        
+        videoViewModel.roomCode = pickedUser.roomCode
+        //viewRouter.currentPage = .videoPage
     }
 }
 

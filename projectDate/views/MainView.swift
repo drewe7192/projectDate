@@ -94,6 +94,7 @@ extension MainView{
             }
             Spacer()
         }
+        // TODO: Use geometry.size.width instead of .infinity
         .frame(width: isActive ? .infinity : 55, height: 55)
         .background(isActive ? .gray.opacity(0.4) : .clear)
         .cornerRadius(30)

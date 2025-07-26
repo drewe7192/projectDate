@@ -39,7 +39,6 @@ struct ContentView: View {
                 .environmentObject(videoViewModel)
                 .environmentObject(qaViewModel)
                 .environmentObject(eventViewModel)
-            /// update status in db whether app is in foreground and background
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                     updateActiveStatus(newPhase: newPhase)
                 }
@@ -67,10 +66,9 @@ struct ContentView: View {
                     try await
                     profileViewModel.UpdateActivityStatus(isActive: false)
                 }
-                
             }
         } else if newPhase == .background {
-           // Todo
+           // TODO: WHAT HAPPENS IN BACKGROUND?
         }
     }
 }

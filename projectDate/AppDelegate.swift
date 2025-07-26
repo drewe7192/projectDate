@@ -13,12 +13,13 @@ import FirebaseMessaging
 import SwiftUICore
 
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
-    var window: UIWindow?
-    let gcmMessageIDKey = "gcm.message_id"
     @Published var requestByProfile: ProfileModel = emptyProfileModel
     @Published var isRequestAccepted: String = ""
     @Published var hostAnswerBlindDate: String = ""
     @Published var guestAnswerBlindDate: String = ""
+    
+    var window: UIWindow?
+    let gcmMessageIDKey = "gcm.message_id"
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication
@@ -44,8 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     
     func application(_ application: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        // TODO: Handle data of notification
-        
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         
@@ -59,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     func application(_ application: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
     -> UIBackgroundFetchResult {
-        // TODO: Handle data of notification
+
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
@@ -101,32 +100,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
-        
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-        }
-        
-        if userInfo["requestByProfileId"] is NSString {
-            setRequestByProfile(userInfo: userInfo)
-        }
-        
-        if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
-            if isRequestAccepted == "true" {
-                self.isRequestAccepted = "true"
-                
-            } else if isRequestAccepted == "false" {
-                self.isRequestAccepted = "false"
-            }
-        }
-        
-        if let hostAnswerBlindDate = userInfo["hostAnswer"] as? NSString {
-            self.hostAnswerBlindDate = hostAnswerBlindDate as String
-        }
-        
-        if let guestAnswerBlindDate = userInfo["guestAnswer"] as? NSString {
-            self.guestAnswerBlindDate = guestAnswerBlindDate as String
-        }
-        
+    
+        setFCMs(userInfo: userInfo)
         return [[]]
     }
     
@@ -135,25 +110,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse) async {
         let userInfo = response.notification.request.content.userInfo
         
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-        }
-        
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         
-        if userInfo["requestByProfileId"] is NSString {
-            setRequestByProfile(userInfo: userInfo)
-        }
-        
-        if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
-            if isRequestAccepted == "true" {
-                self.isRequestAccepted = "true"
-                
-            } else if isRequestAccepted == "false" {
-                self.isRequestAccepted = "false"
-            }
-        }
+        setFCMs(userInfo: userInfo)
     }
     
     func setRequestByProfile(userInfo: [AnyHashable: Any]){
@@ -182,6 +142,33 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self.requestByProfile = profileDTO
         }
     }
+    
+    func setFCMs(userInfo: [AnyHashable: Any]) {
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+        
+        if userInfo["requestByProfileId"] is NSString {
+            setRequestByProfile(userInfo: userInfo)
+        }
+        
+        if let isRequestAccepted = userInfo["isRequestAccepted"] as? NSString {
+            if isRequestAccepted == "true" {
+                self.isRequestAccepted = "true"
+                
+            } else if isRequestAccepted == "false" {
+                self.isRequestAccepted = "false"
+            }
+        }
+        
+        if let hostAnswerBlindDate = userInfo["hostAnswer"] as? NSString {
+            self.hostAnswerBlindDate = hostAnswerBlindDate as String
+        }
+        
+        if let guestAnswerBlindDate = userInfo["guestAnswer"] as? NSString {
+            self.guestAnswerBlindDate = guestAnswerBlindDate as String
+        }
+    }
 }
 
 extension AppDelegate: MessagingDelegate {
@@ -189,6 +176,7 @@ extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
         
+        // Saving FCM Token to Firestore db
         let dataDict: [String: String] = [
             "id" : UUID().uuidString,
             "token": fcmToken ?? "",
