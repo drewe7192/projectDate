@@ -10,7 +10,13 @@ import Firebase
 import HMSRoomModels
 
 struct FullScreenComponentsView: View {
-    let role: RoleType
+    @State private var timeRemaining = 15
+    @State private var showQuestion: Bool = false
+    @State private var transactionState: TransactionState = .idle
+    @State private var showTimer: Bool = true
+    @State private var displaySubmitButton: Bool = false
+    @State private var currentChoice: ChoiceModel = emptyChoiceModel
+    
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var qaViewModel: QAViewModel
@@ -18,18 +24,8 @@ struct FullScreenComponentsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
     @Binding var isMicMuted: Bool
-    
-    @State private var timeRemaining = 15
-    @State private var question: String = "testing"
-    @State private var answer: String = ""
-    @State private var questionNumber: Int = 0
-    @State private var showQuestion: Bool = false
-    @State private var transactionState: TransactionState = .idle
-    @State private var showTimer: Bool = true
-    @State private var displaySubmitButton: Bool = false
-    @State private var currentChoice: ChoiceModel = emptyChoiceModel
-    
-    
+
+    let role: RoleType
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -245,7 +241,7 @@ struct FullScreenComponentsView: View {
 }
 
 #Preview {
-    FullScreenComponentsView(role: RoleType.host, isMicMuted: .constant(false))
+    FullScreenComponentsView(isMicMuted: .constant(false), role: RoleType.host)
         .environmentObject(VideoViewModel())
         .environmentObject(QAViewModel())
         .environmentObject(AppDelegate())

@@ -12,10 +12,6 @@ import GoogleSignIn
 import FirebaseStorage
 
 struct SettingsView: View {
-    @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var viewModel: ProfileViewModel
-    //  @StateObject var viewModel = LiveViewModel()
-    
     @State public var isLoggedOut = false
     @State private var image = UIImage()
     @State private var name = ""
@@ -28,6 +24,9 @@ struct SettingsView: View {
     @State private var matchDayChoices: [String] = ["Saturday","Friday","Thursday","Wednesday","Tuesday","Monday","Sunday"]
     @State private var isDeletingAccount: Bool = false
     @State private var showHamburgerMenu: Bool = false
+    
+    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var viewModel: ProfileViewModel
     
     let storage = Storage.storage()
     

@@ -10,12 +10,6 @@ import Combine
 import Firebase
 
 struct QAView: View {
-    @EnvironmentObject var delegate: AppDelegate
-    @EnvironmentObject var profileViewModel: ProfileViewModel
-    @EnvironmentObject var qaViewModel: QAViewModel
-    @EnvironmentObject var videoViewModel: VideoViewModel
-    @EnvironmentObject var viewRouter: ViewRouter
-    
     @State var timer: Cancellable?
     @State private var timeRemaining = 5
     @FocusState private var nameIsFocused: Bool
@@ -24,6 +18,12 @@ struct QAView: View {
     @State private var showBlindChatTimerSheet: Bool = false
     @State private var currentQAWidgetState = QAWidgetState.inital
     @State private var showDeclineAlert: Bool = false
+    
+    @EnvironmentObject var delegate: AppDelegate
+    @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var qaViewModel: QAViewModel
+    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var viewRouter: ViewRouter
     
     let geometry: GeometryProxy
     let timer2 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()

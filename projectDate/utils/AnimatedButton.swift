@@ -79,7 +79,7 @@ fileprivate struct ScaleButtonStyle: ButtonStyle {
 }
 
 #Preview {
-    FullScreenComponentsView(role: RoleType.host, isMicMuted: .constant(false))
+    FullScreenComponentsView(isMicMuted: .constant(false), role: RoleType.host)
         .environmentObject(VideoViewModel())
         .environmentObject(QAViewModel())
         .environmentObject(AppDelegate())

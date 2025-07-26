@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct RequestView: View {
+    @State private var showSheet: Bool = false
+    @State private var timeRemaining = 5
+    
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var delegate: AppDelegate
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var eventViewModel: EventViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     
-    @State private var showSheet: Bool = false
-    @State private var timeRemaining = 5
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {

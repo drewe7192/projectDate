@@ -8,9 +8,9 @@ import SwiftUI
 import HMSRoomKit
 
 struct VideoView: View {
-    let videoConfig: VideoConfigModel
-    @EnvironmentObject var videoViewModel: VideoViewModel
     @State private var isMicMuted: Bool = false
+    @EnvironmentObject var videoViewModel: VideoViewModel
+    let videoConfig: VideoConfigModel
     
     var body: some View {
         ZStack{
@@ -21,7 +21,7 @@ struct VideoView: View {
                     .cornerRadius(30)
                 
                 if videoConfig.isFullScreen  {
-                    FullScreenComponentsView(role: videoConfig.role, isMicMuted: $isMicMuted)
+                    FullScreenComponentsView(isMicMuted: $isMicMuted, role: videoConfig.role)
                 }
             }
          
@@ -31,4 +31,5 @@ struct VideoView: View {
 
 #Preview {
     VideoView(videoConfig: emptyVideoConfig)
+        .environmentObject(VideoViewModel())
 }

@@ -10,14 +10,14 @@ import Firebase
 import FirebaseAuth
 
 struct SignInView: View {
-    @EnvironmentObject private var viewRouter: ViewRouter
-    
     @State private var signInErrorMessage: String = ""
     @State private var email: String = ""
     @State private var password: String =  ""
     @State private var confirmPassword: String = ""
     @State private var isLoggedIn: Bool = false
     @State private var displayConfirmPassword: Bool = false
+    
+    @EnvironmentObject private var viewRouter: ViewRouter
     
     var body: some View {
         NavigationView {

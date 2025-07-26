@@ -9,16 +9,16 @@ import SwiftUI
 import Firebase
 
 struct HomeView: View {
+    @State private var showingSheet = false
+    @State private var videoConfig: VideoConfigModel = emptyVideoConfig
+    @State private var isHeartSelected: Bool = false
+    
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     
     @Binding var selectedTab: Int
-    
-    @State private var showingSheet = false
-    @State private var videoConfig: VideoConfigModel = emptyVideoConfig
-    @State private var isHeartSelected: Bool = false
     
     var body: some View {
         GeometryReader { geometry in
