@@ -27,6 +27,8 @@ struct SettingsView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var viewModel: ProfileViewModel
+    @EnvironmentObject var videoViewModel: VideoViewModel
+    
     
     let storage = Storage.storage()
     
@@ -55,6 +57,7 @@ struct SettingsView: View {
                 //                            viewModel.getStorageFile(profileId: profileId)
                 //                        }
                 //                    }
+                videoViewModel.roomCode = ""
             }
             .alert(isPresented: $isDeletingAccount){
                 Alert(

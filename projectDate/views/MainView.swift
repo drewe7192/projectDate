@@ -19,7 +19,7 @@ struct MainView: View {
 //                     .tag(1)
 
                  SettingsView()
-                     .tag(2)
+                     .tag(1)
 
 //                 MessagesView()
 //                     .tag(3)
@@ -47,20 +47,20 @@ struct MainView: View {
 
 enum TabbedItems: Int, CaseIterable{
     case home = 0
-    case events
+   // case events
     case settings
-    case messages
+   // case messages
     
     var title: String{
         switch self {
         case .home:
             return "Home"
-        case .events:
-            return "Events"
+//        case .events:
+//            return "Events"
         case .settings:
             return "Settings"
-        case .messages:
-            return "Messages"
+//        case .messages:
+//            return "Messages"
         }
     }
     
@@ -68,12 +68,12 @@ enum TabbedItems: Int, CaseIterable{
         switch self {
         case .home:
             return "house"
-        case .events:
-            return "calendar"
+//        case .events:
+//            return "calendar"
         case .settings:
             return "gear"
-        case .messages:
-            return "message"
+//        case .messages:
+//            return "message"
         }
     }
 }

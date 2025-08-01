@@ -92,7 +92,7 @@ struct HomeView: View {
                 }
                 .padding(.leading)
                 .onTapGesture {
-                    selectedTab = 2
+                    selectedTab = 1
                 }
             
             Spacer()
