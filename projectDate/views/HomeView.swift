@@ -10,6 +10,7 @@ import Firebase
 
 struct HomeView: View {
     @State private var showingSheet = false
+    @State private var showingIntroSheet = true
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var isHeartSelected: Bool = false
     
@@ -36,8 +37,11 @@ struct HomeView: View {
                     Spacer()
                         .frame(height: geometry.size.height * 0.02)
                     videoSection(geometry: geometry)
-                    events(geometry: geometry)
-                    Spacer()
+                    //events(geometry: geometry)
+                    
+                    /// hack because spacer doesnt work here
+                    Text("")
+                        .padding()
                 }
             }
             .task {
@@ -64,6 +68,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingSheet) {
                 newAnswersSheet()
+            }
+            .sheet(isPresented: $showingIntroSheet) {
+                introSheet()
             }
         }
         .ignoresSafeArea(.keyboard)
@@ -264,6 +271,29 @@ struct HomeView: View {
                         newAnswersBody(recentQA: recentQA)
                     }
                     .padding(5)
+            }
+        }
+    }
+    
+    private func introSheet() -> some View {
+        ZStack{
+            Color.primaryColor
+                .ignoresSafeArea()
+            
+            VStack{
+                Text("Features:")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+                
+                
+                Text("Q&A")
+                    .foregroundColor(.white)
+                    .font(.title)
+                
+                Text("BlindChat")
+                    .foregroundColor(.white)
+                    .font(.title)
+          
             }
         }
     }

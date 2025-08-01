@@ -6,95 +6,115 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct CredentialFieldsView: View {
+    @State var errorMessage: String = ""
+    @EnvironmentObject var viewRouter: ViewRouter
     @Binding var email: String
     @Binding var password: String
-    @Binding var confirmPassword: String
-    @Binding var displayConfirmPassword: Bool
+
+    let isSignInView: Bool
     
     var body: some View {
         ZStack{
-            // Use this color to help see the fields better in preview
-//            Color(.systemPink)
-//                .ignoresSafeArea()
+            Color.primaryColor
+                .ignoresSafeArea()
             
-            Group{
-                VStack{
-                    ZStack{
-                        // using 2 text fields to get the proper effect I want:
-                        // a faded background inside textField but text is still bold
-                        //and visible
-                        TextField("", text: $email)
-                            .foregroundColor(.black)
-                            .frame(width: 340, height: 25)
-                            .padding()
-                            .background(.white)
-                            .opacity(0.3)
-                            .cornerRadius(10)
-                            .textInputAutocapitalization(.never)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            )
-                            .padding(.bottom,3)
-                        
-                        TextField("Email", text: $email)
-                            .foregroundColor(.white)
-                            .frame(width: 340, height: 25)
-                            .padding()
-                            .cornerRadius(10)
-                            .textInputAutocapitalization(.never)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            )
-                            .padding(.bottom,3)
-                    }
+            VStack{
+                HStack{
+                    Text("Email:")
+                        .foregroundColor(.white)
+                        .padding(.leading, 20)
                     
-                    ZStack{
-                        // using 2 text fields to get the proper effect I want:
-                        // a faded background inside textField but text is still bold
-                        //and visible
-                        SecureField("", text: $password)
-                            .frame(width: 340, height: 25)
-                            .padding()
-                            .background(.white)
-                            .opacity(0.3)
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            )
-                        
-                        SecureField("Password", text: $password)
-                            .frame(width: 340, height: 25)
-                            .padding()
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                            )
-                    }
-                    
-                    if(displayConfirmPassword){
-                        ZStack{
-                            SecureField("Confirm Password", text: $confirmPassword)
-                                .frame(width: 340, height: 25)
-                                .padding()
-                                .background(.white)
-                                .opacity(0.3)
-                                .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                                )
-
-                            SecureField("Confirm Password", text: $confirmPassword)
-                                .frame(width: 340, height: 25)
-                                .padding()
-                                .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
-                                )
-                        }
-                    }
+                    Spacer()
                 }
+                
+                TextField("", text: $email)
+                    .foregroundColor(.white)
+                    .frame(width: 340, height: 25)
+                    .padding()
+                    .cornerRadius(10)
+                    .textInputAutocapitalization(.never)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                    )
+                    .padding(.bottom,3)
+                
+                HStack{
+                    Text("Password:")
+                        .foregroundColor(.white)
+                        .padding(.leading, 20)
+                    
+                    Spacer()
+                }
+                SecureField("", text: $password)
+                    .frame(width: 340, height: 25)
+                    .padding()
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10).stroke(.white, lineWidth: 2)
+                    )
+                Spacer()
+                    .frame(height: 20)
+                
+                //logIn Button
+                Button(action: {
+                    if(isSignInView){
+                        signInUser(userEmail: email, userPassword: password)
+                    } else {
+                        createUser(userEmail: email, userPassword: password)
+                    }
+                }) {
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(.blue, lineWidth: 2)
+                        .frame(width: 340, height: 50)
+                        .animation(.easeInOut, value: true)
+                        .overlay {
+                            Text(isSignInView ? "Login" : "Sign Up")
+                                .bold()
+                                .foregroundColor(.white)
+                                .frame(width: 340, height: 25)
+                                .padding()
+                                .cornerRadius(10)
+                                .textInputAutocapitalization(.never)
+                                .shadow(radius: 5)
+                        }
+                }
+                .disabled(!email.isEmpty && !password.isEmpty ? false : true)
+                .opacity(!email.isEmpty && !password.isEmpty ? 1 : 0.2)
+            }
+        }
+    }
+    
+    private func signInUser(userEmail: String, userPassword: String){
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            guard error ==  nil else{
+                self.errorMessage = error!.localizedDescription
+                return
+            }
+            switch authResult {
+            case .none:
+                print("Cound not sign in user.")
+            case .some(_):
+                print("User signed in")
+                viewRouter.currentPage = .homePage
+            }
+        }
+    }
+    
+    private func createUser(userEmail: String, userPassword: String){
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            guard error == nil else{
+                self.errorMessage = error!.localizedDescription
+                return
+            }
+            switch authResult {
+            case .none:
+                print("Cound not create new user.")
+            case .some(_):
+                print("User signed in")
+                viewRouter.currentPage = .homePage
             }
         }
     }
@@ -102,6 +122,6 @@ struct CredentialFieldsView: View {
 
 struct CredentialFieldsView_Previews: PreviewProvider {
     static var previews: some View {
-        CredentialFieldsView(email: .constant(""), password: .constant(""), confirmPassword: .constant(""),displayConfirmPassword: .constant(true))
+        CredentialFieldsView(email: .constant(""), password: .constant(""), isSignInView: true)
     }
 }
