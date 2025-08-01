@@ -13,11 +13,23 @@ import SwiftUICore
 class QuestionRepository {
     let db = Firestore.firestore()
     
-    public func Get() async throws -> [QuestionModel] {
-        var questions: [QuestionModel] = []
-        let snapshot = try await db.collection("questions")
-            .limit(to: 10)
-            .getDocuments()
+    public func Get(lastDocumentSnapshot: QueryDocumentSnapshot?) async throws -> QuestionsModel {
+        var snapshot: QuerySnapshot
+        var questions: QuestionsModel = emptyQuestionsModel
+        
+        let query = db.collection("questions").order(by: "id")
+        let initalQuery = query.limit(to: 2)
+        var nextQuery = initalQuery
+        if lastDocumentSnapshot != nil {
+            nextQuery = query.start(afterDocument: lastDocumentSnapshot!).limit(to: 2)
+        }
+      
+        /// get next batch of questions
+        if lastDocumentSnapshot != nil {
+            snapshot = try await nextQuery.getDocuments()
+        } else {
+            snapshot = try await initalQuery.getDocuments()
+        }
         
         snapshot.documents.forEach { documentSnapshot in
             let documentData = documentSnapshot.data()
@@ -26,11 +38,16 @@ class QuestionRepository {
             question.id = documentData["id"] as! String
             question.body = documentData["body"] as! String
             
-            var choices = documentData["choices"] as! [String]
+            let choices = documentData["choices"] as! [String]
             for choice in choices {
                 question.choices.append(ChoiceModel(id: UUID().uuidString, text: choice))
             }
-            questions.append(question)
+            questions.questions.append(question)
+        }
+        
+        /// set to avoid getting same questions
+        if let lastDocument = snapshot.documents.last {
+            questions.lastDoc = lastDocument
         }
         return questions
     }

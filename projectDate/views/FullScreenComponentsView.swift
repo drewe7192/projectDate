@@ -24,7 +24,7 @@ struct FullScreenComponentsView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     
     @Binding var isMicMuted: Bool
-
+    
     let role: RoleType
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -61,7 +61,7 @@ struct FullScreenComponentsView: View {
                 timeRemaining -= 1
             }
             
-            if timeRemaining == 10 {
+            if timeRemaining >= 10 {
                 self.showTimer = true
             }
             
@@ -73,26 +73,31 @@ struct FullScreenComponentsView: View {
         }
         .onChange(of: delegate.hostAnswerBlindDate) { oldValue, newValue in
             Task {
-                do {
-                    if !qaViewModel.answer.body.isEmpty {
-                        try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: qaViewModel.answer.body)
-                    } else {
-                        transactionState = .waitingForResponse
+                if !newValue.isEmpty {
+                    do {
+                        if !qaViewModel.answer.body.isEmpty {
+                            try await compareAnswers(role: RoleType.guest, hostAnswer: newValue, guestAnswer: qaViewModel.answer.body)
+                        } else {
+                            transactionState = .waitingForResponse
+                        }
+                        
+                    } catch {
+                        // HANDLE ERROR
                     }
-                    
-                } catch {
-                    // HANDLE ERROR
                 }
             }
         }
         .onChange(of: delegate.guestAnswerBlindDate) { oldValue, newValue in
             Task {
                 do {
-                    if !qaViewModel.answer.body.isEmpty {
-                        try await compareAnswers(role: RoleType.host, hostAnswer: qaViewModel.answer.body, guestAnswer: newValue)
-                    } else {
-                        transactionState = .waitingForResponse
+                    if !newValue.isEmpty {
+                        if !qaViewModel.answer.body.isEmpty {
+                            try await compareAnswers(role: RoleType.host, hostAnswer: qaViewModel.answer.body, guestAnswer: newValue)
+                        } else {
+                            transactionState = .waitingForResponse
+                        }
                     }
+                    
                 } catch {
                     // HANDLE ERROR
                 }
@@ -112,6 +117,7 @@ struct FullScreenComponentsView: View {
                     .font(.system(size: 40))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
+                    .padding()
                 
                 Spacer()
                 
@@ -192,8 +198,18 @@ struct FullScreenComponentsView: View {
                 
                 if transactionState == .success {
                     /// continue videoChat
-                    timeRemaining = 10
                     showQuestion.toggle()
+                    
+                    qaViewModel.answer.body = ""
+                    delegate.guestAnswerBlindDate = ""
+                    delegate.hostAnswerBlindDate = ""
+                    timeRemaining = 12
+                    self.isMicMuted = false
+                    qaViewModel.questions.removeFirst()
+                    
+                    if qaViewModel.questions.count < 5 {
+                        try await qaViewModel.getQuestions()
+                    }
                     
                 } else if transactionState == .failed {
                     /// leave session

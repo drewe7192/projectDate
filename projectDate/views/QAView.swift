@@ -241,6 +241,10 @@ struct QAView: View {
                         
                         qaViewModel.questions.removeAll(where: {$0.id == qaViewModel.quickChatQuestion.id})
                         
+                        if qaViewModel.questions.count < 2 {
+                           try await qaViewModel.getQuestions()
+                        }
+                        
                         startProfileRotation()
                     }
                 }) {

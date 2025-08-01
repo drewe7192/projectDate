@@ -19,6 +19,7 @@ class QAViewModel: ObservableObject {
     @Published var recentAnswers: [AnswerModel] = []
     @Published var recentQAs: [QAModel] = []
     @Published var recentQAImages: [QADTOModel] = []
+    @Published var lastDocumentSnapshot: QueryDocumentSnapshot?
     
     private let videoService = VideoService()
     private let qaService = QAService()
@@ -27,9 +28,10 @@ class QAViewModel: ObservableObject {
     let db = Firestore.firestore()
     
     public func getQuestions() async throws {
-        let questions = try await videoService.getQuestions()
-        if !questions.isEmpty {
-            self.questions = questions
+        let questions = try await videoService.getQuestions(lastDocumentSnapshot : self.lastDocumentSnapshot)
+        if !questions.questions.isEmpty {
+            self.questions = questions.questions
+            self.lastDocumentSnapshot = questions.lastDoc
         }
     }
     

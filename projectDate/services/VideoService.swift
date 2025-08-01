@@ -13,8 +13,8 @@ class VideoService {
     private let questionRepo = QuestionRepository()
     private let answerRepo = AnswerRepository()
     
-    public func getQuestions() async throws -> [QuestionModel] {
-        let response = try await questionRepo.Get()
+    public func getQuestions(lastDocumentSnapshot: QueryDocumentSnapshot?) async throws -> QuestionsModel {
+        let response = try await questionRepo.Get(lastDocumentSnapshot: lastDocumentSnapshot)
         return response
     }
     

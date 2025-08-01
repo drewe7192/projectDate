@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import Firebase
 
 struct QuestionModel: Identifiable, Equatable, Hashable {
     var id: String
     var body: String
     var choices: [ChoiceModel]
+    var lastDoc: QueryDocumentSnapshot?
 }
 
 var emptyQuestionModel = QuestionModel(id: "", body: "", choices: [])
