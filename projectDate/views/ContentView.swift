@@ -50,9 +50,11 @@ struct ContentView: View {
                 .animation(.easeInOut, value: true)
         case .notificationsPage:
             NotificationsView()
+        case .walkThroughPage:
+            CustomIntroView()
         }
     }
-
+    
     private func updateActiveStatus(newPhase: ScenePhase) {
         if newPhase == .active {
             if !profileViewModel.userProfile.id.isEmpty {
@@ -68,7 +70,7 @@ struct ContentView: View {
                 }
             }
         } else if newPhase == .background {
-           // TODO: WHAT HAPPENS IN BACKGROUND?
+            // TODO: WHAT HAPPENS IN BACKGROUND?
         }
     }
 }

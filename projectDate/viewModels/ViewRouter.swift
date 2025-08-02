@@ -21,7 +21,7 @@ class ViewRouter: ObservableObject {
     func run(){
         Auth.auth().addStateDidChangeListener { auth, user in
             if auth.currentUser != nil {
-                self.currentPage = .homePage
+                self.currentPage = .walkThroughPage
             }
         }
     }
@@ -35,4 +35,5 @@ enum Route {
     case videoPage(videoConfig: VideoConfigModel)
     case requestPage
     case notificationsPage
+    case walkThroughPage
 }

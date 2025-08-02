@@ -10,7 +10,6 @@ import Firebase
 
 struct HomeView: View {
     @State private var showingSheet = false
-    @State private var showingIntroSheet = true
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var isHeartSelected: Bool = false
     
@@ -68,9 +67,6 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingSheet) {
                 newAnswersSheet()
-            }
-            .sheet(isPresented: $showingIntroSheet) {
-                introSheet()
             }
         }
         .ignoresSafeArea(.keyboard)

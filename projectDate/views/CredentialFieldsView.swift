@@ -61,9 +61,9 @@ struct CredentialFieldsView: View {
                 //logIn Button
                 Button(action: {
                     if(isSignInView){
-                        signInUser(userEmail: email, userPassword: password)
+                        signInUser()
                     } else {
-                        createUser(userEmail: email, userPassword: password)
+                        createUser()
                     }
                 }) {
                     RoundedRectangle(cornerRadius: 20)
@@ -87,7 +87,7 @@ struct CredentialFieldsView: View {
         }
     }
     
-    private func signInUser(userEmail: String, userPassword: String){
+    private func signInUser(){
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             guard error ==  nil else{
                 self.errorMessage = error!.localizedDescription
@@ -98,12 +98,12 @@ struct CredentialFieldsView: View {
                 print("Cound not sign in user.")
             case .some(_):
                 print("User signed in")
-                viewRouter.currentPage = .homePage
+                viewRouter.currentPage = .walkThroughPage
             }
         }
     }
     
-    private func createUser(userEmail: String, userPassword: String){
+    private func createUser(){
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             guard error == nil else{
                 self.errorMessage = error!.localizedDescription
@@ -114,7 +114,7 @@ struct CredentialFieldsView: View {
                 print("Cound not create new user.")
             case .some(_):
                 print("User signed in")
-                viewRouter.currentPage = .homePage
+                viewRouter.currentPage = .walkThroughPage
             }
         }
     }
