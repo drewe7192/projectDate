@@ -11,39 +11,80 @@ import FirebaseAuth
 
 struct SignInView: View {
     @State private var signInErrorMessage: String = ""
+    @State var errorMessage: String = ""
     @State private var email: String = ""
     @State private var password: String =  ""
+    @State private var isButtonPressed: Bool = false
+    @FocusState private var focusedField: Field?
+    
+    enum Field {
+        case email, password
+    }
     
     @EnvironmentObject private var viewRouter: ViewRouter
     
     var body: some View {
         NavigationView {
-            GeometryReader{ geoReader in
-                ZStack{
-                    Color.primaryColor
+            GeometryReader { geoReader in
+                ZStack {
+                    AnimatedGradientBackground()
                         .ignoresSafeArea()
                     
-                    VStack{
-                        bodySection(for: geoReader)
+                    NeonParticlesView(count: 30, color: .cyan.opacity(0.8))
+                    
+                    VStack(spacing: 30) {
+                        Text("littleBIGThings")
+                            .font(.system(size: 40, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                            .shadow(color: .cyan.opacity(0.5), radius: 12, x: 0, y: 0)
+                        
+                        DarkGlassContainer {
+                            GlassInputField(placeholder: "Email", text: $email, isFocused: focusedField == .email)
+                                .focused($focusedField, equals: .email)
+                            GlassSecureField(placeholder: "Password", text: $password, isFocused: focusedField == .password)
+                                .focused($focusedField, equals: .password)
+                        }
+                        .padding(.horizontal, 30)
+                        
+                        // Sign In Button
+                        Button(action: {
+                            isButtonPressed.toggle()
+                            login()
+                        }) {
+                            Text("Sign In")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.white.opacity(0.05))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.cyan.opacity(0.4), lineWidth: 1)
+                                )
+                                .cornerRadius(12)
+                                .shadow(color: Color.cyan.opacity(0.3), radius: 8, x: 0, y: 4)
+                                .scaleEffect(isButtonPressed ? 1.03 : 1.0)
+                                .animation(.easeInOut(duration: 0.15), value: isButtonPressed)
+                        }
+                        .padding(.horizontal, 30)
+                                                .disabled(!email.isEmpty && !password.isEmpty ? false : true)
+                                                .opacity(!email.isEmpty && !password.isEmpty ? 1 : 0.5)
+                        
+        
                         footerSection(for: geoReader)
                     }
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
                 }
             }
         }
         .navigationBarBackButtonHidden(true)
     }
     
-    private func bodySection(for geoReader: GeometryProxy) -> some View {
-        ZStack{
-            CredentialFieldsView(email: $email, password: $password, isSignInView: true)
-                .position(x: geoReader.frame(in: .local).midX, y: geoReader.frame(in: .local).midY)
-            
-            Text("littleBIGThings")
-                .font(.custom("Noteworthy", size: geoReader.size.height * 0.07))
-                .bold()
-                .foregroundColor(.white)
-                .position(x: geoReader.size.width * 0.5, y: geoReader.size.height * 0.25)
+    private func login() {
+        
+        if(true){
+            signInUser()
+        } else {
+            createUser()
         }
     }
     
@@ -58,10 +99,40 @@ struct SignInView: View {
             }
         }
     }
+    
+    private func signInUser(){
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            guard error ==  nil else{
+                self.errorMessage = error!.localizedDescription
+                return
+            }
+            switch authResult {
+            case .none:
+                print("Cound not sign in user.")
+            case .some(_):
+                print("User signed in")
+                viewRouter.currentPage = .walkThroughPage
+            }
+        }
+    }
+    
+    private func createUser(){
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            guard error == nil else{
+                self.errorMessage = error!.localizedDescription
+                return
+            }
+            switch authResult {
+            case .none:
+                print("Cound not create new user.")
+            case .some(_):
+                print("User signed in")
+                viewRouter.currentPage = .walkThroughPage
+            }
+        }
+    }
 }
 
-struct SignInView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignInView()
-    }
+#Preview {
+    SignInView()
 }
