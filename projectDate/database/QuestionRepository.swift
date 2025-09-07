@@ -64,7 +64,7 @@ class QuestionRepository {
             question.id = documentData["id"] as! String
             question.body = documentData["body"] as! String
             
-            var choices = documentData["choices"] as! [String]
+            let choices = documentData["choices"] as! [String]
             for choice in choices {
                 question.choices.append(ChoiceModel(id: UUID().uuidString, text: choice))
             }

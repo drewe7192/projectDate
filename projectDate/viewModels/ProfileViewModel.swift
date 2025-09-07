@@ -104,7 +104,7 @@ class ProfileViewModel: NSObject, ObservableObject {
                 "isRequestAccepted": "true",
             ]
             
-            let result = try await functions.httpsCallable("sendAcceptNotification").call(payload)
+            _ = try await functions.httpsCallable("sendAcceptNotification").call(payload)
             
             // Parse the response to extract the string message
             //            if let data = result.data as? [String: Any],
@@ -131,7 +131,7 @@ class ProfileViewModel: NSObject, ObservableObject {
                 "isRequestAccepted": "false",
             ]
             
-            let result = try await functions.httpsCallable("sendDeclineNotification").call(payload)
+            _ = try await functions.httpsCallable("sendDeclineNotification").call(payload)
             
             // Parse the response to extract the bool message
             //            if let data = result.data as? [String: Any],

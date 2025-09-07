@@ -45,7 +45,7 @@ struct RequestView: View {
                             
                             profileViewModel.participantProfile = delegate.requestByProfile
                             
-                            var videoConfig = VideoConfigModel (role: RoleType.guest, isScreenBlurred: true, isFullScreen: true)
+                            let videoConfig = VideoConfigModel (role: RoleType.guest, isScreenBlurred: true, isFullScreen: true)
                             
                             /// show sheet for 5 seconds then launch
                             self.showSheet = true
