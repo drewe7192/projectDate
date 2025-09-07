@@ -10,6 +10,7 @@ import Firebase
 
 struct HomeView: View {
     @State private var showingSheet = false
+    @State private var showingpickNewQuestionsSheet = true
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var isHeartSelected: Bool = false
     
@@ -17,6 +18,10 @@ struct HomeView: View {
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
+    @State private var showSheet = true
+    @State private var selectedOptions: Set<String> = []
+    
+    let options = ["🍎 Apple", "🍌 Banana", "🍇 Grapes", "🍊 Orange", "🍉 Watermelon"]
     
     @Binding var selectedTab: Int
     
@@ -67,6 +72,15 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingSheet) {
                 newAnswersSheet()
+            }
+            .sheet(isPresented: $showSheet) {
+                PickNewQuestionsSheet(
+                    options: options,
+                    selectedOptions: $selectedOptions,
+                    onSubmit: {
+                        showSheet = false
+                    }
+                )
             }
         }
         .ignoresSafeArea(.keyboard)
@@ -209,6 +223,55 @@ struct HomeView: View {
     }
     
     private func newAnswersSheet() -> some View {
+        ZStack{
+            Color.primaryColor
+                .ignoresSafeArea()
+            
+            VStack{
+                Spacer()
+                
+                Text("Congratulations!")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+                
+                
+                Text("You got new answers from: ")
+                    .foregroundColor(.white)
+                    .font(.title)
+                
+                Spacer()
+                
+                newAnswersView()
+                
+                Spacer()
+                
+                Button(action: {
+                    Task {
+                        do {
+                            try await qaViewModel.updateAnswers()
+                            showingSheet.toggle()
+                        } catch let error {
+                            print("Error trying to deactive recent Answers: \(error)")
+                        }
+                    }
+                }) {
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .stroke(.red, lineWidth: 2)
+                        .frame(width: 340, height: 60)
+                        .overlay {
+                            Text("Dismiss")
+                                .foregroundColor(.white)
+                                .font(.system(size: 15))
+                                .bold()
+                                .padding(5)
+                        }
+                }
+                Spacer()
+            }
+        }
+    }
+    
+    private func pickNewQuestionsSheet() -> some View {
         ZStack{
             Color.primaryColor
                 .ignoresSafeArea()

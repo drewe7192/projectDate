@@ -267,7 +267,7 @@ struct QAView: View {
                             .scaledToFit()
                             .foregroundColor(.black)
                             .clipShape(Circle())
-                            .blur(radius: 2)
+                            .blur(radius: 6)
                             .frame(width: 50 , height: 50)
                     } else {
                         Image(systemName: "person.fill")
