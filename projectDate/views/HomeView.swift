@@ -9,20 +9,16 @@ import SwiftUI
 import Firebase
 
 struct HomeView: View {
-    @State private var showingSheet = false
-    @State private var showingpickNewQuestionsSheet = true
     @State private var videoConfig: VideoConfigModel = emptyVideoConfig
     @State private var isHeartSelected: Bool = false
+    @State private var showingNewAnswersSheet = false
+    @State private var selectedOptions: Set<String> = []
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
-    @State private var showSheet = true
-    @State private var selectedOptions: Set<String> = []
-    
-    let options = ["🍎 Apple", "🍌 Banana", "🍇 Grapes", "🍊 Orange", "🍉 Watermelon"]
-    
+
     @Binding var selectedTab: Int
     
     var body: some View {
@@ -67,18 +63,18 @@ struct HomeView: View {
             }
             .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
                 if !newValue.isEmpty {
-                    showingSheet = true
+                    showingNewAnswersSheet = true
                 }
             }
-            .sheet(isPresented: $showingSheet) {
+            .sheet(isPresented: $showingNewAnswersSheet) {
                 newAnswersSheet()
             }
-            .sheet(isPresented: $showSheet) {
+            .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
                 PickNewQuestionsSheet(
-                    options: options,
+                    options: qaViewModel.questions,
                     selectedOptions: $selectedOptions,
                     onSubmit: {
-                        showSheet = false
+                        profileViewModel.showingQuestionSelectSheet = false
                     }
                 )
             }
@@ -249,7 +245,7 @@ struct HomeView: View {
                     Task {
                         do {
                             try await qaViewModel.updateAnswers()
-                            showingSheet.toggle()
+                            showingNewAnswersSheet.toggle()
                         } catch let error {
                             print("Error trying to deactive recent Answers: \(error)")
                         }
@@ -298,7 +294,7 @@ struct HomeView: View {
                     Task {
                         do {
                             try await qaViewModel.updateAnswers()
-                            showingSheet.toggle()
+                            showingNewAnswersSheet.toggle()
                         } catch let error {
                             print("Error trying to deactive recent Answers: \(error)")
                         }

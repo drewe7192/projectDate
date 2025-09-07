@@ -343,7 +343,7 @@ struct QAView: View {
         let fcmToken = try await profileViewModel.GetFCMToken(userId: pickedUser.userId)
         profileViewModel.userProfile.userId = Auth.auth().currentUser?.uid as Any as! String
         
-        var response = try await profileViewModel.callSendRequestNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
+        _ = try await profileViewModel.callSendRequestNotification(fcmToken: fcmToken, requestByProfile: profileViewModel.userProfile)
     }
     
     private func getCurrentUsers() async throws {

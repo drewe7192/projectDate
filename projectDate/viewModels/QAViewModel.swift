@@ -20,6 +20,7 @@ class QAViewModel: ObservableObject {
     @Published var recentQAs: [QAModel] = []
     @Published var recentQAImages: [QADTOModel] = []
     @Published var lastDocumentSnapshot: QueryDocumentSnapshot?
+    @Published var newUserQuestions: [QuestionModel] = []
     
     private let videoService = VideoService()
     private let qaService = QAService()
@@ -27,19 +28,26 @@ class QAViewModel: ObservableObject {
     let storage = Storage.storage()
     let db = Firestore.firestore()
     
-    public func getQuestions() async throws {
-        let questions = try await videoService.getQuestions(lastDocumentSnapshot : self.lastDocumentSnapshot)
-        if !questions.questions.isEmpty {
-            self.questions = questions.questions
-            self.lastDocumentSnapshot = questions.lastDoc
-        }
+    public func getQuestions(isNewUser: Bool? = nil) async throws {
+        let questions = try await qaService.getQuestions(lastDocumentSnapshot : !(isNewUser ?? false) ? self.lastDocumentSnapshot : nil)
+        
+            if !questions.questions.isEmpty {
+                // If new user then get random questions for user to pick
+                if isNewUser ?? false {
+                    let randomQuestions = questions.questions.shuffled().prefix(5)
+                    self.newUserQuestions = Array(randomQuestions)
+                } else {
+                    self.questions = questions.questions
+                    self.lastDocumentSnapshot = questions.lastDoc
+                }
+            }
     }
     
     public func saveAnswer(profileId: String, askerProfileId: String) async throws {
         do {
             let requestObject = AnswerModel(id: UUID().uuidString, profileId: profileId, questionId: quickChatQuestion.id, body: answer.body, isActive: true, askerProfileId: askerProfileId)
             
-            _ = try await videoService.saveAnswer(answer: requestObject)
+            _ = try await qaService.saveAnswer(answer: requestObject)
         } catch let error {
             print("answer failed to save \(error)")
         }

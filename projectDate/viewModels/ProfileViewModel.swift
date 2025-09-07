@@ -17,8 +17,8 @@ class ProfileViewModel: NSObject, ObservableObject {
     
     @Published var userProfile: ProfileModel = emptyProfileModel
     @Published var participantProfile: ProfileModel =  emptyProfileModel
-    @Published var isNewUser: Bool = false
     @Published var currentUsers: [ProfileModel] = []
+    @Published var showingQuestionSelectSheet: Bool = true
     
     private let profileService = ProfileService()
     private let fcmService = FCMService()
@@ -31,9 +31,7 @@ class ProfileViewModel: NSObject, ObservableObject {
         if(!userProfile.id.isEmpty) {
             self.userProfile = userProfile
         } else {
-            if isNewUser {
                 try await CreateUserProfile()
-            }
         }
     }
     
@@ -41,6 +39,7 @@ class ProfileViewModel: NSObject, ObservableObject {
         let  createdProfile = try await profileService.CreateProfile()
         
         if(createdProfile.id != "") {
+            self.showingQuestionSelectSheet = true
             self.userProfile = createdProfile
         }
     }
