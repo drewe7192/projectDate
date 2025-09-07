@@ -29,10 +29,6 @@ struct QAView: View {
     let timer2 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        ZStack {
-            Color.primaryColor
-                .ignoresSafeArea()
-            
             VStack {
                 qaWidget(geometry: geometry)
             }
@@ -96,14 +92,13 @@ struct QAView: View {
                     self.updateQuestion.toggle()
                 }
             }
-        }
+        
     }
     
     private func qaWidget(geometry: GeometryProxy) -> some View {
         VStack{
             RoundedRectangle(cornerRadius: 20)
-                .stroke(changeColor(), lineWidth: 2)
-                .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.25)
+                .fill(Color.clear)
                 .animation(.easeInOut, value: true)
                 .overlay {
                     VStack {
@@ -111,6 +106,7 @@ struct QAView: View {
                         case .inital:
                             connectSection(geometry: geometry)
                             Spacer()
+                                .frame(height: geometry.size.height * 0.06)
                             questionSection(geometry: geometry)
                         case .savingAnswer:
                             ProgressView {
@@ -146,7 +142,6 @@ struct QAView: View {
                                 .foregroundColor(.green)
                         }
                     }
-                    .padding(geometry.size.height * 0.02)
                 }
         }
     }
@@ -201,6 +196,7 @@ struct QAView: View {
                 .font(.system(size: geometry.size.height * 0.025))
                 .animation(.easeInOut)
                 .foregroundColor(.white)
+                .padding(.bottom, 2)
             
             HStack(spacing: 5) {
                 TextField("Type in answer", text: $qaViewModel.answer.body)

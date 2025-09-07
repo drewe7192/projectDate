@@ -23,24 +23,24 @@ struct HomeView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.primaryColor
+                AnimatedGradientBackground()
                     .ignoresSafeArea()
                 
                 VStack{
                     header(geometry: geometry)
-                    Spacer()
-                        .frame(height: geometry.size.height * 0.02)
+                        .padding(.bottom)
                     
-                    QAView(geometry: geometry)
+                    GlassContainer {
+                        QAView(geometry: geometry)
+                    }
+                    .frame(height: geometry.size.height * 0.3)
                     
                     Spacer()
-                        .frame(height: geometry.size.height * 0.02)
+                        .frame(height: geometry.size.height * 0.04)
+                    
                     videoSection(geometry: geometry)
-                    //events(geometry: geometry)
                     
-                    /// hack because spacer doesnt work here
-                    Text("")
-                        .padding()
+                    Spacer()
                 }
             }
             .task {
@@ -289,7 +289,7 @@ struct HomeView: View {
                 Text("BlindChat")
                     .foregroundColor(.white)
                     .font(.title)
-          
+                
             }
         }
     }
