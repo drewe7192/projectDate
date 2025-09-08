@@ -120,7 +120,7 @@ struct QAView: View {
                                 .bold()
                                 .foregroundColor(.yellow)
                         case .AnswerSaved:
-                            Text("Saved Answer!")
+                            Text("Answer Sent!")
                                 .font(.system(size: 25))
                                 .bold()
                                 .foregroundColor(.green)
@@ -241,7 +241,7 @@ struct QAView: View {
                            try await qaViewModel.getQuestions()
                         }
                         
-                        startProfileRotation()
+                      //  startProfileRotation()
                     }
                 }) {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)

@@ -42,6 +42,20 @@ struct HomeView: View {
                     videoSection(geometry: geometry)
                     
                     Spacer()
+                    
+                    GlassContainer {
+                        VStack{
+                            Text("Upcoming SpeedDate")
+                                .foregroundStyle(.white)
+                            
+                            Text("Sunday evening 8pm")
+                                .foregroundStyle(.white)
+                        }
+                     
+                    }
+                    .frame(height: geometry.size.height * 0.1)
+                    
+                    Spacer()
                 }
             }
             .task {

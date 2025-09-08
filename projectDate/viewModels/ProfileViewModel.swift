@@ -18,7 +18,7 @@ class ProfileViewModel: NSObject, ObservableObject {
     @Published var userProfile: ProfileModel = emptyProfileModel
     @Published var participantProfile: ProfileModel =  emptyProfileModel
     @Published var currentUsers: [ProfileModel] = []
-    @Published var showingQuestionSelectSheet: Bool = true
+    @Published var showingQuestionSelectSheet: Bool = false
     
     private let profileService = ProfileService()
     private let fcmService = FCMService()
