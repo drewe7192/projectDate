@@ -71,7 +71,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
                 PickNewQuestionsSheet(
-                    options: qaViewModel.questions,
+                    options: qaViewModel.newUserQuestions,
                     selectedOptions: $selectedOptions,
                     onSubmit: {
                         profileViewModel.showingQuestionSelectSheet = false

@@ -18,10 +18,10 @@ class QuestionRepository {
         var questions: QuestionsModel = emptyQuestionsModel
         
         let query = db.collection("questions").order(by: "id")
-        let initalQuery = query.limit(to: 2)
+        let initalQuery = query.limit(to: 10)
         var nextQuery = initalQuery
         if lastDocumentSnapshot != nil {
-            nextQuery = query.start(afterDocument: lastDocumentSnapshot!).limit(to: 2)
+            nextQuery = query.start(afterDocument: lastDocumentSnapshot!).limit(to: 10)
         }
       
         /// get next batch of questions

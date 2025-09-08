@@ -40,7 +40,7 @@ struct PickNewQuestionsSheet: View {
                         // handle error
                     }
                 }
-                .navigationTitle("Select Options")
+                .navigationTitle("Select Little Things")
                 .navigationBarTitleDisplayMode(.inline)
                 .preferredColorScheme(.dark)
         }
