@@ -31,19 +31,20 @@ struct HomeView: View {
                     
                     VStack{
                         header(geometry: geometry)
-                            .padding(.bottom)
+                         //   .padding(.bottom,2)
                         
                         GlassContainer {
                             QAView(geometry: geometry)
                         }
-                        .frame(height: geometry.size.height * 0.3)
+                        .frame(height: geometry.size.height * 0.25)
                         
                         Spacer()
-                            .frame(height: geometry.size.height * 0.04)
+                            .frame(height: geometry.size.height * 0.03)
                         
                         videoSection(geometry: geometry)
                         
                         Spacer()
+                            .frame(height: geometry.size.height * 0.03)
                         
                         GlassContainer {
                             
@@ -156,14 +157,14 @@ struct HomeView: View {
             
             Spacer()
             
-            Text("LittleBigThings")
-                .font(.custom("Copperplate", size: geometry.size.height * 0.03))
-                .foregroundColor(Color("tertiaryColor"))
-                .bold()
+//            Text("LittleBigThings")
+//                .font(.custom("Copperplate", size: geometry.size.height * 0.03))
+//                .foregroundColor(Color("tertiaryColor"))
+//                .bold()
             
             Image("logo")
                 .resizable()
-                .frame(width: geometry.size.width * 0.1, height: geometry.size.width * 0.1)
+                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
             
             Spacer()
             
