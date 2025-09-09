@@ -16,7 +16,7 @@ struct CustomIntroView: View {
     
     var body: some View {
         ZStack {
-            Color.primaryColor
+            AnimatedGradientBackground()
                 .ignoresSafeArea()
          
             VStack(spacing: 0) {
@@ -53,36 +53,49 @@ struct CustomIntroView: View {
                         }
                     }
                     .padding(.bottom, 15)
-                    
-                    Text(selectedItem.title)
-                        .font(.title.bold())
-                        .foregroundStyle(.white)
-                        .contentTransition(.numericText())
-                    
-                    Text(selectedItem.description)
-                        .font(.system(size: 15))
-                        .foregroundStyle(.gray)
-                    
-                    /// Next/Continue Button
-                    Button {
-                        updateItem(isForward: true)
-                        if selectedItem.id == introItems.last?.id {
-                            viewRouter.currentPage = .homePage
+                    GlassContainer {
+                        VStack {
+                            Text(selectedItem.title)
+                                .font(.title.bold())
+                                .foregroundStyle(.white)
+                                .contentTransition(.numericText())
+                            
+                            Text(selectedItem.description)
+                                .font(.system(size: 15))
+                                .foregroundStyle(.gray)
                         }
-                    } label: {
-                        Text(selectedItem.id == introItems.last?.id ? "Continue" : "Next")
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.white)
-                            .contentTransition(.numericText())
-                            .frame(width: 250)
-                            .padding(.vertical, 12)
-                            .background(.green.gradient, in: .capsule)
+                      
                     }
-                    .padding(.top, 25)
+                    .frame(height: 200)
+                
+                    Spacer()
+                    /// Next/Continue Button
+                    GlassContainer {
+                        Button {
+                            updateItem(isForward: true)
+                            if selectedItem.id == introItems.last?.id {
+                                viewRouter.currentPage = .homePage
+                            }
+                        } label: {
+                            Text(selectedItem.id == introItems.last?.id ? "Continue" : "Next")
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.white)
+                                .contentTransition(.numericText())
+                                .frame(width: 250)
+                              //  .padding(.vertical, 12)
+                               // .background(.green.gradient, in: .capsule)
+                        }
+                       // .padding(.top, 25)
+                    }
+                    .frame(height: 10)
+
+                Spacer()
                 }
                 .multilineTextAlignment(.center)
                 .frame(width: 300)
-                .frame(maxHeight: .infinity)
+             //   .frame(maxHeight: .infinity)
+                
+                
             }
         }
     }
@@ -96,7 +109,7 @@ struct CustomIntroView: View {
             .foregroundStyle(.white.shadow(.drop(radius: 10)))
             .blendMode(.overlay)
             .frame(width: 120, height: 120)
-            .background(.green.gradient, in: .rect(cornerRadius: 32))
+            .background(Color(#colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)), in: .rect(cornerRadius: 32))
             .background {
                 RoundedRectangle(cornerRadius: 35)
                     .fill(.background)

@@ -105,8 +105,6 @@ struct QAView: View {
                         switch currentQAWidgetState {
                         case .inital:
                             connectSection(geometry: geometry)
-                            Spacer()
-                                .frame(height: geometry.size.height * 0.06)
                             questionSection(geometry: geometry)
                         case .savingAnswer:
                             ProgressView {
@@ -196,7 +194,7 @@ struct QAView: View {
                 .font(.system(size: geometry.size.height * 0.025))
                 .animation(.easeInOut)
                 .foregroundColor(.white)
-                .padding(.bottom, 2)
+                .padding()
             
             HStack(spacing: 5) {
                 TextField("Type in answer", text: $qaViewModel.answer.body)

@@ -15,7 +15,7 @@ struct PickNewQuestionsSheet: View {
     var onSubmit: () -> Void
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
                 VStack {
                     ScrollView {
                         randomQuestions()

@@ -13,87 +13,119 @@ struct HomeView: View {
     @State private var isHeartSelected: Bool = false
     @State private var showingNewAnswersSheet = false
     @State private var selectedOptions: Set<String> = []
+    @State private var navigateToSpeedDate = false
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
-
+    
     @Binding var selectedTab: Int
     
     var body: some View {
-        GeometryReader { geometry in
+        NavigationStack {
             ZStack {
-                AnimatedGradientBackground()
-                    .ignoresSafeArea()
-                
-                VStack{
-                    header(geometry: geometry)
-                        .padding(.bottom)
+                GeometryReader { geometry in
+                    AnimatedGradientBackground()
+                        .ignoresSafeArea()
                     
-                    GlassContainer {
-                        QAView(geometry: geometry)
-                    }
-                    .frame(height: geometry.size.height * 0.3)
-                    
-                    Spacer()
-                        .frame(height: geometry.size.height * 0.04)
-                    
-                    videoSection(geometry: geometry)
-                    
-                    Spacer()
-                    
-                    GlassContainer {
-                        VStack{
-                            Text("Upcoming SpeedDate")
-                                .foregroundStyle(.white)
-                            
-                            Text("Sunday evening 8pm")
-                                .foregroundStyle(.white)
+                    VStack{
+                        header(geometry: geometry)
+                            .padding(.bottom)
+                        
+                        GlassContainer {
+                            QAView(geometry: geometry)
                         }
-                     
+                        .frame(height: geometry.size.height * 0.3)
+                        
+                        Spacer()
+                            .frame(height: geometry.size.height * 0.04)
+                        
+                        videoSection(geometry: geometry)
+                        
+                        Spacer()
+                        
+                        GlassContainer {
+                            
+                            VStack{
+                                Button(action: {
+                                    navigateToSpeedDate = true
+                                }) {
+                                    VStack{
+                                        Text("Next SpeedDate")
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 20))
+                                        
+                                        
+                                        
+                                        // Calculate next Sunday
+                                        let calendar = Calendar.current
+                                        let today = Date()
+                                        let weekday = calendar.component(.weekday, from: today) // Sunday = 1, Monday = 2, ...
+                                        let daysToAdd = 8 - weekday // Days until next Sunday
+                                        let nextSunday = calendar.date(byAdding: .day, value: daysToAdd, to: today)!
+                                        
+                                        CountdownView(targetDate: nextSunday)
+                                            .foregroundStyle(.white)
+                                            .bold()
+                                        
+                                        Text("(Sunday evening @ 8pm)")
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 8))
+                                    }
+                                }
+                            }
+                            NavigationLink(
+                                destination: SpeedDateLobbyView(), // The next screen
+                                isActive: $navigateToSpeedDate,
+                                label: {
+                                    EmptyView() // Hidden link
+                                }
+                            )
+                        }
+                        .frame(height: geometry.size.height * 0.1)
+                        
+                        Spacer()
                     }
-                    .frame(height: geometry.size.height * 0.1)
-                    
-                    Spacer()
                 }
-            }
-            .task {
-                do {
-                    /// get profile and launch video
-                    try await profileViewModel.GetUserProfile()
-                    try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
-                    
-                    videoViewModel.roomCode = profileViewModel.userProfile.roomCode
-                    
-                    /// update user app status to active
-                    try await profileViewModel.UpdateActivityStatus(isActive: true)
-                    
-                    /// check for newly answered questions
-                    try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
-                } catch {
-                    print("Error getting userProfile:\(error)")
-                }
-            }
-            .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
-                if !newValue.isEmpty {
-                    showingNewAnswersSheet = true
-                }
-            }
-            .sheet(isPresented: $showingNewAnswersSheet) {
-                newAnswersSheet()
-            }
-            .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
-                PickNewQuestionsSheet(
-                    options: qaViewModel.newUserQuestions,
-                    selectedOptions: $selectedOptions,
-                    onSubmit: {
-                        profileViewModel.showingQuestionSelectSheet = false
+                .task {
+                    do {
+                        /// get profile and launch video
+                        try await profileViewModel.GetUserProfile()
+                        try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
+                        
+                        videoViewModel.roomCode = profileViewModel.userProfile.roomCode
+                        
+                        /// update user app status to active
+                        try await profileViewModel.UpdateActivityStatus(isActive: true)
+                        
+                        /// check for newly answered questions
+                        try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
+                    } catch {
+                        print("Error getting userProfile:\(error)")
                     }
-                )
+                }
+                .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
+                    if !newValue.isEmpty {
+                        showingNewAnswersSheet = true
+                    }
+                }
+                .sheet(isPresented: $showingNewAnswersSheet) {
+                    newAnswersSheet()
+                }
+                .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
+                    PickNewQuestionsSheet(
+                        options: qaViewModel.newUserQuestions,
+                        selectedOptions: $selectedOptions,
+                        onSubmit: {
+                            profileViewModel.showingQuestionSelectSheet = false
+                        }
+                    )
+                }
             }
+            .ignoresSafeArea(.keyboard)
         }
-        .ignoresSafeArea(.keyboard)
+        
     }
     
     private func header(geometry: GeometryProxy) -> some View {
