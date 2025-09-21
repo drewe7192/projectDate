@@ -102,6 +102,7 @@
 			membershipExceptions = (
 				AnswerModel.swift,
 				ChoiceModel.swift,
+				CreateRoomResponse.swift,
 				FCMTokenModel.swift,
 				ProfileInfoModel.swift,
 				ProfileModel.swift,
@@ -659,7 +660,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = LittleBigThings;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for videochatting with friends and others in the area. Data like your audio will be used when connecting with others in videochat so everyone can be comfortable when joining";
@@ -667,12 +668,12 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dotzero.projectDate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -701,7 +702,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = projectDate/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = LittleBigThings;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "for videochatting with friends and others in the area. Data like your name and camera will be used when connecting with others in videochat so everyone can be comfortable when joining";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "for dating";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "for videochatting with friends and others in the area. Data like your audio will be used when connecting with others in videochat so everyone can be comfortable when joining";
@@ -709,12 +710,12 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dotzero.projectDate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

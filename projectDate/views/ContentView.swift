@@ -8,9 +8,9 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var profileViewModel: ProfileViewModel
     @Environment(\.scenePhase) var scenePhase
     
-    @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var videoViewModel = VideoViewModel()
     @StateObject var eventViewModel = EventViewModel()
     @StateObject var qaViewModel = QAViewModel()
@@ -29,6 +29,7 @@ struct ContentView: View {
                 }
         case .signUpPage:
             SignUpView()
+                .environmentObject(profileViewModel)
         case .signInPage:
             SignInView()
         case .settingsPage:
@@ -78,4 +79,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(ViewRouter())
+        .environmentObject(ProfileViewModel())
 }

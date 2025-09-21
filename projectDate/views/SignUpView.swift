@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import FirebaseFunctions
 
 struct SignUpView: View {
     @State private var signInErrorMessage: String = ""
@@ -15,6 +16,11 @@ struct SignUpView: View {
     @State private var password: String =  ""
     @State private var isButtonPressed: Bool = false
     @FocusState private var focusedField: Field?
+    @State var errorMessage: String = ""
+    @State private var roomCode: String?
+    
+    @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var profileViewModel: ProfileViewModel
     
     enum Field {
         case email, password
@@ -43,10 +49,12 @@ struct SignUpView: View {
                         }
                         .padding(.horizontal, 30)
                         
-                        // Sign In Button
+                        // Sign Up Button
                         Button(action: {
-                            isButtonPressed.toggle()
-                            login()
+                            Task {
+                                isButtonPressed.toggle()
+                                await createUser()
+                            }
                         }) {
                             Text("Sign Up")
                                 .font(.headline)
@@ -73,8 +81,14 @@ struct SignUpView: View {
         .navigationBarBackButtonHidden(true)
     }
     
-    private func login() {
-        print("Logging in with Email: \(email), Password: \(password)")
+    private func createUser() async {
+        do {
+            let newRoomCode = try await handleSignupAndRoomCreation(email: email, password: password)
+            profileViewModel.newRoomCode = newRoomCode
+            viewRouter.currentPage = .walkThroughPage
+        } catch {
+            self.errorMessage = error.localizedDescription
+        }
     }
     
     private func footerSection(for geoReader: GeometryProxy) -> some View {
@@ -88,10 +102,28 @@ struct SignUpView: View {
             }
         }
     }
+    
+    // This function can be part of your ViewModel or a utility class
+    func handleSignupAndRoomCreation(email: String, password: String) async throws -> String {
+        // 1. Create the user. This also signs them in.
+        let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+        
+        // 2. Explicitly fetch the ID token for the newly created user.
+        let _ = try await authResult.user.idTokenForcingRefresh(true)
+        
+        // 3. Call the Firebase Cloud Function securely.
+        let functions = Functions.functions()
+        let result = try await functions.httpsCallable("createRoom").call()
+        
+        guard let responseData = result.data as? [String: Any],
+              let roomCode = responseData["roomCode"] as? String else {
+            throw NSError(domain: "FunctionsError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from Cloud Function"])
+        }
+        return roomCode
+    }
 }
 
-struct SignUpView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignUpView()
-    }
+#Preview {
+    SignUpView()
+        .environmentObject(ProfileViewModel())
 }

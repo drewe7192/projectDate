@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var showingNewAnswersSheet = false
     @State private var selectedOptions: Set<String> = []
     @State private var navigateToSpeedDate = false
+    @State private var shouldReloadData = false
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
@@ -89,7 +90,7 @@ struct HomeView: View {
                         Spacer()
                     }
                 }
-                .task {
+                .task(id: shouldReloadData) {
                     do {
                         /// get profile and launch video
                         try await profileViewModel.GetUserProfile()

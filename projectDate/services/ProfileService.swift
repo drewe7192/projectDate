@@ -17,16 +17,16 @@ class ProfileService {
         return response
     }
     
-    public func CreateProfile() async throws -> ProfileModel {
+    public func CreateProfile(newRoomCode: String) async throws -> ProfileModel {
         let id = UUID().uuidString
         let newProfile = ProfileModel(
             id: id,
             name: Auth.auth().currentUser?.displayName ?? "",
             gender: "",
-            roomCode: "",
+            roomCode: newRoomCode,
             isActive: false,
             profileImage: UIImage(),
-            userId: ""
+            userId: Auth.auth().currentUser?.uid ?? ""
         )
         
         let docData: [String: Any] = [

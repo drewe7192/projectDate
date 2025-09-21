@@ -67,10 +67,9 @@ struct SignInView: View {
                                 .animation(.easeInOut(duration: 0.15), value: isButtonPressed)
                         }
                         .padding(.horizontal, 30)
-                                                .disabled(!email.isEmpty && !password.isEmpty ? false : true)
-                                                .opacity(!email.isEmpty && !password.isEmpty ? 1 : 0.5)
+                        .disabled(!email.isEmpty && !password.isEmpty ? false : true)
+                        .opacity(!email.isEmpty && !password.isEmpty ? 1 : 0.5)
                         
-        
                         footerSection(for: geoReader)
                     }
                 }
@@ -80,12 +79,7 @@ struct SignInView: View {
     }
     
     private func login() {
-        
-        if(true){
-            signInUser()
-        } else {
-            createUser()
-        }
+        signInUser()
     }
     
     private func footerSection(for geoReader: GeometryProxy) -> some View {
@@ -111,23 +105,6 @@ struct SignInView: View {
                 print("Cound not sign in user.")
             case .some(_):
                 print("User signed in")
-                viewRouter.currentPage = .walkThroughPage
-            }
-        }
-    }
-    
-    private func createUser(){
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            guard error == nil else{
-                self.errorMessage = error!.localizedDescription
-                return
-            }
-            switch authResult {
-            case .none:
-                print("Cound not create new user.")
-            case .some(_):
-                print("User signed in")
-                viewRouter.currentPage = .walkThroughPage
             }
         }
     }

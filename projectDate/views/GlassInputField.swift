@@ -14,6 +14,7 @@ struct GlassInputField: View {
     
     var body: some View {
         TextField(placeholder, text: $text)
+            .foregroundStyle(.white)
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: 12)

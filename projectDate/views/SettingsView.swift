@@ -52,11 +52,6 @@ struct SettingsView: View {
                 Spacer()
             }
             .onAppear{
-                //                    viewModel.getUserProfile(){(profileId) -> Void in
-                //                        if profileId != "" {
-                //                            viewModel.getStorageFile(profileId: profileId)
-                //                        }
-                //                    }
                 videoViewModel.roomCode = ""
             }
             .alert(isPresented: $isDeletingAccount){

@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct CreateRoomResponse: Codable {
+    let roomCode: String
+}

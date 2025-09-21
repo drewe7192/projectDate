@@ -24,33 +24,33 @@ struct WalkthroughItem: Identifiable {
 
 let walkthroughItems: [WalkthroughItem] = [
     .init(
-        image: "app.gift.fill",
-        title: "The Little things are important.",
-        description: "Hobbies, Cleaniness, Quirks, blah: the million little things is what really shapes a friendship. The little things can become Big things at anytime.",
+        image: "rectangle.split.3x1",
+        title: "The Problem",
+        description: "Swipes miss the details. We focus on what really matters — the little things",
         scale: 1
     ),
     .init(
-        image: "globe.europe.africa",
-        title: "The Big things are important.",
-        description: "Career, Life Goals, Family, and Health; the bigs things shape who are now and for the future. Geting to know the important stuff in a person life will get you closer than a dating app.",
-        scale: 0.6,
+        image: "sparkles",
+        title: "The Promise",
+        description: "Discover small quirks and shared interests that spark big connections.",
+        scale: 0.4,
         anchor: .topLeading,
         offset: -70,
         rotation: 30
     ),
     .init(
-        image: "checkmark.circle.badge.questionmark.fill",
-        title: "Q&A feature",
-        description: "The Question & Answer feature gives you the freedom to ask anything, and get multiple answer. Best answer wins",
-        scale: 0.5,
+        image: "person.2.wave.2.fill",
+        title: "SpeedDates",
+        description: "Answer quick Q&As and jump into fun video speed dates — real chats, no waiting.",
+        scale: 0.2,
         anchor: .bottomLeading,
         offset: -60,
         rotation: -35
     ),
     .init(
-        image: "person.line.dotted.person",
-        title: "BlindChat feature",
-        description: "They say Love is blind, but over here we think the same goes with friendships. Using this feature your able to get to know someone without the pressure of looks first, get to know you second",
+        image: "sparkle.magnifyingglass",
+        title: "BlindChats",
+        description: "Go live instantly when someone else is online. No swipes. No pressure. Just connection.",
         scale: 0.4,
         anchor: .bottomLeading,
         offset: -50,
@@ -58,10 +58,10 @@ let walkthroughItems: [WalkthroughItem] = [
         extraOffset: -120
     ),
     .init(
-        image: "figure.cooldown.circle.fill",
-        title: "Cool down after a workout",
+        image: "arrow.right.circle.fill",
+        title: "Start Discovering LittleBigThings",
         description: "",
-        scale: 0.35,
+        scale: 0.4,
         anchor: .bottomLeading,
         offset: -50,
         rotation: 250,

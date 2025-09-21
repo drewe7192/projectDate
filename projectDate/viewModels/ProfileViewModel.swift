@@ -19,6 +19,7 @@ class ProfileViewModel: NSObject, ObservableObject {
     @Published var participantProfile: ProfileModel =  emptyProfileModel
     @Published var currentUsers: [ProfileModel] = []
     @Published var showingQuestionSelectSheet: Bool = false
+    @Published var newRoomCode: String?
     
     private let profileService = ProfileService()
     private let fcmService = FCMService()
@@ -31,14 +32,14 @@ class ProfileViewModel: NSObject, ObservableObject {
         if(!userProfile.id.isEmpty) {
             self.userProfile = userProfile
         } else {
-                try await CreateUserProfile()
+            try await CreateUserProfile()
         }
     }
     
     public func CreateUserProfile() async throws {
-        let  createdProfile = try await profileService.CreateProfile()
+        let  createdProfile = try await profileService.CreateProfile(newRoomCode: newRoomCode ?? "")
         
-        if(createdProfile.id != "") {
+        if(!createdProfile.id.isEmpty) {
             self.showingQuestionSelectSheet = true
             self.userProfile = createdProfile
         }
@@ -47,13 +48,13 @@ class ProfileViewModel: NSObject, ObservableObject {
     public func GetCurrentUsers() async throws {
         let currentUsers = try await profileService.GetCurrentUsers(userId: Auth.auth().currentUser?.uid ?? "")
         self.currentUsers = currentUsers
-
+        
         if(!self.currentUsers.isEmpty) {
             for currentUser in self.currentUsers {
                 try await getFileFromStorage(profileId: currentUser.id, isActiveUser: true)
             }
             print("\(self.currentUsers[0].profileImage.size.height)")
-          
+            
         }
     }
     
@@ -106,16 +107,7 @@ class ProfileViewModel: NSObject, ObservableObject {
             
             _ = try await functions.httpsCallable("sendAcceptNotification").call(payload)
             
-            // Parse the response to extract the string message
-            //            if let data = result.data as? [String: Any],
-            //               let message = data["message"] as? String {
-            //                return message
-            //            } else {
-            //                throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
-            //            }
-            //        } catch {
-            //            throw error
-            //        }
+
             return ""
         }
         
@@ -133,16 +125,6 @@ class ProfileViewModel: NSObject, ObservableObject {
             
             _ = try await functions.httpsCallable("sendDeclineNotification").call(payload)
             
-            // Parse the response to extract the bool message
-            //            if let data = result.data as? [String: Any],
-            //               let message = data["success"] as? Bool {
-            //                return message
-            //            } else {
-            //                throw NSError(domain: "InvalidResponse", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response format."])
-            //            }
-            //        } catch {
-            //            throw error
-            //        }
             return ""
         }
     }
@@ -165,6 +147,19 @@ class ProfileViewModel: NSObject, ObservableObject {
                 }
             }
         }
+    }
+    
+    func callCreateRoomFunction() async throws -> String  {
+        let functions = Functions.functions()
+        
+        let result = try await functions.httpsCallable("createRoom").call()
+        
+        guard let responseData = result.data as? [String: Any],
+              let roomCode = responseData["roomCode"] as? String else {
+            throw NSError(domain: "FunctionsError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid respone from Cloud Function"])
+        }
+        
+        return roomCode
     }
 }
 
