@@ -91,20 +91,22 @@ struct HomeView: View {
                     }
                 }
                 .task(id: shouldReloadData) {
-                    do {
-                        /// get profile and launch video
-                        try await profileViewModel.GetUserProfile()
-                        try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
-                        
-                        videoViewModel.roomCode = profileViewModel.userProfile.roomCode
-                        
-                        /// update user app status to active
-                        try await profileViewModel.UpdateActivityStatus(isActive: true)
-                        
-                        /// check for newly answered questions
-                        try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
-                    } catch {
-                        print("Error getting userProfile:\(error)")
+                    if let _ = Auth.auth().currentUser {
+                        do {
+                            /// get profile and launch video
+                            try await profileViewModel.GetUserProfile()
+                            try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
+                            
+                            videoViewModel.roomCode = profileViewModel.userProfile.roomCode
+                            
+                            /// update user app status to active
+                            try await profileViewModel.UpdateActivityStatus(isActive: true)
+                            
+                            /// check for newly answered questions
+                            try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
+                        } catch {
+                            print("Error getting userProfile:\(error)")
+                        }
                     }
                 }
                 .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in

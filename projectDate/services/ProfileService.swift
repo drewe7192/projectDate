@@ -18,6 +18,10 @@ class ProfileService {
     }
     
     public func CreateProfile(newRoomCode: String) async throws -> ProfileModel {
+        guard let uid = Auth.auth().currentUser?.uid else {
+              throw NSError(domain: "ProfileService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No logged in user"])
+          }
+        
         let id = UUID().uuidString
         let newProfile = ProfileModel(
             id: id,

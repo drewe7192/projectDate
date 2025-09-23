@@ -28,8 +28,13 @@ class ProfileViewModel: NSObject, ObservableObject {
     let functions = Functions.functions()
     
     public func GetUserProfile() async throws {
-        let userProfile = try await profileService.GetProfile(userId: Auth.auth().currentUser?.uid ?? "")
-        if(!userProfile.id.isEmpty) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("⚠️ No logged in user, skipping GetUserProfile")
+            return
+        }
+        
+        let userProfile = try await profileService.GetProfile(userId: uid)
+        if !userProfile.id.isEmpty {
             self.userProfile = userProfile
         } else {
             try await CreateUserProfile()
