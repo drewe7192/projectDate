@@ -14,7 +14,6 @@ struct HomeView: View {
     @State private var showingNewAnswersSheet = false
     @State private var selectedOptions: Set<String> = []
     @State private var navigateToSpeedDate = false
-    @State private var shouldReloadData = false
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
@@ -32,7 +31,7 @@ struct HomeView: View {
                     
                     VStack{
                         header(geometry: geometry)
-                         //   .padding(.bottom,2)
+                        //   .padding(.bottom,2)
                         
                         GlassContainer {
                             QAView(geometry: geometry)
@@ -90,16 +89,18 @@ struct HomeView: View {
                         Spacer()
                     }
                 }
-                .task(id: shouldReloadData) {
+                .task() {
                     if let _ = Auth.auth().currentUser {
                         do {
                             /// get profile and launch video
                             try await profileViewModel.GetUserProfile()
+                            
+                            // Only set roomCode if userProfile exists
+                            if !profileViewModel.userProfile.roomCode.isEmpty {
+                                videoViewModel.roomCode = profileViewModel.userProfile.roomCode
+                            }
+                            
                             try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
-                            
-                            videoViewModel.roomCode = profileViewModel.userProfile.roomCode
-                            
-                            /// update user app status to active
                             try await profileViewModel.UpdateActivityStatus(isActive: true)
                             
                             /// check for newly answered questions
@@ -160,10 +161,10 @@ struct HomeView: View {
             
             Spacer()
             
-//            Text("LittleBigThings")
-//                .font(.custom("Copperplate", size: geometry.size.height * 0.03))
-//                .foregroundColor(Color("tertiaryColor"))
-//                .bold()
+            //            Text("LittleBigThings")
+            //                .font(.custom("Copperplate", size: geometry.size.height * 0.03))
+            //                .foregroundColor(Color("tertiaryColor"))
+            //                .bold()
             
             Image("logo")
                 .resizable()
