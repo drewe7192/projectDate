@@ -49,7 +49,7 @@ struct SignInView: View {
                         // Sign In Button
                         Button(action: {
                             isButtonPressed.toggle()
-                            login()
+                            signInUser()
                         }) {
                             Text("Sign In")
                                 .font(.headline)
@@ -78,10 +78,6 @@ struct SignInView: View {
         .navigationBarBackButtonHidden(true)
     }
     
-    private func login() {
-        signInUser()
-    }
-    
     private func footerSection(for geoReader: GeometryProxy) -> some View {
         HStack{
             Text("Don't have an account?")
@@ -105,6 +101,7 @@ struct SignInView: View {
                 print("Cound not sign in user.")
             case .some(_):
                 print("User signed in")
+                viewRouter.currentPage = .homePage
             }
         }
     }

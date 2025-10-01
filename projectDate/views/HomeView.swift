@@ -47,30 +47,27 @@ struct HomeView: View {
                             .frame(height: geometry.size.height * 0.03)
                         
                         GlassContainer {
-                            
                             VStack{
                                 Button(action: {
-                                    navigateToSpeedDate = true
+                                 //   navigateToSpeedDate = true
                                 }) {
                                     VStack{
-                                        Text("Next SpeedDate")
+                                        Text("You have no upcoming MeetUps")
                                             .foregroundStyle(.white)
                                             .font(.system(size: 20))
                                         
+//                                        // Calculate next Sunday
+//                                        let calendar = Calendar.current
+//                                        let today = Date()
+//                                        let weekday = calendar.component(.weekday, from: today) // Sunday = 1, Monday = 2, ...
+//                                        let daysToAdd = 8 - weekday // Days until next Sunday
+//                                        let nextSunday = calendar.date(byAdding: .day, value: daysToAdd, to: today)!
+//                                        
+//                                        CountdownView(targetDate: nextSunday)
+//                                            .foregroundStyle(.white)
+//                                            .bold()
                                         
-                                        
-                                        // Calculate next Sunday
-                                        let calendar = Calendar.current
-                                        let today = Date()
-                                        let weekday = calendar.component(.weekday, from: today) // Sunday = 1, Monday = 2, ...
-                                        let daysToAdd = 8 - weekday // Days until next Sunday
-                                        let nextSunday = calendar.date(byAdding: .day, value: daysToAdd, to: today)!
-                                        
-                                        CountdownView(targetDate: nextSunday)
-                                            .foregroundStyle(.white)
-                                            .bold()
-                                        
-                                        Text("(Sunday evening @ 8pm)")
+                                        Text("(Answer questions or BlindChat to get started)")
                                             .foregroundStyle(.white)
                                             .font(.system(size: 8))
                                     }
@@ -85,6 +82,8 @@ struct HomeView: View {
                             )
                         }
                         .frame(height: geometry.size.height * 0.1)
+                        .disabled(true)
+                        .opacity(0.5)
                         
                         Spacer()
                     }

@@ -1,56 +1,76 @@
 import { onCall, CallableRequest, HttpsError } from "firebase-functions/v2/https";
-import axios from 'axios';
+import * as functions from "firebase-functions";
+import axios from "axios";
+import jwt from "jsonwebtoken";
 
-const hmsTemplateId = '638d9d1b2b58471af0e13f08'; 
+const hmsTemplateId = "638d9d1b2b58471af0e13f08"; // your template ID
 
 export const createRoom = onCall(async (request: CallableRequest) => {
-    // Get the secret securely from environment variables.
-    const hmsManagementToken = process.env.HMS_MANAGEMENT_TOKEN;
+  // Require authenticated caller
+  if (!request.auth) {
+    throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
+  }
 
-    // Check for authenticated user and a valid token.
-    if (!request.auth) {
-        throw new HttpsError('unauthenticated', 'The function must be called while authenticated.');
-    }
-    if (!hmsManagementToken) {
-        throw new HttpsError('internal', 'Missing HMS_MANAGEMENT_TOKEN environment variable.');
-    }
+  // Load HMS keys from Firebase config (set with: firebase functions:config:set hms.access_key="..." hms.secret="...")
+  const hmsKey = functions.config().hms.access_key;
+  const hmsSecret = functions.config().hms.secret;
 
-    const userId = request.auth.uid;
-    const roomName = `room-${userId}`;
-    console.log('Userid',userId);
-    try {
-        // Call the 100ms Create Room API
-        const createRoomResponse = await axios.post(
-            'https://api.100ms.live/v2/rooms',
-            {
-                name: roomName,
-                template_id: hmsTemplateId,
-                description: `Room for new user ${userId}`,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${hmsManagementToken}`,
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-        const roomId = createRoomResponse.data.id;
+  if (!hmsKey || !hmsSecret) {
+    throw new HttpsError("internal", "Missing HMS access key or secret in Firebase config.");
+  }
 
-        // Call the 100ms Create Room Codes API
-        const createRoomCodeResponse = await axios.post(
-            `https://api.100ms.live/v2/room-codes/room/${roomId}`,
-            {},
-            {
-                headers: {
-                    Authorization: `Bearer ${hmsManagementToken}`,
-                },
-            }
-        );
-        const roomCode = createRoomCodeResponse.data.data[0].code;
+  // Generate short-lived management token
+  const hmsManagementToken = jwt.sign(
+    {
+      access_key: hmsKey,
+      type: "management",
+      version: 2,
+      iat: Math.floor(Date.now() / 1000),
+      nbf: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 60, // valid for 60s
+    },
+    hmsSecret,
+    { algorithm: "HS256" }
+  );
 
-        return { roomCode: roomCode };
-    } catch (error: any) {
-        console.error('Error creating 100ms room:', error.message);
-        throw new HttpsError('internal', 'Failed to create 100ms room.', error.message);
-    }
+  const userId = request.auth.uid;
+  const roomName = `room-${userId}`;
+
+  try {
+    // Create the room
+    const createRoomResponse = await axios.post(
+      "https://api.100ms.live/v2/rooms",
+      {
+        name: roomName,
+        template_id: hmsTemplateId,
+        description: `Room for user ${userId}`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${hmsManagementToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const roomId = createRoomResponse.data.id;
+
+    // Create room codes
+    const createRoomCodeResponse = await axios.post(
+      `https://api.100ms.live/v2/room-codes/room/${roomId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${hmsManagementToken}`,
+        },
+      }
+    );
+
+    const roomCode = createRoomCodeResponse.data.data[0].code;
+
+    return { roomCode };
+  } catch (error: any) {
+    console.error("Error creating 100ms room:", error.message, error.response?.data);
+    throw new HttpsError("internal", "Failed to create 100ms room.", error.message);
+  }
 });

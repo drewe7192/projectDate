@@ -21,6 +21,7 @@ class ViewRouter: ObservableObject {
     func run(){
         Auth.auth().addStateDidChangeListener { auth, user in
             if auth.currentUser != nil {
+
             }
         }
     }
