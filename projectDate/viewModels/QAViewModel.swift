@@ -85,6 +85,7 @@ class QAViewModel: ObservableObject {
         for recentAnswer in self.recentAnswers {
             let question = try await qaService.getQuestion(questionId: recentAnswer.questionId)
             
+            // get profileImage of user that sent answer
             getFileFromStorage(profileId: recentAnswer.profileId) {(data, error) in
                 if let error = error {
                     print("Error getting file from storage: \(error)")

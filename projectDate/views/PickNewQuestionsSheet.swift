@@ -22,7 +22,7 @@ struct PickNewQuestionsSheet: View {
                     }
                     
                     Button(action: onSubmit) {
-                        Text("Submit")
+                        Text("Ask Questions")
                             .font(.headline)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -40,7 +40,7 @@ struct PickNewQuestionsSheet: View {
                         // handle error
                     }
                 }
-                .navigationTitle("Select Little Things")
+                .navigationTitle("What Do You Want to Ask?")
                 .navigationBarTitleDisplayMode(.inline)
                 .preferredColorScheme(.dark)
         }

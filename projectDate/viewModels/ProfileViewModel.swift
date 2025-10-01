@@ -45,7 +45,7 @@ class ProfileViewModel: NSObject, ObservableObject {
         let  createdProfile = try await profileService.CreateProfile(newRoomCode: newRoomCode ?? "")
         
         if(!createdProfile.id.isEmpty) {
-            self.showingQuestionSelectSheet = true
+            self.showingQuestionSelectSheet.toggle()
             self.userProfile = createdProfile
         }
     }

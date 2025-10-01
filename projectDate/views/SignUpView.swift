@@ -18,6 +18,7 @@ struct SignUpView: View {
     @FocusState private var focusedField: Field?
     @State var errorMessage: String = ""
     @State private var roomCode: String?
+    @State private var isCreatingUser: Bool = false
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var profileViewModel: ProfileViewModel
@@ -48,30 +49,35 @@ struct SignUpView: View {
                                 .focused($focusedField, equals: .password)
                         }
                         .padding(.horizontal, 30)
-                        
-                        // Sign Up Button
-                        Button(action: {
-                            Task {
-                                isButtonPressed.toggle()
-                                await createUser()
+                        if (isCreatingUser) {
+                            ProgressView()
+                                .scaleEffect(1.5, anchor: .center)
+                        } else {
+                            // Sign Up Button
+                            Button(action: {
+                                Task {
+                                    isButtonPressed.toggle()
+                                    await createUser()
+                                }
+                            }) {
+                                Text("Sign Up")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white.opacity(0.05))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color.cyan.opacity(0.4), lineWidth: 1)
+                                    )
+                                    .cornerRadius(12)
+                                    .shadow(color: Color.cyan.opacity(0.3), radius: 8, x: 0, y: 4)
+                                    .scaleEffect(isButtonPressed ? 1.05 : 1.0)
+                                    .animation(.easeInOut(duration: 0.15), value: isButtonPressed)
                             }
-                        }) {
-                            Text("Sign Up")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.white.opacity(0.05))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.cyan.opacity(0.4), lineWidth: 1)
-                                )
-                                .cornerRadius(12)
-                                .shadow(color: Color.cyan.opacity(0.3), radius: 8, x: 0, y: 4)
-                                .scaleEffect(isButtonPressed ? 1.03 : 1.0)
-                                .animation(.easeInOut(duration: 0.15), value: isButtonPressed)
+                            .padding(.horizontal, 30)
                         }
-                        .padding(.horizontal, 30)
+                        
                         
                         footerSection(for: geoReader)
                     }
@@ -83,9 +89,11 @@ struct SignUpView: View {
     
     private func createUser() async {
         do {
+            isCreatingUser.toggle()
             let newRoomCode = try await handleSignupAndRoomCreation(email: email, password: password)
             profileViewModel.newRoomCode = newRoomCode
             viewRouter.currentPage = .walkThroughPage
+            isCreatingUser.toggle()
         } catch {
             self.errorMessage = error.localizedDescription
         }

@@ -39,15 +39,6 @@ let walkthroughItems: [WalkthroughItem] = [
         rotation: 30
     ),
     .init(
-        image: "person.2.wave.2.fill",
-        title: "SpeedDates",
-        description: "Answer quick Q&As and jump into fun video speed dates — real chats, no waiting.",
-        scale: 0.2,
-        anchor: .bottomLeading,
-        offset: -60,
-        rotation: -35
-    ),
-    .init(
         image: "sparkle.magnifyingglass",
         title: "BlindChats",
         description: "Go live instantly when someone else is online. No swipes. No pressure. Just connection.",
@@ -56,6 +47,15 @@ let walkthroughItems: [WalkthroughItem] = [
         offset: -50,
         rotation: 160,
         extraOffset: -120
+    ),
+    .init(
+        image: "clock",
+        title: "SpeedDates",
+        description: "Coming Soon",
+        scale: 0.4,
+        anchor: .bottomLeading,
+        offset: -60,
+        rotation: -35
     ),
     .init(
         image: "arrow.right.circle.fill",
