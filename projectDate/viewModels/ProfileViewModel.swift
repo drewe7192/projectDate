@@ -26,6 +26,7 @@ class ProfileViewModel: NSObject, ObservableObject {
     
     let storage = Storage.storage()
     let functions = Functions.functions()
+    var tokenToUse =  FCMTokenModel(id: "", token: "")
     
     public func GetUserProfile() async throws {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -51,7 +52,8 @@ class ProfileViewModel: NSObject, ObservableObject {
     }
     
     public func GetCurrentUsers() async throws {
-        let currentUsers = try await profileService.GetCurrentUsers(userId: Auth.auth().currentUser?.uid ?? "")
+//        let currentUsers = try await profileService.GetCurrentUsers(userId: Auth.auth().currentUser?.uid ?? "")
+        let currentUsers = mockProfiles
         self.currentUsers = currentUsers
         
         if(!self.currentUsers.isEmpty) {
@@ -76,9 +78,16 @@ class ProfileViewModel: NSObject, ObservableObject {
         do {
             /// Used for testing
             //functions.useEmulator(withHost: "localhost", port: 5001)
+
+            if fcmToken.id.isEmpty {
+                tokenToUse = FCMTokenModel(id: fcmToken.id, token: "fake_token_123456") // fill other properties if needed
+            } else {
+                tokenToUse = fcmToken
+            }
+
             
             let payload = [
-                "fcmToken": fcmToken.token,
+                "fcmToken": tokenToUse.token,
                 "requestByProfileId": requestByProfile.id,
                 "requestByProfileName": requestByProfile.name,
                 "requestByProfileGender": requestByProfile.gender,

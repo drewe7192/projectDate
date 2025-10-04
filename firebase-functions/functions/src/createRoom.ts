@@ -1,19 +1,21 @@
-import { onCall, CallableRequest, HttpsError } from "firebase-functions/v2/https";
-import * as functions from "firebase-functions";
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { defineSecret } from "firebase-functions/params";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
 const hmsTemplateId = "638d9d1b2b58471af0e13f08"; // your template ID
+const hmsAccessKey = defineSecret("HMS_ACCESS_KEY");
+const hmsSecret = defineSecret("HMS_SECRET");
 
-export const createRoom = onCall(async (request: CallableRequest) => {
-  // Require authenticated caller
-  if (!request.auth) {
-    throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-  }
+export const createRoom = onCall(
+  { secrets: [hmsAccessKey, hmsSecret] },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError("unauthenticated", "Must be called while authenticated.");
+    }
 
-  // Load HMS keys from Firebase config (set with: firebase functions:config:set hms.access_key="..." hms.secret="...")
-  const hmsKey = functions.config().hms.access_key;
-  const hmsSecret = functions.config().hms.secret;
+    const hmsKey = hmsAccessKey.value();
+    const hmsSecretKey = hmsSecret.value();
 
   if (!hmsKey || !hmsSecret) {
     throw new HttpsError("internal", "Missing HMS access key or secret in Firebase config.");
@@ -29,7 +31,7 @@ export const createRoom = onCall(async (request: CallableRequest) => {
       nbf: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 60, // valid for 60s
     },
-    hmsSecret,
+    hmsSecretKey,
     { algorithm: "HS256" }
   );
 

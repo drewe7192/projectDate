@@ -21,6 +21,7 @@ class QAViewModel: ObservableObject {
     @Published var recentQAImages: [QADTOModel] = []
     @Published var lastDocumentSnapshot: QueryDocumentSnapshot?
     @Published var newUserQuestions: [QuestionModel] = []
+    @Published var currentQAWidgetState = QAWidgetState.inital
     
     private let videoService = VideoService()
     private let qaService = QAService()

@@ -15,6 +15,8 @@ struct HomeView: View {
     @State private var selectedOptions: Set<String> = []
     @State private var navigateToSpeedDate = false
     
+    @StateObject private var toastManager = ToastManager.shared
+    
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
@@ -36,7 +38,7 @@ struct HomeView: View {
                         GlassContainer {
                             QAView(geometry: geometry)
                         }
-                        .frame(height: geometry.size.height * 0.25)
+                        .frame(height: geometry.size.height * 0.3)
                         
                         Spacer()
                             .frame(height: geometry.size.height * 0.03)
@@ -88,46 +90,58 @@ struct HomeView: View {
                         Spacer()
                     }
                 }
-                .task() {
-                    if let _ = Auth.auth().currentUser {
-                        do {
-                            /// get profile and launch video
-                            try await profileViewModel.GetUserProfile()
-                            
-                            // Only set roomCode if userProfile exists
-                            if !profileViewModel.userProfile.roomCode.isEmpty {
-                                videoViewModel.roomCode = profileViewModel.userProfile.roomCode
-                            }
-                            
-                            try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
-                            try await profileViewModel.UpdateActivityStatus(isActive: true)
-                            
-                            /// check for newly answered questions
-                            try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
-                        } catch {
-                            print("Error getting userProfile:\(error)")
+                
+                // ← Put the toast view *here* (overlay)
+                         ToastView(toastManager: toastManager)
+                             .zIndex(1000)
+            }
+            .task {
+                if let _ = Auth.auth().currentUser {
+                    do {
+                        /// get profile and launch video
+                        try await profileViewModel.GetUserProfile()
+                        
+                        // Only set roomCode if userProfile exists
+                        if !profileViewModel.userProfile.roomCode.isEmpty {
+                            videoViewModel.roomCode = profileViewModel.userProfile.roomCode
                         }
+                        
+                        try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
+                        try await profileViewModel.UpdateActivityStatus(isActive: true)
+                        
+                        /// check for newly answered questions
+                        try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
+                    } catch {
+                        print("Error getting userProfile:\(error)")
                     }
-                }
-                .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
-                    if !newValue.isEmpty {
-                        showingNewAnswersSheet = true
-                    }
-                }
-                .sheet(isPresented: $showingNewAnswersSheet) {
-                    newAnswersSheet()
-                }
-                .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
-                    PickNewQuestionsSheet(
-                        options: qaViewModel.newUserQuestions,
-                        selectedOptions: $selectedOptions,
-                        onSubmit: {
-                            profileViewModel.showingQuestionSelectSheet = false
-                        }
-                    )
                 }
             }
+            .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
+                if !newValue.isEmpty {
+                    showingNewAnswersSheet = true
+                }
+            }
+            .onChange(of: qaViewModel.currentQAWidgetState) { oldValue, newValue in
+                if newValue == .BCRequestSent {
+                    toastManager.showToast("Request sent successfully ✅")
+                } else if newValue == .inital {
+                    // optional: hide or do nothing
+                }
+            }
+            .sheet(isPresented: $showingNewAnswersSheet) {
+                newAnswersSheet()
+            }
+            .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
+                PickNewQuestionsSheet(
+                    options: qaViewModel.newUserQuestions,
+                    selectedOptions: $selectedOptions,
+                    onSubmit: {
+                        profileViewModel.showingQuestionSelectSheet = false
+                    }
+                )
+            }
             .ignoresSafeArea(.keyboard)
+            
         }
         
     }

@@ -17,6 +17,11 @@ async function sendNotification(fcmToken: string, title: string, body: string, d
     };
 
     try {
+        if (message.token == "fake_token_123456") {
+            console.log('Successfully sent Mock message:');
+            return { success: true, messageId: "Mock_messageID" };
+        }
+        
         const response = await admin.messaging().send(message);
         console.log('Successfully sent message:', response);
         return { success: true, messageId: response };
