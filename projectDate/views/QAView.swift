@@ -29,17 +29,24 @@ struct QAView: View {
     let timer2 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        VStack(spacing: 10) {
-            // Connect Section: Profile info + Start BlindChat button
+        VStack {
             connectSection(geometry: geometry)
-            // QA question + Send button
             questionSection(geometry: geometry)
+            Spacer()
+                .frame(height: geometry.size.height * 0.03)
+            
+            Button(action: { moveToNextProfile() }) {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color("tertiaryColor"), lineWidth: 2)
+                    .frame(width: geometry.size.width * 0.8, height: geometry.size.height * 0.07)
+                    .overlay { Text("Next user").foregroundColor(.white) }
+            }
         }
         .task {
             do {
                 try await getCurrentUsers()
                 try await qaViewModel.getQuestions()
-                startProfileRotation()
+                setupInitialProfile()
             } catch let error {
                 print(error)
             }
@@ -65,20 +72,6 @@ struct QAView: View {
         .alert("Sorry, user declined request", isPresented: $showDeclineAlert) {
             Button("OK", role: .cancel) { }
         }
-        .onReceive(timer2) { _ in
-            if showBlindChatTimerSheet {
-                if timeRemaining > 0 {
-                    timeRemaining -= 1
-                } else {
-                    showBlindChatTimerSheet = false
-                }
-            }
-        }
-        .onChange(of: currentUser) { oldValue, newValue in
-            if oldValue.id != newValue.id {
-                updateQuestion.toggle()
-            }
-        }
         .sheet(isPresented: $showProfilePreview) {
             profilePreviewSheet(user: currentUser)
         }
@@ -92,7 +85,6 @@ struct QAView: View {
             
             // ✅ Start BlindChat button
             Button(action: {
-                print("Start BlindChat tapped!") // Debug
                 showProfilePreview = true
             }) {
                 Text("Start BlindChat")
@@ -185,6 +177,8 @@ struct QAView: View {
     // MARK: Profile Preview Sheet
     private func profilePreviewSheet(user: ProfileModel) -> some View {
         VStack(spacing: 20) {
+            Text("Review Before Connecting").font(.headline)
+            
             if !user.profileImage.size.height.isZero {
                 Image(uiImage: user.profileImage)
                     .resizable()
@@ -199,7 +193,6 @@ struct QAView: View {
             }
             
             Text(user.name).font(.title).bold()
-            
             if let bio = user.bio, !bio.isEmpty {
                 Text(bio).font(.body).multilineTextAlignment(.center).padding()
             }
@@ -254,11 +247,11 @@ struct QAView: View {
             return
         }
         
-        profileViewModel.currentUsers.removeAll(where: { $0.id == currentUser.id })
+        // profileViewModel.currentUsers.removeAll(where: { $0.id == currentUser.id })
         
         if !profileViewModel.currentUsers.isEmpty {
-            currentUser = profileViewModel.currentUsers.first!
-            qaViewModel.quickChatQuestion = qaViewModel.questions.randomElement() ?? emptyQuestionModel
+            currentUser = profileViewModel.currentUsers.randomElement() ?? profileViewModel.currentUsers.first!
+            qaViewModel.quickChatQuestion = qaViewModel.questions.randomElement() ?? qaViewModel.questions.first!
         } else {
             currentUser = emptyProfileModel
         }
@@ -269,21 +262,14 @@ struct QAView: View {
         var index = 0
         currentUser = profileViewModel.currentUsers[index]
         
-        self.timer = Timer.publish(every: 4, on: .main, in: .common)
-            .autoconnect()
-            .sink { _ in
-                guard !profileViewModel.currentUsers.isEmpty else {
-                    currentUser = emptyProfileModel
-                    return
-                }
-                index = (index + 1) % profileViewModel.currentUsers.count
-                currentUser = profileViewModel.currentUsers[index]
-                
-                if updateQuestion {
-                    qaViewModel.quickChatQuestion = qaViewModel.questions.randomElement() ?? emptyQuestionModel
-                    updateQuestion.toggle()
-                }
-            }
+    }
+    
+    // MARK: - Profile Rotation
+    private func setupInitialProfile() {
+        if let first = profileViewModel.currentUsers.first {
+            currentUser = first
+            qaViewModel.quickChatQuestion = qaViewModel.questions.randomElement() ?? emptyQuestionModel
+        }
     }
     
     // MARK: BlindChat Countdown
@@ -317,3 +303,10 @@ enum QAWidgetState {
     case inital, savingAnswer, AnswerSaved, sendingBCRequest, BCRequestSent
 }
 
+#Preview {
+    HomeView(selectedTab: .constant(0))
+        .environmentObject(ProfileViewModel())
+        .environmentObject(VideoViewModel())
+        .environmentObject(AppDelegate())
+        .environmentObject(QAViewModel())
+}

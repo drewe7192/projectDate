@@ -38,7 +38,7 @@ struct HomeView: View {
                         GlassContainer {
                             QAView(geometry: geometry)
                         }
-                        .frame(height: geometry.size.height * 0.3)
+                        .frame(height: geometry.size.height * 0.4)
                         
                         Spacer()
                             .frame(height: geometry.size.height * 0.03)
@@ -48,45 +48,47 @@ struct HomeView: View {
                         Spacer()
                             .frame(height: geometry.size.height * 0.03)
                         
-                        GlassContainer {
-                            VStack{
-                                Button(action: {
-                                 //   navigateToSpeedDate = true
-                                }) {
-                                    VStack{
-                                        Text("You have no upcoming MeetUps")
-                                            .foregroundStyle(.white)
-                                            .font(.system(size: 20))
-                                        
-//                                        // Calculate next Sunday
-//                                        let calendar = Calendar.current
-//                                        let today = Date()
-//                                        let weekday = calendar.component(.weekday, from: today) // Sunday = 1, Monday = 2, ...
-//                                        let daysToAdd = 8 - weekday // Days until next Sunday
-//                                        let nextSunday = calendar.date(byAdding: .day, value: daysToAdd, to: today)!
-//                                        
-//                                        CountdownView(targetDate: nextSunday)
+//                        GlassContainer {
+//                            VStack{
+//                                Button(action: {
+//                                 //   navigateToSpeedDate = true
+//                                }) {
+//                                    VStack{
+//                                        Text("You have no upcoming MeetUps")
 //                                            .foregroundStyle(.white)
-//                                            .bold()
-                                        
-                                        Text("(Answer questions or BlindChat to get started)")
-                                            .foregroundStyle(.white)
-                                            .font(.system(size: 8))
-                                    }
-                                }
-                            }
-                            NavigationLink(
-                                destination: SpeedDateLobbyView(), // The next screen
-                                isActive: $navigateToSpeedDate,
-                                label: {
-                                    EmptyView() // Hidden link
-                                }
-                            )
-                        }
-                        .frame(height: geometry.size.height * 0.1)
-                        .disabled(true)
-                        .opacity(0.5)
-                        
+//                                            .font(.system(size: 20))
+//                                        
+////                                        // Calculate next Sunday
+////                                        let calendar = Calendar.current
+////                                        let today = Date()
+////                                        let weekday = calendar.component(.weekday, from: today) // Sunday = 1, Monday = 2, ...
+////                                        let daysToAdd = 8 - weekday // Days until next Sunday
+////                                        let nextSunday = calendar.date(byAdding: .day, value: daysToAdd, to: today)!
+////                                        
+////                                        CountdownView(targetDate: nextSunday)
+////                                            .foregroundStyle(.white)
+////                                            .bold()
+//                                        
+//                                        Text("(Answer questions or BlindChat to get started)")
+//                                            .foregroundStyle(.white)
+//                                            .font(.system(size: 8))
+//                                    }
+//                                }
+//                            }
+//                            NavigationLink(
+//                                destination: SpeedDateLobbyView(), // The next screen
+//                                isActive: $navigateToSpeedDate,
+//                                label: {
+//                                    EmptyView() // Hidden link
+//                                }
+//                            )
+//                        }
+//                        .frame(height: geometry.size.height * 0.1)
+//                        .disabled(true)
+//                        .opacity(0.5)
+                        Text("Please report inappropriate behavior to support@LittleBigThings.com")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
                         Spacer()
                     }
                 }
@@ -207,7 +209,7 @@ struct HomeView: View {
             else {
                 RoundedRectangle(cornerRadius: 25)
                     .fill(Color.primaryColor)
-                    .frame(width: geometry.size.width * 0.5, height: geometry.size.height * 0.4)
+                    .frame(width: geometry.size.width * 0.5, height: geometry.size.height * 0.2)
                     .overlay {
                         VStack {
                             ProgressView {
