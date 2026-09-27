@@ -2,6 +2,7 @@ import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+const { v4: uuidv4 } = require('uuid');
 
 const hmsTemplateId = "638d9d1b2b58471af0e13f08"; // your template ID
 const hmsAccessKey = defineSecret("HMS_ACCESS_KEY");
@@ -30,6 +31,8 @@ export const createRoom = onCall(
       iat: Math.floor(Date.now() / 1000),
       nbf: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 60, // valid for 60s
+      jti: uuidv4()
+
     },
     hmsSecretKey,
     { algorithm: "HS256" }

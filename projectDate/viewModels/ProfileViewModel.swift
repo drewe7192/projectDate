@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import FirebaseStorage
 import FirebaseFunctions
-import SwiftUICore
+import SwiftUI
 
 @MainActor
 class ProfileViewModel: NSObject, ObservableObject {

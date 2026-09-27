@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-import SwiftUICore
+import SwiftUI
 
 
 class QuestionRepository {

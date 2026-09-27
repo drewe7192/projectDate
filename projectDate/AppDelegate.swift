@@ -10,7 +10,8 @@ import UserNotifications
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
-import SwiftUICore
+import SwiftUI
+import FirebaseFunctions
 
 class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     @Published var requestByProfile: ProfileModel = emptyProfileModel
@@ -24,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication
                         .LaunchOptionsKey: Any]?) -> Bool {
+                            
                             FirebaseApp.configure()
                             
                             Messaging.messaging().delegate = self
@@ -58,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
     func application(_ application: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
     -> UIBackgroundFetchResult {
-
+        
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
@@ -100,7 +102,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
-    
+        
         setFCMs(userInfo: userInfo)
         return [[]]
     }

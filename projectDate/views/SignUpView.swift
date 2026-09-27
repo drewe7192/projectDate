@@ -89,13 +89,14 @@ struct SignUpView: View {
     
     private func createUser() async {
         do {
-            isCreatingUser.toggle()
+            isCreatingUser = true
             let newRoomCode = try await handleSignupAndRoomCreation(email: email, password: password)
             profileViewModel.newRoomCode = newRoomCode
             viewRouter.currentPage = .walkThroughPage
-            isCreatingUser.toggle()
+            isCreatingUser = false
         } catch {
             self.errorMessage = error.localizedDescription
+            print(error)
         }
     }
     
@@ -127,6 +128,7 @@ struct SignUpView: View {
               let roomCode = responseData["roomCode"] as? String else {
             throw NSError(domain: "FunctionsError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from Cloud Function"])
         }
+        print(responseData)
         return roomCode
     }
 }
