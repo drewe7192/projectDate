@@ -14,15 +14,10 @@ struct MainView: View {
              TabView(selection: $selectedTab) {
                  HomeView(selectedTab: self.$selectedTab)
                      .tag(0)
-                 
-//                 EventsView()
-//                     .tag(1)
-
+                     .toolbar(.hidden, for: .tabBar)
                  SettingsView()
                      .tag(1)
-
-//                 MessagesView()
-//                     .tag(3)
+                     .toolbar(.hidden, for: .tabBar)
              }
              
              ZStack{
@@ -47,20 +42,14 @@ struct MainView: View {
 
 enum TabbedItems: Int, CaseIterable{
     case home = 0
-   // case events
     case settings
-   // case messages
     
     var title: String{
         switch self {
         case .home:
             return "Home"
-//        case .events:
-//            return "Events"
         case .settings:
             return "Settings"
-//        case .messages:
-//            return "Messages"
         }
     }
     
@@ -68,12 +57,8 @@ enum TabbedItems: Int, CaseIterable{
         switch self {
         case .home:
             return "house"
-//        case .events:
-//            return "calendar"
         case .settings:
             return "gear"
-//        case .messages:
-//            return "message"
         }
     }
 }
@@ -94,8 +79,7 @@ extension MainView{
             }
             Spacer()
         }
-        // TODO: Use geometry.size.width instead of .infinity
-        .frame(width: isActive ? .infinity : 55, height: 55)
+        .frame(maxWidth: isActive ? .infinity : 55, maxHeight: 55)
         .background(isActive ? .gray.opacity(0.4) : .clear)
         .cornerRadius(30)
     }
