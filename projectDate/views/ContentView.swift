@@ -13,7 +13,6 @@ struct ContentView: View {
     
     @StateObject var videoViewModel = VideoViewModel()
     @StateObject var eventViewModel = EventViewModel()
-    @StateObject var qaViewModel = QAViewModel()
     
     var body: some View {
         switch viewRouter.currentPage {
@@ -21,7 +20,6 @@ struct ContentView: View {
             MainView()
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
-                .environmentObject(qaViewModel)
                 .environmentObject(eventViewModel)
             /// update status in db whether app is in foreground and background
                 .onChange(of: scenePhase) { oldPhase, newPhase in
@@ -38,7 +36,6 @@ struct ContentView: View {
             VideoView(videoConfig: videoConfig)
                 .environmentObject(profileViewModel)
                 .environmentObject(videoViewModel)
-                .environmentObject(qaViewModel)
                 .environmentObject(eventViewModel)
                 .onChange(of: scenePhase) { oldPhase, newPhase in
                     updateActiveStatus(newPhase: newPhase)
@@ -55,6 +52,8 @@ struct ContentView: View {
             CustomIntroView()
         case .speedDateLobby:
             SpeedDateLobbyView()
+                .environmentObject(eventViewModel)
+                .environmentObject(videoViewModel)
         }
     }
     

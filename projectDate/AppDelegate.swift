@@ -139,7 +139,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         if let requestByProfileUserId = userInfo["requestByProfileUserId"] as? NSString {
-            profileDTO.userId = requestByProfileUserId as String
+            profileDTO.userUID = requestByProfileUserId as String
             
             self.requestByProfile = profileDTO
         }

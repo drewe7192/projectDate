@@ -11,10 +11,10 @@ import Firebase
 class ProfileRepository {
     let db = Firestore.firestore()
     
-    public func Get(userId: String) async throws -> ProfileModel {
+    public func Get(userUID: String) async throws -> ProfileModel {
         var profile = emptyProfileModel
         let snapshot = try await db.collection("profiles")
-            .whereField("userId", isEqualTo: userId as String)
+            .whereField("userUID", isEqualTo: userUID as String)
             .getDocuments()
         
         snapshot.documents.forEach { documentSnapshot in
@@ -24,7 +24,8 @@ class ProfileRepository {
             profile.name = documentData["name"] as! String
             profile.gender = documentData["gender"] as! String
             profile.roomCode = documentData["roomCode"] as! String
-            profile.isActive = documentData["isActive"] as! Bool
+            profile.isHost = documentData["isHost"] as! Bool
+            profile.eventId = documentData["eventId"] as! String
         }
         return profile
     }
@@ -34,10 +35,10 @@ class ProfileRepository {
         try await docRef.setData(newProfile)
     }
     
-    public func GetAll(userId: String) async throws -> [ProfileModel] {
+    public func GetAll(userUID: String) async throws -> [ProfileModel] {
         var activeProfiles: [ProfileModel] = []
         let snapshot = try await db.collection("profiles")
-            .whereField("userId", isNotEqualTo: userId as String)
+            .whereField("userUID", isNotEqualTo: userUID as String)
             .getDocuments()
         
         snapshot.documents.forEach { documentSnapshot in
@@ -48,8 +49,9 @@ class ProfileRepository {
             profile.name = documentData["name"] as! String
             profile.gender = documentData["gender"] as! String
             profile.roomCode = documentData["roomCode"] as! String
-            profile.isActive = documentData["isActive"] as! Bool
-            profile.userId = documentData["userId"] as! String
+            profile.isHost = documentData["isHost"] as! Bool
+            profile.eventId = documentData["eventId"] as! String
+            profile.userUID = documentData["userUID"] as! String
             
             activeProfiles.append(profile)
         }

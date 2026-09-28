@@ -18,9 +18,9 @@ struct HomeView: View {
     @StateObject private var toastManager = ToastManager.shared
     
     @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var qaViewModel: QAViewModel
     @EnvironmentObject var videoViewModel: VideoViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var eventViewModel: EventViewModel
     
     @Binding var selectedTab: Int
     
@@ -52,21 +52,6 @@ struct HomeView: View {
                                                                 Text("Start Speed Date")
                                                                     .foregroundStyle(.white)
                                                                     .font(.system(size: 20))
-                        
-                        //                                        // Calculate next Sunday
-                        //                                        let calendar = Calendar.current
-                        //                                        let today = Date()
-                        //                                        let weekday = calendar.component(.weekday, from: today) // Sunday = 1, Monday = 2, ...
-                        //                                        let daysToAdd = 8 - weekday // Days until next Sunday
-                        //                                        let nextSunday = calendar.date(byAdding: .day, value: daysToAdd, to: today)!
-                        //
-                        //                                        CountdownView(targetDate: nextSunday)
-                        //                                            .foregroundStyle(.white)
-                        //                                            .bold()
-                        
-//                                                                Text("(Answer questions or BlindChat to get started)")
-//                                                                    .foregroundStyle(.white)
-//                                                                    .font(.system(size: 8))
                                                             }
                                                         }
                                                     }
@@ -89,9 +74,6 @@ struct HomeView: View {
                         Spacer()
                     }
                 }
-                
-                ToastView(toastManager: toastManager)
-                    .zIndex(1000)
             }
             .task {
                 if let _ = Auth.auth().currentUser {
@@ -106,42 +88,13 @@ struct HomeView: View {
                         
                         try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
                         try await profileViewModel.UpdateActivityStatus(isActive: true)
-                        
-                        /// check for newly answered questions
-                        try await qaViewModel.getRecentQA(profileId: profileViewModel.userProfile.id)
                     } catch {
                         print("Error getting userProfile:\(error)")
                     }
                 }
             }
-            .onChange(of: qaViewModel.recentQAs) { oldValue, newValue in
-                if !newValue.isEmpty {
-                    showingNewAnswersSheet = true
-                }
-            }
-            .onChange(of: qaViewModel.currentQAWidgetState) { oldValue, newValue in
-                if newValue == .BCRequestSent {
-                    toastManager.showToast("Request sent successfully ✅")
-                } else if newValue == .inital {
-                    // optional: hide or do nothing
-                }
-            }
-            .sheet(isPresented: $showingNewAnswersSheet) {
-                newAnswersSheet()
-            }
-            .sheet(isPresented: $profileViewModel.showingQuestionSelectSheet) {
-                PickNewQuestionsSheet(
-                    options: qaViewModel.newUserQuestions,
-                    selectedOptions: $selectedOptions,
-                    onSubmit: {
-                        profileViewModel.showingQuestionSelectSheet = false
-                    }
-                )
-            }
             .ignoresSafeArea(.keyboard)
-            
         }
-        
     }
     
     private func header(geometry: GeometryProxy) -> some View {
@@ -280,118 +233,6 @@ struct HomeView: View {
         .padding(.bottom)
     }
     
-    private func newAnswersSheet() -> some View {
-        ZStack{
-            Color.primaryColor
-                .ignoresSafeArea()
-            
-            VStack{
-                Spacer()
-                
-                Text("Congratulations!")
-                    .foregroundColor(.white)
-                    .font(.largeTitle)
-                
-                
-                Text("You got new answers from: ")
-                    .foregroundColor(.white)
-                    .font(.title)
-                
-                Spacer()
-                
-                newAnswersView()
-                
-                Spacer()
-                
-                Button(action: {
-                    Task {
-                        do {
-                            try await qaViewModel.updateAnswers()
-                            showingNewAnswersSheet.toggle()
-                        } catch let error {
-                            print("Error trying to deactive recent Answers: \(error)")
-                        }
-                    }
-                }) {
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .stroke(.red, lineWidth: 2)
-                        .frame(width: 340, height: 60)
-                        .overlay {
-                            Text("Dismiss")
-                                .foregroundColor(.white)
-                                .font(.system(size: 15))
-                                .bold()
-                                .padding(5)
-                        }
-                }
-                Spacer()
-            }
-        }
-    }
-    
-    private func pickNewQuestionsSheet() -> some View {
-        ZStack{
-            Color.primaryColor
-                .ignoresSafeArea()
-            
-            VStack{
-                Spacer()
-                
-                Text("Congratulations!")
-                    .foregroundColor(.white)
-                    .font(.largeTitle)
-                
-                
-                Text("You got new answers from: ")
-                    .foregroundColor(.white)
-                    .font(.title)
-                
-                Spacer()
-                
-                newAnswersView()
-                
-                Spacer()
-                
-                Button(action: {
-                    Task {
-                        do {
-                            try await qaViewModel.updateAnswers()
-                            showingNewAnswersSheet.toggle()
-                        } catch let error {
-                            print("Error trying to deactive recent Answers: \(error)")
-                        }
-                    }
-                }) {
-                    RoundedRectangle(cornerRadius: 15, style: .continuous)
-                        .stroke(.red, lineWidth: 2)
-                        .frame(width: 340, height: 60)
-                        .overlay {
-                            Text("Dismiss")
-                                .foregroundColor(.white)
-                                .font(.system(size: 15))
-                                .bold()
-                                .padding(5)
-                        }
-                }
-                Spacer()
-            }
-        }
-    }
-    
-    private func newAnswersView() -> some View {
-        ScrollView {
-            ForEach(qaViewModel.recentQAs, id: \.self) { recentQA in
-                RoundedRectangle(cornerRadius: 15, style: .continuous)
-                    .stroke(.white, lineWidth: 2)
-                    .frame(width: 360, height: 80)
-                    .overlay {
-                        newAnswersBody(recentQA: recentQA)
-                    }
-                    .padding(5)
-            }
-        }
-    }
-    
     private func introSheet() -> some View {
         ZStack{
             Color.primaryColor
@@ -415,49 +256,6 @@ struct HomeView: View {
         }
     }
     
-    private func newAnswersBody(recentQA: QAModel) -> some View {
-        HStack {
-            VStack{
-                Circle()
-                    .overlay(
-                        Image(uiImage: recentQA.profileImage)
-                            .resizable()
-                            .foregroundColor(.black)
-                    )
-                    .frame(width: 50)
-                    .foregroundColor(.gray)
-                
-                Text("John Doe")
-                    .foregroundColor(.white)
-                    .font(.system(size: 10))
-                    .bold()
-            }
-            
-            Spacer()
-            
-            VStack{
-                Text("\(recentQA.question.body)")
-                    .foregroundColor(.white)
-                    .font(.system(size: 15))
-                    .bold()
-                
-                Text("\(recentQA.answer.body)")
-                    .foregroundColor(.green)
-                    .font(.system(size: 10))
-            }
-            Spacer()
-            Button(action: {
-                self.isHeartSelected.toggle()
-            }) {
-                Image(systemName: "heart.circle")
-                    .resizable()
-                    .foregroundColor(self.isHeartSelected ? .red : .white)
-                    .frame(width: 25, height: 25)
-            }
-        }
-        .padding()
-    }
-    
     private func launchVideoSession(pickedUser: ProfileModel) async throws {
         // this removes HMSPreBuiltView and triggers its onDisappear()
         // makes sure current video sesh has closed
@@ -476,5 +274,4 @@ struct HomeView: View {
         .environmentObject(ProfileViewModel())
         .environmentObject(VideoViewModel())
         .environmentObject(AppDelegate())
-        .environmentObject(QAViewModel())
 }

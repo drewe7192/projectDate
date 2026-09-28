@@ -12,8 +12,8 @@ class ProfileService {
     private let profileRepo = ProfileRepository()
     private let fcmTokenRepo = FCMTokenRepository()
     
-    public func GetProfile(userId: String) async throws -> ProfileModel {
-        let response = try await profileRepo.Get(userId: userId)
+    public func GetProfile(userUID: String) async throws -> ProfileModel {
+        let response = try await profileRepo.Get(userUID: userUID)
         return response
     }
     
@@ -28,9 +28,10 @@ class ProfileService {
             name: Auth.auth().currentUser?.displayName ?? "",
             gender: "",
             roomCode: newRoomCode,
-            isActive: false,
+            isHost: false,
+            eventId: "",
+            userUID: Auth.auth().currentUser?.uid ?? "",
             profileImage: UIImage(),
-            userId: Auth.auth().currentUser?.uid ?? ""
         )
         
         let docData: [String: Any] = [
@@ -38,15 +39,17 @@ class ProfileService {
             "name": newProfile.name,
             "gender": newProfile.gender,
             "roomCode": newProfile.roomCode,
-            "userId": Auth.auth().currentUser?.uid as Any
+            "isHost": newProfile.isHost,
+            "eventId": newProfile.eventId,
+            "userUID": Auth.auth().currentUser?.uid as Any
         ]
         
         try await profileRepo.Create(newID: newProfile.id, newProfile: docData)
         return newProfile
     }
     
-    public func GetCurrentUsers(userId: String) async throws -> [ProfileModel] {
-        let responseActiveProfiles = try await profileRepo.GetAll(userId: userId)
+    public func GetCurrentUsers(userUID: String) async throws -> [ProfileModel] {
+        let responseActiveProfiles = try await profileRepo.GetAll(userUID: userUID)
         let results = responseActiveProfiles
         
         return results

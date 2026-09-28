@@ -14,9 +14,10 @@ struct ProfileModel: Identifiable, Equatable {
     var name: String
     var gender: String
     var roomCode: String
-    var isActive: Bool
+    var isHost: Bool
+    var eventId: String
+    var userUID: String
     var profileImage: UIImage
-    var userId: String
     var bio: String?
 }
 
@@ -25,9 +26,10 @@ var emptyProfileModel = ProfileModel(
     name: "",
     gender: "",
     roomCode: "",
-    isActive: false,
+    isHost: false,
+    eventId: "",
+    userUID: "",
     profileImage: UIImage(),
-    userId: "",
     bio: ""
 )
 
@@ -37,9 +39,10 @@ var mockProfiles: [ProfileModel] = [
         name: "Alice Johnson",
         gender: "Female",
         roomCode: "X1A2B",
-        isActive: false,
+        isHost: false,
+        eventId: "133",
+        userUID: "alice01",
         profileImage: UIImage(systemName: "person.circle.fill") ?? UIImage(),
-        userId: "alice01",
         bio: "Coffee lover ☕ | Bookworm 📚 | Always up for deep conversations."
     ),
     ProfileModel(
@@ -47,40 +50,10 @@ var mockProfiles: [ProfileModel] = [
         name: "Brian Smith",
         gender: "Male",
         roomCode: "Y7C9D",
-        isActive: true,
+        isHost: false,
+        eventId: "",
+        userUID: "brian02",
         profileImage: UIImage(systemName: "person.circle") ?? UIImage(),
-        userId: "brian02",
         bio: "Tech enthusiast 💻 | Basketball fan 🏀 | Exploring new cities 🌎."
-    ),
-    ProfileModel(
-        id: UUID().uuidString,
-        name: "Chloe Martinez",
-        gender: "Female",
-        roomCode: "Z5E4F",
-        isActive: false,
-        profileImage: UIImage(systemName: "star.circle.fill") ?? UIImage(),
-        userId: "chloe03",
-        bio: "Creative soul 🎨 | Music is my therapy 🎶 | Dog mom 🐶."
-    ),
-    ProfileModel(
-        id: UUID().uuidString,
-        name: "David Lee",
-        gender: "Male",
-        roomCode: "K3L8M",
-        isActive: true,
-        profileImage: UIImage(systemName: "flame.circle.fill") ?? UIImage(),
-        userId: "david04",
-        bio: "Foodie 🍜 | Hiking adventures ⛰ | Always down for game nights 🎲."
-    ),
-    ProfileModel(
-        id: UUID().uuidString,
-        name: "Ella Brown",
-        gender: "Female",
-        roomCode: "Q2W9R",
-        isActive: false,
-        profileImage: UIImage(systemName: "moon.circle.fill") ?? UIImage(),
-        userId: "ella05",
-        bio: "Night owl 🌙 | Aspiring photographer 📸 | Tea over coffee 🍵."
     )
 ]
-

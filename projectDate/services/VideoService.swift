@@ -10,7 +10,5 @@ import Firebase
 
 
 class VideoService {
-    private let questionRepo = QuestionRepository()
-    private let answerRepo = AnswerRepository()
     
 }

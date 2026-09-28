@@ -38,7 +38,7 @@ struct RequestView: View {
                     Button(action: {
                         Task {
                             
-                            let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
+                            let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userUID)
                             _ = try await profileViewModel.callSendAcceptNotification(fcmToken: fcmToken)
                             
                             videoViewModel.roomCode = delegate.requestByProfile.roomCode
@@ -67,7 +67,7 @@ struct RequestView: View {
                     
                     Button(action: {
                         Task {
-                            let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userId)
+                            let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userUID)
                             _ = try await profileViewModel.callSendDeclineNotification(fcmToken: fcmToken)
                             
                             viewRouter.currentPage = .homePage

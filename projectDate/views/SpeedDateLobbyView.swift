@@ -22,6 +22,9 @@ struct SpeedDateLobbyView: View {
         Participant(name: "Diana", isReady: true)
     ]
     @EnvironmentObject var viewRouter: ViewRouter
+    @EnvironmentObject var eventVM: EventViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var videoVM: VideoViewModel
     
     // Countdown to next speed date
     @State private var timeRemaining: String = ""
@@ -98,7 +101,8 @@ struct SpeedDateLobbyView: View {
                         
                         // Start/Join Button
                         Button(action: {
-                            let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: false, isFullScreen: true)
+                            let videoConfig = VideoConfigModel(role: RoleType.host, isScreenBlurred: false, isFullScreen: true)
+                            videoVM.roomCode = profileVM.userProfile.isHost ?  eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
                             
                             viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
                         }) {
@@ -114,8 +118,13 @@ struct SpeedDateLobbyView: View {
                     }
                 }
             }
-            .onAppear {
-                updateTimeRemaining()
+            .task {
+                do {
+                    updateTimeRemaining()
+                    try await eventVM.GetEvent(eventId: profileVM.userProfile.eventId)
+                } catch {
+                    print("error occured in speeddating Lobby")
+                }
             }
             .onReceive(timer) { _ in
                 updateTimeRemaining()

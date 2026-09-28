@@ -34,7 +34,7 @@ class ProfileViewModel: NSObject, ObservableObject {
             return
         }
         
-        let userProfile = try await profileService.GetProfile(userId: uid)
+        let userProfile = try await profileService.GetProfile(userUID: uid)
         if !userProfile.id.isEmpty {
             self.userProfile = userProfile
         } else {
@@ -92,7 +92,7 @@ class ProfileViewModel: NSObject, ObservableObject {
                 "requestByProfileName": requestByProfile.name,
                 "requestByProfileGender": requestByProfile.gender,
                 "requestByProfileRoomCode": requestByProfile.roomCode,
-                "requestByProfileUserId": requestByProfile.userId,
+                "requestByProfileUserId": requestByProfile.userUID,
             ]
             
             let result = try await functions.httpsCallable("sendRequestNotification").call(payload)

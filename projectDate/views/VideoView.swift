@@ -13,15 +13,24 @@ struct VideoView: View {
     let videoConfig: VideoConfigModel
     
     var body: some View {
-        ZStack{
+        ZStack {
             if !videoViewModel.roomCode.isEmpty {
                 HMSPrebuiltView(roomCode: videoViewModel.roomCode, isMicMuted: $isMicMuted)
+                    // 🔑 Crucial for Speed Dating: Forces a clean view re-draw for the new date
+                    .id(videoViewModel.roomCode)
                     .blur(radius: videoConfig.isScreenBlurred ? 30 : 0)
                     .frame(width: videoConfig.isFullScreen ? .infinity : 350, height: videoConfig.isFullScreen ? .infinity : 250)
                     .cornerRadius(30)
                 
-                if videoConfig.isFullScreen  {
+                if videoConfig.isFullScreen {
                     FullScreenComponentsView(isMicMuted: $isMicMuted, role: videoConfig.role)
+                }
+            } else {
+                // Visual feedback while waiting for the next match
+                VStack {
+                    ProgressView()
+                    Text("Finding your next match...")
+                        .padding()
                 }
             }
         }
