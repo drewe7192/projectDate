@@ -43,15 +43,16 @@ struct SpeedDateLobbyView: View {
                     AnimatedGradientBackground()
                         .ignoresSafeArea()
                     
-                    VStack(spacing: 20) {
+                    VStack {
                         Text("SpeedDate Lobby")
                             .font(.largeTitle)
                             .bold()
                             .foregroundStyle(.white)
-                            .padding(.bottom,30)
+                        
+                        Spacer()
+                            .frame(maxHeight: 30)
                         
                         GlassContainer {
-                            // Countdown
                             VStack {
                                 Text("Next SpeedDate starts in:")
                                     .font(.headline)
@@ -62,7 +63,10 @@ struct SpeedDateLobbyView: View {
                                     .foregroundColor(.blue)
                             }
                         }
-                        .frame(height: 30)
+                        .frame(maxHeight: 80)
+                        
+                        Spacer()
+                            .frame(maxHeight: 40)
                         
                         // Participants list
                         VStack(alignment: .leading) {
@@ -83,21 +87,17 @@ struct SpeedDateLobbyView: View {
                                                     .frame(width: 15, height: 15)
                                             }
                                             .padding()
-                                         //   .background(Color(UIColor.secondarySystemBackground))
                                             .cornerRadius(10)
                                         }
-                                   
                                     }
                                 }
                             }
-                            .frame(maxHeight: 400)
                         }
                         
                         Spacer()
                         
                         // Start/Join Button
                         Button(action: {
-                            print("Join SpeedDate tapped")
                             let videoConfig = VideoConfigModel (role: RoleType.host, isScreenBlurred: false, isFullScreen: true)
                             
                             viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
@@ -111,12 +111,9 @@ struct SpeedDateLobbyView: View {
                                 .cornerRadius(12)
                                 .shadow(radius: 4)
                         }
-                        
                     }
-                    .padding()
                 }
             }
-     
             .onAppear {
                 updateTimeRemaining()
             }

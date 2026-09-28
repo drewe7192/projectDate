@@ -36,4 +36,5 @@ enum Route {
     case requestPage
     case notificationsPage
     case walkThroughPage
+    case speedDateLobby
 }

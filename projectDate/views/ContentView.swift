@@ -53,6 +53,8 @@ struct ContentView: View {
             NotificationsView()
         case .walkThroughPage:
             CustomIntroView()
+        case .speedDateLobby:
+            SpeedDateLobbyView()
         }
     }
     
