@@ -10,69 +10,46 @@ import Firebase
 import HMSRoomModels
 
 struct FullScreenComponentsView: View {
-    @State private var timeRemaining = 15
-    @State private var showQuestion: Bool = false
-    @State private var transactionState: TransactionState = .idle
-    @State private var showTimer: Bool = true
-    @State private var displaySubmitButton: Bool = false
-    @State private var currentChoice: ChoiceModel = emptyChoiceModel
-    
-    @EnvironmentObject var videoViewModel: VideoViewModel
-    @EnvironmentObject var profileViewModel: ProfileViewModel
-    @EnvironmentObject var delegate: AppDelegate
-    @EnvironmentObject var viewRouter: ViewRouter
-    
-    @Binding var isMicMuted: Bool
+    // 🔑 Holds your localized timer and snapshot state safely
+    @StateObject private var videoVM = VideoViewModel()
     
     let role: RoleType
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let eventId: String
+    let hostId: String
+    let guestId: String
     
     var body: some View {
         VStack {
-            if self.showTimer {
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(.blue, lineWidth: 2)
-                    .frame(width: 210, height: 100)
-                    .overlay {
-                        VStack(alignment: .center) {
-                            Text("Chat it up! You got ")
-                                .font(.title3)
-                            Text("\(self.timeRemaining)")
-                                .font(.title)
-                            Text("seconds left")
-                                .font(.title3)
-                        }
-                        .padding()
-                    }
+            // 🔑 Checks videoVM directly. Changing this will NEVER redraw the HMSPrebuiltView.
+            if videoVM.isRoundActive && videoVM.roundEndTime != nil {
+                Text(videoVM.timeRemainingString)
+                    .font(.system(.title2, design: .monospaced))
+                    .bold()
+                    .foregroundColor(videoVM.isTimeRunningOut ? .red : .white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.black.opacity(0.6))
+                    .cornerRadius(20)
+                    .padding(.top, 50)
+            } else {
+                Text("Waiting for date to join...")
+                    .font(.subheadline)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.blue.opacity(0.6))
+                    .cornerRadius(20)
+                    .padding(.top, 50)
             }
+            Spacer()
         }
-        .task {
-            do {
-            } catch {
-                // HANDLE ERROR
-            }
+        .onAppear {
+            // Kick off your Firestore data listener right when the overlay mounts
+            videoVM.listenToMatchSession(eventId: eventId, hostId: hostId, guestId: guestId)
         }
-        .onReceive(timer) { time in
-            if timeRemaining > 0 {
-                timeRemaining -= 1
-            }
-            
-            if timeRemaining >= 10 {
-                self.showTimer = true
-            }
-            
-            if timeRemaining == 0 {
-                self.showTimer = false
-                self.showQuestion = true
-                self.isMicMuted = true
-            }
+        .onDisappear {
+            videoVM.stopMatchSession()
         }
     }
-}
-
-#Preview {
-    FullScreenComponentsView(isMicMuted: .constant(false), role: RoleType.host)
-        .environmentObject(VideoViewModel())
-        .environmentObject(AppDelegate())
-        .environmentObject(ProfileViewModel())
 }

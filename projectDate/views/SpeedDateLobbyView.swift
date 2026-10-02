@@ -24,7 +24,7 @@ struct SpeedDateLobbyView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var eventVM: EventViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
-    @EnvironmentObject var videoVM: VideoViewModel
+    @EnvironmentObject var speedDateVM: SpeedDateViewModel
     
     // Countdown to next speed date
     @State private var timeRemaining: String = ""
@@ -101,10 +101,20 @@ struct SpeedDateLobbyView: View {
                         
                         // Start/Join Button
                         Button(action: {
-                            let videoConfig = VideoConfigModel(role: RoleType.host, isScreenBlurred: false, isFullScreen: true)
-                            videoVM.roomCode = profileVM.userProfile.isHost ?  eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
+                            let videoConfig = VideoConfigModel(role: profileVM.userProfile.isHost ? RoleType.host : RoleType.guest, isScreenBlurred: false, isFullScreen: true)
+                            
+                            speedDateVM.roomCode = profileVM.userProfile.isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
                             
                             viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                speedDateVM.joinPredeterminedRound(
+                                    eventId: eventVM.event.id,
+                                    roomCode: speedDateVM.roomCode,
+                                    hostId: "5AA436FD-1798-4D5C-A4C9-8052D96FE0CD",
+                                    guestId: "F3C65259-D014-419E-8F76-BC42E7160E86",
+                                    currentUserId: ""
+                                )
+                            }
                         }) {
                             Text("Join SpeedDate")
                                 .font(.headline)

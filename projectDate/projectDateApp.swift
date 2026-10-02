@@ -15,6 +15,7 @@ import FirebaseMessaging
 struct projectDateApp: App {
     @StateObject var viewRouter = ViewRouter()
     @StateObject var profileViewModel = ProfileViewModel()
+    @StateObject var speedDateViewModel = SpeedDateViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
@@ -22,6 +23,7 @@ struct projectDateApp: App {
             ContentView()
                 .environmentObject(viewRouter)
                 .environmentObject(profileViewModel)
+                .environmentObject(speedDateViewModel)
         }
     }
 }

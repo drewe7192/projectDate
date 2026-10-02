@@ -27,7 +27,7 @@ struct SettingsView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var viewModel: ProfileViewModel
-    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var speedDateVM: SpeedDateViewModel
     
     
     let storage = Storage.storage()
@@ -52,7 +52,7 @@ struct SettingsView: View {
                 Spacer()
             }
             .onAppear{
-                videoViewModel.roomCode = ""
+                speedDateVM.roomCode = ""
             }
             .alert(isPresented: $isDeletingAccount){
                 Alert(

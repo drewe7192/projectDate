@@ -77,10 +77,3 @@ fileprivate struct ScaleButtonStyle: ButtonStyle {
             }
     }
 }
-
-#Preview {
-    FullScreenComponentsView(isMicMuted: .constant(false), role: RoleType.host)
-        .environmentObject(VideoViewModel())
-        .environmentObject(AppDelegate())
-        .environmentObject(ProfileViewModel())
-}

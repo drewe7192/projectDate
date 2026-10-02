@@ -9,51 +9,59 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @Environment(\.scenePhase) var scenePhase
     
-    @StateObject var videoViewModel = VideoViewModel()
     @StateObject var eventViewModel = EventViewModel()
     
     var body: some View {
-        switch viewRouter.currentPage {
-        case .homePage:
-            MainView()
-                .environmentObject(profileViewModel)
-                .environmentObject(videoViewModel)
-                .environmentObject(eventViewModel)
-            /// update status in db whether app is in foreground and background
-                .onChange(of: scenePhase) { oldPhase, newPhase in
-                    updateActiveStatus(newPhase: newPhase)
-                }
-        case .signUpPage:
-            SignUpView()
-                .environmentObject(profileViewModel)
-        case .signInPage:
-            SignInView()
-        case .settingsPage:
-            SettingsView()
-        case .videoPage(let videoConfig):
-            VideoView(videoConfig: videoConfig)
-                .environmentObject(profileViewModel)
-                .environmentObject(videoViewModel)
-                .environmentObject(eventViewModel)
-                .onChange(of: scenePhase) { oldPhase, newPhase in
-                    updateActiveStatus(newPhase: newPhase)
-                }
-        case .requestPage:
-            RequestView()
-                .environmentObject(profileViewModel)
-                .environmentObject(eventViewModel)
-                .environmentObject(videoViewModel)
-                .animation(.easeInOut, value: true)
-        case .notificationsPage:
-            NotificationsView()
-        case .walkThroughPage:
-            CustomIntroView()
-        case .speedDateLobby:
-            SpeedDateLobbyView()
-                .environmentObject(eventViewModel)
-                .environmentObject(videoViewModel)
+        ZStack {
+            // 1. Main Navigation Routing Switch
+            switch viewRouter.currentPage {
+            case .homePage:
+                MainView()
+                    .environmentObject(profileViewModel)
+                    .environmentObject(speedDateVM)
+                    .environmentObject(eventViewModel)
+                    .onChange(of: scenePhase) { oldPhase, newPhase in
+                        updateActiveStatus(newPhase: newPhase)
+                    }
+            case .signUpPage:
+                SignUpView()
+                    .environmentObject(profileViewModel)
+            case .signInPage:
+                SignInView()
+            case .settingsPage:
+                SettingsView()
+            case .requestPage:
+                RequestView()
+                    .environmentObject(profileViewModel)
+                    .environmentObject(eventViewModel)
+                    .environmentObject(speedDateVM)
+                    .animation(.easeInOut, value: true)
+            case .notificationsPage:
+                NotificationsView()
+            case .walkThroughPage:
+                CustomIntroView()
+            case .speedDateLobby:
+                SpeedDateLobbyView()
+                    .environmentObject(eventViewModel)
+                    .environmentObject(speedDateVM)
+            case .videoPage:
+                Color.clear
+            }
+            
+            
+            if case .videoPage(let videoConfig) = viewRouter.currentPage {
+                VideoView(videoConfig: videoConfig)
+                    .transition(.opacity) // Smooth entry transition
+            }
+        }
+        .environmentObject(profileViewModel)
+        .environmentObject(speedDateVM)
+        .environmentObject(eventViewModel)
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            updateActiveStatus(newPhase: newPhase)
         }
     }
     
@@ -81,4 +89,5 @@ struct ContentView: View {
     ContentView()
         .environmentObject(ViewRouter())
         .environmentObject(ProfileViewModel())
+        .environmentObject(SpeedDateViewModel())
 }

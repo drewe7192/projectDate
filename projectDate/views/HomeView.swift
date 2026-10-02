@@ -18,7 +18,7 @@ struct HomeView: View {
     @StateObject private var toastManager = ToastManager.shared
     
     @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var eventViewModel: EventViewModel
     
@@ -83,7 +83,7 @@ struct HomeView: View {
                         
                         // Only set roomCode if userProfile exists
                         if !profileViewModel.userProfile.roomCode.isEmpty {
-                            videoViewModel.roomCode = profileViewModel.userProfile.roomCode
+                            speedDateVM.roomCode = profileViewModel.userProfile.roomCode
                         }
                         
                         try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
@@ -152,7 +152,7 @@ struct HomeView: View {
     
     private func videoSection(geometry: GeometryProxy) -> some View {
         VStack {
-            if !videoViewModel.roomCode.isEmpty {
+            if !speedDateVM.roomCode.isEmpty {
                 VideoView(videoConfig: videoConfig)
             }
             else {
@@ -259,12 +259,12 @@ struct HomeView: View {
     private func launchVideoSession(pickedUser: ProfileModel) async throws {
         // this removes HMSPreBuiltView and triggers its onDisappear()
         // makes sure current video sesh has closed
-        videoViewModel.roomCode = ""
+        speedDateVM.roomCode = ""
         
         // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
         try? await Task.sleep(for: .seconds(5))
         
-        videoViewModel.roomCode = pickedUser.roomCode
+        speedDateVM.roomCode = pickedUser.roomCode
         //viewRouter.currentPage = .videoPage
     }
 }
@@ -272,6 +272,6 @@ struct HomeView: View {
 #Preview {
     HomeView(selectedTab: .constant(0))
         .environmentObject(ProfileViewModel())
-        .environmentObject(VideoViewModel())
+        .environmentObject(SpeedDateViewModel())
         .environmentObject(AppDelegate())
 }

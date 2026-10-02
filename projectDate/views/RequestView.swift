@@ -13,7 +13,7 @@ struct RequestView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var delegate: AppDelegate
-    @EnvironmentObject var videoViewModel: VideoViewModel
+    @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @EnvironmentObject var eventViewModel: EventViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     
@@ -41,7 +41,7 @@ struct RequestView: View {
                             let fcmToken = try await profileViewModel.GetFCMToken(userId: delegate.requestByProfile.userUID)
                             _ = try await profileViewModel.callSendAcceptNotification(fcmToken: fcmToken)
                             
-                            videoViewModel.roomCode = delegate.requestByProfile.roomCode
+                            speedDateVM.roomCode = delegate.requestByProfile.roomCode
                             
                             profileViewModel.participantProfile = delegate.requestByProfile
                             
