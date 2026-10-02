@@ -14,14 +14,15 @@ class SpeedDateViewModel: ObservableObject {
     @Published var roomCode: String = ""
     private var functions = Functions.functions()
     
-    func joinPredeterminedRound(eventId: String, roomCode: String, hostId: String, guestId: String, currentUserId: String) {
+    func joinPredeterminedRound(eventId: String, roomCode: String, hostId: String, guestId: String, currentProfileId: String) {
         // 🔑 Build the identical pairing document string identifier block
         let matchDocId = "\(eventId)_\(hostId)_\(guestId)"
         let payload: [String: Any] = [
             "eventId": eventId,
             "roomCode": roomCode,
             "hostId": hostId,
-            "guestId": guestId
+            "guestId": guestId,
+            "currentProfileId": currentProfileId
         ]
         
         // 1. Trigger the backend v2 Cloud Function to initialize the session document

@@ -19,8 +19,7 @@ struct VideoView: View {
                 HMSPrebuiltView(roomCode: speedDateVM.roomCode, isMicMuted: $isMicMuted)
                 // 🔑 Crucial for Speed Dating: Forces a clean view re-draw for the new date
                     .id(speedDateVM.roomCode)
-                    .blur(radius: videoConfig.isScreenBlurred ? 30 : 0)
-                    .frame(maxWidth: videoConfig.isFullScreen ? .infinity : 350, maxHeight: videoConfig.isFullScreen ? .infinity : 250)
+                    .frame(maxWidth: videoConfig.isFullScreen ? UIScreen.main.bounds.width : 350, maxHeight: videoConfig.isFullScreen ? UIScreen.main.bounds.height : 250)
                     .cornerRadius(30)
                 
                 if videoConfig.isFullScreen {

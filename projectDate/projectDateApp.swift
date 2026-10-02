@@ -16,6 +16,7 @@ struct projectDateApp: App {
     @StateObject var viewRouter = ViewRouter()
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var speedDateViewModel = SpeedDateViewModel()
+    @StateObject var videoViewModel = VideoViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
@@ -24,6 +25,7 @@ struct projectDateApp: App {
                 .environmentObject(viewRouter)
                 .environmentObject(profileViewModel)
                 .environmentObject(speedDateViewModel)
+                .environmentObject(videoViewModel)
         }
     }
 }

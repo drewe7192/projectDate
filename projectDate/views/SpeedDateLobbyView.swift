@@ -25,6 +25,7 @@ struct SpeedDateLobbyView: View {
     @EnvironmentObject var eventVM: EventViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
+    @EnvironmentObject var videoVM: VideoViewModel
     
     // Countdown to next speed date
     @State private var timeRemaining: String = ""
@@ -105,16 +106,19 @@ struct SpeedDateLobbyView: View {
                             
                             speedDateVM.roomCode = profileVM.userProfile.isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
                             
+                            // 🔑 1. THE FIX: Force any stuck 100ms audio/video channels to completely kill themselves
+                            // before we transition. This mimics a clean app restart!
+                            videoVM.stopMatchSession()
+                            
                             viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                speedDateVM.joinPredeterminedRound(
-                                    eventId: eventVM.event.id,
-                                    roomCode: speedDateVM.roomCode,
-                                    hostId: "5AA436FD-1798-4D5C-A4C9-8052D96FE0CD",
-                                    guestId: "F3C65259-D014-419E-8F76-BC42E7160E86",
-                                    currentUserId: ""
-                                )
-                            }
+                            
+                            speedDateVM.joinPredeterminedRound(
+                                eventId: eventVM.event.id,
+                                roomCode: speedDateVM.roomCode,
+                                hostId: "5AA436FD-1798-4D5C-A4C9-8052D96FE0CD",
+                                guestId: "F3C65259-D014-419E-8F76-BC42E7160E86",
+                                currentProfileId: profileVM.userProfile.id
+                            )
                         }) {
                             Text("Join SpeedDate")
                                 .font(.headline)

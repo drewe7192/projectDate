@@ -10,6 +10,7 @@ struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
+    @EnvironmentObject var videoVM: VideoViewModel
     @Environment(\.scenePhase) var scenePhase
     
     @StateObject var eventViewModel = EventViewModel()
@@ -47,6 +48,7 @@ struct ContentView: View {
                 SpeedDateLobbyView()
                     .environmentObject(eventViewModel)
                     .environmentObject(speedDateVM)
+                    .environmentObject(videoVM)
             case .videoPage:
                 Color.clear
             }
