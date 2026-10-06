@@ -82,6 +82,16 @@ struct ContentView: View {
                 }
             }
         } else if newPhase == .background {
+            // 🔑 THE SNAPCHAT PROTECTION FIX:
+            // Forcefully drop the structural room state the moment the app is backgrounded or closed.
+            // This prevents a "ghost" session from lingering in memory when you open the app back up quickly!
+            if !speedDateVM.roomCode.isEmpty {
+                print("📱 App backgrounded. Evicting local video track layouts...")
+                speedDateVM.clearActiveRoom()
+                
+                // Pop the router view back to the lobby so it boots on a clean baseline
+                viewRouter.currentPage = .speedDateLobby
+            }
 
         }
     }

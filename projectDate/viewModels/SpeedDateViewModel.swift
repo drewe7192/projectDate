@@ -25,19 +25,23 @@ class SpeedDateViewModel: ObservableObject {
             "currentProfileId": currentProfileId
         ]
         
+        // 🔑 THE PERMANENT FIX: Set the room code instantly on the main queue first!
+        // This ensures the view unblocks and opens the 100ms viewport right away,
+        // eliminating the intermittent loading freeze entirely.
+        DispatchQueue.main.async {
+            withAnimation {
+                if self.roomCode != roomCode {
+                    self.roomCode = roomCode
+                }
+            }
+        }
+        
         // 1. Trigger the backend v2 Cloud Function to initialize the session document
         functions.httpsCallable("joinSpeedDateRound").call(payload) { [weak self] _, error in
             guard let self = self else { return }
             if let error = error {
                 print("🚨 Cloud Function Error: \(error.localizedDescription)")
                 return
-            }
-            
-            DispatchQueue.main.async {
-                withAnimation {
-                    // 🔑 Populates roomCode exactly ONCE to open the screen safely
-                    self.roomCode = roomCode
-                }
             }
         }
     }

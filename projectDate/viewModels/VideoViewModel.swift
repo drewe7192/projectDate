@@ -30,20 +30,10 @@ class VideoViewModel: ObservableObject {
                 guard let self = self else { return }
                 guard let snapshot = snapshot, snapshot.exists, let data = snapshot.data() else { return }
                 
-                
-                
-                
-                
-                
-                
-                
                 if snapshot.metadata.isFromCache {
                          print("⏳ Skipping cached data... waiting for live server state.")
                          return
                      }
-                
-                
-                
                 
                 // 1. Check absolute server target countdown expiration
                 if let timestamp = data["roundEndsAt"] as? Timestamp {

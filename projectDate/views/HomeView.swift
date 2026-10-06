@@ -67,10 +67,6 @@ struct HomeView: View {
                         .frame(height: geometry.size.height * 0.1)
                         .disabled(false)
                         .opacity(0.5)
-                        
-                        //                        Text("Please report inappropriate behavior to support@HotSeatSpeedDating.com")
-                        //                            .font(.footnote)
-                        //                            .foregroundColor(.gray)
                         Spacer()
                     }
                 }
@@ -264,18 +260,6 @@ struct HomeView: View {
                 
             }
         }
-    }
-    
-    private func launchVideoSession(pickedUser: ProfileModel) async throws {
-        // this removes HMSPreBuiltView and triggers its onDisappear()
-        // makes sure current video sesh has closed
-        speedDateVM.roomCode = ""
-        
-        // Delay of 5 seconds (1 second = 1_000_000_000 nanoseconds)
-        try? await Task.sleep(for: .seconds(5))
-        
-        speedDateVM.roomCode = pickedUser.roomCode
-        //viewRouter.currentPage = .videoPage
     }
 }
 
