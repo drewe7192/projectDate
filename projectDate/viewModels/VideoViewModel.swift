@@ -30,6 +30,21 @@ class VideoViewModel: ObservableObject {
                 guard let self = self else { return }
                 guard let snapshot = snapshot, snapshot.exists, let data = snapshot.data() else { return }
                 
+                
+                
+                
+                
+                
+                
+                
+                if snapshot.metadata.isFromCache {
+                         print("⏳ Skipping cached data... waiting for live server state.")
+                         return
+                     }
+                
+                
+                
+                
                 // 1. Check absolute server target countdown expiration
                 if let timestamp = data["roundEndsAt"] as? Timestamp {
                     let serverDate = timestamp.dateValue()
@@ -97,5 +112,25 @@ class VideoViewModel: ObservableObject {
         timer?.invalidate()
         dateListener?.remove()
     }
+    
+    func endRoundCleanly() {
+        // 1. Invalidate and clear the timer thread securely
+        timer?.invalidate()
+        timer = nil
+        
+        // 2. Remove the Firestore real-time snapshot listener
+        dateListener?.remove()
+        dateListener = nil
+        
+        // 3. Clear all published UI layout variables safely on the Main thread
+        DispatchQueue.main.async {
+            self.timeRemainingString = "03:00"
+            self.isTimeRunningOut = false
+            self.roundEndTime = nil
+            self.isRoundActive = false
+        }
+    }
+
+    
 }
 

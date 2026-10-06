@@ -82,7 +82,7 @@ struct ContentView: View {
                 }
             }
         } else if newPhase == .background {
-            // TODO: WHAT HAPPENS IN BACKGROUND?
+
         }
     }
 }

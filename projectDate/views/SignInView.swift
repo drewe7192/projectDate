@@ -33,7 +33,7 @@ struct SignInView: View {
                     NeonParticlesView(count: 30, color: .cyan.opacity(0.8))
                     
                     VStack(spacing: 30) {
-                        Text("littleBIGThings")
+                        Text("Hot Seat")
                             .font(.system(size: 40, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .shadow(color: .cyan.opacity(0.5), radius: 12, x: 0, y: 0)

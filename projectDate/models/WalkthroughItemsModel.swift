@@ -59,7 +59,7 @@ let walkthroughItems: [WalkthroughItem] = [
     ),
     .init(
         image: "arrow.right.circle.fill",
-        title: "Start Discovering LittleBigThings",
+        title: "Start Discovering Hot Seat",
         description: "",
         scale: 0.4,
         anchor: .bottomLeading,

@@ -42,33 +42,33 @@ struct HomeView: View {
                         Spacer()
                             .frame(height: geometry.size.height * 0.03)
                         
-                                                GlassContainer {
-                                                    VStack{
-                                                        Button(action: {
-                                                            navigateToSpeedDate = true
-                                                            viewRouter.currentPage = .speedDateLobby
-                                                        }) {
-                                                            VStack{
-                                                                Text("Start Speed Date")
-                                                                    .foregroundStyle(.white)
-                                                                    .font(.system(size: 20))
-                                                            }
-                                                        }
-                                                    }
-                                                    
-                                                    NavigationLink(
-                                                        destination: SpeedDateLobbyView(), // The next screen
-                                                        isActive: $navigateToSpeedDate,
-                                                        label: {
-                                                            EmptyView() // Hidden link
-                                                        }
-                                                    )
-                                                }
-                                                .frame(height: geometry.size.height * 0.1)
-                                                .disabled(false)
-                                                .opacity(0.5)
+                        GlassContainer {
+                            VStack{
+                                Button(action: {
+                                    navigateToSpeedDate = true
+                                    viewRouter.currentPage = .speedDateLobby
+                                }) {
+                                    VStack{
+                                        Text("Start Speed Date")
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 20))
+                                    }
+                                }
+                            }
+                            
+                            NavigationLink(
+                                destination: SpeedDateLobbyView(), // The next screen
+                                isActive: $navigateToSpeedDate,
+                                label: {
+                                    EmptyView() // Hidden link
+                                }
+                            )
+                        }
+                        .frame(height: geometry.size.height * 0.1)
+                        .disabled(false)
+                        .opacity(0.5)
                         
-                        //                        Text("Please report inappropriate behavior to support@LittleBigThings.com")
+                        //                        Text("Please report inappropriate behavior to support@HotSeatSpeedDating.com")
                         //                            .font(.footnote)
                         //                            .foregroundColor(.gray)
                         Spacer()
@@ -83,7 +83,10 @@ struct HomeView: View {
                         
                         // Only set roomCode if userProfile exists
                         if !profileViewModel.userProfile.roomCode.isEmpty {
-                            speedDateVM.roomCode = profileViewModel.userProfile.roomCode
+                            let incomingRoomCode = profileViewModel.userProfile.roomCode
+                            
+                            // Launch the video view safely now
+                            speedDateVM.roomCode = incomingRoomCode
                         }
                         
                         try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
@@ -92,6 +95,9 @@ struct HomeView: View {
                         print("Error getting userProfile:\(error)")
                     }
                 }
+            }
+            .onDisappear {
+                speedDateVM.roomCode = ""
             }
             .ignoresSafeArea(.keyboard)
         }
@@ -124,15 +130,19 @@ struct HomeView: View {
                 }
             
             Spacer()
-            
-            //            Text("LittleBigThings")
-            //                .font(.custom("Copperplate", size: geometry.size.height * 0.03))
-            //                .foregroundColor(Color("tertiaryColor"))
-            //                .bold()
-            
+            //  VStack {
+            Text("Hot")
+                .font(.custom("Copperplate", size: geometry.size.height * 0.025))
+                .foregroundColor(Color("tertiaryColor"))
+                .bold()
             Image("logo")
                 .resizable()
-                .frame(width: geometry.size.width * 0.2, height: geometry.size.width * 0.2)
+                .frame(width: geometry.size.width * 0.12, height: geometry.size.width * 0.12)
+            Text("Seat")
+                .font(.custom("Copperplate", size: geometry.size.height * 0.025))
+                .foregroundColor(Color("tertiaryColor"))
+                .bold()
+            //    }
             
             Spacer()
             

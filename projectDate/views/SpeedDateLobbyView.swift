@@ -110,8 +110,6 @@ struct SpeedDateLobbyView: View {
                             // before we transition. This mimics a clean app restart!
                             videoVM.stopMatchSession()
                             
-                            viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                            
                             speedDateVM.joinPredeterminedRound(
                                 eventId: eventVM.event.id,
                                 roomCode: speedDateVM.roomCode,
@@ -119,6 +117,8 @@ struct SpeedDateLobbyView: View {
                                 guestId: "F3C65259-D014-419E-8F76-BC42E7160E86",
                                 currentProfileId: profileVM.userProfile.id
                             )
+                            
+                            viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
                         }) {
                             Text("Join SpeedDate")
                                 .font(.headline)

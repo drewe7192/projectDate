@@ -41,4 +41,15 @@ class SpeedDateViewModel: ObservableObject {
             }
         }
     }
+    
+    func clearActiveRoom() {
+        DispatchQueue.main.async {
+            withAnimation {
+                // Setting this back to empty string forces SwiftUI to safely
+                // unmount the unmodifiable 100ms viewport structure completely
+                self.roomCode = ""
+            }
+        }
+    }
+
 }
