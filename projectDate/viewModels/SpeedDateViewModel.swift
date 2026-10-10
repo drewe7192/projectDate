@@ -16,7 +16,7 @@ class SpeedDateViewModel: ObservableObject {
     
     func joinPredeterminedRound(eventId: String, roomCode: String, hostId: String, guestId: String, currentProfileId: String) {
         // 🔑 Build the identical pairing document string identifier block
-        let matchDocId = "\(eventId)_\(hostId)_\(guestId)"
+        let matchDocId = "\(eventId)_\(hostId)"
         let payload: [String: Any] = [
             "eventId": eventId,
             "roomCode": roomCode,
@@ -25,7 +25,10 @@ class SpeedDateViewModel: ObservableObject {
             "currentProfileId": currentProfileId
         ]
         
-        // 🔑 THE PERMANENT FIX: Set the room code instantly on the main queue first!
+        print(hostId)
+        print(guestId)
+        
+        // Set the room code instantly on the main queue first!
         // This ensures the view unblocks and opens the 100ms viewport right away,
         // eliminating the intermittent loading freeze entirely.
         DispatchQueue.main.async {

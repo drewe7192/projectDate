@@ -84,7 +84,7 @@ struct FullScreenComponentsView: View {
         
         // 3. Write a permanent block token payload entry into your Firestore database
         let db = Firestore.firestore()
-        let matchDocId = "\(eventId)_\(hostId)_\(guestId)"
+        let matchDocId = "\(eventId)_\(hostId)"
         let targetOffenderId = (role == .host) ? guestId : hostId
         let myCurrentUserId = (role == .host) ? hostId : guestId
         

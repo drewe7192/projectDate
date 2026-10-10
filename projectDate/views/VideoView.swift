@@ -26,8 +26,8 @@ struct VideoView: View {
                     FullScreenComponentsView(
                         role: videoConfig.role,
                         eventId: eventVM.event.id,
-                        hostId: "5AA436FD-1798-4D5C-A4C9-8052D96FE0CD",
-                        guestId: "F3C65259-D014-419E-8F76-BC42E7160E86"
+                        hostId: videoConfig.hostId,
+                        guestId: videoConfig.guestId
                     )
                 }
             } else {

@@ -23,7 +23,7 @@ class VideoViewModel: ObservableObject {
     
     /// Attaches the live listener to your event match doc directly
     func listenToMatchSession(eventId: String, hostId: String, guestId: String) {
-        let matchDocId = "\(eventId)_\(hostId)_\(guestId)"
+        let matchDocId = "\(eventId)_\(hostId)"
         
         dateListener = db.collection("activeDates").document(matchDocId)
             .addSnapshotListener { [weak self] snapshot, error in
