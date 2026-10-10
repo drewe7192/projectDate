@@ -84,7 +84,7 @@ struct HomeView: View {
                             speedDateVM.roomCode = incomingRoomCode
                         }
                         
-                        try await eventViewModel.GetEvent(eventId: profileViewModel.userProfile.eventId)
+                        try await eventViewModel.GetEvent(profileId: profileViewModel.userProfile.id)
                         
                         try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
                         try await profileViewModel.UpdateActivityStatus(isActive: true)

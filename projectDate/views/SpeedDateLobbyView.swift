@@ -17,7 +17,7 @@ struct SpeedDateLobbyView: View {
     @EnvironmentObject var videoVM: VideoViewModel
     
     // 🔑 Keep track of which match number the host is currently on
-    @State private var currentRoundNumber: Int = 1
+    @State private var currentRoundNumber: Int = 0
     @State private var showMatchConfirmationSheet: Bool = false
     // Track which participant the host clicks on to view
     @State private var selectedParticipantId: String? = nil
@@ -32,7 +32,7 @@ struct SpeedDateLobbyView: View {
                     AnimatedGradientBackground()
                         .ignoresSafeArea()
                     
-                    if profileVM.userProfile.isHost {
+                    if eventVM.event.hostProfileId == profileVM.userProfile.id {
                         hostView
                     } else {
                         guestView
@@ -105,7 +105,7 @@ struct SpeedDateLobbyView: View {
                 .scaleEffect(1.5)
                 .padding()
             
-            Text("Welcome to the Hotseat")
+            Text("Welcome to Hotseat Live")
                 .font(.largeTitle)
                 .bold()
             
@@ -183,9 +183,8 @@ struct SpeedDateLobbyView: View {
                 // Start/Join Button
                 Button(action: {
                     let user = profileVM.userProfile
-                    let isHost = user.isHost
-
-                    // 🔑 Extract variables to keep the initializer clean
+                    let isHost = eventVM.event.hostProfileId == user.id
+                    
                     let currentRole: RoleType = isHost ? .host : .guest
                     let currentHostId = isHost ? user.id : ""
                     let currentGuestId = isHost ? "" : user.id
@@ -198,7 +197,7 @@ struct SpeedDateLobbyView: View {
                         isFullScreen: true
                     )
                     
-                    speedDateVM.roomCode = profileVM.userProfile.isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
+                    speedDateVM.roomCode = isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
                     
                     // Force any stuck 100ms audio/video channels to completely kill themselves
                     // before we transition. This mimics a clean app restart!
@@ -262,7 +261,7 @@ struct SpeedDateLobbyView: View {
     }
     
     private func startLobbyStateListener() {
-        let matchDocId = "\(eventVM.event.id)_\(profileVM.userProfile.id)"
+        let matchDocId = "\(eventVM.event.id)_\(eventVM.event.hostProfileId)"
         let db = Firestore.firestore()
         
         // Listen directly to the activeDates tracking node
@@ -271,35 +270,54 @@ struct SpeedDateLobbyView: View {
                 guard let document = documentSnapshot, document.exists,
                       let data = document.data() else { return }
                 
-                // If the host writes a code to this guest's active document slot, break the wait loop
-                if let assignedRoomCode = data["activeRoomCode"] as? String, !assignedRoomCode.isEmpty {
-                    
-                    let user = profileVM.userProfile
-                    let isHost = user.isHost
-
-                    // 🔑 Extract variables to keep the initializer clean
-                    let currentRole: RoleType = isHost ? .host : .guest
-                    let currentHostId = isHost ? user.id : ""
-                    let currentGuestId = isHost ? "" : user.id
-
-                    let videoConfig = VideoConfigModel(
-                        role: currentRole,
-                        hostId: currentHostId,
-                        guestId: currentGuestId,
-                        isScreenBlurred: false,
-                        isFullScreen: true
-                    )
-                    
-                    DispatchQueue.main.async {
-                        speedDateVM.roomCode = assignedRoomCode
-                        videoVM.stopMatchSession() // Clear stale video channels
-                        
-                        // 🚀 The magic leap: Pushes the guest onto the video screen automatically!
-                        viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                    }
+                // 1. Safely parse and synchronize the round number string key
+                guard let currentRoundNumber = data["currentRoundNumber"] as? Int else { return }
+                
+                DispatchQueue.main.async {
+                    self.currentRoundNumber = currentRoundNumber
                 }
+                
+                let roundKey = "round_\(currentRoundNumber)"
+
+                // 2. Locate the precise target index from your map dictionary
+                guard let targetGuestId = eventVM.event.participantOrder[roundKey],
+                      !targetGuestId.isEmpty else {
+                    print("⚠️ No valid participant profile ID found for key: \(roundKey)")
+                    return
+                }
+                
+                // 3. Validate if the host has populated the live matching ID slot
+                if let activeGuestId = data["guestId"] as? String, activeGuestId.isEmpty {
+                    
+                        let user = profileVM.userProfile
+                        let isHost = eventVM.event.hostProfileId == user.id
+
+                        // Configure explicit variables based on authenticated role type context
+                        let currentRole: RoleType = isHost ? .host : .guest
+                        let currentHostId = isHost ? user.id : ""
+
+                        let videoConfig = VideoConfigModel(
+                            role: currentRole,
+                            hostId: currentHostId,
+                            guestId: targetGuestId,
+                            isScreenBlurred: false,
+                            isFullScreen: true
+                        )
+                        
+                        DispatchQueue.main.async {
+                            speedDateVM.roomCode = isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
+                            
+                            // Clear out lingering channels before forcing the screen view switch
+                            videoVM.stopMatchSession()
+                            
+                            // 🚀 Jump to the live video round layout seamlessly
+                            viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                        }
+                    }
+                
             }
     }
+
 }
 
 #Preview {

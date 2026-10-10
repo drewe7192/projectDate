@@ -23,10 +23,25 @@ class EventRepository {
             
             var event: EventModel = emptyEventModel
             event.id = documentData["id"] as! String
-            event.type = documentData["type"] as! String
+            event.hostProfileId = documentData["hostProfileId"] as! String
+            event.participantProfileIds = documentData["participantProfileIds"] as! [String]
             event.guestRoomCode = documentData["guestRoomCode"] as! String
             event.hostRoomCode = documentData["hostRoomCode"] as! String
-            event.participantProfileIds = documentData["participantProfileIds"] as! [String]
+            event.type = documentData["type"] as! String
+            
+            if let createdTimestamp = documentData["createdDate"] as? Timestamp {
+                event.createdDate = createdTimestamp.dateValue()
+            }
+            if let startTimestamp = documentData["startDate"] as? Timestamp {
+                event.startDate = startTimestamp.dateValue()
+            }
+            
+            // Safely parsing the participantOrder Map without type-casting crashes
+              if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
+                  event.participantOrder = rawOrderMap
+              } else {
+                  event.participantOrder = [:] // Safe empty fallback if the map doesn't exist yet
+              }
             
             events.append(event)
         }
@@ -43,10 +58,44 @@ class EventRepository {
             let documentData = documentSnapshot.data()
             
             event.id = documentData["id"] as! String
-            event.type = documentData["type"] as! String
-            event.hostRoomCode = documentData["hostRoomCode"] as! String
-            event.guestRoomCode = documentData["guestRoomCode"] as! String
+            event.hostProfileId = documentData["hostProfileId"] as! String
             event.participantProfileIds = documentData["participantProfileIds"] as! [String]
+            event.guestRoomCode = documentData["guestRoomCode"] as! String
+            event.hostRoomCode = documentData["hostRoomCode"] as! String
+            event.type = documentData["type"] as! String
+            
+            // Safely parsing the participantOrder Map without type-casting crashes
+              if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
+                  event.participantOrder = rawOrderMap
+              } else {
+                  event.participantOrder = [:] // Safe empty fallback if the map doesn't exist yet
+              }
+        }
+        return event
+    }
+    
+    public func Get(profileId: String) async throws -> EventModel {
+        var event: EventModel = emptyEventModel
+        let snapshot = try await db.collection("events")
+            .whereField("participantProfileIds", arrayContains: profileId)
+            .getDocuments()
+        
+        snapshot.documents.forEach { documentSnapshot in
+            let documentData = documentSnapshot.data()
+            
+            event.id = documentData["id"] as! String
+            event.hostProfileId = documentData["hostProfileId"] as! String
+            event.participantProfileIds = documentData["participantProfileIds"] as! [String]
+            event.guestRoomCode = documentData["guestRoomCode"] as! String
+            event.hostRoomCode = documentData["hostRoomCode"] as! String
+            event.type = documentData["type"] as! String
+            
+            // Safely parsing the participantOrder Map without type-casting crashes
+              if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
+                  event.participantOrder = rawOrderMap
+              } else {
+                  event.participantOrder = [:] // Safe empty fallback if the map doesn't exist yet
+              }
         }
         return event
     }

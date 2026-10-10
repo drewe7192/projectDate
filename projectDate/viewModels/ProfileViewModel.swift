@@ -51,20 +51,6 @@ class ProfileViewModel: NSObject, ObservableObject {
         }
     }
     
-    public func GetCurrentUsers() async throws {
-//        let currentUsers = try await profileService.GetCurrentUsers(userId: Auth.auth().currentUser?.uid ?? "")
-        let currentUsers = mockProfiles
-        self.currentUsers = currentUsers
-        
-        if(!self.currentUsers.isEmpty) {
-            for currentUser in self.currentUsers {
-                try await getFileFromStorage(profileId: currentUser.id, isActiveUser: true)
-            }
-            print("\(self.currentUsers[0].profileImage.size.height)")
-            
-        }
-    }
-    
     public func UpdateActivityStatus(isActive: Bool) async throws {
         try await profileService.UpdateActivityStatus(profileId: !userProfile.id.isEmpty ? userProfile.id : "XMIsmq29yPr0AKWQNB9h", isActive: isActive)
     }

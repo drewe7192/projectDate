@@ -21,11 +21,11 @@ class ProfileRepository {
             let documentData = documentSnapshot.data()
             
             profile.id = documentData["id"] as! String
+            profile.userUID = documentData["userUID"] as! String
+            profile.roomCode = documentData["roomCode"] as! String
             profile.name = documentData["name"] as! String
             profile.gender = documentData["gender"] as! String
-            profile.roomCode = documentData["roomCode"] as! String
-            profile.isHost = documentData["isHost"] as! Bool
-            profile.eventId = documentData["eventId"] as! String
+            profile.bio = documentData["bio"] as? String ?? ""
         }
         return profile
     }
@@ -46,12 +46,11 @@ class ProfileRepository {
             var profile: ProfileModel = emptyProfileModel
             
             profile.id = documentData["id"] as! String
+            profile.userUID = documentData["userUID"] as! String
+            profile.roomCode = documentData["roomCode"] as! String
             profile.name = documentData["name"] as! String
             profile.gender = documentData["gender"] as! String
-            profile.roomCode = documentData["roomCode"] as! String
-            profile.isHost = documentData["isHost"] as! Bool
-            profile.eventId = documentData["eventId"] as! String
-            profile.userUID = documentData["userUID"] as! String
+            profile.bio = documentData["bio"] as? String ?? ""
             
             activeProfiles.append(profile)
         }

@@ -21,4 +21,9 @@ class EventViewModel: NSObject, ObservableObject {
         let event = try await eventService.GetEvent(eventId: eventId)
         self.event = event
     }
+    
+    public func GetEvent(profileId: String) async throws {
+        let event = try await eventService.GetEvent(profileId: profileId)
+        self.event = event
+    }
 }

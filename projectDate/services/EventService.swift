@@ -15,5 +15,10 @@ class EventService {
         let response = try await eventRepo.Get(eventId: eventId)
         return response
     }
+    
+    public func GetEvent(profileId: String) async throws -> EventModel {
+        let response = try await eventRepo.Get(profileId: profileId)
+        return response
+    }
 }
 

@@ -25,34 +25,25 @@ class ProfileService {
         let id = UUID().uuidString
         let newProfile = ProfileModel(
             id: id,
+            userUID: Auth.auth().currentUser?.uid ?? "",
+            roomCode: newRoomCode,
             name: Auth.auth().currentUser?.displayName ?? "",
             gender: "",
-            roomCode: newRoomCode,
-            isHost: false,
-            eventId: "",
-            userUID: Auth.auth().currentUser?.uid ?? "",
             profileImage: UIImage(),
+            bio: ""
         )
         
         let docData: [String: Any] = [
             "id": newProfile.id,
+            "userUID": Auth.auth().currentUser?.uid as Any,
+            "roomCode": newProfile.roomCode,
             "name": newProfile.name,
             "gender": newProfile.gender,
-            "roomCode": newProfile.roomCode,
-            "isHost": newProfile.isHost,
-            "eventId": newProfile.eventId,
-            "userUID": Auth.auth().currentUser?.uid as Any
+            "bio": (newProfile.bio ?? "") as String
         ]
         
         try await profileRepo.Create(newID: newProfile.id, newProfile: docData)
         return newProfile
-    }
-    
-    public func GetCurrentUsers(userUID: String) async throws -> [ProfileModel] {
-        let responseActiveProfiles = try await profileRepo.GetAll(userUID: userUID)
-        let results = responseActiveProfiles
-        
-        return results
     }
     
     public func UpdateActivityStatus(profileId: String, isActive: Bool) async throws {

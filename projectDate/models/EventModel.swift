@@ -9,14 +9,14 @@ import Foundation
 
 struct EventModel: Identifiable, Equatable, Codable, Hashable {
     var id: String
-    var type: String
-    var createdDate: Date
-    var description: String
+    var hostProfileId: String
+    var participantOrder: [String: String]
+    var participantProfileIds: [String]
     var guestRoomCode: String
     var hostRoomCode: String
+    var createdDate: Date
     var startDate: Date
-    var title: String
-    var participantProfileIds: [String]
+    var type: String
 }
 
-var emptyEventModel = EventModel(id: "", type: "SpeedDate", createdDate: Date.now, description: "", guestRoomCode: "", hostRoomCode: "", startDate: Date.now,title: "", participantProfileIds: [])
+var emptyEventModel = EventModel(id: "", hostProfileId: "", participantOrder: ["": ""], participantProfileIds: [], guestRoomCode: "", hostRoomCode: "", createdDate: Date.now, startDate: Date.now, type: "SpeedDate",)
