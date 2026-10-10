@@ -34,10 +34,10 @@ struct SignUpView: View {
                     AnimatedGradientBackground()
                         .ignoresSafeArea()
                     
-                    NeonParticlesView(count: 30, color: .cyan.opacity(0.8))
+                    NeonParticlesView(count: 30, color: .red.opacity(0.8))
                     
                     VStack(spacing: 30) {
-                        Text("Hot Seat")
+                        Text("HotSeat Live")
                             .font(.system(size: 40, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .shadow(color: .cyan.opacity(0.5), radius: 12, x: 0, y: 0)
@@ -60,26 +60,28 @@ struct SignUpView: View {
                                     await createUser()
                                 }
                             }) {
-                                Text("Sign Up")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.white.opacity(0.05))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.cyan.opacity(0.4), lineWidth: 1)
-                                    )
-                                    .cornerRadius(12)
-                                    .shadow(color: Color.cyan.opacity(0.3), radius: 8, x: 0, y: 4)
-                                    .scaleEffect(isButtonPressed ? 1.05 : 1.0)
-                                    .animation(.easeInOut(duration: 0.15), value: isButtonPressed)
+                                VStack {
+                                    Text("Sign Up")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.white.opacity(0.05))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Color.cyan.opacity(0.4), lineWidth: 1)
+                                        )
+                                        .cornerRadius(12)
+                                        .shadow(color: Color.cyan.opacity(0.3), radius: 8, x: 0, y: 4)
+                                        .scaleEffect(isButtonPressed ? 1.05 : 1.0)
+                                        .animation(.easeInOut(duration: 0.15), value: isButtonPressed)
+                                }
+                              
                             }
                             .padding(.horizontal, 30)
                         }
-                        
-                        
                         footerSection(for: geoReader)
+                        
                     }
                 }
             }
@@ -92,7 +94,7 @@ struct SignUpView: View {
             isCreatingUser = true
             let newRoomCode = try await handleSignupAndRoomCreation(email: email, password: password)
             profileViewModel.newRoomCode = newRoomCode
-            viewRouter.currentPage = .walkThroughPage
+            viewRouter.currentPage = .homePage
             isCreatingUser = false
         } catch {
             self.errorMessage = error.localizedDescription
@@ -101,18 +103,25 @@ struct SignUpView: View {
     }
     
     private func footerSection(for geoReader: GeometryProxy) -> some View {
-        HStack{
-            Text("Already have an account?")
-                .foregroundColor(Color.white)
-            
-            NavigationLink(destination: SignInView()) {
-                Text("Log In now")
-                    .foregroundColor(.blue)
+        VStack(spacing: 20) {
+            HStack{
+                Text("Already have an account?")
+                    .foregroundColor(Color.white)
+                
+                NavigationLink(destination: SignInView()) {
+                    Text("Log In now")
+                        .foregroundColor(.blue)
+                }
             }
+            
+            Text("By signing up, you agree to our Terms of Service and EULA. We enforce a zero-tolerance policy against objectionable content and abusive behavior. Violators will be instantly banned within 24 hours.")
+                .font(.caption)
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 20)
         }
     }
-    
-    // This function can be part of your ViewModel or a utility class
+
     func handleSignupAndRoomCreation(email: String, password: String) async throws -> String {
         // 1. Create the user. This also signs them in.
         let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
@@ -128,7 +137,6 @@ struct SignUpView: View {
               let roomCode = responseData["roomCode"] as? String else {
             throw NSError(domain: "FunctionsError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from Cloud Function"])
         }
-        print(responseData)
         return roomCode
     }
 }

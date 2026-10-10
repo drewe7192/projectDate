@@ -12,16 +12,23 @@ import FirebaseAuth
 
 class ViewRouter: ObservableObject {
     static let shared = ViewRouter()
-    @Published var currentPage: Route = .homePage
-
+    @Published var currentPage: Route = .signInPage
+    
     init(){
         run()
     }
     
     func run(){
         Auth.auth().addStateDidChangeListener { auth, user in
-            if auth.currentUser != nil {
-
+            // Dispatch to the main thread since UI updates must happen on MainActor
+            DispatchQueue.main.async {
+                if user != nil {
+                    // 🔑 If a user session exists, automatically route them straight home
+                    self.currentPage = .homePage
+                } else {
+                    // 🔑 If no user is authenticated, route them to the sign-in screen
+                    self.currentPage = .signInPage
+                }
             }
         }
     }
@@ -33,8 +40,6 @@ enum Route {
     case homePage
     case settingsPage
     case videoPage(videoConfig: VideoConfigModel)
-    case requestPage
     case notificationsPage
-    case walkThroughPage
     case speedDateLobby
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NeonParticlesView: View {
     let count: Int
-    var color: Color = .cyan.opacity(0.7)
+    var color: Color = .red.opacity(0.7)
     @State private var animate = false
     
     var body: some View {

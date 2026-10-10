@@ -30,10 +30,10 @@ struct SignInView: View {
                     AnimatedGradientBackground()
                         .ignoresSafeArea()
                     
-                    NeonParticlesView(count: 30, color: .cyan.opacity(0.8))
+                    NeonParticlesView(count: 30, color: .red.opacity(0.8))
                     
                     VStack(spacing: 30) {
-                        Text("Hot Seat")
+                        Text("HotSeat Live")
                             .font(.system(size: 40, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .shadow(color: .cyan.opacity(0.5), radius: 12, x: 0, y: 0)
@@ -79,14 +79,22 @@ struct SignInView: View {
     }
     
     private func footerSection(for geoReader: GeometryProxy) -> some View {
-        HStack{
-            Text("Don't have an account?")
-                .foregroundColor(Color.white)
-            
-            NavigationLink(destination: SignUpView()) {
-                Text("Sign up")
-                    .foregroundColor(.blue)
+        VStack(spacing: 20) {
+            HStack{
+                Text("Don't have an account?")
+                    .foregroundColor(Color.white)
+                
+                NavigationLink(destination: SignUpView()) {
+                    Text("Sign up")
+                        .foregroundColor(.blue)
+                }
             }
+            
+            Text("By signing in, you agree to our Terms of Service and EULA. We enforce a zero-tolerance policy against objectionable content and abusive behavior. Violators will be instantly banned within 24 hours.")
+                .font(.caption)
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 20)
         }
     }
     

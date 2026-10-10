@@ -31,7 +31,6 @@ struct VideoView: View {
                     )
                 }
             } else {
-                // Visual feedback while waiting for the next match
                 VStack {
                     ProgressView()
                     Text("Finding your next match...")

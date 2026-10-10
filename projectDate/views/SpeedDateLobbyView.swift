@@ -19,8 +19,8 @@ struct SpeedDateLobbyView: View {
     @State private var currentRoundNumber: Int = 1
     @State private var showMatchConfirmationSheet: Bool = false
     
-    @State private var opponentName: String = "Sarah, 24"
-    @State private var opponentBio: String = "Avid runner, dog lover, and coffee enthusiast."
+    @State private var opponentName: String = ""
+    @State private var opponentBio: String = ""
     
     var body: some View {
         NavigationStack {
@@ -35,7 +35,6 @@ struct SpeedDateLobbyView: View {
                         Text("Speed Dating Event")
                             .font(.largeTitle)
                             .bold()
-                        // .foregroundStyle(.white)
                         
                         // 🔑 Shows the current progress of the event to the user
                         Text("Current Progress: Round \(currentRoundNumber) of 3")
@@ -76,14 +75,7 @@ struct SpeedDateLobbyView: View {
                     }
                 }
             }
-            .task {
-                do {
-                    try await eventVM.GetEvent(eventId: profileVM.userProfile.eventId)
-                } catch {
-                    print("error occured in speeddating Lobby")
-                }
-            }
-            // 🔑 THE TRUE APPLE GATE: Displays real participant profiles from your database
+            // Displays real participant profiles from your database
             .sheet(isPresented: $showMatchConfirmationSheet) {
                 VStack(spacing: 25) {
                     Text("Match is Ready!")
@@ -91,7 +83,7 @@ struct SpeedDateLobbyView: View {
                         .bold()
                         .padding(.top, 30)
                     
-                    // Apple Requirement 1: Identifiable Information BEFORE Connecting
+                    // Identifiable Information BEFORE Connecting
                     VStack(spacing: 12) {
                         Circle()
                             .fill(Color.gray.opacity(0.2))
@@ -117,13 +109,12 @@ struct SpeedDateLobbyView: View {
                     
                     Spacer()
                     
-                    // Apple Requirement 2: Explicit Accept or Skip controls
+                    // Explicit Accept or Skip controls
                     HStack(spacing: 16) {
                         // SKIP ACTION
                         Button(action: {
                             self.showMatchConfirmationSheet = false
                             advanceToNextRoundSlot()
-                           // speedDateVM.clearActiveRoom() // Force disconnect instantly// DO i need this here?
                         }) {
                             Text("Skip / Next")
                                 .font(.headline)
@@ -172,7 +163,6 @@ struct SpeedDateLobbyView: View {
             }
         }
     }
-    
     
     private func prepareNextOpponentMetadata() {
         switch currentRoundNumber {

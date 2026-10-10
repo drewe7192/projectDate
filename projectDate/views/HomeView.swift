@@ -15,8 +15,6 @@ struct HomeView: View {
     @State private var selectedOptions: Set<String> = []
     @State private var navigateToSpeedDate = false
     
-    @StateObject private var toastManager = ToastManager.shared
-    
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
@@ -49,7 +47,8 @@ struct HomeView: View {
                                     viewRouter.currentPage = .speedDateLobby
                                 }) {
                                     VStack{
-                                        Text("Start Speed Date")
+                                        Text(eventViewModel.event.participantProfileIds.contains(profileViewModel.userProfile.id) ? "Start Speed Date" : "Not a Participant")
+
                                             .foregroundStyle(.white)
                                             .font(.system(size: 20))
                                     }
@@ -65,8 +64,8 @@ struct HomeView: View {
                             )
                         }
                         .frame(height: geometry.size.height * 0.1)
-                        .disabled(false)
-                        .opacity(0.5)
+                        .disabled(!eventViewModel.event.participantProfileIds.contains(profileViewModel.userProfile.id))
+                        .opacity(eventViewModel.event.participantProfileIds.contains(profileViewModel.userProfile.id) ? 0.5 : 0.2)
                         Spacer()
                     }
                 }
@@ -84,6 +83,8 @@ struct HomeView: View {
                             // Launch the video view safely now
                             speedDateVM.roomCode = incomingRoomCode
                         }
+                        
+                        try await eventViewModel.GetEvent(eventId: profileViewModel.userProfile.eventId)
                         
                         try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
                         try await profileViewModel.UpdateActivityStatus(isActive: true)
@@ -127,14 +128,14 @@ struct HomeView: View {
             
             Spacer()
             //  VStack {
-            Text("Hot")
+            Text("HotSeat")
                 .font(.custom("Copperplate", size: geometry.size.height * 0.025))
                 .foregroundColor(Color("tertiaryColor"))
                 .bold()
             Image("logo")
                 .resizable()
                 .frame(width: geometry.size.width * 0.12, height: geometry.size.width * 0.12)
-            Text("Seat")
+            Text("Live")
                 .font(.custom("Copperplate", size: geometry.size.height * 0.025))
                 .foregroundColor(Color("tertiaryColor"))
                 .bold()
