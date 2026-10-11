@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import FirebaseMessaging
+import HMSSDK
+import FirebaseFirestore
 
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
@@ -173,3 +175,37 @@ extension Date {
     }
   }
 }
+
+extension VideoViewModel {
+    
+    // 🔑 THE AUTOMATIC DISCONNECT CATCHER: Triggers when 100ms detects a user closed their app or dropped connection
+    func handle100msPeerUpdate(peer: HMSPeer, update: HMSPeerUpdate, eventId: String, hostId: String) {
+        switch update {
+        case .peerLeft:
+            print("🔌 100ms Notice: Peer left the call channel unexpectedly. Evaluating room reset...")
+            
+            if peer.role?.name == "guest" || peer.customerUserID != hostId {
+                print("🧹 Guest app closure detected by 100ms. Executing atomic database reset...")
+                
+                let db = Firestore.firestore()
+                let matchDocId = "\(eventId)_\(hostId)"
+                
+                db.collection("activeDates").document(matchDocId).updateData([
+                    "status": "waiting",
+                    "guestId": "",
+                    "roundEndTime": FieldValue.delete()
+                ]) { error in
+                    if let error = error {
+                        print("❌ Automatic 100ms-triggered reset failed: \(error.localizedDescription)")
+                    } else {
+                        print("✅ Success: Room safely rolled back to waiting status after app closure.")
+                    }
+                }
+            }
+        default:
+            break
+        }
+    }
+}
+
+
