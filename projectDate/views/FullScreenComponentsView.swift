@@ -10,8 +10,7 @@ import Firebase
 import HMSRoomModels
 
 struct FullScreenComponentsView: View {
-    // 🔑 Holds your localized timer and snapshot state safely
-    @StateObject private var videoVM = VideoViewModel()
+    @EnvironmentObject var videoVM: VideoViewModel
     
     let role: RoleType
     let eventId: String
