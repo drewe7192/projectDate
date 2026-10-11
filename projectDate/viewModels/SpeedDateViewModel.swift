@@ -25,9 +25,6 @@ class SpeedDateViewModel: ObservableObject {
             "currentProfileId": currentProfileId
         ]
         
-        print(hostId)
-        print(guestId)
-        
         // Set the room code instantly on the main queue first!
         // This ensures the view unblocks and opens the 100ms viewport right away,
         // eliminating the intermittent loading freeze entirely.

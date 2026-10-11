@@ -16,15 +16,8 @@ struct SpeedDateLobbyView: View {
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @EnvironmentObject var videoVM: VideoViewModel
     
-    // 🔑 Keep track of which match number the host is currently on
     @State private var currentRoundNumber: Int = 1
     @State private var showMatchConfirmationSheet: Bool = false
-    // Track which participant the host clicks on to view
-    @State private var selectedParticipantId: String? = nil
-    
-    @State private var opponentName: String = ""
-    @State private var opponentBio: String = ""
-    
     @State private var isHostWaitingForMe: Bool = false
     @State private var activeRoomCode: String = ""
     
@@ -42,93 +35,144 @@ struct SpeedDateLobbyView: View {
                     }
                 }
             }
-            // Displays real participant profiles from your database
             .sheet(isPresented: $showMatchConfirmationSheet) {
                 matchConfirmationSheetContent
             }
         }
     }
     
-    // MARK: - 👑 1. FIXED HOST VIEW (Sequential Automation)
+    // MARK: - HOST VIEW
     private var hostView: some View {
         VStack(spacing: 24) {
             Spacer()
-            
-            VStack(spacing: 8) {
-                Text("Host Control Dashboard")
-                    .font(.largeTitle)
-                    .bold()
-                
-                Text("Round \(currentRoundNumber) of 3")
-                    .font(.title3)
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 6)
-                    .background(Color.blue.opacity(0.1))
-                    .cornerRadius(10)
+            hostViewHeader
+            participantList
+            Spacer()
+            matchButton // Automatically targets the precise user assigned to this round
+            Spacer()
+        }
+        .onAppear {
+            Task {
+                try await profileVM.GetProfiles(profileIds: eventVM.event.participantProfileIds)
             }
+        }
+    }
+    
+    // MARK: - GUEST VIEW
+    private var guestView: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            guestHeader
+            guestFooter
+            Spacer()
+        }
+        .onAppear {
+            startLobbyStateListener()
+        }
+    }
+    
+    private var hostViewHeader: some View {
+        VStack(spacing: 8) {
+            Text("HotSeat Lobby")
+                .font(.largeTitle)
+                .bold()
             
-            // 🔒 Visual Roster Preview: Filters out the Host automatically so they are never listed
-            let activeGuests = eventVM.event.participantProfileIds.filter { $0 != profileVM.userProfile.id }
-            
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Sequential Queue (\(activeGuests.count) Guests Registered)")
-                    .font(.caption)
-                    .bold()
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 24)
+            Text("Round \(currentRoundNumber) of 3")
+                .font(.title3)
+                .foregroundColor(.blue)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+                .background(Color.blue.opacity(0.1))
+                .cornerRadius(10)
+        }
+    }
+    
+    private var participantList: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // 🔑 Loops through the sorted keys and matches them to profiles dynamically
+            let sortedActiveGuests: [ProfileModel] = {
+                // 1. Get the raw keys sorted by round order sequence (e.g., ["round_1", "round_2", "round_3"])
+                let sortedRoundKeys = eventVM.event.participantOrder.keys.sorted { key1, key2 in
+                    // Extract numbers from "round_1", "round_2" to sort numerically
+                    let num1 = Int(key1.replacingOccurrences(of: "round_", with: "")) ?? 0
+                    let num2 = Int(key2.replacingOccurrences(of: "round_", with: "")) ?? 0
+                    return num1 < num2
+                }
                 
-                ScrollView {
-                    VStack(spacing: 10) {
-                        ForEach(activeGuests, id: \.self) { guestId in
-                            HStack {
-                                Circle()
-                                    .fill(Color.gray.opacity(0.1))
-                                    .frame(width: 36, height: 36)
-                                    .overlay(Image(systemName: "person.fill").foregroundColor(.gray))
-                                
-                                Text("Tester ID: \(guestId.prefix(8))...")
+                // 2. Map the keys directly to their profile IDs, filtering out the Host
+                let sequentialProfileIds = sortedRoundKeys.compactMap { eventVM.event.participantOrder[$0] }
+                    .filter { $0 != profileVM.userProfile.id }
+                
+                // 3. Match those sequential IDs against the loaded profiles array in memory
+                return sequentialProfileIds.compactMap { targetId in
+                    profileVM.guestProfiles.first(where: { $0.id == targetId })
+                }
+            }()
+            
+            Text("\(sortedActiveGuests.count) Guests in Queue")
+                .font(.caption)
+                .bold()
+                .foregroundColor(.secondary)
+                .padding(.horizontal, 24)
+            
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(sortedActiveGuests, id: \.self) { guestProfile in
+                        HStack {
+                            Circle()
+                                .fill(Color.gray.opacity(0.1))
+                                .frame(width: 36, height: 36)
+                                .overlay(Image(systemName: "person.fill").foregroundColor(.gray))
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(guestProfile.name)
                                     .font(.subheadline)
+                                    .bold()
                                     .lineLimit(1)
                                 
-                                Spacer()
-                                
-                                // Check if this guest is the one assigned to the current round
-                                let roundKey = "round_\(currentRoundNumber)"
-                                if eventVM.event.participantOrder[roundKey] == guestId {
-                                    Text("Up Next")
-                                        .font(.caption2)
-                                        .bold()
-                                        .foregroundColor(.green)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(Color.green.opacity(0.1))
-                                        .cornerRadius(6)
-                                }
+                                Text("ID: \(guestProfile.id.prefix(8))...")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
                             }
-                            .padding()
-                            .background(Color.black.opacity(0.05))
-                            .cornerRadius(12)
+                            
+                            Spacer()
+                            
+                            //Check if this guest is the one assigned to the current round
+                            let roundKey = "round_\(currentRoundNumber)"
+                            if eventVM.event.participantOrder[roundKey] == guestProfile.id {
+                                Text("Up Next")
+                                    .font(.caption2)
+                                    .bold()
+                                    .foregroundColor(.green)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.green.opacity(0.1))
+                                    .cornerRadius(6)
+                            }
                         }
+                        .padding()
+                        .background(Color.black.opacity(0.05))
+                        .cornerRadius(12)
                     }
-                    .padding(.horizontal, 24)
                 }
-                .frame(maxHeight: 200)
+                .padding(.horizontal, 24)
             }
-            
-            Spacer()
-            
-            // 🔑 THE SEQUENTIAL TRIGGER: Automatically targets the precise user assigned to this round
+            .frame(maxHeight: 200)
+        }
+    }
+    
+    private var matchButton: some View {
+        VStack {
             Button(action: {
-                let roundKey = "round_\(currentRoundNumber)"
-                
-                // Look up the profile ID assigned to this round key string directly
-                if let targetedGuestId = eventVM.event.participantOrder[roundKey] {
-                    self.selectedParticipantId = targetedGuestId
-                    prepareNextOpponentMetadata(for: targetedGuestId)
-                    self.showMatchConfirmationSheet = true
-                } else {
-                    print("⚠️ No sequential match mapped for key: \(roundKey)")
+                Task {
+                    let roundKey = "round_\(currentRoundNumber)"
+                    
+                    // Look up the profile ID assigned to this round key string directly
+                    if let targetedGuestId = eventVM.event.participantOrder[roundKey] {
+                        await prepareNextOpponentMetadata(for: targetedGuestId)
+                    } else {
+                        print("⚠️ No sequential match mapped for key: \(roundKey)")
+                    }
                 }
             }) {
                 Text(currentRoundNumber == 1 ? "Launch First Match" : "Connect Next Match (Round \(currentRoundNumber))")
@@ -140,16 +184,11 @@ struct SpeedDateLobbyView: View {
                     .cornerRadius(12)
                     .padding(.horizontal, 24)
             }
-            
-            Spacer()
         }
     }
     
-    // MARK: - 📱 2. GUEST VIEW (Interactive Wait State)
-    private var guestView: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            
+    private var guestHeader: some View {
+        VStack {
             if !isHostWaitingForMe {
                 ProgressView()
                     .scaleEffect(1.5)
@@ -172,8 +211,11 @@ struct SpeedDateLobbyView: View {
                 .padding(.vertical, 6)
                 .background(Color.blue.opacity(0.1))
                 .cornerRadius(10)
-            
-            // Dynamic text updates based on host configuration actions
+        }
+    }
+    
+    private var guestFooter: some View {
+        VStack {
             Text(isHostWaitingForMe ? "The host has opened your room and is ready to talk! Tap below to join your 1v1 video match." : "The host is currently configuring your next 1v1 video match sequence. Sit tight—your screen will update when the match launches.")
                 .font(.body)
                 .foregroundColor(.secondary)
@@ -182,53 +224,56 @@ struct SpeedDateLobbyView: View {
             
             Spacer()
             
-            // 🔑 GUEST CALL-IN ACTION TRIGGER: Becomes visible the exact millisecond status == "waiting"
             if isHostWaitingForMe {
-                Button(action: {
-                    let user = profileVM.userProfile
-                    let videoConfig = VideoConfigModel(
-                        role: .guest,
-                        hostId: eventVM.event.hostProfileId,
-                        guestId: user.id,
-                        isScreenBlurred: false,
-                        isFullScreen: true
-                    )
-                    
-                    // Kill any stale 100ms background pipeline audio nodes
-                    videoVM.stopMatchSession()
-                    
-                    // 🚀 STEP 2 HANDSHAKE INVOCATION: Fills guestId slot, flips room to active, and schedules Cloud Task timer!
-                    speedDateVM.joinPredeterminedRound(
-                        eventId: eventVM.event.id,
-                        roomCode: self.activeRoomCode,
-                        hostId: eventVM.event.hostProfileId,
-                        guestId: user.id,
-                        currentProfileId: user.id
-                    )
-                    
-                    // Clear state out locally and push onto the video stream page layer layout
-                    self.isHostWaitingForMe = false
-                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                }) {
-                    HStack {
-                        Image(systemName: "phone.fill")
-                        Text("Enter Hotseat Video Call")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.green)
-                    .cornerRadius(12)
-                    .padding(.horizontal, 32)
-                    .shadow(color: .green.opacity(0.3), radius: 8, x: 0, y: 4)
-                }
-                .padding(.bottom, 20)
+                guestLaunchButton
             }
         }
-        .onAppear {
-            startLobbyStateListener()
+    }
+    
+    private var guestLaunchButton: some View {
+        VStack {
+            Button(action: {
+                let user = profileVM.userProfile
+                let videoConfig = VideoConfigModel(
+                    role: .guest,
+                    hostId: eventVM.event.hostProfileId,
+                    guestId: user.id,
+                    isScreenBlurred: false,
+                    isFullScreen: true
+                )
+                
+                // Kill any stale 100ms background pipeline audio nodes
+                videoVM.stopMatchSession()
+                
+                // 🚀 Fills guestId slot, flips room to active, and schedules Cloud Task timer!
+                speedDateVM.joinPredeterminedRound(
+                    eventId: eventVM.event.id,
+                    roomCode: self.activeRoomCode,
+                    hostId: eventVM.event.hostProfileId,
+                    guestId: user.id,
+                    currentProfileId: user.id
+                )
+                
+                // Clear state out locally and push onto the video stream page layer layout
+                self.isHostWaitingForMe = false
+                viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+            }) {
+                HStack {
+                    Image(systemName: "phone.fill")
+                    Text("Enter Hotseat Video Call")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.green)
+                .cornerRadius(12)
+                .padding(.horizontal, 32)
+                .shadow(color: .green.opacity(0.3), radius: 8, x: 0, y: 4)
+            }
+            .padding(.bottom, 20)
         }
+        
     }
     
     private var matchConfirmationSheetContent: some View {
@@ -238,118 +283,115 @@ struct SpeedDateLobbyView: View {
                 .bold()
                 .padding(.top, 30)
             
-            // Identifiable Information BEFORE Connecting
-            VStack(spacing: 12) {
-                Circle()
-                    .fill(Color.gray.opacity(0.2))
-                    .frame(width: 140, height: 140)
-                    .overlay(Image(systemName: "person.fill").font(.system(size: 60)).foregroundColor(.gray))
-                
-                // 🔑 Pull the ACTUAL live opponent name from your database model instead of a placeholder text block!
-                Text(opponentName.isEmpty ? "Your Next Date" : opponentName)
-                    .font(.title)
-                    .bold()
-                
-                Text(opponentBio)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 30)
-                
-                Text("Verified Match Event Participant")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.vertical)
+            matchConfirmationSheetBody
+                .padding(.vertical)
             
             Spacer()
+            matchConfirmationSheetControls
+        }
+    }
+    
+    private var matchConfirmationSheetBody: some View {
+        VStack(spacing: 12) {
+            Circle()
+                .fill(Color.gray.opacity(0.2))
+                .frame(width: 140, height: 140)
+                .overlay(Image(systemName: "person.fill").font(.system(size: 60)).foregroundColor(.gray))
             
-            // Explicit Accept or Skip controls
-            HStack(spacing: 16) {
-                // SKIP ACTION
-                Button(action: {
-                    self.showMatchConfirmationSheet = false
-                    advanceToNextRoundSlot()
-                }) {
-                    Text("Skip / Next")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(12)
-                }
-                
-                // Start/Join Button
-                Button(action: {
-                    let user = profileVM.userProfile
-                    let isHost = eventVM.event.hostProfileId == user.id
-                    
-                    let currentRole: RoleType = isHost ? .host : .guest
-                    let currentHostId = isHost ? user.id : ""
-                    let currentGuestId = isHost ? "" : user.id
-                    
-                    let videoConfig = VideoConfigModel(
-                        role: currentRole,
-                        hostId: currentHostId,
-                        guestId: currentGuestId,
-                        isScreenBlurred: false,
-                        isFullScreen: true
-                    )
-                    
-                    speedDateVM.roomCode = isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
-                    
-                    // Force any stuck 100ms audio/video channels to completely kill themselves
-                    // before we transition. This mimics a clean app restart!
-                    videoVM.stopMatchSession()
-                    
-                    // Trigger the live database handshake pipelines
-                    speedDateVM.joinPredeterminedRound(
-                        eventId: eventVM.event.id,
-                        roomCode: speedDateVM.roomCode,
-                        hostId: currentHostId,
-                        guestId: currentGuestId,
-                        currentProfileId: profileVM.userProfile.id
-                    )
-                    
-                    // Advance the round counter internally so when they return, they are queued up for the next candidate
-                    advanceToNextRoundSlot()
-                    
-                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                }) {
-                    Text("Accept & Connect")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .cornerRadius(12)
-                }
-                Spacer()
+            Text(profileVM.guestProfile.name.isEmpty ? "Your Next Date" : profileVM.guestProfile.name)
+                .font(.title)
+                .bold()
+            
+            Text(profileVM.guestProfile.bio ?? "")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 30)
+            
+            Text("Verified Match Event Participant")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    private var matchConfirmationSheetControls: some View {
+        HStack(spacing: 16) {
+            // SKIP ACTION
+            Button(action: {
+                self.showMatchConfirmationSheet = false
+                advanceToNextRoundSlot()
+            }) {
+                Text("Skip / Next")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red)
+                    .cornerRadius(12)
             }
+            
+            // Start/Join Button
+            Button(action: {
+                let user = profileVM.userProfile
+                let isHost = eventVM.event.hostProfileId == user.id
+                
+                let currentRole: RoleType = isHost ? .host : .guest
+                let currentHostId = isHost ? user.id : ""
+                let currentGuestId = isHost ? "" : user.id
+                
+                let videoConfig = VideoConfigModel(
+                    role: currentRole,
+                    hostId: currentHostId,
+                    guestId: currentGuestId,
+                    isScreenBlurred: false,
+                    isFullScreen: true
+                )
+                
+                speedDateVM.roomCode = isHost ? eventVM.event.hostRoomCode : eventVM.event.guestRoomCode
+                
+                // Force any stuck 100ms audio/video channels to completely kill themselves
+                // before we transition. This mimics a clean app restart!
+                videoVM.stopMatchSession()
+                
+                // Trigger the live database handshake pipelines
+                speedDateVM.joinPredeterminedRound(
+                    eventId: eventVM.event.id,
+                    roomCode: speedDateVM.roomCode,
+                    hostId: currentHostId,
+                    guestId: currentGuestId,
+                    currentProfileId: profileVM.userProfile.id
+                )
+                
+                // Advance the round counter internally so when they return, they are queued up for the next candidate
+                advanceToNextRoundSlot()
+                
+                viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+            }) {
+                Text("Accept & Connect")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(12)
+            }
+            Spacer()
         }
-        
     }
     
-    private func prepareNextOpponentMetadata(for participantId: String) {
-        // Here you will eventually parse actual object fields out of your snapshot data model.
-        // Falling back to your structured template matrix logic for now:
-        switch currentRoundNumber {
-        case 1:
-            opponentName = "Sarah, 24"
-            opponentBio = "Avid runner, dog lover, and coffee enthusiast."
-        case 2:
-            opponentName = "Jessica, 27"
-            opponentBio = "Designer who loves checking out new local bakeshops."
-        case 3:
-            opponentName = "Emily, 25"
-            opponentBio = "Beach lover, gym regular, and movie nerd."
-        default:
-            opponentName = "Your Next Match"
-            opponentBio = "Review profile details and tap Accept to connect."
+    private func prepareNextOpponentMetadata(for participantId: String) async {
+        print("🔍 Fetching live profile data for matching tester ID: \(participantId)")
+        do {
+            try await profileVM.GetProfile(profileId: participantId)
+            
+            // 🔒 Safe MainActor scheduling replaces the old DispatchQueue format cleanly
+            await MainActor.run {
+                self.showMatchConfirmationSheet = true
+            }
+        } catch {
+            print("❌ Failed to fetch user profile metadata: \(error.localizedDescription)")
         }
     }
-    
     
     private func advanceToNextRoundSlot() {
         if currentRoundNumber < 3 {
@@ -365,8 +407,6 @@ struct SpeedDateLobbyView: View {
         let currentUserId = profileVM.userProfile.id
         let currentEventId = eventVM.event.id
         let hostId = eventVM.event.hostProfileId
-        
-        // 🔑 Generates the uniform document path matching the Host's write signature
         let matchDocId = "\(currentEventId)_\(hostId)"
         
         print("📱 Starting lobby state ear listener on document node: \(matchDocId)")
@@ -378,14 +418,46 @@ struct SpeedDateLobbyView: View {
                     return
                 }
                 
-                guard let document = documentSnapshot, document.exists,
-                      let data = document.data() else {
-                    print("⏳ Active date tracking node is empty or unpopulated.")
+                guard let document = documentSnapshot else { return }
+                
+                // 🔑 THE CACHE SHIELD FIX: If the data is from local cache and the document isn't fully verified on the server yet,
+                // freeze navigation and force the app to stay in the lobby waiting view!
+                if document.metadata.isFromCache {
+                    print("⚠️ Ignoring stale local cache payload on startup. Waiting for real-time server verification...")
+                    DispatchQueue.main.async {
+                        self.isHostWaitingForMe = false
+                        // 🔑 COMPILER-PROOF CHECK: Use a switch to check the page safely without Equatable errors!
+                        switch viewRouter.currentPage {
+                        case .speedDateLobby:
+                            break // Already safely in the lobby workspace, do nothing!
+                        default:
+                            viewRouter.currentPage = .speedDateLobby // Push them back to the lobby
+                        }
+                    }
                     return
                 }
                 
-                // 1. Sync the current round state number down from the database driver
-                guard let serverRoundNumber = data["currentRoundNumber"] as? Int else { return }
+                // 🧹 If the document doesn't exist on the server (because you deleted it), clean up memory cleanly!
+                guard document.exists else {
+                    print("🧹 Server confirmed document does not exist. Grounding Guest safely to Lobby Screen.")
+                    DispatchQueue.main.async {
+                        self.isHostWaitingForMe = false
+                        self.activeRoomCode = ""
+                        speedDateVM.roomCode = ""
+                        videoVM.stopMatchSession()
+                        // 🔑 COMPILER-PROOF CHECK: Use a switch to check the page safely without Equatable errors!
+                        switch viewRouter.currentPage {
+                        case .speedDateLobby:
+                            break // Already safely in the lobby workspace, do nothing!
+                        default:
+                            viewRouter.currentPage = .speedDateLobby // Push them back to the lobby
+                        }
+                    }
+                    return
+                }
+                
+                guard let data = document.data(),
+                      let serverRoundNumber = data["currentRoundNumber"] as? Int else { return }
                 
                 DispatchQueue.main.async {
                     self.currentRoundNumber = serverRoundNumber

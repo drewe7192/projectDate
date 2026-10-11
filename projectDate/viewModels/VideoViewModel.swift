@@ -10,7 +10,6 @@ import SwiftUI
 import FirebaseFirestore
 
 class VideoViewModel: ObservableObject {
-    // 🔑 Placed all reactive layout properties inside the localized video model
     @Published var timeRemainingString: String = "03:00"
     @Published var isTimeRunningOut: Bool = false
     @Published var roundEndTime: Date? = nil
@@ -120,7 +119,5 @@ class VideoViewModel: ObservableObject {
             self.isRoundActive = false
         }
     }
-
-    
 }
 

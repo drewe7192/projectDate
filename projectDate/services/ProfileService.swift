@@ -17,6 +17,16 @@ class ProfileService {
         return response
     }
     
+    public func GetProfile(profileId: String) async throws -> ProfileModel {
+        let response = try await profileRepo.Get(profileId: profileId)
+        return response
+    }
+    
+    public func GetProfiles(profileIds: [String]) async throws -> [ProfileModel] {
+        let response = try await profileRepo.Get(profileIds: profileIds)
+        return response
+    }
+    
     public func CreateProfile(newRoomCode: String) async throws -> ProfileModel {
         guard let uid = Auth.auth().currentUser?.uid else {
               throw NSError(domain: "ProfileService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No logged in user"])

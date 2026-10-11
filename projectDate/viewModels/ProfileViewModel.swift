@@ -16,7 +16,8 @@ class ProfileViewModel: NSObject, ObservableObject {
     @Environment(\.scenePhase) var scenePhase
     
     @Published var userProfile: ProfileModel = emptyProfileModel
-    @Published var participantProfile: ProfileModel =  emptyProfileModel
+    @Published var guestProfile: ProfileModel =  emptyProfileModel
+    @Published var guestProfiles: [ProfileModel] =  []
     @Published var currentUsers: [ProfileModel] = []
     @Published var showingQuestionSelectSheet: Bool = false
     @Published var newRoomCode: String?
@@ -27,6 +28,7 @@ class ProfileViewModel: NSObject, ObservableObject {
     let storage = Storage.storage()
     let functions = Functions.functions()
     var tokenToUse =  FCMTokenModel(id: "", token: "")
+    
     
     public func GetUserProfile() async throws {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -39,6 +41,20 @@ class ProfileViewModel: NSObject, ObservableObject {
             self.userProfile = userProfile
         } else {
             try await CreateUserProfile()
+        }
+    }
+    
+    public func GetProfile(profileId: String) async throws {
+        let profile = try await profileService.GetProfile(profileId: profileId)
+        if !profile.id.isEmpty {
+            self.guestProfile = profile
+        }
+    }
+    
+    public func GetProfiles(profileIds: [String]) async throws {
+        let profiles = try await profileService.GetProfiles(profileIds: profileIds)
+        if !profiles.isEmpty {
+            self.guestProfiles = profiles
         }
     }
     

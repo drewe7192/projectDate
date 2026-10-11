@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct ProfileModel: Identifiable, Equatable {
+struct ProfileModel: Identifiable, Equatable, Hashable {
     var id : String
     var userUID: String
     var roomCode: String
