@@ -119,7 +119,7 @@ struct FullScreenComponentsView: View {
         
         // Write the state reset straight to Firestore
         db.collection("activeDates").document(matchDocId).updateData([
-            "status": "waiting",
+            "status": "completed",
             "guestId": "",
             "roundEndTime": FieldValue.delete()
         ]) { error in

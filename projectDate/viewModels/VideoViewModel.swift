@@ -30,38 +30,47 @@ class VideoViewModel: ObservableObject {
                 guard let snapshot = snapshot, snapshot.exists, let data = snapshot.data() else { return }
                 
                 if snapshot.metadata.isFromCache {
-                         print("⏳ Skipping cached data... waiting for live server state.")
-                         return
-                     }
-                
-                // 1. Check absolute server target countdown expiration
-                if let timestamp = data["roundEndsAt"] as? Timestamp {
-                    let serverDate = timestamp.dateValue()
-                    if self.roundEndTime != serverDate {
-                        DispatchQueue.main.async {
-                            self.roundEndTime = serverDate
-                        }
-                    }
+                    print("⏳ Skipping cached data... waiting for live server state.")
+                    return
                 }
                 
-                // 2. Manage the countdown gate state via server status
-                if let status = data["status"] as? String {
-                    DispatchQueue.main.async {
-                        let activeState = (status == "active")
-                        if self.isRoundActive != activeState {
-                            self.isRoundActive = activeState
-                            if activeState, let targetTime = self.roundEndTime {
-                                self.startCountdown(targetEndTime: targetTime)
-                            }
-                        }
+                // 🚀 STEP A: Extract ALL parameters from the network snapshot packet SYNCHRONOUSLY first!
+                var extractedServerDate: Date? = nil
+                if let timestamp = data["roundEndTime"] as? Timestamp {
+                    extractedServerDate = timestamp.dateValue()
+                }
+                
+                let status = data["status"] as? String ?? ""
+                let activeState = (status == "active")
+                
+                // 🚀 STEP B: Dispatch ONE single, combined atomic block onto the Main Actor Thread!
+                DispatchQueue.main.async {
+                    // 1. Commit the absolute countdown target date to memory first
+                    if let verifiedDate = extractedServerDate {
+                        self.roundEndTime = verifiedDate
+                    }
+                    
+                    // 2. Commit the structural room active boundary configurations
+                    if self.isRoundActive != activeState {
+                        self.isRoundActive = activeState
                         
-                        if status == "completed" {
-                            self.stopMatchSession()
+                        // 🔑 GUARANTEED SAFE: Since both assignments run inline within the same exact thread execution pass,
+                        // 'self.roundEndTime' can NEVER evaluate as nil when this block evaluates!
+                        if activeState, let targetTime = self.roundEndTime {
+                            print("⏱️ VideoVM: Starting countdown ticker pipeline atomically for: \(targetTime)")
+                            self.startCountdown(targetEndTime: targetTime)
                         }
+                    }
+                    
+                    // 3. Handle graceful room timeout teardown conditions
+                    if status == "completed" {
+                        print("⏱️ VideoVM: Match completion packet received. Dropping stream layout pipelines.")
+                        self.stopMatchSession()
                     }
                 }
             }
     }
+
     
     private func startCountdown(targetEndTime: Date) {
         timer?.invalidate()

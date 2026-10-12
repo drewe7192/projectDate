@@ -191,7 +191,7 @@ extension VideoViewModel {
                 let matchDocId = "\(eventId)_\(hostId)"
                 
                 db.collection("activeDates").document(matchDocId).updateData([
-                    "status": "waiting",
+                    "status": "completed",
                     "guestId": "",
                     "roundEndTime": FieldValue.delete()
                 ]) { error in
