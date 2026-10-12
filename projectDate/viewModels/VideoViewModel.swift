@@ -14,6 +14,7 @@ class VideoViewModel: ObservableObject {
     @Published var isTimeRunningOut: Bool = false
     @Published var roundEndTime: Date? = nil
     @Published var isRoundActive: Bool = false
+    @Published var currentRoundNumber: Int = 1
     
     private var db = Firestore.firestore()
     private var dateListener: ListenerRegistration?
@@ -21,7 +22,7 @@ class VideoViewModel: ObservableObject {
     private var localSecondsRemaining: Int = 20
     
     /// Attaches the live listener to your event match doc directly
-    func listenToMatchSession(eventId: String, hostId: String, guestId: String, viewRouter: ViewRouter) {
+    func listenToMatchSession(eventId: String, hostId: String, guestId: String, role: RoleType, viewRouter: ViewRouter) {
         let matchDocId = "\(eventId)_\(hostId)"
         
         dateListener = db.collection("activeDates").document(matchDocId)
@@ -43,6 +44,15 @@ class VideoViewModel: ObservableObject {
                 let status = data["status"] as? String ?? ""
                 let activeState = (status == "active")
                 
+                // 🚀 THE FIX: Safely parse and bind the server round number straight to videoVM!
+                if let serverRoundNumber = data["currentRoundNumber"] as? Int {
+                    DispatchQueue.main.async {
+                        // Update your shared video view-model property so the entire view re-orders instantly!
+                        self.currentRoundNumber = serverRoundNumber
+                        print("👑 Host synchronized current round from database: \(serverRoundNumber)")
+                    }
+                }
+                
                 // 🚀 STEP B: Dispatch ONE single, combined atomic block onto the Main Actor Thread!
                 DispatchQueue.main.async {
                     // 1. Commit the absolute countdown target date to memory first
@@ -58,7 +68,7 @@ class VideoViewModel: ObservableObject {
                         // 'self.roundEndTime' can NEVER evaluate as nil when this block evaluates!
                         if activeState, let targetTime = self.roundEndTime {
                             print("⏱️ VideoVM: Starting countdown ticker pipeline atomically for: \(targetTime)")
-                            self.startCountdown(targetEndTime: targetTime, viewRouter: viewRouter, eventId: eventId, hostId: hostId, guestId: guestId)
+                            self.startCountdown(targetEndTime: targetTime, viewRouter: viewRouter, eventId: eventId, hostId: hostId, guestId: guestId, role: role)
                         }
                     }
                     
@@ -72,7 +82,7 @@ class VideoViewModel: ObservableObject {
     }
     
     
-    private func startCountdown(targetEndTime: Date, viewRouter: ViewRouter, eventId: String, hostId: String, guestId: String) {
+    private func startCountdown(targetEndTime: Date, viewRouter: ViewRouter, eventId: String, hostId: String, guestId: String, role: RoleType) {
         timer?.invalidate()
         
         let initialSecondsLeft = Int(targetEndTime.timeIntervalSinceNow)
@@ -85,26 +95,8 @@ class VideoViewModel: ObservableObject {
                 self.timer?.invalidate()
                 
                 
-                
-                // 🚀 LAYER A: ATOMIC SERVER UPDATE (Host Only)
-                // This forces status to change to "completed" in Firestore right when the local clock strikes zero
-                    print("👑 Ticker: Device is Host. Informing Firestore that round time has officially expired.")
-                    
-                    let db = Firestore.firestore()
-                    let matchDocId = "\(eventId)_\(hostId)"
-                    
-                    db.collection("activeDates").document(matchDocId).updateData([
-                        "status": "completed"
-                    ]) { error in
-                        if let error = error {
-                            print("❌ Failed to push automatic timer timeout status write: \(error.localizedDescription)")
-                        } else {
-                            print("✅ Success: Server status field safely flipped to 'completed' by Host ticker.")
-                        }
-                    }
-                
-                
-                
+                // This writes the new round number to Firestore, updating both apps instantly!
+                self.hostAdvanceRoundOnServer(eventId: eventId, hostId: hostId, currentRoundNumber: currentRoundNumber)
                 
                 self.stopMatchSession()
                 self.endRoundCleanly()
@@ -157,6 +149,31 @@ class VideoViewModel: ObservableObject {
             self.isTimeRunningOut = false
             self.roundEndTime = nil
             self.isRoundActive = false
+        }
+    }
+    
+    func hostAdvanceRoundOnServer(eventId: String, hostId: String, currentRoundNumber: Int) {
+        let db = Firestore.firestore()
+        let matchDocId = "\(eventId)_\(hostId)"
+        
+        // 🔑 Read what the current round number is right before updating it
+        let nextRound = currentRoundNumber + 1
+        
+        print("👑 Host advancing matchmaking state to Round \(nextRound) on Firestore...")
+        
+        // Reset parameters and advance the master server round tracking index
+        db.collection("activeDates").document(matchDocId).updateData([
+            "status": "completed",
+            "currentRoundNumber": nextRound, // 🚀 UPDATES BOTH DEVICES SIMULTANEOUSLY!
+            "guestId": "",
+            "hostRoomCode": "",
+            "guestRoomCode": ""
+        ]) { error in
+            if let error = error {
+                print("❌ Failed to advance round number in Firestore: \(error.localizedDescription)")
+            } else {
+                print("✅ Success: Server is now configured for Round \(nextRound)")
+            }
         }
     }
 }

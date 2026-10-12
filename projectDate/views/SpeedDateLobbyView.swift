@@ -16,7 +16,6 @@ struct SpeedDateLobbyView: View {
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @EnvironmentObject var videoVM: VideoViewModel
     
-    @State private var currentRoundNumber: Int = 1
     @State private var showMatchConfirmationSheet: Bool = false
     @State private var isHostWaitingForMe: Bool = false
     @State private var activeRoomCode: String = ""
@@ -52,6 +51,7 @@ struct SpeedDateLobbyView: View {
             Spacer()
         }
         .onAppear {
+            startHostLobbySyncListener()
             Task {
                 try await profileVM.GetProfiles(profileIds: eventVM.event.participantProfileIds)
             }
@@ -77,7 +77,7 @@ struct SpeedDateLobbyView: View {
                 .font(.largeTitle)
                 .bold()
             
-            Text("Round \(currentRoundNumber) of 3")
+            Text("Round \(videoVM.currentRoundNumber) of 3")
                 .font(.title3)
                 .foregroundColor(.blue)
                 .padding(.horizontal, 16)
@@ -138,7 +138,7 @@ struct SpeedDateLobbyView: View {
                             Spacer()
                             
                             //Check if this guest is the one assigned to the current round
-                            let roundKey = "round_\(currentRoundNumber)"
+                            let roundKey = "round_\(videoVM.currentRoundNumber)"
                             if eventVM.event.participantOrder[roundKey] == guestProfile.id {
                                 Text("Up Next")
                                     .font(.caption2)
@@ -165,7 +165,7 @@ struct SpeedDateLobbyView: View {
         VStack {
             Button(action: {
                 Task {
-                    let roundKey = "round_\(currentRoundNumber)"
+                    let roundKey = "round_\(videoVM.currentRoundNumber)"
                     
                     // Look up the profile ID assigned to this round key string directly
                     if let targetedGuestId = eventVM.event.participantOrder[roundKey] {
@@ -175,7 +175,7 @@ struct SpeedDateLobbyView: View {
                     }
                 }
             }) {
-                Text(currentRoundNumber == 1 ? "Launch First Match" : "Connect Next Match (Round \(currentRoundNumber))")
+                Text(videoVM.currentRoundNumber == 1 ? "Launch First Match" : "Connect Next Match (Round \(videoVM.currentRoundNumber))")
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -204,7 +204,7 @@ struct SpeedDateLobbyView: View {
                 .font(.largeTitle)
                 .bold()
             
-            Text("Round \(currentRoundNumber) of 3")
+            Text("Round \(videoVM.currentRoundNumber) of 3")
                 .font(.headline)
                 .foregroundColor(.blue)
                 .padding(.horizontal, 16)
@@ -394,12 +394,44 @@ struct SpeedDateLobbyView: View {
     }
     
     private func advanceToNextRoundSlot() {
-        if currentRoundNumber < 3 {
-            currentRoundNumber += 1
+        if videoVM.currentRoundNumber < 3 {
+            videoVM.currentRoundNumber += 1
         } else {
             // Loop back or mark event complete
-            currentRoundNumber = 1
+            videoVM.currentRoundNumber = 1
         }
+    }
+    
+    private func startHostLobbySyncListener() {
+        let db = Firestore.firestore()
+        let currentEventId = eventVM.event.id
+        let hostId = eventVM.event.hostProfileId
+        let matchDocId = "\(currentEventId)_\(hostId)"
+        
+        print("👑 Host: Attaching dashboard synchronization listener on node: \(matchDocId)")
+        
+        db.collection("activeDates").document(matchDocId)
+            .addSnapshotListener { documentSnapshot, error in
+                if let error = error {
+                    print("❌ Host sync error: \(error.localizedDescription)")
+                    return
+                }
+                
+                  guard let document = documentSnapshot, document.exists,
+                        let data = document.data() else {
+                      print("ℹ️ No active dates document found. Initializing on Round 1 baseline.")
+                      return
+                  }
+                
+                // Safely parse and bind the server round number straight to videoVM!
+                if let serverRoundNumber = data["currentRoundNumber"] as? Int {
+                    DispatchQueue.main.async {
+                        // Update your shared video view-model property so the entire view re-orders instantly!
+                        videoVM.currentRoundNumber = serverRoundNumber
+                        print("👑 Host synchronized current round from database: \(serverRoundNumber)")
+                    }
+                }
+            }
     }
     
     private func startLobbyStateListener() {
@@ -419,8 +451,16 @@ struct SpeedDateLobbyView: View {
                 }
                 
                 guard let document = documentSnapshot else { return }
+                // gotta get this before the media cache... maybe fix later?
+                guard let data = document.data(),
+                      let serverRoundNumber = data["currentRoundNumber"] as? Int else { return }
+                print(serverRoundNumber)
+                DispatchQueue.main.async {
+                    videoVM.currentRoundNumber = serverRoundNumber
+                }
                 
-                // 🔑 THE CACHE SHIELD FIX: If the data is from local cache and the document isn't fully verified on the server yet,
+                
+                // 🔑 THE CACHE SHIELD: If the data is from local cache and the document isn't fully verified on the server yet,
                 // freeze navigation and force the app to stay in the lobby waiting view!
                 if document.metadata.isFromCache {
                     print("⚠️ Ignoring stale local cache payload on startup. Waiting for real-time server verification...")
@@ -455,13 +495,7 @@ struct SpeedDateLobbyView: View {
                     }
                     return
                 }
-                
-                guard let data = document.data(),
-                      let serverRoundNumber = data["currentRoundNumber"] as? Int else { return }
-                
-                DispatchQueue.main.async {
-                    self.currentRoundNumber = serverRoundNumber
-                }
+            
                 
                 // 2. Build the string lookup pattern matching your updated [String: String] Map data model
                 let roundKey = "round_\(serverRoundNumber)"
