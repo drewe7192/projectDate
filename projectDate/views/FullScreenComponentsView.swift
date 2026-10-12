@@ -100,7 +100,7 @@ struct FullScreenComponentsView: View {
         }
         .onAppear {
             // Kick off your Firestore data listener right when the overlay mounts
-            videoVM.listenToMatchSession(eventId: eventId, hostId: hostId, guestId: guestId)
+            videoVM.listenToMatchSession(eventId: eventId, hostId: hostId, guestId: guestId, viewRouter: viewRouter)
         }
         .onDisappear {
             videoVM.stopMatchSession()

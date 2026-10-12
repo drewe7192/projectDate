@@ -10,7 +10,7 @@ import SwiftUI
 import FirebaseFirestore
 
 class VideoViewModel: ObservableObject {
-    @Published var timeRemainingString: String = "03:00"
+    @Published var timeRemainingString: String = "00:20"
     @Published var isTimeRunningOut: Bool = false
     @Published var roundEndTime: Date? = nil
     @Published var isRoundActive: Bool = false
@@ -18,10 +18,10 @@ class VideoViewModel: ObservableObject {
     private var db = Firestore.firestore()
     private var dateListener: ListenerRegistration?
     private var timer: Timer?
-    private var localSecondsRemaining: Int = 180
+    private var localSecondsRemaining: Int = 20
     
     /// Attaches the live listener to your event match doc directly
-    func listenToMatchSession(eventId: String, hostId: String, guestId: String) {
+    func listenToMatchSession(eventId: String, hostId: String, guestId: String, viewRouter: ViewRouter) {
         let matchDocId = "\(eventId)_\(hostId)"
         
         dateListener = db.collection("activeDates").document(matchDocId)
@@ -58,7 +58,7 @@ class VideoViewModel: ObservableObject {
                         // 'self.roundEndTime' can NEVER evaluate as nil when this block evaluates!
                         if activeState, let targetTime = self.roundEndTime {
                             print("⏱️ VideoVM: Starting countdown ticker pipeline atomically for: \(targetTime)")
-                            self.startCountdown(targetEndTime: targetTime)
+                            self.startCountdown(targetEndTime: targetTime, viewRouter: viewRouter, eventId: eventId, hostId: hostId, guestId: guestId)
                         }
                     }
                     
@@ -70,23 +70,54 @@ class VideoViewModel: ObservableObject {
                 }
             }
     }
-
     
-    private func startCountdown(targetEndTime: Date) {
+    
+    private func startCountdown(targetEndTime: Date, viewRouter: ViewRouter, eventId: String, hostId: String, guestId: String) {
         timer?.invalidate()
         
         let initialSecondsLeft = Int(targetEndTime.timeIntervalSinceNow)
-        self.localSecondsRemaining = initialSecondsLeft > 0 ? initialSecondsLeft : 180
+        self.localSecondsRemaining = initialSecondsLeft > 0 ? initialSecondsLeft : 20
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             
             if self.localSecondsRemaining <= 0 {
                 self.timer?.invalidate()
+                
+                
+                
+                // 🚀 LAYER A: ATOMIC SERVER UPDATE (Host Only)
+                // This forces status to change to "completed" in Firestore right when the local clock strikes zero
+                    print("👑 Ticker: Device is Host. Informing Firestore that round time has officially expired.")
+                    
+                    let db = Firestore.firestore()
+                    let matchDocId = "\(eventId)_\(hostId)"
+                    
+                    db.collection("activeDates").document(matchDocId).updateData([
+                        "status": "completed"
+                    ]) { error in
+                        if let error = error {
+                            print("❌ Failed to push automatic timer timeout status write: \(error.localizedDescription)")
+                        } else {
+                            print("✅ Success: Server status field safely flipped to 'completed' by Host ticker.")
+                        }
+                    }
+                
+                
+                
+                
+                self.stopMatchSession()
+                self.endRoundCleanly()
+                
                 DispatchQueue.main.async {
                     self.timeRemainingString = "00:00"
                     self.isTimeRunningOut = true
                 }
+                
+                if case .videoPage = viewRouter.currentPage {
+                    viewRouter.currentPage = .speedDateLobby
+                }
+                
             } else {
                 self.localSecondsRemaining -= 1
                 let minutes = self.localSecondsRemaining / 60
@@ -94,7 +125,7 @@ class VideoViewModel: ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.timeRemainingString = String(format: "%02d:%02d", minutes, seconds)
-                    self.isTimeRunningOut = self.localSecondsRemaining <= 15
+                    self.isTimeRunningOut = self.localSecondsRemaining <= 10
                 }
             }
         }
@@ -122,7 +153,7 @@ class VideoViewModel: ObservableObject {
         
         // 3. Clear all published UI layout variables safely on the Main thread
         DispatchQueue.main.async {
-            self.timeRemainingString = "03:00"
+            self.timeRemainingString = "00:20"
             self.isTimeRunningOut = false
             self.roundEndTime = nil
             self.isRoundActive = false
