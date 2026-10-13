@@ -25,7 +25,6 @@ struct VideoView: View {
                 if videoConfig.isFullScreen {
                     FullScreenComponentsView(
                         role: videoConfig.role,
-                        eventId: eventVM.event.id,
                         hostId: videoConfig.hostId,
                         guestId: videoConfig.guestId
                     )

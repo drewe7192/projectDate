@@ -16,13 +16,14 @@ import FirebaseCore
 
 struct FullScreenComponentsView: View {
     @EnvironmentObject var videoVM: VideoViewModel
+    @EnvironmentObject var eventVM: EventViewModel
     @EnvironmentObject var viewRouter: ViewRouter
     @Environment(\.scenePhase) var scenePhase // 🔑 Layer 2: Detects if the app is minimized/backgrounded
     
     let role: RoleType
-    let eventId: String
     let hostId: String
     let guestId: String
+    
     
     var body: some View {
         VStack {
@@ -100,7 +101,7 @@ struct FullScreenComponentsView: View {
         }
         .onAppear {
             // Kick off your Firestore data listener right when the overlay mounts
-            videoVM.listenToMatchSession(eventId: eventId, hostId: hostId, guestId: guestId, role: role, viewRouter: viewRouter)
+            videoVM.listenToMatchSession(eventId: eventVM.event.id, hostId: hostId, guestId: guestId, role: role, viewRouter: viewRouter, participantOrder: eventVM.event.participantOrder)
         }
         .onDisappear {
             videoVM.stopMatchSession()
@@ -115,7 +116,7 @@ struct FullScreenComponentsView: View {
         videoVM.endRoundCleanly()
         
         let db = Firestore.firestore()
-        let matchDocId = "\(eventId)_\(hostId)"
+        let matchDocId = "\(eventVM.event.id)_\(hostId)"
         
         // Write the state reset straight to Firestore
         db.collection("activeDates").document(matchDocId).updateData([
@@ -140,7 +141,7 @@ struct FullScreenComponentsView: View {
         videoVM.endRoundCleanly()
         
         let db = Firestore.firestore()
-        let matchDocId = "\(eventId)_\(hostId)"
+        let matchDocId = "\(eventVM.event.id)_\(hostId)"
         let targetOffenderId = (role == .host) ? guestId : hostId
         let myCurrentUserId = (role == .host) ? hostId : guestId
         
@@ -160,7 +161,7 @@ struct FullScreenComponentsView: View {
         let reportData: [String: Any] = [
             "reporterId": myCurrentUserId,
             "offenderId": targetOffenderId,
-            "eventId": eventId,
+            "eventId": eventVM.event.id,
             "timestamp": FieldValue.serverTimestamp(),
             "status": "pending_review"
         ]

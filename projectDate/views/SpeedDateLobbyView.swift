@@ -67,7 +67,7 @@ struct SpeedDateLobbyView: View {
             Spacer()
         }
         .onAppear {
-            startLobbyStateListener()
+            startGuestLobbyStateListener()
         }
     }
     
@@ -334,6 +334,8 @@ struct SpeedDateLobbyView: View {
             Button(action: {
                 let user = profileVM.userProfile
                 let isHost = eventVM.event.hostProfileId == user.id
+                let hostId = eventVM.event.hostProfileId
+                let matchDocId = "\(eventVM.event.id)_\(hostId)"
                 
                 let currentRole: RoleType = isHost ? .host : .guest
                 let currentHostId = isHost ? user.id : ""
@@ -352,6 +354,14 @@ struct SpeedDateLobbyView: View {
                 // Force any stuck 100ms audio/video channels to completely kill themselves
                 // before we transition. This mimics a clean app restart!
                 videoVM.stopMatchSession()
+                
+                
+                // 🔑 THE FIX: Transition the server state from "review" to "waiting"
+                // right here to signal the Guest that the Host is officially inside the room!
+                let db = Firestore.firestore()
+                db.collection("activeDates").document(matchDocId).updateData([
+                    "status": "waiting" // 🚀 This is the exact moment the Guest's green button will unlock!
+                ])
                 
                 // Trigger the live database handshake pipelines
                 speedDateVM.joinPredeterminedRound(
@@ -417,11 +427,11 @@ struct SpeedDateLobbyView: View {
                     return
                 }
                 
-                  guard let document = documentSnapshot, document.exists,
-                        let data = document.data() else {
-                      print("ℹ️ No active dates document found. Initializing on Round 1 baseline.")
-                      return
-                  }
+                guard let document = documentSnapshot, document.exists,
+                      let data = document.data() else {
+                    print("ℹ️ No active dates document found. Initializing on Round 1 baseline.")
+                    return
+                }
                 
                 // Safely parse and bind the server round number straight to videoVM!
                 if let serverRoundNumber = data["currentRoundNumber"] as? Int {
@@ -434,16 +444,15 @@ struct SpeedDateLobbyView: View {
             }
     }
     
-    private func startLobbyStateListener() {
-        let db = Firestore.firestore()
+    private func startGuestLobbyStateListener() {
         let currentUserId = profileVM.userProfile.id
-        let currentEventId = eventVM.event.id
         let hostId = eventVM.event.hostProfileId
-        let matchDocId = "\(currentEventId)_\(hostId)"
+        let matchDocId = "\(eventVM.event.id)_\(hostId)"
         
         print("📱 Starting lobby state ear listener on document node: \(matchDocId)")
         
-        db.collection("activeDates").document(matchDocId)
+        // 💡 Tip: You can pass includeMetadataChanges: false here if you want to bypass local caches entirely
+        _ = Firestore.firestore().collection("activeDates").document(matchDocId)
             .addSnapshotListener { documentSnapshot, error in
                 if let error = error {
                     print("❌ Firestore real-time listener error: \(error.localizedDescription)")
@@ -451,95 +460,117 @@ struct SpeedDateLobbyView: View {
                 }
                 
                 guard let document = documentSnapshot else { return }
-                // gotta get this before the media cache... maybe fix later?
+                
+                // 🚀 STEP A: Extract global metrics before caching or deletion barriers can touch them!
                 guard let data = document.data(),
                       let serverRoundNumber = data["currentRoundNumber"] as? Int else { return }
-                print(serverRoundNumber)
+                
                 DispatchQueue.main.async {
-                    videoVM.currentRoundNumber = serverRoundNumber
+                    if videoVM.currentRoundNumber != serverRoundNumber {
+                        videoVM.currentRoundNumber = serverRoundNumber
+                        print("📱 Guest view-model synchronized to round: \(serverRoundNumber)")
+                    }
                 }
                 
-                
-                // 🔑 THE CACHE SHIELD: If the data is from local cache and the document isn't fully verified on the server yet,
-                // freeze navigation and force the app to stay in the lobby waiting view!
+                // 🛡️ STEP B: Delegate state shields to dedicated sub-components
                 if document.metadata.isFromCache {
-                    print("⚠️ Ignoring stale local cache payload on startup. Waiting for real-time server verification...")
-                    DispatchQueue.main.async {
-                        self.isHostWaitingForMe = false
-                        // 🔑 COMPILER-PROOF CHECK: Use a switch to check the page safely without Equatable errors!
-                        switch viewRouter.currentPage {
-                        case .speedDateLobby:
-                            break // Already safely in the lobby workspace, do nothing!
-                        default:
-                            viewRouter.currentPage = .speedDateLobby // Push them back to the lobby
-                        }
-                    }
+                    handleStaleCacheOnStartup()
                     return
                 }
                 
-                // 🧹 If the document doesn't exist on the server (because you deleted it), clean up memory cleanly!
                 guard document.exists else {
-                    print("🧹 Server confirmed document does not exist. Grounding Guest safely to Lobby Screen.")
-                    DispatchQueue.main.async {
-                        self.isHostWaitingForMe = false
-                        self.activeRoomCode = ""
-                        speedDateVM.roomCode = ""
-                        videoVM.stopMatchSession()
-                        // 🔑 COMPILER-PROOF CHECK: Use a switch to check the page safely without Equatable errors!
-                        switch viewRouter.currentPage {
-                        case .speedDateLobby:
-                            break // Already safely in the lobby workspace, do nothing!
-                        default:
-                            viewRouter.currentPage = .speedDateLobby // Push them back to the lobby
-                        }
-                    }
-                    return
-                }
-            
-                
-                // 2. Build the string lookup pattern matching your updated [String: String] Map data model
-                let roundKey = "round_\(serverRoundNumber)"
-                
-                // 3. Extract the target profile ID assigned to this specific round loop sequence
-                guard let targetGuestId = eventVM.event.participantOrder[roundKey], !targetGuestId.isEmpty else {
-                    print("⚠️ System Matrix Mismatch: No guest mapping exists for key '\(roundKey)'")
+                    handleMatchSessionDeletion()
                     return
                 }
                 
-                // 🔒 SECURITY CHECK: Stop here if this device profile isn't the one scheduled for this round
-                guard currentUserId == targetGuestId else { return }
-                
-                // 4. Extract the room status string parameter and the active channel routing credentials
-                let status = data["status"] as? String ?? ""
-                let roomCode = data["hostRoomCode"] as? String ?? document.documentID
-                
-                DispatchQueue.main.async {
-                    self.activeRoomCode = roomCode
-                    
-                    // 🔀 DYNAMIC STATE EVALUATION INTERCEPTOR:
-                    if status == "waiting" {
-                        // Host opened the space, reveal the interactive join call-in action button layer
-                        self.isHostWaitingForMe = true
-                        print("💚 Host is checked into the room waiting for you. Revealing Call Button.")
-                        
-                    } else if status == "active" {
-                        // Backup check: If things bypass directly or handle rapid updates, push forward
-                        self.isHostWaitingForMe = false
-                        
-                        let videoConfig = VideoConfigModel(
-                            role: .guest,
-                            hostId: hostId,
-                            guestId: currentUserId,
-                            isScreenBlurred: false,
-                            isFullScreen: true
-                        )
-                        
-                        speedDateVM.roomCode = roomCode
-                        print("🚀 Match state changed to active! Moving Guest to video view layout.")
-                        viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                    }
-                }
+                // 🔀 STEP C: Delegate schedule matching and room navigation
+                processLiveLobbyPayload(data, serverRoundNumber: serverRoundNumber, hostId: hostId, currentUserId: currentUserId, defaultRoomCode: document.documentID)
             }
+    }
+    
+    private func handleStaleCacheOnStartup() {
+        print("⚠️ Ignoring stale local cache payload on startup. Waiting for real-time server verification...")
+        DispatchQueue.main.async {
+            self.isHostWaitingForMe = false
+            resetToLobbyIfNeeded()
+        }
+    }
+    
+    private func handleMatchSessionDeletion() {
+        print("🧹 Server confirmed document does not exist. Grounding Guest safely to Lobby Screen.")
+        DispatchQueue.main.async {
+            self.isHostWaitingForMe = false
+            self.activeRoomCode = ""
+            speedDateVM.roomCode = ""
+            videoVM.stopMatchSession()
+            resetToLobbyIfNeeded()
+        }
+    }
+    
+    private func processLiveLobbyPayload(_ data: [String: Any], serverRoundNumber: Int, hostId: String, currentUserId: String, defaultRoomCode: String) {
+        // Build lookup pattern matching your updated schedule map matrix using the local parsed round integer
+        let roundKey = "round_\(serverRoundNumber)"
+        
+        // Extract the target profile ID assigned to this specific round sequence loop
+        guard let targetGuestId = eventVM.event.participantOrder[roundKey], !targetGuestId.isEmpty else {
+            print("⚠️ System Matrix Mismatch: No guest mapping exists for key '\(roundKey)'")
+            return
+        }
+        
+        // 🔒 SECURITY CHECK GATEWAY: Stop here if this device isn't the scheduled round target match entry
+        guard currentUserId == targetGuestId else {
+            print("🔒 Secure Filter: User is a spectator for Round \(serverRoundNumber). Hiding call buttons.")
+            DispatchQueue.main.async { self.isHostWaitingForMe = false }
+            return
+        }
+        
+        // Extract room routing flags and signaling channel tokens
+        let status = data["status"] as? String ?? ""
+        let roomCode = data["hostRoomCode"] as? String ?? defaultRoomCode
+        
+        DispatchQueue.main.async {
+            self.activeRoomCode = roomCode
+            
+            // 🔀 DYNAMIC STATE EVALUATION INTERCEPTOR:
+            if status == "waiting" {
+                self.isHostWaitingForMe = true
+                print("💚 Host is checked into the room waiting for you. Revealing Call Button.")
+                
+            } else if status == "active" {
+                self.isHostWaitingForMe = false
+                
+                let videoConfig = VideoConfigModel(
+                    role: .guest,
+                    hostId: hostId,
+                    guestId: currentUserId,
+                    isScreenBlurred: false,
+                    isFullScreen: true
+                )
+                
+                speedDateVM.roomCode = roomCode
+                
+                switch viewRouter.currentPage {
+                case .videoPage(_):
+                    break // Guest is already inside the call framework container, ignore duplicate pushes
+                default:
+                    print("🚀 Match state changed to active! Moving Guest to video view layout.")
+                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                }
+            } else {
+                // 🔒 SAFETY BUFFER MAPPING: Covers "review", "completed", or empty database transitions
+                // This ensures the green button drops off instantly the second a round clears!
+                self.isHostWaitingForMe = false
+            }
+        }
+    }
+    
+    private func resetToLobbyIfNeeded() {
+        switch viewRouter.currentPage {
+        case .speedDateLobby:
+            break // Already safely anchored inside the lobby layout view tree workspace
+        default:
+            viewRouter.currentPage = .speedDateLobby
+        }
     }
 }
 

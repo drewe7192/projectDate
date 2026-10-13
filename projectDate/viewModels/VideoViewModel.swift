@@ -22,7 +22,7 @@ class VideoViewModel: ObservableObject {
     private var localSecondsRemaining: Int = 20
     
     /// Attaches the live listener to your event match doc directly
-    func listenToMatchSession(eventId: String, hostId: String, guestId: String, role: RoleType, viewRouter: ViewRouter) {
+    func listenToMatchSession(eventId: String, hostId: String, guestId: String, role: RoleType, viewRouter: ViewRouter, participantOrder: [String: String]) {
         let matchDocId = "\(eventId)_\(hostId)"
         
         dateListener = db.collection("activeDates").document(matchDocId)
@@ -68,7 +68,7 @@ class VideoViewModel: ObservableObject {
                         // 'self.roundEndTime' can NEVER evaluate as nil when this block evaluates!
                         if activeState, let targetTime = self.roundEndTime {
                             print("⏱️ VideoVM: Starting countdown ticker pipeline atomically for: \(targetTime)")
-                            self.startCountdown(targetEndTime: targetTime, viewRouter: viewRouter, eventId: eventId, hostId: hostId, guestId: guestId, role: role)
+                            self.startCountdown(targetEndTime: targetTime, viewRouter: viewRouter, eventId: eventId, hostId: hostId, guestId: guestId, role: role, participantOrder: participantOrder)
                         }
                     }
                     
@@ -82,7 +82,7 @@ class VideoViewModel: ObservableObject {
     }
     
     
-    private func startCountdown(targetEndTime: Date, viewRouter: ViewRouter, eventId: String, hostId: String, guestId: String, role: RoleType) {
+    private func startCountdown(targetEndTime: Date, viewRouter: ViewRouter, eventId: String, hostId: String, guestId: String, role: RoleType, participantOrder: [String:String]) {
         timer?.invalidate()
         
         let initialSecondsLeft = Int(targetEndTime.timeIntervalSinceNow)
@@ -96,7 +96,7 @@ class VideoViewModel: ObservableObject {
                 
                 
                 // This writes the new round number to Firestore, updating both apps instantly!
-                self.hostAdvanceRoundOnServer(eventId: eventId, hostId: hostId, currentRoundNumber: currentRoundNumber)
+                self.hostAdvanceRoundOnServer(eventId: eventId, hostId: hostId, currentRoundNumber: currentRoundNumber,participantOrder: participantOrder )
                 
                 self.stopMatchSession()
                 self.endRoundCleanly()
@@ -152,19 +152,27 @@ class VideoViewModel: ObservableObject {
         }
     }
     
-    func hostAdvanceRoundOnServer(eventId: String, hostId: String, currentRoundNumber: Int) {
+    func hostAdvanceRoundOnServer(eventId: String, hostId: String, currentRoundNumber: Int, participantOrder: [String: String]) {
         let db = Firestore.firestore()
         let matchDocId = "\(eventId)_\(hostId)"
         
         // 🔑 Read what the current round number is right before updating it
-        let nextRound = currentRoundNumber + 1
+        let nextRoundNumber = currentRoundNumber + 1
+        let nextRoundKey = "round_\(nextRoundNumber)"
         
-        print("👑 Host advancing matchmaking state to Round \(nextRound) on Firestore...")
+        // 🔑 THE MATRIX GATE: Verify if there is another guest mapped to the upcoming round number slot
+        let hasMoreParticipants = participantOrder[nextRoundKey] != nil &&
+        !participantOrder[nextRoundKey]!.isEmpty
+        
+        // 🔀 CHOOSE NEXT DATABASE STATUS STATE DIRECTLY:
+        let nextStatusState = hasMoreParticipants ? "review" : "completed"
+        
+        print("👑 Host advancing matchmaking state to Round \(nextRoundNumber) on Firestore...")
         
         // Reset parameters and advance the master server round tracking index
         db.collection("activeDates").document(matchDocId).updateData([
-            "status": "completed",
-            "currentRoundNumber": nextRound, // 🚀 UPDATES BOTH DEVICES SIMULTANEOUSLY!
+            "status": nextStatusState,
+            "currentRoundNumber": nextRoundNumber,
             "guestId": "",
             "hostRoomCode": "",
             "guestRoomCode": ""
@@ -172,7 +180,7 @@ class VideoViewModel: ObservableObject {
             if let error = error {
                 print("❌ Failed to advance round number in Firestore: \(error.localizedDescription)")
             } else {
-                print("✅ Success: Server is now configured for Round \(nextRound)")
+                print("✅ Success: Server is now configured for Round \(nextRoundNumber)")
             }
         }
     }
