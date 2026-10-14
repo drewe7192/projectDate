@@ -244,6 +244,8 @@ struct SpeedDateLobbyView: View {
                 // Kill any stale 100ms background pipeline audio nodes
                 videoVM.stopMatchSession()
                 
+                speedDateVM.roomCode = eventVM.event.guestRoomCode
+                
                 // 🚀 Fills guestId slot, flips room to active, and schedules Cloud Task timer!
                 speedDateVM.joinPredeterminedRound(
                     eventId: eventVM.event.id,
