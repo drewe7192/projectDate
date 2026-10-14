@@ -12,7 +12,7 @@ import FirebaseAuth
 
 class ViewRouter: ObservableObject {
     static let shared = ViewRouter()
-    @Published var currentPage: Route = .signInPage
+    @Published var currentPage: Route = .signUpPage
     
     init(){
         run()
@@ -25,9 +25,6 @@ class ViewRouter: ObservableObject {
                 if user != nil {
                     // 🔑 If a user session exists, automatically route them straight home
                     self.currentPage = .homePage
-                } else {
-                    // 🔑 If no user is authenticated, route them to the sign-in screen
-                    self.currentPage = .signInPage
                 }
             }
         }

@@ -59,12 +59,22 @@ class ProfileViewModel: NSObject, ObservableObject {
     }
     
     public func CreateUserProfile() async throws {
-        let  createdProfile = try await profileService.CreateProfile(newRoomCode: newRoomCode ?? "")
-        
+        let newRoomCode = try await handleRoomCreation()
+        let  createdProfile = try await profileService.CreateProfile(newRoomCode: newRoomCode)
         if(!createdProfile.id.isEmpty) {
-            self.showingQuestionSelectSheet.toggle()
             self.userProfile = createdProfile
         }
+    }
+    
+    func handleRoomCreation() async throws -> String {
+        let functions = Functions.functions()
+        let result = try await functions.httpsCallable("createRoom").call()
+        
+        guard let responseData = result.data as? [String: Any],
+              let roomCode = responseData["roomCode"] as? String else {
+            throw NSError(domain: "FunctionsError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from Cloud Function"])
+        }
+        return roomCode
     }
     
     public func UpdateActivityStatus(isActive: Bool) async throws {

@@ -18,7 +18,6 @@ struct SpeedDateLobbyView: View {
     
     @State private var showMatchConfirmationSheet: Bool = false
     @State private var isHostWaitingForMe: Bool = false
-    @State private var activeRoomCode: String = ""
     
     var body: some View {
         NavigationStack {
@@ -248,7 +247,7 @@ struct SpeedDateLobbyView: View {
                 // 🚀 Fills guestId slot, flips room to active, and schedules Cloud Task timer!
                 speedDateVM.joinPredeterminedRound(
                     eventId: eventVM.event.id,
-                    roomCode: self.activeRoomCode,
+                    roomCode: speedDateVM.roomCode,
                     hostId: eventVM.event.hostProfileId,
                     guestId: user.id,
                     currentProfileId: user.id
@@ -500,7 +499,6 @@ struct SpeedDateLobbyView: View {
         print("🧹 Server confirmed document does not exist. Grounding Guest safely to Lobby Screen.")
         DispatchQueue.main.async {
             self.isHostWaitingForMe = false
-            self.activeRoomCode = ""
             speedDateVM.roomCode = ""
             videoVM.stopMatchSession()
             resetToLobbyIfNeeded()
@@ -529,8 +527,6 @@ struct SpeedDateLobbyView: View {
         let roomCode = data["hostRoomCode"] as? String ?? defaultRoomCode
         
         DispatchQueue.main.async {
-            self.activeRoomCode = roomCode
-            
             // 🔀 DYNAMIC STATE EVALUATION INTERCEPTOR:
             if status == "waiting" {
                 self.isHostWaitingForMe = true

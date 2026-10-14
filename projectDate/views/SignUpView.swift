@@ -92,8 +92,7 @@ struct SignUpView: View {
     private func createUser() async {
         do {
             isCreatingUser = true
-            let newRoomCode = try await handleSignupAndRoomCreation(email: email, password: password)
-            profileViewModel.newRoomCode = newRoomCode
+            try await handleSignup(email: email, password: password)
             viewRouter.currentPage = .homePage
             isCreatingUser = false
         } catch {
@@ -122,22 +121,12 @@ struct SignUpView: View {
         }
     }
 
-    func handleSignupAndRoomCreation(email: String, password: String) async throws -> String {
+    func handleSignup(email: String, password: String) async throws {
         // 1. Create the user. This also signs them in.
         let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
         
         // 2. Explicitly fetch the ID token for the newly created user.
         let _ = try await authResult.user.idTokenForcingRefresh(true)
-        
-        // 3. Call the Firebase Cloud Function securely.
-        let functions = Functions.functions()
-        let result = try await functions.httpsCallable("createRoom").call()
-        
-        guard let responseData = result.data as? [String: Any],
-              let roomCode = responseData["roomCode"] as? String else {
-            throw NSError(domain: "FunctionsError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response from Cloud Function"])
-        }
-        return roomCode
     }
 }
 
