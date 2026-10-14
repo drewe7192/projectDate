@@ -243,21 +243,32 @@ struct SpeedDateLobbyView: View {
                 
                 // Kill any stale 100ms background pipeline audio nodes
                 videoVM.stopMatchSession()
+                videoVM.endRoundCleanly()
                 
-                speedDateVM.roomCode = eventVM.event.guestRoomCode
+                speedDateVM.roomCode = ""
                 
-                // 🚀 Fills guestId slot, flips room to active, and schedules Cloud Task timer!
-                speedDateVM.joinPredeterminedRound(
-                    eventId: eventVM.event.id,
-                    roomCode: speedDateVM.roomCode,
-                    hostId: eventVM.event.hostProfileId,
-                    guestId: user.id,
-                    currentProfileId: user.id
-                )
-                
-                // Clear state out locally and push onto the video stream page layer layout
-                self.isHostWaitingForMe = false
-                viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                // 🚀 STEP 2: Introduce a minor main actor execution delay (150ms)
+                // This forces SwiftUI to fully unmount any lingering RTC video track allocations
+                // from previous rounds before Phone 3 initializes its stream channel!
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    
+                    // Re-bind the static room code token cleanly now that the cache is flushed
+                    speedDateVM.roomCode = eventVM.event.guestRoomCode
+                    print("📱 3rd Phone: Static room code re-initialized cleanly for Round 2: \(speedDateVM.roomCode)")
+                    
+                    // Trigger the database round state transitions
+                    speedDateVM.joinPredeterminedRound(
+                        eventId: eventVM.event.id,
+                        roomCode: speedDateVM.roomCode,
+                        hostId: eventVM.event.hostProfileId,
+                        guestId: user.id,
+                        currentProfileId: user.id
+                    )
+                    
+                    // Clear local button state flags and safely push them into the fresh video layout view tree
+                    self.isHostWaitingForMe = false
+                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
+                }
             }) {
                 HStack {
                     Image(systemName: "phone.fill")
@@ -526,7 +537,6 @@ struct SpeedDateLobbyView: View {
         
         // Extract room routing flags and signaling channel tokens
         let status = data["status"] as? String ?? ""
-        let roomCode = data["hostRoomCode"] as? String ?? defaultRoomCode
         
         DispatchQueue.main.async {
             // 🔀 DYNAMIC STATE EVALUATION INTERCEPTOR:
@@ -535,6 +545,18 @@ struct SpeedDateLobbyView: View {
                 print("💚 Host is checked into the room waiting for you. Revealing Call Button.")
                 
             } else if status == "active" {
+                // 🔒 THE ABSOLUTE NAVIGATIONAL LIFEGUARD FIX:
+                // If the 3rd phone has ALREADY successfully broken out of the lobby and is rendering the call page,
+                // immediately exit the block! Do NOT re-trigger view allocation states or overwrite the router!
+                switch viewRouter.currentPage {
+                case .videoPage(_):
+                    print("🛡️ Listener Shield: Guest is already actively on the video call page. Aborting redundant layout re-pushes.")
+                    return // 🚀 EXIT THE FUNCTION PASS COMPLETELY!
+                default:
+                    break // Not on the video page yet, allow them to pass through safely below
+                }
+                
+                // 🚀 Only runs if they are physically still sitting in the lobby room waiting area!
                 self.isHostWaitingForMe = false
                 
                 let videoConfig = VideoConfigModel(
@@ -545,15 +567,9 @@ struct SpeedDateLobbyView: View {
                     isFullScreen: true
                 )
                 
-                speedDateVM.roomCode = roomCode
-                
-                switch viewRouter.currentPage {
-                case .videoPage(_):
-                    break // Guest is already inside the call framework container, ignore duplicate pushes
-                default:
-                    print("🚀 Match state changed to active! Moving Guest to video view layout.")
-                    viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
-                }
+                speedDateVM.roomCode = eventVM.event.guestRoomCode
+                print("🚀 Match state confirmed active! Transitioning Guest to video view layout container.")
+                viewRouter.currentPage = .videoPage(videoConfig: videoConfig)
             } else {
                 // 🔒 SAFETY BUFFER MAPPING: Covers "review", "completed", or empty database transitions
                 // This ensures the green button drops off instantly the second a round clears!
