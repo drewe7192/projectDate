@@ -11,7 +11,7 @@ import Firebase
 class FCMTokenRepository {
     let db = Firestore.firestore()
     
-    public func Get(userId: String) async throws -> FCMTokenModel {
+    public func get(userId: String) async throws -> FCMTokenModel {
         var fcmToken = emptyFCMTokenModel
         let snapshot = try await db.collection("fcmTokens")
             .whereField("userId", isEqualTo: userId as String)

@@ -74,7 +74,7 @@ struct HomeView: View {
                 if let _ = Auth.auth().currentUser {
                     do {
                         /// get profile and launch video
-                        try await profileViewModel.GetUserProfile()
+                        try await profileViewModel.getUserProfile()
                         
                         // Only set roomCode if userProfile exists
                         if !profileViewModel.userProfile.roomCode.isEmpty {
@@ -84,10 +84,10 @@ struct HomeView: View {
                             speedDateVM.roomCode = incomingRoomCode
                         }
                         
-                        try await eventViewModel.GetEvent(profileId: profileViewModel.userProfile.id)
+                        try await eventViewModel.getEvent(profileId: profileViewModel.userProfile.id)
                         
                         try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
-                        try await profileViewModel.UpdateActivityStatus(isActive: true)
+                        try await profileViewModel.updateActivityStatus(isActive: true)
                     } catch {
                         print("Error getting userProfile:\(error)")
                     }

@@ -12,22 +12,22 @@ class ProfileService {
     private let profileRepo = ProfileRepository()
     private let fcmTokenRepo = FCMTokenRepository()
     
-    public func GetProfile(userUID: String) async throws -> ProfileModel {
-        let response = try await profileRepo.Get(userUID: userUID)
+    public func getProfile(userUID: String) async throws -> ProfileModel {
+        let response = try await profileRepo.get(userUID: userUID)
         return response
     }
     
-    public func GetProfile(profileId: String) async throws -> ProfileModel {
-        let response = try await profileRepo.Get(profileId: profileId)
+    public func getProfile(profileId: String) async throws -> ProfileModel {
+        let response = try await profileRepo.get(profileId: profileId)
         return response
     }
     
-    public func GetProfiles(profileIds: [String]) async throws -> [ProfileModel] {
-        let response = try await profileRepo.Get(profileIds: profileIds)
+    public func getProfiles(profileIds: [String]) async throws -> [ProfileModel] {
+        let response = try await profileRepo.get(profileIds: profileIds)
         return response
     }
     
-    public func CreateProfile(newRoomCode: String) async throws -> ProfileModel {
+    public func createProfile(newRoomCode: String) async throws -> ProfileModel {
         guard let uid = Auth.auth().currentUser?.uid else {
               throw NSError(domain: "ProfileService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No logged in user"])
           }
@@ -52,11 +52,11 @@ class ProfileService {
             "bio": (newProfile.bio ?? "") as String
         ]
         
-        try await profileRepo.Create(newID: newProfile.id, newProfile: docData)
+        try await profileRepo.create(newID: newProfile.id, newProfile: docData)
         return newProfile
     }
     
-    public func UpdateActivityStatus(profileId: String, isActive: Bool) async throws {
-        try await profileRepo.UpdateActiveStatus(profileId: profileId, isActive: isActive)
+    public func updateActivityStatus(profileId: String, isActive: Bool) async throws {
+        try await profileRepo.updateActiveStatus(profileId: profileId, isActive: isActive)
     }
 }

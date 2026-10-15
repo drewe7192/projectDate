@@ -63,14 +63,14 @@ struct ContentView: View {
         if newPhase == .active {
             if !profileViewModel.userProfile.id.isEmpty {
                 Task{
-                    try await profileViewModel.UpdateActivityStatus(isActive: true)
+                    try await profileViewModel.updateActivityStatus(isActive: true)
                 }
             }
         } else if newPhase == .inactive {
             if !profileViewModel.userProfile.id.isEmpty {
                 Task {
                     try await
-                    profileViewModel.UpdateActivityStatus(isActive: false)
+                    profileViewModel.updateActivityStatus(isActive: false)
                 }
             }
         } else if newPhase == .background {

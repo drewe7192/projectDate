@@ -17,13 +17,13 @@ class EventViewModel: NSObject, ObservableObject {
     @Published var event: EventModel = emptyEventModel
     private let eventService = EventService()
     
-    public func GetEvent(eventId: String) async throws {
-        let event = try await eventService.GetEvent(eventId: eventId)
+    public func getEvent(eventId: String) async throws {
+        let event = try await eventService.getEvent(eventId: eventId)
         self.event = event
     }
     
-    public func GetEvent(profileId: String) async throws {
-        let event = try await eventService.GetEvent(profileId: profileId)
+    public func getEvent(profileId: String) async throws {
+        let event = try await eventService.getEvent(profileId: profileId)
         self.event = event
     }
 }

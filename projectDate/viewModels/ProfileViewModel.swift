@@ -30,37 +30,37 @@ class ProfileViewModel: NSObject, ObservableObject {
     var tokenToUse =  FCMTokenModel(id: "", token: "")
     
     
-    public func GetUserProfile() async throws {
+    public func getUserProfile() async throws {
         guard let uid = Auth.auth().currentUser?.uid else {
             print("⚠️ No logged in user, skipping GetUserProfile")
             return
         }
         
-        let userProfile = try await profileService.GetProfile(userUID: uid)
+        let userProfile = try await profileService.getProfile(userUID: uid)
         if !userProfile.id.isEmpty {
             self.userProfile = userProfile
         } else {
-            try await CreateUserProfile()
+            try await createUserProfile()
         }
     }
     
-    public func GetProfile(profileId: String) async throws {
-        let profile = try await profileService.GetProfile(profileId: profileId)
+    public func getProfile(profileId: String) async throws {
+        let profile = try await profileService.getProfile(profileId: profileId)
         if !profile.id.isEmpty {
             self.guestProfile = profile
         }
     }
     
-    public func GetProfiles(profileIds: [String]) async throws {
-        let profiles = try await profileService.GetProfiles(profileIds: profileIds)
+    public func getProfiles(profileIds: [String]) async throws {
+        let profiles = try await profileService.getProfiles(profileIds: profileIds)
         if !profiles.isEmpty {
             self.guestProfiles = profiles
         }
     }
     
-    public func CreateUserProfile() async throws {
+    public func createUserProfile() async throws {
         let newRoomCode = try await handleRoomCreation()
-        let  createdProfile = try await profileService.CreateProfile(newRoomCode: newRoomCode)
+        let  createdProfile = try await profileService.createProfile(newRoomCode: newRoomCode)
         if(!createdProfile.id.isEmpty) {
             self.userProfile = createdProfile
         }
@@ -77,12 +77,12 @@ class ProfileViewModel: NSObject, ObservableObject {
         return roomCode
     }
     
-    public func UpdateActivityStatus(isActive: Bool) async throws {
-        try await profileService.UpdateActivityStatus(profileId: !userProfile.id.isEmpty ? userProfile.id : "XMIsmq29yPr0AKWQNB9h", isActive: isActive)
+    public func updateActivityStatus(isActive: Bool) async throws {
+        try await profileService.updateActivityStatus(profileId: !userProfile.id.isEmpty ? userProfile.id : "XMIsmq29yPr0AKWQNB9h", isActive: isActive)
     }
     
-    public func GetFCMToken(userId: String) async throws -> FCMTokenModel {
-        let fcmToken = try await fcmService.GetFCMToken(userId: userId)
+    public func getFCMToken(userId: String) async throws -> FCMTokenModel {
+        let fcmToken = try await fcmService.getFCMToken(userId: userId)
         return fcmToken
     }
     
@@ -186,17 +186,5 @@ class ProfileViewModel: NSObject, ObservableObject {
         }
         
         return roomCode
-    }
-}
-
-///TODO:  can we put this in a more appropiate class?
-extension ProfileViewModel: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification) async
-    -> UNNotificationPresentationOptions {
-        if scenePhase == .active  {
-            return [[]]
-        }
-        return [[.sound, .banner, .badge]]
     }
 }

@@ -52,7 +52,7 @@ struct SpeedDateLobbyView: View {
         .onAppear {
             startHostLobbySyncListener()
             Task {
-                try await profileVM.GetProfiles(profileIds: eventVM.event.participantProfileIds)
+                try await profileVM.getProfiles(profileIds: eventVM.event.participantProfileIds)
             }
         }
     }
@@ -404,7 +404,7 @@ struct SpeedDateLobbyView: View {
     private func prepareNextOpponentMetadata(for participantId: String) async {
         print("🔍 Fetching live profile data for matching tester ID: \(participantId)")
         do {
-            try await profileVM.GetProfile(profileId: participantId)
+            try await profileVM.getProfile(profileId: participantId)
             
             // 🔒 Safe MainActor scheduling replaces the old DispatchQueue format cleanly
             await MainActor.run {

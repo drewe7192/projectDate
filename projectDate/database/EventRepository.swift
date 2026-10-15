@@ -8,11 +8,10 @@
 import Foundation
 import Firebase
 
-
 class EventRepository {
     let db = Firestore.firestore()
     
-    public func Get() async throws -> [EventModel] {
+    public func get() async throws -> [EventModel] {
         var events: [EventModel] = []
         let snapshot = try await db.collection("events")
             .limit(to: 10)
@@ -36,7 +35,7 @@ class EventRepository {
                 event.startDate = startTimestamp.dateValue()
             }
             
-            // Safely parsing the participantOrder Map without type-casting crashes
+            // Safely parsing the participantOrder Map
               if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
                   event.participantOrder = rawOrderMap
               } else {
@@ -48,7 +47,7 @@ class EventRepository {
         return events
     }
     
-    public func Get(eventId: String) async throws -> EventModel {
+    public func get(eventId: String) async throws -> EventModel {
         var event: EventModel = emptyEventModel
         let snapshot = try await db.collection("events")
             .whereField("id", isEqualTo: eventId)
@@ -64,7 +63,7 @@ class EventRepository {
             event.hostRoomCode = documentData["hostRoomCode"] as! String
             event.type = documentData["type"] as! String
             
-            // Safely parsing the participantOrder Map without type-casting crashes
+            // Safely parsing the participantOrder Map
               if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
                   event.participantOrder = rawOrderMap
               } else {
@@ -74,7 +73,7 @@ class EventRepository {
         return event
     }
     
-    public func Get(profileId: String) async throws -> EventModel {
+    public func get(profileId: String) async throws -> EventModel {
         var event: EventModel = emptyEventModel
         let snapshot = try await db.collection("events")
             .whereField("participantProfileIds", arrayContains: profileId)
@@ -100,12 +99,7 @@ class EventRepository {
         return event
     }
     
-    public func Save(event: EventModel) async throws {
-        do {
+    public func save(event: EventModel) async throws {
             try db.collection("events").document(event.id).setData(from: event)
-        } catch let error {
-            print(error)
-        }
     }
-    
 }

@@ -11,8 +11,8 @@ import Firebase
 class FCMService {
     private let fcmTokenRepo = FCMTokenRepository()
     
-    public func GetFCMToken(userId: String) async throws -> FCMTokenModel{
-        let fcmToken = try await fcmTokenRepo.Get(userId: userId)
+    public func getFCMToken(userId: String) async throws -> FCMTokenModel{
+        let fcmToken = try await fcmTokenRepo.get(userId: userId)
         return fcmToken
     }
 }

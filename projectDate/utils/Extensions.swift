@@ -143,7 +143,6 @@ extension Date {
 
 }
 
-// MARK: Helper methods
 extension Date {
   func getWeekDaysInEnglish() -> [String] {
     var calendar = Calendar(identifier: .gregorian)
@@ -177,7 +176,6 @@ extension Date {
 }
 
 extension VideoViewModel {
-    
     // 🔑 THE AUTOMATIC DISCONNECT CATCHER: Triggers when 100ms detects a user closed their app or dropped connection
     func handle100msPeerUpdate(peer: HMSPeer, update: HMSPeerUpdate, eventId: String, hostId: String) {
         switch update {
@@ -205,6 +203,17 @@ extension VideoViewModel {
         default:
             break
         }
+    }
+}
+
+extension ProfileViewModel: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification) async
+    -> UNNotificationPresentationOptions {
+        if scenePhase == .active  {
+            return [[]]
+        }
+        return [[.sound, .banner, .badge]]
     }
 }
 

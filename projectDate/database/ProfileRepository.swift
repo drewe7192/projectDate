@@ -11,7 +11,7 @@ import Firebase
 class ProfileRepository {
     let db = Firestore.firestore()
     
-    public func Get(userUID: String) async throws -> ProfileModel {
+    public func get(userUID: String) async throws -> ProfileModel {
         var profile = emptyProfileModel
         let snapshot = try await db.collection("profiles")
             .whereField("userUID", isEqualTo: userUID as String)
@@ -30,7 +30,7 @@ class ProfileRepository {
         return profile
     }
     
-    public func Get(profileId: String) async throws -> ProfileModel {
+    public func get(profileId: String) async throws -> ProfileModel {
         
         var profile = emptyProfileModel
         let snapshot = try await db.collection("profiles")
@@ -50,7 +50,7 @@ class ProfileRepository {
         return profile
     }
     
-    public func Get(profileIds: [String]) async throws -> [ProfileModel] {
+    public func get(profileIds: [String]) async throws -> [ProfileModel] {
         guard !profileIds.isEmpty else { return [] }
         
         var activeProfiles: [ProfileModel] = []
@@ -74,12 +74,12 @@ class ProfileRepository {
         return activeProfiles
     }
     
-    public func Create(newID: String, newProfile: [String: Any]) async throws {
+    public func create(newID: String, newProfile: [String: Any]) async throws {
         let docRef = db.collection("profiles").document(newID)
         try await docRef.setData(newProfile)
     }
     
-    public func GetAll(userUID: String) async throws -> [ProfileModel] {
+    public func getAll(userUID: String) async throws -> [ProfileModel] {
         var activeProfiles: [ProfileModel] = []
         let snapshot = try await db.collection("profiles")
             .whereField("userUID", isNotEqualTo: userUID as String)
@@ -101,7 +101,7 @@ class ProfileRepository {
         return activeProfiles
     }
     
-    public func UpdateActiveStatus(profileId: String, isActive: Bool)  async throws {
+    public func updateActiveStatus(profileId: String, isActive: Bool)  async throws {
         let docRef = db.collection("profiles").document(profileId)
         try await docRef.updateData([
             "isActive": isActive

@@ -11,13 +11,13 @@ import Firebase
 class EventService {
     private let eventRepo = EventRepository()
     
-    public func GetEvent(eventId: String) async throws -> EventModel {
-        let response = try await eventRepo.Get(eventId: eventId)
+    public func getEvent(eventId: String) async throws -> EventModel {
+        let response = try await eventRepo.get(eventId: eventId)
         return response
     }
     
-    public func GetEvent(profileId: String) async throws -> EventModel {
-        let response = try await eventRepo.Get(profileId: profileId)
+    public func getEvent(profileId: String) async throws -> EventModel {
+        let response = try await eventRepo.get(profileId: profileId)
         return response
     }
 }
