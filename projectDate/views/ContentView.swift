@@ -37,6 +37,9 @@ struct ContentView: View {
                     .environmentObject(eventVM)
                     .environmentObject(speedDateVM)
                     .environmentObject(videoVM)
+            case.onBoardingPage:
+                OnBoardingView()
+                    .environmentObject(profileVM)
             case .videoPage:
                 Color.clear
             }

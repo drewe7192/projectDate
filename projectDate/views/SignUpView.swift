@@ -92,7 +92,7 @@ struct SignUpView: View {
         do {
             isCreatingUser = true
             try await handleSignup(email: email, password: password)
-            viewRouter.currentPage = .homePage
+            viewRouter.currentPage = .onBoardingPage
             isCreatingUser = false
         } catch {
             self.errorMessage = error.localizedDescription

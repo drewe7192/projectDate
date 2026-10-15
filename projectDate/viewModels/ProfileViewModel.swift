@@ -10,6 +10,7 @@ import Firebase
 import FirebaseStorage
 import FirebaseFunctions
 import SwiftUI
+import AVFoundation
 
 @MainActor
 class ProfileViewModel: NSObject, ObservableObject {
@@ -21,6 +22,7 @@ class ProfileViewModel: NSObject, ObservableObject {
     @Published var currentUsers: [ProfileModel] = []
     @Published var showingQuestionSelectSheet: Bool = false
     @Published var newRoomCode: String?
+    @Published var isPermissionDenied = false
     
     private let profileService = ProfileService()
     private let fcmService = FCMService()
@@ -182,5 +184,22 @@ class ProfileViewModel: NSObject, ObservableObject {
         }
         
         return roomCode
+    }
+    
+    /// 🔒 Triggers native system prompts sequentially and returns true only if BOTH are approved
+    func requestCameraAndMicAccess() async -> Bool {
+        // 1. Request Camera Access
+        let cameraGranted = await AVCaptureDevice.requestAccess(for: .video)
+        print("🎥 Camera permission result: \(cameraGranted)")
+        
+        // 2. Request Microphone Access
+        let micGranted = await AVCaptureDevice.requestAccess(for: .audio)
+        print("🎙️ Microphone permission result: \(micGranted)")
+        
+        await MainActor.run {
+            self.isPermissionDenied = !(cameraGranted && micGranted)
+        }
+        
+        return cameraGranted && micGranted
     }
 }

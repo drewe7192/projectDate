@@ -39,4 +39,5 @@ enum Route {
     case videoPage(videoConfig: VideoConfigModel)
     case notificationsPage
     case speedDateLobby
+    case onBoardingPage
 }
