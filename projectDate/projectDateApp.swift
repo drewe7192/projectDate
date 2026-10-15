@@ -14,18 +14,18 @@ import FirebaseMessaging
 @main
 struct projectDateApp: App {
     @StateObject var viewRouter = ViewRouter()
-    @StateObject var profileViewModel = ProfileViewModel()
-    @StateObject var speedDateViewModel = SpeedDateViewModel()
-    @StateObject var videoViewModel = VideoViewModel()
+    @StateObject var profileVM = ProfileViewModel()
+    @StateObject var speedDateVM = SpeedDateViewModel()
+    @StateObject var videoVM = VideoViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(viewRouter)
-                .environmentObject(profileViewModel)
-                .environmentObject(speedDateViewModel)
-                .environmentObject(videoViewModel)
+                .environmentObject(profileVM)
+                .environmentObject(speedDateVM)
+                .environmentObject(videoVM)
         }
     }
 }

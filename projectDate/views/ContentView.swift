@@ -8,28 +8,27 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
     @EnvironmentObject var videoVM: VideoViewModel
     @Environment(\.scenePhase) var scenePhase
     
-    @StateObject var eventViewModel = EventViewModel()
+    @StateObject var eventVM = EventViewModel()
     
     var body: some View {
         ZStack {
-            // 1. Main Navigation Routing Switch
             switch viewRouter.currentPage {
             case .homePage:
                 MainView()
-                    .environmentObject(profileViewModel)
+                    .environmentObject(profileVM)
                     .environmentObject(speedDateVM)
-                    .environmentObject(eventViewModel)
+                    .environmentObject(eventVM)
                     .onChange(of: scenePhase) { oldPhase, newPhase in
                         updateActiveStatus(newPhase: newPhase)
                     }
             case .signUpPage:
                 SignUpView()
-                    .environmentObject(profileViewModel)
+                    .environmentObject(profileVM)
             case .signInPage:
                 SignInView()
             case .settingsPage:
@@ -38,22 +37,21 @@ struct ContentView: View {
                 NotificationsView()
             case .speedDateLobby:
                 SpeedDateLobbyView()
-                    .environmentObject(eventViewModel)
+                    .environmentObject(eventVM)
                     .environmentObject(speedDateVM)
                     .environmentObject(videoVM)
             case .videoPage:
                 Color.clear
             }
             
-            
             if case .videoPage(let videoConfig) = viewRouter.currentPage {
                 VideoView(videoConfig: videoConfig)
                     .transition(.opacity) // Smooth entry transition
             }
         }
-        .environmentObject(profileViewModel)
+        .environmentObject(profileVM)
         .environmentObject(speedDateVM)
-        .environmentObject(eventViewModel)
+        .environmentObject(eventVM)
         .onChange(of: scenePhase) { oldPhase, newPhase in
             updateActiveStatus(newPhase: newPhase)
         }
@@ -61,16 +59,16 @@ struct ContentView: View {
     
     private func updateActiveStatus(newPhase: ScenePhase) {
         if newPhase == .active {
-            if !profileViewModel.userProfile.id.isEmpty {
+            if !profileVM.userProfile.id.isEmpty {
                 Task{
-                    try await profileViewModel.updateActivityStatus(isActive: true)
+                    try await profileVM.updateActivityStatus(isActive: true)
                 }
             }
         } else if newPhase == .inactive {
-            if !profileViewModel.userProfile.id.isEmpty {
+            if !profileVM.userProfile.id.isEmpty {
                 Task {
                     try await
-                    profileViewModel.updateActivityStatus(isActive: false)
+                    profileVM.updateActivityStatus(isActive: false)
                 }
             }
         } else if newPhase == .background {
