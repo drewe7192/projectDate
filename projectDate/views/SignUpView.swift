@@ -15,13 +15,12 @@ struct SignUpView: View {
     @State private var email: String = ""
     @State private var password: String =  ""
     @State private var isButtonPressed: Bool = false
-    @FocusState private var focusedField: Field?
     @State var errorMessage: String = ""
     @State private var roomCode: String?
     @State private var isCreatingUser: Bool = false
     
+    @FocusState private var focusedField: Field?
     @EnvironmentObject var viewRouter: ViewRouter
-    @EnvironmentObject var profileViewModel: ProfileViewModel
     
     enum Field {
         case email, password

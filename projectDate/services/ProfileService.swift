@@ -55,8 +55,4 @@ class ProfileService {
         try await profileRepo.create(newID: newProfile.id, newProfile: docData)
         return newProfile
     }
-    
-    public func updateActivityStatus(profileId: String, isActive: Bool) async throws {
-        try await profileRepo.updateActiveStatus(profileId: profileId, isActive: isActive)
-    }
 }

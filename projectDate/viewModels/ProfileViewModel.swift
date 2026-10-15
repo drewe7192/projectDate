@@ -77,10 +77,6 @@ class ProfileViewModel: NSObject, ObservableObject {
         return roomCode
     }
     
-    public func updateActivityStatus(isActive: Bool) async throws {
-        try await profileService.updateActivityStatus(profileId: !userProfile.id.isEmpty ? userProfile.id : "XMIsmq29yPr0AKWQNB9h", isActive: isActive)
-    }
-    
     public func getFCMToken(userId: String) async throws -> FCMTokenModel {
         let fcmToken = try await fcmService.getFCMToken(userId: userId)
         return fcmToken

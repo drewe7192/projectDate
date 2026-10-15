@@ -17,8 +17,8 @@ struct HomeView: View {
     
     @EnvironmentObject var viewRouter: ViewRouter
     @EnvironmentObject var speedDateVM: SpeedDateViewModel
-    @EnvironmentObject var profileViewModel: ProfileViewModel
-    @EnvironmentObject var eventViewModel: EventViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var eventVM: EventViewModel
     
     @Binding var selectedTab: Int
     
@@ -47,7 +47,7 @@ struct HomeView: View {
                                     viewRouter.currentPage = .speedDateLobby
                                 }) {
                                     VStack{
-                                        Text(eventViewModel.event.participantProfileIds.contains(profileViewModel.userProfile.id) ? "Start Speed Date" : "Not a Participant")
+                                        Text(eventVM.event.participantProfileIds.contains(profileVM.userProfile.id) ? "Start Speed Date" : "Not a Participant")
 
                                             .foregroundStyle(.white)
                                             .font(.system(size: 20))
@@ -64,8 +64,8 @@ struct HomeView: View {
                             )
                         }
                         .frame(height: geometry.size.height * 0.1)
-                        .disabled(!eventViewModel.event.participantProfileIds.contains(profileViewModel.userProfile.id))
-                        .opacity(eventViewModel.event.participantProfileIds.contains(profileViewModel.userProfile.id) ? 0.5 : 0.2)
+                        .disabled(!eventVM.event.participantProfileIds.contains(profileVM.userProfile.id))
+                        .opacity(eventVM.event.participantProfileIds.contains(profileVM.userProfile.id) ? 0.5 : 0.2)
                         Spacer()
                     }
                 }
@@ -74,20 +74,19 @@ struct HomeView: View {
                 if let _ = Auth.auth().currentUser {
                     do {
                         /// get profile and launch video
-                        try await profileViewModel.getUserProfile()
+                        try await profileVM.getUserProfile()
                         
                         // Only set roomCode if userProfile exists
-                        if !profileViewModel.userProfile.roomCode.isEmpty {
-                            let incomingRoomCode = profileViewModel.userProfile.roomCode
+                        if !profileVM.userProfile.roomCode.isEmpty {
+                            let incomingRoomCode = profileVM.userProfile.roomCode
                             
                             // Launch the video view safely now
                             speedDateVM.roomCode = incomingRoomCode
                         }
                         
-                        try await eventViewModel.getEvent(profileId: profileViewModel.userProfile.id)
+                        try await eventVM.getEvent(profileId: profileVM.userProfile.id)
                         
-                        try await profileViewModel.getFileFromStorage(profileId: profileViewModel.userProfile.id)
-                        try await profileViewModel.updateActivityStatus(isActive: true)
+                        try await profileVM.getFileFromStorage(profileId: profileVM.userProfile.id)
                     } catch {
                         print("Error getting userProfile:\(error)")
                     }
@@ -105,10 +104,10 @@ struct HomeView: View {
             Circle()
                 .frame(width: geometry.size.width * 0.08)
                 .overlay {
-                    if !profileViewModel.userProfile.profileImage.size.height.isZero {
+                    if !profileVM.userProfile.profileImage.size.height.isZero {
                         Circle()
                             .overlay(
-                                Image(uiImage: profileViewModel.userProfile.profileImage)
+                                Image(uiImage: profileVM.userProfile.profileImage)
                                     .resizable()
                                     .scaledToFit()
                                     .clipShape(Circle())

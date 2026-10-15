@@ -23,9 +23,6 @@ struct ContentView: View {
                     .environmentObject(profileVM)
                     .environmentObject(speedDateVM)
                     .environmentObject(eventVM)
-                    .onChange(of: scenePhase) { oldPhase, newPhase in
-                        updateActiveStatus(newPhase: newPhase)
-                    }
             case .signUpPage:
                 SignUpView()
                     .environmentObject(profileVM)
@@ -52,28 +49,6 @@ struct ContentView: View {
         .environmentObject(profileVM)
         .environmentObject(speedDateVM)
         .environmentObject(eventVM)
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            updateActiveStatus(newPhase: newPhase)
-        }
-    }
-    
-    private func updateActiveStatus(newPhase: ScenePhase) {
-        if newPhase == .active {
-            if !profileVM.userProfile.id.isEmpty {
-                Task{
-                    try await profileVM.updateActivityStatus(isActive: true)
-                }
-            }
-        } else if newPhase == .inactive {
-            if !profileVM.userProfile.id.isEmpty {
-                Task {
-                    try await
-                    profileVM.updateActivityStatus(isActive: false)
-                }
-            }
-        } else if newPhase == .background {
-
-        }
     }
 }
 

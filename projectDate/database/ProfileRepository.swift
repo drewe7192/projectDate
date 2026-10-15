@@ -100,12 +100,4 @@ class ProfileRepository {
         }
         return activeProfiles
     }
-    
-    public func updateActiveStatus(profileId: String, isActive: Bool)  async throws {
-        let docRef = db.collection("profiles").document(profileId)
-        try await docRef.updateData([
-            "isActive": isActive
-        ])
-    }
 }
-
