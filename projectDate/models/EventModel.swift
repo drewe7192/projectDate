@@ -16,7 +16,8 @@ struct EventModel: Identifiable, Equatable, Codable, Hashable {
     var hostRoomCode: String
     var createdDate: Date
     var startDate: Date
+    var endDate: Date
     var type: String
 }
 
-var emptyEventModel = EventModel(id: "", hostProfileId: "", participantOrder: ["": ""], participantProfileIds: [], guestRoomCode: "", hostRoomCode: "", createdDate: Date.now, startDate: Date.now, type: "SpeedDate",)
+var emptyEventModel = EventModel(id: "", hostProfileId: "", participantOrder: ["": ""], participantProfileIds: [], guestRoomCode: "", hostRoomCode: "", createdDate: Date.now, startDate: Date.now, endDate: Date.now, type: "SpeedDate",)

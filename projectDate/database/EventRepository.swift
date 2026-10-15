@@ -35,6 +35,10 @@ class EventRepository {
                 event.startDate = startTimestamp.dateValue()
             }
             
+            if let startTimestamp = documentData["endDate"] as? Timestamp {
+                event.endDate = startTimestamp.dateValue()
+            }
+            
             // Safely parsing the participantOrder Map
               if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
                   event.participantOrder = rawOrderMap
@@ -63,6 +67,17 @@ class EventRepository {
             event.hostRoomCode = documentData["hostRoomCode"] as! String
             event.type = documentData["type"] as! String
             
+            if let createdTimestamp = documentData["createdDate"] as? Timestamp {
+                event.createdDate = createdTimestamp.dateValue()
+            }
+            if let startTimestamp = documentData["startDate"] as? Timestamp {
+                event.startDate = startTimestamp.dateValue()
+            }
+            
+            if let startTimestamp = documentData["endDate"] as? Timestamp {
+                event.endDate = startTimestamp.dateValue()
+            }
+            
             // Safely parsing the participantOrder Map
               if let rawOrderMap = documentData["participantOrder"] as? [String: String] {
                   event.participantOrder = rawOrderMap
@@ -88,6 +103,17 @@ class EventRepository {
             event.guestRoomCode = documentData["guestRoomCode"] as! String
             event.hostRoomCode = documentData["hostRoomCode"] as! String
             event.type = documentData["type"] as! String
+            
+            if let createdTimestamp = documentData["createdDate"] as? Timestamp {
+                event.createdDate = createdTimestamp.dateValue()
+            }
+            if let startTimestamp = documentData["startDate"] as? Timestamp {
+                event.startDate = startTimestamp.dateValue()
+            }
+            
+            if let startTimestamp = documentData["endDate"] as? Timestamp {
+                event.endDate = startTimestamp.dateValue()
+            }
             
             // Safely parsing the participantOrder Map without type-casting crashes
               if let rawOrderMap = documentData["participantOrder"] as? [String: String] {

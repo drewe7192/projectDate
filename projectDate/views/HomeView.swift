@@ -22,14 +22,17 @@ struct HomeView: View {
     
     @Binding var selectedTab: Int
     
+    @State private var currentTime = Date()
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
     var body: some View {
         NavigationStack {
             ZStack {
+                AnimatedGradientBackground()
+                    .ignoresSafeArea()
+                
                 GeometryReader { geometry in
-                    AnimatedGradientBackground()
-                        .ignoresSafeArea()
-                    
-                    VStack{
+                    VStack {
                         header(geometry: geometry)
                         
                         Spacer()
@@ -40,32 +43,25 @@ struct HomeView: View {
                         Spacer()
                             .frame(height: geometry.size.height * 0.03)
                         
+                        let isParticipant = eventVM.event.participantProfileIds.contains(profileVM.userProfile.id)
+                        let isUpcomingEvent  = eventVM.event.startDate > currentTime
+                        let isCompletedEvent = eventVM.event.endDate < currentTime
+                        let isLiveEvent = currentTime >= eventVM.event.startDate && currentTime <= eventVM.event.endDate
+                        
                         GlassContainer {
-                            VStack{
-                                Button(action: {
-                                    navigateToSpeedDate = true
-                                    viewRouter.currentPage = .speedDateLobby
-                                }) {
-                                    VStack{
-                                        Text(eventVM.event.participantProfileIds.contains(profileVM.userProfile.id) ? "Start Speed Date" : "Not a Participant")
-
-                                            .foregroundStyle(.white)
-                                            .font(.system(size: 20))
-                                    }
-                                }
-                            }
-                            
-                            NavigationLink(
-                                destination: SpeedDateLobbyView(), // The next screen
-                                isActive: $navigateToSpeedDate,
-                                label: {
-                                    EmptyView() // Hidden link
-                                }
-                            )
+                            mainButttonSection(isParticipant: isParticipant, isUpcomingEvent: isUpcomingEvent, isCompletedEvent: isCompletedEvent, isLiveEvent: isLiveEvent)
                         }
                         .frame(height: geometry.size.height * 0.1)
-                        .disabled(!eventVM.event.participantProfileIds.contains(profileVM.userProfile.id))
-                        .opacity(eventVM.event.participantProfileIds.contains(profileVM.userProfile.id) ? 0.5 : 0.2)
+                        .disabled(!isParticipant)
+                        .opacity(isParticipant ? 1.0 : 0.3)
+                        
+                        Spacer()
+                        
+                        if isParticipant && isUpcomingEvent {
+                            countdownOverlaySection(isUpcomingEvent: isUpcomingEvent, isCompletedEvent: isCompletedEvent, isLiveEvent: isLiveEvent)
+                        } else if isCompletedEvent {
+                            registerOverlaySection
+                        }
                         Spacer()
                     }
                 }
@@ -73,18 +69,17 @@ struct HomeView: View {
             .task {
                 if let _ = Auth.auth().currentUser {
                     do {
-                        /// get profile and launch video
                         try await profileVM.getUserProfile()
                         
-                        // Only set roomCode if userProfile exists
                         if !profileVM.userProfile.roomCode.isEmpty {
-                            let incomingRoomCode = profileVM.userProfile.roomCode
-                            
-                            // Launch the video view safely now
-                            speedDateVM.roomCode = incomingRoomCode
+                            speedDateVM.roomCode = profileVM.userProfile.roomCode
                         }
                         
                         try await eventVM.getEvent(profileId: profileVM.userProfile.id)
+                        // 3. Update currentTime explicitly after network fetching completes
+                        currentTime = Date()
+                        print(currentTime)
+                        print(eventVM.event.startDate)
                         
                         try await profileVM.getFileFromStorage(profileId: profileVM.userProfile.id)
                     } catch {
@@ -95,9 +90,13 @@ struct HomeView: View {
             .onDisappear {
                 speedDateVM.roomCode = ""
             }
-            .ignoresSafeArea(.keyboard)
+            // 4. Listen on the top level stack container so state cycles cleanly
+            .onReceive(timer) { input in
+                currentTime = input
+            }
         }
     }
+    
     
     private func header(geometry: GeometryProxy) -> some View {
         HStack{
@@ -126,7 +125,6 @@ struct HomeView: View {
                 }
             
             Spacer()
-            //  VStack {
             Text("HotSeat")
                 .font(.custom("Copperplate", size: geometry.size.height * 0.025))
                 .foregroundColor(Color("tertiaryColor"))
@@ -138,7 +136,6 @@ struct HomeView: View {
                 .font(.custom("Copperplate", size: geometry.size.height * 0.025))
                 .foregroundColor(Color("tertiaryColor"))
                 .bold()
-            //    }
             
             Spacer()
             
@@ -183,83 +180,141 @@ struct HomeView: View {
         }
     }
     
-    private func events(geometry: GeometryProxy) -> some View {
-        VStack{
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack{
-                    ForEach(0...4, id: \.self) {_ in
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.blue, lineWidth: 2)
-                            .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.15)
-                            .overlay{
-                                HStack{
-                                    HStack(spacing: -15) {
-                                        ForEach(0...4, id: \.self) { _ in
-                                            HStack(spacing: 0) {
-                                                Circle()
-                                                    .overlay {
-                                                        Image(systemName: "person.fill")
-                                                            .resizable()
-                                                            .frame(width: geometry.size.width * 0.03, height: geometry.size.height * 0.02)
-                                                            .foregroundColor(.black)
-                                                    }
-                                                    .foregroundColor(.gray)
-                                                    .frame(width: geometry.size.width * 0.08, height: geometry.size.height * 0.08)
-                                            }
-                                        }
-                                    }
-                                    
-                                    Text("Meet 1")
-                                        .foregroundColor(Color("tertiaryColor"))
-                                        .font(.system(size: geometry.size.height * 0.03))
-                                        .bold()
-                                        .padding(.bottom,5)
-                                    
-                                    HStack{
-                                        Text("3/3/25 @4pm")
-                                            .foregroundColor(Color("tertiaryColor"))
-                                            .font(.system(size: geometry.size.height * 0.015))
-                                    }
-                                    .padding(.bottom)
-                                }
-                                .padding(5)
-                                
-                            }
-                            .padding(5)
-                            .scrollTransition { content, phase in
-                                content
-                                    .opacity(phase.isIdentity ? 1 : 0)
-                                    .scaleEffect(phase.isIdentity ? 1 : 0.75)
-                                    .blur(radius: phase.isIdentity ? 0 : 10)
-                            }
+    
+    /// Converts the target Date into a readable string (e.g., "Oct 15, 7:00 PM")
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+    
+    /// Calculates the difference between two times and builds a "00:00:00" string
+    private func countdownString(from now: Date, to target: Date) -> String {
+        let diff = Int(target.timeIntervalSince(now))
+        
+        guard diff > 0 else { return "00:00:00" }
+        
+        let hours = diff / 3600
+        let minutes = (diff % 3600) / 60
+        let seconds = diff % 60
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+    
+    @ViewBuilder
+    private func countdownOverlaySection(isUpcomingEvent: Bool, isCompletedEvent: Bool, isLiveEvent: Bool) -> some View {
+        VStack {
+            if isUpcomingEvent {
+                Text("Starts: \(formattedDate(eventVM.event.startDate))")
+                    .font(.system(size: 24))
+                    .foregroundStyle(.white.opacity(0.8))
+                
+                Text("Starts in: \(countdownString(from: currentTime, to: eventVM.event.startDate))")
+                    .font(.system(size: 24, design: .monospaced))
+                    .foregroundStyle(.yellow)
+            } else if isLiveEvent {
+                Text("Event Started Live!")
+                    .font(.system(size: 24, weight: .medium))
+                    .foregroundStyle(.green)
+            } else if isCompletedEvent {
+                Text("Event Has Ended!")
+                    .font(.system(size: 24, weight: .medium))
+                    .foregroundStyle(.green)
+            }
+        }
+        .id(eventVM.event.startDate) // 🔑 Explicitly triggers structural invalidation
+    }
+    
+    @ViewBuilder
+    private var registerOverlaySection: some View {
+        VStack(spacing: 12) {
+            Text("Ready to jump in the HotSeat?")
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+            
+            Text("Live events require registration. Connect below to get added to the next round:")
+                .font(.system(size: 14))
+                .foregroundStyle(.white.opacity(0.8))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 12)
+            
+            HStack(spacing: 12) {
+                Link(destination: URL(string: "mailto:joinhotseatapp@gmail.com")!) {
+                    HStack {
+                        Image(systemName: "envelope.fill")
+                        Text("Email")
                     }
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+                }
+                
+                Link(destination: URL(string: "https://www.linkedin.com/in/drewe7192/")!) {
+                    HStack {
+                        Image(systemName: "person.crop.circle.badge.plus")
+                        Text("Developer")
+                    }
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color.white.opacity(0.15))
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.white.opacity(0.3), lineWidth: 1)
+                    )
+                }
+            }
+            .padding(.horizontal, 12)
+        }
+        .padding(.vertical, 16)
+        .background(Color.black.opacity(0.4))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(.white.opacity(0.15), lineWidth: 1)
+        )
+        .padding(.horizontal, 16)
+        .frame(minHeight: 20)
+    }
+    
+    @ViewBuilder
+    private func mainButttonSection(isParticipant: Bool, isUpcomingEvent: Bool, isCompletedEvent: Bool, isLiveEvent: Bool) -> some View {
+        VStack(spacing: 8) {
+            Button(action: {
+                navigateToSpeedDate = true
+                viewRouter.currentPage = .speedDateLobby
+            }) {
+                VStack(spacing: 4) {
+                    let text: String = {
+                          switch (isLiveEvent, isUpcomingEvent, isParticipant) {
+                          case (true, _, true):
+                              return "Start Speed Date"
+                          case (false, true, true):
+                              return "Enter Waiting Room"
+                          default:
+                              return "No upcoming events registered at this time"
+                          }
+                      }()
+                      
+                      Text(text)
+                          .foregroundStyle(.white)
+                          .font(.system(size: 20, weight: .bold))
                 }
             }
         }
-        .padding(.bottom)
-    }
-    
-    private func introSheet() -> some View {
-        ZStack{
-            Color.primaryColor
-                .ignoresSafeArea()
-            
-            VStack{
-                Text("Features:")
-                    .foregroundColor(.white)
-                    .font(.largeTitle)
-                
-                
-                Text("Q&A")
-                    .foregroundColor(.white)
-                    .font(.title)
-                
-                Text("BlindChat")
-                    .foregroundColor(.white)
-                    .font(.title)
-                
-            }
-        }
+        .navigationDestination(isPresented: $navigateToSpeedDate) {
+             SpeedDateLobbyView()
+         }
     }
 }
 
