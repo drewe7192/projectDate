@@ -41,7 +41,7 @@ struct HomeView: View {
                         videoSection(geometry: geometry)
                         
                         Spacer()
-                            .frame(height: geometry.size.height * 0.03)
+                            .frame(height: geometry.size.height * 0.05)
                         
                         let isParticipant = eventVM.event.participantProfileIds.contains(profileVM.userProfile.id)
                         let isUpcomingEvent  = eventVM.event.startDate > currentTime
@@ -52,14 +52,10 @@ struct HomeView: View {
                             mainButttonSection(isParticipant: isParticipant, isUpcomingEvent: isUpcomingEvent, isCompletedEvent: isCompletedEvent, isLiveEvent: isLiveEvent)
                         }
                         .frame(height: geometry.size.height * 0.1)
-                        .disabled(!isParticipant)
-                        .opacity(isParticipant ? 1.0 : 0.3)
                         
                         Spacer()
                         
-                        if isParticipant && isUpcomingEvent {
-                            countdownOverlaySection(isUpcomingEvent: isUpcomingEvent, isCompletedEvent: isCompletedEvent, isLiveEvent: isLiveEvent)
-                        } else if isCompletedEvent {
+                        if isCompletedEvent || !isParticipant{
                             registerOverlaySection
                         }
                         Spacer()
@@ -180,7 +176,6 @@ struct HomeView: View {
         }
     }
     
-    
     /// Converts the target Date into a readable string (e.g., "Oct 15, 7:00 PM")
     private func formattedDate(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -289,32 +284,43 @@ struct HomeView: View {
     
     @ViewBuilder
     private func mainButttonSection(isParticipant: Bool, isUpcomingEvent: Bool, isCompletedEvent: Bool, isLiveEvent: Bool) -> some View {
-        VStack(spacing: 8) {
+        VStack{
             Button(action: {
                 navigateToSpeedDate = true
                 viewRouter.currentPage = .speedDateLobby
             }) {
-                VStack(spacing: 4) {
+                VStack{
                     let text: String = {
-                          switch (isLiveEvent, isUpcomingEvent, isParticipant) {
-                          case (true, _, true):
-                              return "Start Speed Date"
-                          case (false, true, true):
-                              return "Enter Waiting Room"
-                          default:
-                              return "No upcoming events registered at this time"
-                          }
-                      }()
-                      
-                      Text(text)
-                          .foregroundStyle(.white)
-                          .font(.system(size: 20, weight: .bold))
+                        switch (isLiveEvent, isUpcomingEvent, isParticipant) {
+                        case (true, _, true):
+                            return "Start Speed Date"
+                        case (false, false, true):
+                            return "No Upcoming Events"
+                        case (false, false, false):
+                            return "No Upcoming Events"
+                        default:
+                            return ""
+                        }
+                    }()
+                    
+                    Spacer()
+                    Text(text)
+                        .foregroundStyle(.white)
+                        .font(.system(size: 20, weight: .bold))
+                    
+                    if isParticipant && isUpcomingEvent {
+                        countdownOverlaySection(isUpcomingEvent: isUpcomingEvent, isCompletedEvent: isCompletedEvent, isLiveEvent: isLiveEvent)
+                    }
+                    Spacer()
+                    
                 }
             }
+            .disabled(!isParticipant || isCompletedEvent || isUpcomingEvent )
+            .opacity(!isParticipant || isCompletedEvent ? 0.2: 0.5)
         }
         .navigationDestination(isPresented: $navigateToSpeedDate) {
-             SpeedDateLobbyView()
-         }
+            SpeedDateLobbyView()
+        }
     }
 }
 

@@ -203,24 +203,14 @@ struct SettingsView: View {
     
     private func headerSection() -> some View {
         HStack{
+            Spacer()
             Text("Settings")
-                .foregroundColor(Color.black)
+                .foregroundColor(Color.white)
                 .bold()
                 .font(.system(size: 30))
                 .padding()
             
             Spacer()
-            
-            Circle()
-                .frame(width: 35)
-                .overlay {
-                    Image(systemName: "line.3.horizontal.decrease")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.white)
-                }
-                .padding()
-                .foregroundColor(.gray)
         }
     }
     
